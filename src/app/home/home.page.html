@@ -1,0 +1,184 @@
+<ion-content [fullscreen]="true">
+  <ion-grid class="ion-no-padding">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-md="6">
+          <img src="./assets/imgs/bg-hero.svg" width="100%">
+          <div class="top-left">
+            <ion-button fill="clear" color="light">
+              <ion-icon slot="icon-only" name="location-outline"></ion-icon>
+              <span>Yogyakarta</span>
+            </ion-button>
+            <ion-item class="fill-0" lines="none">
+              <ion-label>
+                <ion-text color="light">
+                  <h1>Ashar</h1>
+                  <p>2 Jam 33 menit lagi</p>
+                </ion-text>
+              </ion-label>
+            </ion-item>
+          </div>
+
+          <div class="top-right">
+            <ion-button fill="clear" color="light" size="large">
+              <ion-icon style="font-size: 3rem;" slot="icon-only" name="person-circle"></ion-icon>
+            </ion-button>
+          </div>
+
+          <div class="ion-padding">
+            <div class="info-jadwal">
+              <ion-row style="border-bottom: 1px solid #F2F2F2;">
+                <ion-col class="ion-text-center">
+                  <ion-label>
+                    Rabu, 15 Januari 2021
+                  </ion-label>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col class="ion-text-center">
+                  <ion-label class="fs-10">
+                    <ion-text color="medium">Imsak</ion-text>
+                    <ion-text color="dark">
+                      <p>03.43</p>
+                    </ion-text>
+                  </ion-label>
+                </ion-col>
+                <ion-col class="ion-text-center">
+                  <ion-label class="fs-10">
+                    <ion-text color="medium">Subuh</ion-text>
+                    <ion-text color="dark">
+                      <p>03.53</p>
+                    </ion-text>
+                  </ion-label>
+                </ion-col>
+                <ion-col class="ion-text-center">
+                  <ion-label class="fs-10">
+                    <ion-text color="medium">Dhuhur</ion-text>
+                    <ion-text color="dark">
+                      <p>11.43</p>
+                    </ion-text>
+                  </ion-label>
+                </ion-col>
+                <ion-col class="ion-text-center">
+                  <ion-label class="fs-10">
+                    <ion-text color="primary">Ashar</ion-text>
+                    <ion-text color="primary">
+                      <p>15.03</p>
+                    </ion-text>
+                  </ion-label>
+                </ion-col>
+                <ion-col class="ion-text-center">
+                  <ion-label class="fs-10">
+                    <ion-text color="medium">Maghrib</ion-text>
+                    <ion-text color="dark">
+                      <p>17.43</p>
+                    </ion-text>
+                  </ion-label>
+                </ion-col>
+                <ion-col class="ion-text-center">
+                  <ion-label class="fs-10">
+                    <ion-text color="medium">Isya</ion-text>
+                    <ion-text color="dark">
+                      <p>18.57</p>
+                    </ion-text>
+                  </ion-label>
+                </ion-col>
+              </ion-row>
+            </div>
+          </div>
+
+          <div class="container">
+            <ion-slides pager="true" [options]="slideOpts" class="ion-padding" style="margin-top: 20px;">
+              <ion-slide>
+                <a href="https://muhammadiyah.or.id/">
+                  <img src="./assets/imgs/slide1.png" class="object-bg rounded-1" height="150">
+                </a>
+              </ion-slide>
+              <ion-slide>
+                <a href="https://suaramuhammadiyah.id/">
+                  <img src="./assets/imgs/slide2.png" class="object-bg rounded-1" height="150">
+                </a>
+              </ion-slide>
+              <ion-slide>
+                <a href="https://lazismu.org/">
+                  <img src="./assets/imgs/slide3.png" class="object-bg rounded-1" height="150">
+                </a>
+              </ion-slide>
+            </ion-slides>
+
+
+            <ion-grid>
+              <ion-row>
+                <ion-col size="3" class="ion-text-center">
+                  <img src="./assets/icon/pengajian.svg"/>
+                  <p class="fs-10" style="margin-top: -1px;">Pengajian</p>
+                </ion-col>
+                <ion-col size="3" class="ion-text-center">
+                  <img src="./assets/icon/cabang-ranting.svg"/>
+                  <p class="fs-10" style="margin-top: -1px;">Cabang dan Ranting</p>
+                </ion-col>
+                <ion-col size="3" class="ion-text-center" routerLink="/jadwal-sholat">
+                  <img src="./assets/icon/jadwal-sholat.svg"/>
+                  <p class="fs-10" style="margin-top: -1px;">Jadwal Sholat</p>
+                </ion-col>
+                <ion-col size="3" class="ion-text-center">
+                  <img src="./assets/icon/video.svg"/>
+                  <p class="fs-10" style="margin-top: -1px;">Video</p>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
+            <!-- ProdukMU -->
+            <ion-item lines="none">
+              <ion-label>
+                <h2>ProdukMU</h2>
+              </ion-label>
+              <ion-chip color="primary">
+                <ion-label>
+                  Lihat Semua
+                </ion-label>
+              </ion-chip>
+            </ion-item>
+
+            <ion-row>
+              <ion-col size="6">
+                <ion-card class="rounded-15">
+                  <img src="./assets/imgs/meja-set.jpg" class="object-bg" style="height: 150px;">
+                  <ion-card-content>
+                    <ion-label>
+                      <ion-text color="primary">
+                        <h2>Furniture Set</h2>
+                      </ion-text>
+                      <ion-text color="medium" class="ion-text-nowrap">
+                        <p>Furniture set yang di desain khusus keluarga</p>
+                      </ion-text>
+                    </ion-label>
+                    <h2 style="margin-top: 20px;">Rp.1200.000</h2>
+                  </ion-card-content>
+                </ion-card>
+              </ion-col>
+              <ion-col size="6">
+                <ion-card class="rounded-15">
+                  <img src="./assets/imgs/pisang-coklat.jpg" class="object-bg" style="height: 150px;">
+                  <ion-card-content>
+                    <ion-label>
+                      <ion-text color="primary">
+                        <h2>Pisang Coklat</h2>
+                      </ion-text>
+                      <ion-text color="medium" class="ion-text-nowrap">
+                        <p>Paduan coklat dan pisang</p>
+                      </ion-text>
+                    </ion-label>
+                    <h2 style="margin-top: 20px;">Rp.20.000</h2>
+                  </ion-card-content>
+                </ion-card>
+              </ion-col>
+            </ion-row>
+            <!-- End ProdukMU -->
+          </div>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+</ion-content>

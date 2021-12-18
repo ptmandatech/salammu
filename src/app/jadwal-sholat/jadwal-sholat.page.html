@@ -1,0 +1,32 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title class="ion-text-center">Jadwal Sholat</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" id="alignment-button">
+        <ion-icon slot="icon-only" name="filter"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+
+
+</ion-content>
+
+
+<ion-popover trigger="alignment-button" side="bottom" alignment="end">
+  <ng-template>
+    <ion-content>
+      <ion-item lines="none" *ngFor="let n of ['Mingguan', 'Bulanan']" >
+        <ion-label>
+          <ion-text>
+            {{n}}
+          </ion-text>
+        </ion-label>
+      </ion-item>
+    </ion-content>
+  </ng-template>
+</ion-popover>
