@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { ModalJadwalComponent } from './jadwal-sholat/modal-jadwal/modal-jadwal.component';
 
 const routes: Routes = [
   {
@@ -14,6 +15,10 @@ const routes: Routes = [
   {
     path: 'jadwal-sholat',
     loadChildren: () => import('./jadwal-sholat/jadwal-sholat.module').then( m => m.JadwalSholatPageModule)
+  },
+  {
+    path: 'modal-jadwal',
+    component: ModalJadwalComponent
   },
 ];
 

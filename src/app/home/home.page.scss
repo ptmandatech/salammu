@@ -1,13 +1,3 @@
-.centered {
-  text-align: center;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
 .top-left {
   position: absolute;
   top: 3%;
@@ -34,10 +24,6 @@
 .container {
   position: relative;
   top: -100px ;
-}
-
-.fs-10 {
-  font-size: 12px;
 }
 
 .object-bg {

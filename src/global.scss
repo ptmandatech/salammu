@@ -38,3 +38,21 @@ ion-button {
 .rounded-15 {
   border-radius: 15px;
 }
+
+.centered {
+  text-align: center;
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.modal-class {
+  --border-radius: 15px 15px 0px 0px;;
+}
+
+.fs-10 {
+  font-size: 12px;
+}

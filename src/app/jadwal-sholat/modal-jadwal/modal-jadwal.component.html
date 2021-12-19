@@ -1,0 +1,20 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-item lines="full">
+      <ion-label>
+        <ion-text color="medium">Rabu 15 Desember 2021</ion-text>
+      </ion-label>
+    </ion-item>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item lines="none" *ngFor="let n of ['Imsak', 'Subuh', 'Dhuhur', 'Ashar', 'Maghrib', 'Isya']">
+    <ion-label>
+      <ion-text>{{n}}</ion-text>
+    </ion-label>
+    <ion-text slot="end" color="primary">
+      03.43
+    </ion-text>
+  </ion-item>
+</ion-content>
