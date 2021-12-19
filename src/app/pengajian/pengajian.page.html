@@ -1,0 +1,80 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title>Pengajian</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-segment mode="md" [(ngModel)]="defaultSegment">
+      <ion-segment-button value="kalender">
+        <ion-label>
+          Kalender
+        </ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="map">
+        <ion-label>
+          Peta
+        </ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid class="ion-no-padding">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-md="6">
+
+        <div [ngSwitch]="defaultSegment">
+
+          <!-- Segment kalender-->
+          <div *ngSwitchCase="'kalender'" >
+            <ion-toolbar>
+              <ion-button slot="start" fill="clear" button-icon (click)="prev()">
+              <ion-icon slot="icon-only" name="caret-back"></ion-icon>
+              </ion-button>
+              <ion-title class="date-title">{{selected | date:'dd, MMM y'}}</ion-title>
+              <ion-button slot="end" fill="clear" button-icon (click)="next()">
+              <ion-icon slot="icon-only" name="caret-forward"></ion-icon>
+              </ion-button>
+            </ion-toolbar>
+
+            <ion-grid class="ion-no-padding">
+              <ion-row>
+                <ion-col class="ion-text-center" *ngFor="let h of ['Min','Sen','Sel','Rab','Kam','Jum','Sab']">
+                  <ion-text color="medium">
+                    {{h}}
+                  </ion-text>
+                </ion-col>
+              </ion-row>
+              <ion-row *ngFor="let m of week" class="ion-align-items-center">
+                <ion-col class="cal-cell" *ngFor="let n of [0,1,2,3,4,5,6]" [ngClass]="{'cell-selected':cellSelected[m+n]}" (click)="selectCell(m,n)">
+                  <div *ngIf="cal[m][n]!=0" class="centered ion-padding">
+                    <ion-text class="cal-date">{{cal[m][n]!=0 ? cal[m][n].tanggal : ''}}</ion-text>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </div>
+          <!-- End Segment kalender -->
+
+
+          <!-- Segment Peta-->
+          <div *ngSwitchCase="'map'" >
+            <ion-row>
+              <ion-col class="ion-text-center">
+                <img src="./assets/icon/marker.svg" width="35" (click)="modalPeta()">
+              </ion-col>
+            </ion-row>
+
+          </div>
+          <!-- End Segment Peta-->
+
+        </div>
+
+
+
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

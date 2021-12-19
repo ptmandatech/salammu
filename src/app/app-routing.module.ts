@@ -20,6 +20,10 @@ const routes: Routes = [
     path: 'modal-jadwal',
     component: ModalJadwalComponent
   },
+  {
+    path: 'pengajian',
+    loadChildren: () => import('./pengajian/pengajian.module').then( m => m.PengajianPageModule)
+  },
 ];
 
 @NgModule({

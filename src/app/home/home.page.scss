@@ -23,7 +23,7 @@
 
 .container {
   position: relative;
-  top: -100px ;
+  top: -90px ;
 }
 
 .object-bg {
@@ -34,4 +34,10 @@
 
 ion-slides {
   width: 100%;
+}
+
+.text-elipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
