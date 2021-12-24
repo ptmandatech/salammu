@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title class="ion-text-center">Cabang Ranting</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" routerLink="/cabang-ranting/pencarian-cabangranting">
+        <ion-icon slot="icon-only" name="search-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-segment mode="md" [(ngModel)]="defaultSegment">
+      <ion-segment-button value="cabang">
+        <ion-label>
+          Cabang
+        </ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="ranting">
+        <ion-label>
+          Ranting
+        </ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-grid class="ion-no-padding">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-md="6">
+
+        <div [ngSwitch]="defaultSegment">
+
+          <!-- Segment Cabang-->
+          <div *ngSwitchCase="'cabang'" >
+            <ion-item detail *ngFor="let n of [1,2,3,4,5]" routerLink="/cabang-ranting/detail-cabang-ranting">
+              <ion-thumbnail slot="start">
+                <img src="./assets/icon/cabang.svg">
+              </ion-thumbnail>
+              <ion-label>
+                <h3>Cabang Cileungsi</h3>
+                <p>Alamat sekretariat</p>
+              </ion-label>
+            </ion-item>
+          </div>
+          <!-- End Segment Cabang-->
+
+
+          <!-- Segment Ranting-->
+          <div *ngSwitchCase="'ranting'" >
+            <ion-item detail *ngFor="let n of [1,2,3,4,5]" routerLink="/cabang-ranting/detail-cabang-ranting">
+              <ion-thumbnail slot="start">
+                <img src="./assets/icon/ranting.svg">
+              </ion-thumbnail>
+              <ion-label>
+                <h3>Ranting Ujungrusi</h3>
+                <p>Alamat sekretariat</p>
+              </ion-label>
+            </ion-item>
+          </div>
+          <!-- End Segment Ranting-->
+
+
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

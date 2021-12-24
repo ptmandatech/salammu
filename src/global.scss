@@ -71,3 +71,19 @@ ion-segment-button {
 .bg-gray {
   background: #E7E7E7;
 }
+
+.object-bg {
+  background-size: cover;
+  object-fit: cover;
+  width: 100%;
+}
+
+
+.footer {
+  position: fixed;
+  padding: 16px;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  width: 100%;
+}

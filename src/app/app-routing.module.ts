@@ -24,6 +24,18 @@ const routes: Routes = [
     path: 'pengajian',
     loadChildren: () => import('./pengajian/pengajian.module').then( m => m.PengajianPageModule)
   },
+  {
+    path: 'cabang-ranting',
+    loadChildren: () => import('./cabang-ranting/cabang-ranting.module').then( m => m.CabangRantingPageModule)
+  },
+  {
+    path: 'produk-mu',
+    loadChildren: () => import('./produk-mu/produk-mu.module').then( m => m.ProdukMUPageModule)
+  },
+  {
+    path: 'video',
+    loadChildren: () => import('./video/video.module').then( m => m.VideoPageModule)
+  },
 ];
 
 @NgModule({

@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title>Pencarian</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-searchbar mode="ios" showCancelButton="never" placeholder="Cari nama cabang atau ranting"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-grid class="ion-no-padding">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-md="6">
+        <div class="centered" hidden>
+          <img src="./assets/icon/pencarian.svg">
+          <ion-label>
+            <p>Pencarian tidak ditemukan</p>
+          </ion-label>
+        </div>
+
+        <ion-item detail routerLink="/cabang-ranting/detail-cabang-ranting">
+          <ion-thumbnail slot="start">
+            <img src="./assets/icon/cabang.svg">
+          </ion-thumbnail>
+          <ion-label>
+            <h3>Cabang Cileungsi</h3>
+            <p>Alamat sekretariat</p>
+          </ion-label>
+        </ion-item>
+
+        <ion-item detail routerLink="/cabang-ranting/detail-cabang-ranting">
+          <ion-thumbnail slot="start">
+            <img src="./assets/icon/ranting.svg">
+          </ion-thumbnail>
+          <ion-label>
+            <h3>Ranting Ujungrusi</h3>
+            <p>Alamat sekretariat</p>
+          </ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+
+
+</ion-content>
