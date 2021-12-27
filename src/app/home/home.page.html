@@ -28,57 +28,108 @@
             <div class="info-jadwal">
               <ion-row style="border-bottom: 1px solid #F2F2F2;">
                 <ion-col class="ion-text-center">
-                  <ion-label>
-                    Rabu, 15 Januari 2021
+                  <ion-label *ngIf="timesToday != undefined">
+                    {{timesToday.date.gregorian | date: 'DDDD, dd MMMM yyyy' }}
+                  </ion-label>
+                  <ion-label *ngIf="timesToday == undefined">
+                    <ion-skeleton-text animated></ion-skeleton-text>
                   </ion-label>
                 </ion-col>
               </ion-row>
               <ion-row>
                 <ion-col class="ion-text-center">
-                  <ion-label class="fs-10">
-                    <ion-text color="medium">Imsak</ion-text>
+                  <ion-label class="fs-10" *ngIf="timesToday != undefined">
+                    <ion-text color="{{checkTime(timesToday.times.Imsak, timesToday.times.Fajr) ? 'primary':'medium'}}">Imsak</ion-text>
+                    <ion-text color="{{checkTime(timesToday.times.Imsak, timesToday.times.Fajr) ? 'primary':'dark'}}">
+                      <p>{{timesToday.times.Imsak}}</p>
+                    </ion-text>
+                    <ion-text color="dark" *ngIf="timesToday == undefined">
+                      <p><ion-skeleton-text animated></ion-skeleton-text></p>
+                    </ion-text>
+                  </ion-label>
+                  <ion-label class="fs-10" *ngIf="timesToday == undefined">
                     <ion-text color="dark">
-                      <p>03.43</p>
+                      <p><ion-skeleton-text animated></ion-skeleton-text></p>
                     </ion-text>
                   </ion-label>
                 </ion-col>
                 <ion-col class="ion-text-center">
-                  <ion-label class="fs-10">
-                    <ion-text color="medium">Subuh</ion-text>
+                  <ion-label class="fs-10" *ngIf="timesToday != undefined">
+                    <ion-text color="{{checkTime(timesToday.times.Fajr, timesToday.times.Sunrise) ? 'primary':'medium'}}">Subuh</ion-text>
+                    <ion-text color="{{checkTime(timesToday.times.Fajr, timesToday.times.Sunrise) ? 'primary':'dark'}}">
+                      <p>{{timesToday.times.Fajr}}</p>
+                    </ion-text>
+                    <ion-text color="dark" *ngIf="timesToday == undefined">
+                      <p><ion-skeleton-text animated></ion-skeleton-text></p>
+                    </ion-text>
+                  </ion-label>
+                  <ion-label class="fs-10" *ngIf="timesToday == undefined">
                     <ion-text color="dark">
-                      <p>03.53</p>
+                      <p><ion-skeleton-text animated></ion-skeleton-text></p>
                     </ion-text>
                   </ion-label>
                 </ion-col>
                 <ion-col class="ion-text-center">
-                  <ion-label class="fs-10">
-                    <ion-text color="medium">Dhuhur</ion-text>
+                  <ion-label class="fs-10" *ngIf="timesToday != undefined">
+                    <ion-text color="{{checkTime(timesToday.times.Dhuhr, timesToday.times.Asr) ? 'primary':'medium'}}">Dhuhur</ion-text>
+                    <ion-text color="{{checkTime(timesToday.times.Dhuhr, timesToday.times.Asr) ? 'primary':'dark'}}">
+                      <p>{{timesToday.times.Dhuhr}}</p>
+                    </ion-text>
+                    <ion-text color="dark" *ngIf="timesToday == undefined">
+                      <p><ion-skeleton-text animated></ion-skeleton-text></p>
+                    </ion-text>
+                  </ion-label>
+                  <ion-label class="fs-10" *ngIf="timesToday == undefined">
                     <ion-text color="dark">
-                      <p>11.43</p>
+                      <p><ion-skeleton-text animated></ion-skeleton-text></p>
                     </ion-text>
                   </ion-label>
                 </ion-col>
                 <ion-col class="ion-text-center">
-                  <ion-label class="fs-10">
-                    <ion-text color="primary">Ashar</ion-text>
-                    <ion-text color="primary">
-                      <p>15.03</p>
+                  <ion-label class="fs-10" *ngIf="timesToday != undefined">
+                    <ion-text color="{{checkTime(timesToday.times.Asr, timesToday.times.Maghrib) ? 'primary':'medium'}}">Ashar</ion-text>
+                    <ion-text color="{{checkTime(timesToday.times.Asr, timesToday.times.Maghrib) ? 'primary':'dark'}}">
+                      <p>{{timesToday.times.Asr}}</p>
+                    </ion-text>
+                    <ion-text color="dark" *ngIf="timesToday == undefined">
+                      <p><ion-skeleton-text animated></ion-skeleton-text></p>
+                    </ion-text>
+                  </ion-label>
+                  <ion-label class="fs-10" *ngIf="timesToday == undefined">
+                    <ion-text color="dark">
+                      <p><ion-skeleton-text animated></ion-skeleton-text></p>
                     </ion-text>
                   </ion-label>
                 </ion-col>
                 <ion-col class="ion-text-center">
-                  <ion-label class="fs-10">
-                    <ion-text color="medium">Maghrib</ion-text>
+                  <ion-label class="fs-10" *ngIf="timesToday != undefined">
+                    <ion-text color="{{checkTime(timesToday.times.Maghrib, timesToday.times.Isha) ? 'primary':'medium'}}">Maghrib</ion-text>
+                    <ion-text color="{{checkTime(timesToday.times.Maghrib, timesToday.times.Isha) ? 'primary':'dark'}}">
+                      <p>{{timesToday.times.Maghrib}}</p>
+                    </ion-text>
+                    <ion-text color="dark" *ngIf="timesToday == undefined">
+                      <p><ion-skeleton-text animated></ion-skeleton-text></p>
+                    </ion-text>
+                  </ion-label>
+                  <ion-label class="fs-10" *ngIf="timesToday == undefined">
                     <ion-text color="dark">
-                      <p>17.43</p>
+                      <p><ion-skeleton-text animated></ion-skeleton-text></p>
                     </ion-text>
                   </ion-label>
                 </ion-col>
                 <ion-col class="ion-text-center">
-                  <ion-label class="fs-10">
-                    <ion-text color="medium">Isya</ion-text>
+                  <ion-label class="fs-10" *ngIf="timesToday != undefined">
+                    <ion-text color="{{checkTime(timesToday.times.Isha, '23:59') ? 'primary':'medium'}}">Isya</ion-text>
+                    <ion-text color="{{checkTime(timesToday.times.Isha, '23:59') ? 'primary':'dark'}}">
+                      <p>{{timesToday.times.Isha}}</p>
+                    </ion-text>
+                    <ion-text color="dark" *ngIf="timesToday == undefined">
+                      <p><ion-skeleton-text animated></ion-skeleton-text></p>
+                    </ion-text>
+                  </ion-label>
+                  <ion-label class="fs-10" *ngIf="timesToday == undefined">
                     <ion-text color="dark">
-                      <p>18.57</p>
+                      <p><ion-skeleton-text animated></ion-skeleton-text></p>
                     </ion-text>
                   </ion-label>
                 </ion-col>
