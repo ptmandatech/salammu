@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { ApiService } from '../services/api.service';
 import { CalendarService } from '../services/calendar.service';
 import { ModalJadwalComponent } from './modal-jadwal/modal-jadwal.component';
 
@@ -13,6 +14,7 @@ export class JadwalSholatPage implements OnInit {
   constructor(
     private calendar:CalendarService,
     public modalController: ModalController,
+    private api: ApiService,
   ) { }
 
   cal:any={};
@@ -21,10 +23,13 @@ export class JadwalSholatPage implements OnInit {
   daily:boolean;
   weekly:boolean;
   monthly:boolean;
+  prayTime:any = [];
 
-  ngOnInit() {
+  async ngOnInit() {
     this.getCal();
     this.dailyShow();
+    this.prayTime = await this.api.getMonth();
+    console.log(this.prayTime)
   }
 
 
