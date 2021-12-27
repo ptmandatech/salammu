@@ -11,6 +11,7 @@ export class HomePage {
     initialSlide: 1,
     speed: 400,
     spaceBetween: 20,
+    autoplay: true
   };
 
 

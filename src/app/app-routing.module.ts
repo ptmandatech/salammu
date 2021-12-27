@@ -36,6 +36,10 @@ const routes: Routes = [
     path: 'video',
     loadChildren: () => import('./video/video.module').then( m => m.VideoPageModule)
   },
+  {
+    path: 'profil',
+    loadChildren: () => import('./profil/profil.module').then( m => m.ProfilPageModule)
+  },
 ];
 
 @NgModule({
