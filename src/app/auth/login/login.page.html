@@ -1,0 +1,48 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="ion-padding">
+
+  <ion-row>
+    <ion-col class="ion-text-center">
+      <img src="./assets/icon/logo.svg">
+    </ion-col>
+  </ion-row>
+
+
+  <div id="content">
+
+    <ion-text color="medium">
+      <p>Email</p>
+    </ion-text>
+    <ion-item class="input">
+      <ion-input type="email"></ion-input>
+    </ion-item>
+
+    <ion-text color="medium">
+      <p>Password</p>
+    </ion-text>
+    <ion-item class="input">
+      <ion-input type="{{type}}" placeholder="Enter your password"></ion-input>
+      <ion-icon name="{{type == 'password' ? 'eye-outline':'eye-off-outline'}}" (click)="show()" slot="end" color="medium"></ion-icon>
+    </ion-item>
+
+
+        <div style="display: flex;">
+          <ion-button class="ion-text-capitalize" color="primary" fill="clear" size="small">Lupa Password</ion-button>
+          <div style="flex-grow: 1;"></div>
+          <ion-button class="ion-text-capitalize" color="primary" fill="clear" size="small">Registrasi</ion-button>
+        </div>
+
+          <ion-button color="primary" class="custom-button" (click)="login()">
+            Masuk
+          </ion-button>
+
+
+    </div>
+
+
+</ion-content>

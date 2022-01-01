@@ -1,5 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+import { LoginPage } from '../auth/login/login.page';
 import { ApiService } from '../services/api.service';
 
 @Component({
@@ -19,12 +21,13 @@ export class HomePage implements OnInit {
   dateNow:any;
   constructor(
     private api: ApiService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    public modalController: ModalController,
   ) {}
 
   prayTime:any;
   timesToday:any;
-  async ngOnInit() { 
+  async ngOnInit() {
     this.dateNow = new Date();
     this.prayTime = await this.api.getToday();
     this.timesToday = this.prayTime.datetime[0];
@@ -52,5 +55,17 @@ export class HomePage implements OnInit {
     } else {
       return false;
     }
+  }
+
+
+  async modalLogin() {
+    const modal = await this.modalController.create({
+      component: LoginPage,
+      mode: "md",
+      cssClass: 'modal-class',
+      initialBreakpoint: 1,
+      breakpoints: [0, 1, 1],
+    });
+    return await modal.present();
   }
 }

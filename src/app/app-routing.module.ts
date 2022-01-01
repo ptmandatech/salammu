@@ -60,6 +60,10 @@ const routes: Routes = [
     path: 'my-cr',
     loadChildren: () => import('./config/my-cr/my-cr.module').then( m => m.MyCrPageModule)
   },
+  {
+    path: 'login',
+    loadChildren: () => import('./auth/login/login.module').then( m => m.LoginPageModule)
+  },
 ];
 
 @NgModule({
