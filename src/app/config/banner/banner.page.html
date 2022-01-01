@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title>Banner</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+
+  <ion-grid class="ion-no-padding">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-md="6">
+        <div style="margin-top: 20px;"></div>
+
+        <ion-item detail>
+          <ion-row class="ion-align-items-center">
+            <ion-col size="4">
+              <img src="./assets/imgs/slide1.png" class="rounded-15 object-bg" style="height: 75px;">
+            </ion-col>
+            <ion-col size="8" class="ion-padding">
+              <ion-label>
+                <p class="ion-text-wrap">https://muhammadiyah.or.id/</p>
+              </ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-item>
+
+        <ion-item detail>
+          <ion-row class="ion-align-items-center">
+            <ion-col size="4">
+              <img src="./assets/imgs//slide2.png" class="rounded-15 object-bg" style="height: 75px;">
+            </ion-col>
+            <ion-col size="8" class="ion-padding">
+              <ion-label>
+                <p class="ion-text-wrap">https://suaramuhammadiyah.id/</p>
+              </ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-item>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div style="margin-top: 100px;"></div>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" routerLink="/tambah-banner">
+    <ion-fab-button>
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>

@@ -11,6 +11,10 @@ const routes: Routes = [
   {
     path: 'detail-produk',
     loadChildren: () => import('./detail-produk/detail-produk.module').then( m => m.DetailProdukPageModule)
+  },
+  {
+    path: 'tambah-produk',
+    loadChildren: () => import('./tambah-produk/tambah-produk.module').then( m => m.TambahProdukPageModule)
   }
 ];
 

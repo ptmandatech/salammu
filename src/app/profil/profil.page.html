@@ -3,7 +3,7 @@
     <ion-back-button slot="start"></ion-back-button>
     <ion-title class="ion-text-center">Profil</ion-title>
     <ion-buttons slot="end">
-      <ion-button fill="clear">
+      <ion-button fill="clear" routerLink="/profil/edit-profil">
         <ion-icon slot="icon-only" name="create-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -12,64 +12,82 @@
 
 <ion-content>
 
-  <div class="bg-primary"></div>
-  <div class="ion-padding">
-      <ion-row class="card-profil">
-        <ion-col class="ion-text-center">
-          <img src="./assets/imgs/blank-profil.png" class="img-profil">
-          <ion-label>
-            <h2>Arif Muhammad</h2>
-            <p>0877736629</p>
-          </ion-label>
-        </ion-col>
-      </ion-row>
-  </div>
+  <ion-grid class="ion-no-padding">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-md="6">
 
-  <div style="position: relative; top: -110px;">
-    <ion-card class="rounded-15">
-      <ion-item lines="none" detail>
-        <ion-icon slot="start" name="bag-handle-outline"></ion-icon>
-        <ion-label>
-          <h3>Produk Anda</h3>
-        </ion-label>
-      </ion-item>
-    </ion-card>
+        <div class="bg-primary"></div>
+        <div class="ion-padding">
+            <ion-row class="card-profil">
+              <ion-col class="ion-text-center">
+                <img src="./assets/imgs/blank-profil.png" class="img-profil">
+                <ion-label>
+                  <h2>Arif Muhammad</h2>
+                  <p>0877736629</p>
+                </ion-label>
+              </ion-col>
+            </ion-row>
+        </div>
 
-    <ion-card class="rounded-15">
-      <ion-item lines="none" detail>
-        <ion-icon slot="start" name="images-outline"></ion-icon>
-        <ion-label>
-          <h3>Banner</h3>
-        </ion-label>
-      </ion-item>
-    </ion-card>
+        <div style="position: relative; top: -110px;">
+          <ion-card class="rounded-15" routerLink="/my-product">
+            <ion-item lines="none" detail>
+              <ion-icon slot="start" name="bag-handle-outline"></ion-icon>
+              <ion-label>
+                <h3>Produk Anda</h3>
+              </ion-label>
+            </ion-item>
+          </ion-card>
 
-    <ion-card class="rounded-15">
-      <ion-item lines="none" detail>
-        <ion-icon slot="start" name="videocam-outline"></ion-icon>
-        <ion-label>
-          <h3>Video</h3>
-        </ion-label>
-      </ion-item>
-    </ion-card>
+          <ion-card class="rounded-15" routerLink="/banner">
+            <ion-item lines="none" detail>
+              <ion-icon slot="start" name="images-outline"></ion-icon>
+              <ion-label>
+                <h3>Banner</h3>
+              </ion-label>
+            </ion-item>
+          </ion-card>
 
-    <ion-card class="rounded-15">
-      <ion-item lines="none" detail>
-        <ion-icon slot="start" name="sparkles-outline"></ion-icon>
-        <ion-label>
-          <h3>Cabang Ranting</h3>
-        </ion-label>
-      </ion-item>
-    </ion-card>
+          <ion-card class="rounded-15" routerLink="/my-video">
+            <ion-item lines="none" detail>
+              <ion-icon slot="start" name="videocam-outline"></ion-icon>
+              <ion-label>
+                <h3>Video</h3>
+              </ion-label>
+            </ion-item>
+          </ion-card>
 
-    <ion-card class="rounded-15">
-      <ion-item lines="none" detail>
-        <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
-        <ion-label>
-          <h3>Ubah Password</h3>
-        </ion-label>
-      </ion-item>
-    </ion-card>
-  </div>
+          <ion-card class="rounded-15" routerLink="/my-cr">
+            <ion-item lines="none" detail>
+              <ion-icon slot="start" name="sparkles-outline"></ion-icon>
+              <ion-label>
+                <h3>Cabang Ranting</h3>
+              </ion-label>
+            </ion-item>
+          </ion-card>
+
+          <ion-card class="rounded-15">
+            <ion-item lines="none" detail>
+              <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
+              <ion-label>
+                <h3>Ubah Password</h3>
+              </ion-label>
+            </ion-item>
+          </ion-card>
+
+          <ion-card class="rounded-15">
+            <ion-item lines="none" detail>
+              <ion-icon color="danger" slot="start" name="exit-outline"></ion-icon>
+              <ion-label>
+                <h3>Keluar</h3>
+              </ion-label>
+            </ion-item>
+          </ion-card>
+        </div>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
 
 </ion-content>

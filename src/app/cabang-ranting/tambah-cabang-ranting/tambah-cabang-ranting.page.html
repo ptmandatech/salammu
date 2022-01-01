@@ -1,0 +1,90 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title>Tambah Cabang/Ranting</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-grid class="ion-no-padding">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-md="6">
+
+        <ion-text color="medium">Pilih Kategori</ion-text>
+          <ion-item lines="none" class="input">
+              <ion-select [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" interface="popover" placeholder="Pilih kategori">
+                <ion-select-option *ngFor="let n of ['Cabang', 'Ranting']"  value="{{n}}">{{n}}</ion-select-option>
+              </ion-select>
+              <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
+          </ion-item>
+
+          <ion-text color="medium">Nama Cabang</ion-text>
+          <ion-item lines="none" class="input">
+            <ion-input></ion-input>
+          </ion-item>
+
+          <ion-text color="medium">Nama Ranting</ion-text>
+          <ion-item lines="none" class="input">
+            <ion-input></ion-input>
+          </ion-item>
+
+          <ion-text color="medium">Tentang</ion-text>
+          <quill-editor>
+            <div quill-editor-toolbar>
+              <span class="ql-formats">
+                <select class="ql-align" [title]="'Aligment'">
+                  <option selected></option>
+                  <option value="center"></option>
+                  <option value="right"></option>
+                  <option value="justify"></option>
+                </select>
+              </span>
+              <span class="ql-formats">
+                <select class="ql-header">
+                  <option value="1">Heading 1</option>
+                  <option value="2">Heading 2</option>
+                  <option value="3">Heading 3</option>
+                  <option value="4">Heading 4</option>
+                  <option value="5">Heading 5</option>
+                  <option value="6">Heading 6</option>
+                  <option selected>Normal</option>
+                </select>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-list" value="ordered"></button>
+                <button class="ql-list" value="bullet"></button>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-bold" [title]="'Bold'"></button>
+                <button class="ql-italic" [title]="'Italic'"></button>
+                <button class="ql-underline" [title]="'Underline'"></button>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-image" [title]="'Image'"></button>
+              </span>
+
+            </div>
+
+            <div class="ql-container" style="border-width: 0;">
+              <div class="ql-editor" [innerHTML]="byPassedHTMLString">
+              </div>
+            </div>
+          </quill-editor>
+
+
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div style="margin-top: 100px;"></div>
+
+          <div class="footer">
+            <ion-button color="primary" expand="block">
+              Simpan
+            </ion-button>
+          </div>
+
+
+
+</ion-content>

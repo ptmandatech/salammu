@@ -40,6 +40,26 @@ const routes: Routes = [
     path: 'profil',
     loadChildren: () => import('./profil/profil.module').then( m => m.ProfilPageModule)
   },
+  {
+    path: 'my-product',
+    loadChildren: () => import('./config/my-product/my-product.module').then( m => m.MyProductPageModule)
+  },
+  {
+    path: 'banner',
+    loadChildren: () => import('./config/banner/banner.module').then( m => m.BannerPageModule)
+  },
+  {
+    path: 'tambah-banner',
+    loadChildren: () => import('./config/tambah-banner/tambah-banner.module').then( m => m.TambahBannerPageModule)
+  },
+  {
+    path: 'my-video',
+    loadChildren: () => import('./config/my-video/my-video.module').then( m => m.MyVideoPageModule)
+  },
+  {
+    path: 'my-cr',
+    loadChildren: () => import('./config/my-cr/my-cr.module').then( m => m.MyCrPageModule)
+  },
 ];
 
 @NgModule({

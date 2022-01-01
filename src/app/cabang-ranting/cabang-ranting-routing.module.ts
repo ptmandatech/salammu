@@ -15,6 +15,10 @@ const routes: Routes = [
   {
     path: 'pencarian-cabangranting',
     loadChildren: () => import('./pencarian-cabangranting/pencarian-cabangranting.module').then( m => m.PencarianCabangrantingPageModule)
+  },
+  {
+    path: 'tambah-cabang-ranting',
+    loadChildren: () => import('./tambah-cabang-ranting/tambah-cabang-ranting.module').then( m => m.TambahCabangRantingPageModule)
   }
 ];
 
