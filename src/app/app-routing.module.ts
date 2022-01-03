@@ -64,6 +64,18 @@ const routes: Routes = [
     path: 'login',
     loadChildren: () => import('./auth/login/login.module').then( m => m.LoginPageModule)
   },
+  {
+    path: 'my-pengajian',
+    loadChildren: () => import('./config/my-pengajian/my-pengajian.module').then( m => m.MyPengajianPageModule)
+  },
+  {
+    path: 'register',
+    loadChildren: () => import('./auth/register/register.module').then( m => m.RegisterPageModule)
+  },
+  {
+    path: 'forgot-password',
+    loadChildren: () => import('./auth/forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule)
+  },
 ];
 
 @NgModule({

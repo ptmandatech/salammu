@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
+import { ForgotPasswordPage } from '../forgot-password/forgot-password.page';
+import { RegisterPage } from '../register/register.page';
 
 @Component({
   selector: 'app-login',
@@ -32,6 +34,24 @@ export class LoginPage implements OnInit {
     this.modalController.dismiss({
       'dismissed': true
     });
+  }
+
+  async modalRegister() {
+    const modal = await this.modalController.create({
+      component: RegisterPage,
+      mode: "md",
+    });
+    this.dismiss();
+    return await modal.present();
+  }
+
+  async modalForgot() {
+    const modal = await this.modalController.create({
+      component: ForgotPasswordPage,
+      mode: "md",
+    });
+    this.dismiss();
+    return await modal.present();
   }
 
 }

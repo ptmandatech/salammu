@@ -62,9 +62,6 @@ export class HomePage implements OnInit {
     const modal = await this.modalController.create({
       component: LoginPage,
       mode: "md",
-      cssClass: 'modal-class',
-      initialBreakpoint: 1,
-      breakpoints: [0, 1, 1],
     });
     return await modal.present();
   }

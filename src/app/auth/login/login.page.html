@@ -1,5 +1,10 @@
 <ion-header class="ion-no-border">
   <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -8,7 +13,7 @@
 
   <ion-row>
     <ion-col class="ion-text-center">
-      <img src="./assets/icon/logo.svg">
+      <img src="./assets/icon/logo.svg" width="40%">
     </ion-col>
   </ion-row>
 
@@ -32,9 +37,9 @@
 
 
         <div style="display: flex;">
-          <ion-button class="ion-text-capitalize" color="primary" fill="clear" size="small">Lupa Password</ion-button>
+          <ion-button class="ion-text-capitalize" color="primary" fill="clear" size="small" (click)="modalForgot()">Lupa Password</ion-button>
           <div style="flex-grow: 1;"></div>
-          <ion-button class="ion-text-capitalize" color="primary" fill="clear" size="small">Registrasi</ion-button>
+          <ion-button class="ion-text-capitalize" color="primary" fill="clear" size="small" (click)="modalRegister()">Registrasi</ion-button>
         </div>
 
           <ion-button color="primary" class="custom-button" (click)="login()">
