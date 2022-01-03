@@ -1,0 +1,72 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title class="ion-text-center">Tambah Pengajian</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear">
+        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-grid class="ion-no-padding">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-md="6">
+
+        <div class="ion-padding">
+
+          <ion-text color="medium">Nama Pengajian</ion-text>
+          <ion-item lines="none" class="input">
+            <ion-input></ion-input>
+          </ion-item>
+
+          <ion-text color="medium">Deskripsi pengajian</ion-text>
+          <ion-item lines="none" class="input">
+            <ion-textarea  rows="4" cols="20"></ion-textarea>
+          </ion-item>
+
+          <ion-text color="medium">Tanggal dan Jam Pengajian</ion-text>
+          <ion-item lines="none" class="input" button="true" id="open-date-input">
+            <ion-label>Tanggal:Jam</ion-label>
+            <ion-text slot="end">{{ dateValue }}</ion-text>
+            <ion-popover trigger="open-date-input" show-backdrop="false">
+              <ng-template>
+                <ion-datetime
+                  #popoverDatetime
+                  presentation="time-date"
+                  (ionChange)="dateValue = formatDate(popoverDatetime.value)"
+                ></ion-datetime>
+              </ng-template>
+            </ion-popover>
+          </ion-item>
+
+          <ion-text color="medium">Rumah</ion-text>
+          <ion-item lines="none" class="input">
+            <ion-input type="text"></ion-input>
+          </ion-item>
+
+          <ion-text color="medium">Lokasi Lengkap</ion-text>
+          <ion-item lines="none" class="input">
+            <ion-textarea  rows="4" cols="20"></ion-textarea>
+          </ion-item>
+
+          <ion-text color="medium">Pin Lokasi</ion-text>
+
+          <div style="margin-top: 100px;"></div>
+
+          <div class="footer">
+            <ion-button color="primary" expand="block">
+              Simpan
+            </ion-button>
+          </div>
+
+
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

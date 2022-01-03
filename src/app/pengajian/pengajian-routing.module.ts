@@ -11,6 +11,10 @@ const routes: Routes = [
   {
     path: 'detail-pengajian',
     loadChildren: () => import('./detail-pengajian/detail-pengajian.module').then( m => m.DetailPengajianPageModule)
+  },
+  {
+    path: 'tambah-pengajian',
+    loadChildren: () => import('./tambah-pengajian/tambah-pengajian.module').then( m => m.TambahPengajianPageModule)
   }
 ];
 
