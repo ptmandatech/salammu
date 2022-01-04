@@ -9,32 +9,35 @@
     </ion-buttons>
   </ion-toolbar>
 
+  <!-- harian -->
   <ion-toolbar color="primary" *ngIf="daily">
-    <ion-button color="light" slot="start" fill="clear" button-icon (click)="prev()">
+    <ion-button color="light" slot="start" fill="clear" button-icon (click)="prev('daily')">
     <ion-icon slot="icon-only" name="caret-back"></ion-icon>
     </ion-button>
     <ion-title class="date-title">{{selected | date:'dd, MMM y'}}</ion-title>
-    <ion-button color="light" slot="end" fill="clear" button-icon (click)="next()">
+    <ion-button color="light" slot="end" fill="clear" button-icon (click)="next('daily')">
     <ion-icon slot="icon-only" name="caret-forward"></ion-icon>
     </ion-button>
   </ion-toolbar>
 
+  <!-- mingguan -->
   <ion-toolbar color="primary" *ngIf="weekly">
-    <ion-button color="light" slot="start" fill="clear" button-icon>
+    <ion-button color="light" slot="start" fill="clear" button-icon (click)="prev('weekly')">
     <ion-icon slot="icon-only" name="caret-back"></ion-icon>
     </ion-button>
-    <ion-title class="date-title">1 - 7 Desember 2021</ion-title>
-    <ion-button color="light" slot="end" fill="clear" button-icon>
+    <ion-title class="date-title" *ngIf="timesSelected != undefined">{{timesSelected[0].date.gregorian | date:'dd'}} - {{timesSelected[timesSelected.length-1].date.gregorian | date:'dd'}} {{timesSelected[0].date.gregorian | date:'MMMM yyyy'}}</ion-title>
+    <ion-button color="light" slot="end" fill="clear" button-icon (click)="next('weekly')">
     <ion-icon slot="icon-only" name="caret-forward"></ion-icon>
     </ion-button>
   </ion-toolbar>
 
+  <!-- bulanan -->
   <ion-toolbar color="primary" *ngIf="monthly">
-    <ion-button color="light" slot="start" fill="clear" button-icon>
+    <ion-button color="light" slot="start" fill="clear" button-icon (click)="prev('monthly')">
     <ion-icon slot="icon-only" name="caret-back"></ion-icon>
     </ion-button>
-    <ion-title class="date-title">Desember 2021</ion-title>
-    <ion-button color="light" slot="end" fill="clear" button-icon>
+    <ion-title class="date-title" *ngIf="timesSelected != undefined">{{timesSelected[0].date.gregorian | date:'MMMM yyyy'}}</ion-title>
+    <ion-button color="light" slot="end" fill="clear" button-icon (click)="next('monthly')">
     <ion-icon slot="icon-only" name="caret-forward"></ion-icon>
     </ion-button>
   </ion-toolbar>
@@ -87,15 +90,15 @@
 
 
         <ion-grid *ngIf="weekly" class="ion-no-padding">
-          <ion-row class="ion-align-items-center" *ngFor="let n of [1,2,3,4,5,6,7]">
+          <ion-row class="ion-align-items-center" *ngFor="let n of timesSelected">
             <ion-col class="cal-cell bg-gray">
               <div class="centered">
-                <ion-text color="secondary" class="cal-date fs-10">{{n}} Des 2021</ion-text>
+                <ion-text color="secondary" class="cal-date fs-10">{{n.date.gregorian | date:'dd MMM yyyy'}}</ion-text>
               </div>
             </ion-col>
-            <ion-col class="cal-cell" *ngFor="let n of [0,1,2,3,4,5]">
+            <ion-col class="cal-cell" *ngFor="let t of n.timesParsed">
               <div class="centered">
-                <ion-text color="medium" class="cal-date fs-10">04.36</ion-text>
+                <ion-text color="medium" class="cal-date fs-10">{{t.time}}</ion-text>
               </div>
             </ion-col>
           </ion-row>
@@ -104,15 +107,15 @@
 
         <ion-grid *ngIf="monthly" class="ion-no-padding">
 
-          <ion-row class="ion-align-items-center" *ngFor="let n of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]">
+          <ion-row class="ion-align-items-center" *ngFor="let n of timesSelected">
             <ion-col class="cal-cell bg-gray">
               <div class="centered">
-                <ion-text color="secondary" class="cal-date fs-10">{{n}} Des 2021</ion-text>
+                <ion-text color="secondary" class="cal-date fs-10">{{n.date.gregorian | date:'dd MMM yyyy'}}</ion-text>
               </div>
             </ion-col>
-            <ion-col class="cal-cell" *ngFor="let n of [0,1,2,3,4,5]">
+            <ion-col class="cal-cell" *ngFor="let t of n.timesParsed">
               <div class="centered">
-                <ion-text color="medium" class="cal-date fs-10">04.36</ion-text>
+                <ion-text color="medium" class="cal-date fs-10">{{t.time}}</ion-text>
               </div>
             </ion-col>
           </ion-row>

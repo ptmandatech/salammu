@@ -41,6 +41,7 @@ export class HomePage implements OnInit {
     this.cekLogin();
     this.prayTime = await this.api.getToday();
     this.timesToday = await this.prayTime.datetime[0];
+    
     this.parseTime(this.timesToday);
     this.serverImg = this.common.photoBaseUrl+'products/';
     this.serverImgBanner = this.common.photoBaseUrl+'banners/';
@@ -93,9 +94,15 @@ export class HomePage implements OnInit {
     for(var i=0; i<times.length-1; i++) {
       this.data = {};
       let dt;
-      await this.checkTime(times[i], times[i+1]).then(res => {
-        return dt = res;
-      });
+      if(title[i] == 'Imsak') {
+        await this.checkTime('00:01', times[i]).then(res => {
+          return dt = res;
+        });
+      } else {
+        await this.checkTime(times[i], times[i+1]).then(res => {
+          return dt = res;
+        });
+      }
       if(title[i] == 'Asr') {
         title[i] = 'Ashar';
       } else if(title[i] == 'Dhuhr') {

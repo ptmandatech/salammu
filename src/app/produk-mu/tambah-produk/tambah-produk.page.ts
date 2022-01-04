@@ -76,13 +76,6 @@ export class TambahProdukPage implements OnInit {
       if(result)
       {
         this.images.push(result.data);
-        // fetch(result.data)
-        // .then(res => res.blob())
-        // .then(async blob => {
-        //   this.loadingAlert();
-        //   this.blobImage = blob;
-        //   this.images.push(result);
-        // });
       } else {
         this.loadingController.dismiss();
       } 

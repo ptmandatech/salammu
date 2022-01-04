@@ -10,6 +10,7 @@ import { DatePipe } from '@angular/common';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ModalJadwalComponent } from './jadwal-sholat/modal-jadwal/modal-jadwal.component';
+import { ModalKalenderComponent } from './pengajian/modal-kalender/modal-kalender.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ImageUploaderPageModule } from './image-uploader/image-uploader.module';
 import { ImageCropperModule } from 'ngx-image-cropper';
@@ -17,10 +18,12 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 @NgModule({
   declarations: [
     AppComponent, 
-    ModalJadwalComponent
+    ModalJadwalComponent,
+    ModalKalenderComponent
   ],
   entryComponents: [
-    ModalJadwalComponent
+    ModalJadwalComponent,
+    ModalKalenderComponent
   ],
   imports: [
     BrowserModule, 

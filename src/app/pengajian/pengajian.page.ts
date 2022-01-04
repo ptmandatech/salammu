@@ -48,18 +48,16 @@ export class PengajianPage implements OnInit {
     this.cal=res;
     this.week=Object.keys(res);
   }
-  next()
+  next(from)
   {
-      console.log(this.selected);
-      var cal=this.calendar.next(this.selected).data;
-      this.selected=this.calendar.next(this.selected).selected;
+      var cal=this.calendar.next(this.selected, from).data;
+      this.selected=this.calendar.next(this.selected, from).selected;
       this.parseCal(cal);
   }
-  prev()
+  prev(from)
   {
-      console.log(this.selected);
-      var cal=this.calendar.previous(this.selected).data;
-      this.selected=this.calendar.previous(this.selected).selected;
+      var cal=this.calendar.previous(this.selected, from).data;
+      this.selected=this.calendar.previous(this.selected, from).selected;
       this.parseCal(cal);
   }
 
@@ -71,17 +69,18 @@ export class PengajianPage implements OnInit {
      this.cellSelected[m+n]=true;
      var date=this.cal[m][n];
      this.selected=new Date(date.tahun,date.bulan-1,date.tanggal);
-     this.modalKelander();
+     this.modalKelander(this.selected);
   }
 
   //Modal Kalender
-  async modalKelander() {
+  async modalKelander(selected) {
     const modal = await this.modalController.create({
       component: ModalKalenderComponent,
       mode: "md",
       cssClass: 'modal-class',
       initialBreakpoint: 0.5,
       breakpoints: [0, 0.5, 1],
+      componentProps: {data:selected}
     });
     return await modal.present();
   }

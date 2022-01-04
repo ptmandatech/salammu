@@ -38,7 +38,6 @@ export class TambahPengajianPage implements OnInit {
   getDetailPengajian() {
     this.api.get('pengajian/find/'+this.id).then(res => {
       this.pengajianData = res;
-      console.log(res)
       this.dateValue = this.pengajianData.datetime;
     })
   }
@@ -50,7 +49,6 @@ export class TambahPengajianPage implements OnInit {
   save() {
     if(this.isCreated == true) {
       this.api.post('pengajian', this.pengajianData).then(res => {
-        console.log(res)
         if(res) {
           alert('Berhasil menambahkan data.');
           this.loading = false;
@@ -59,7 +57,20 @@ export class TambahPengajianPage implements OnInit {
       })
     } else {
       this.api.put('pengajian/'+this.id, this.pengajianData).then(res => {
-        console.log(res)
+        if(res) {
+          alert('Berhasil memperbarui data.');
+          this.loading = false;
+          this.router.navigate(['/my-pengajian']);
+        }
+      })
+    }
+  }
+
+  done() {
+    var conf = confirm('Jadwal pengajian sudah selesai?');
+    if (conf) {
+      this.pengajianData.status = 'done';
+      this.api.put('pengajian/'+this.id, this.pengajianData).then(res => {
         if(res) {
           alert('Berhasil memperbarui data.');
           this.loading = false;

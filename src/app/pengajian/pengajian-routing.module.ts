@@ -9,7 +9,7 @@ const routes: Routes = [
     component: PengajianPage
   },
   {
-    path: 'detail-pengajian',
+    path: 'detail-pengajian/:id',
     loadChildren: () => import('./detail-pengajian/detail-pengajian.module').then( m => m.DetailPengajianPageModule)
   },
   {

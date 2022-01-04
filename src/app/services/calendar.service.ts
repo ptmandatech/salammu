@@ -11,16 +11,35 @@ export class CalendarService {
 		var dt=new Date();
 		return this.calendar(dt);
 	}
-	next(dd)
+	
+	next(dd, from)
 	{
-		var d=new Date(dd.getFullYear(),dd.getMonth()+1,1);
-		return this.calendar(d);
+		if(from == 'daily') {
+			var d=new Date(dd.getFullYear(),dd.getMonth()+1,1);
+			return this.calendar(d);
+		} else if(from == 'weekly') {
+			var d=new Date(dd.getFullYear(),dd.getDay()+7,1);
+			return this.calendar(d);
+		} else if(from == 'monthly') {
+			var d=new Date(dd.getFullYear(),dd.getMonth()+1,1);
+			return this.calendar(d);
+		}
 	}
-	previous(dd)
+
+	previous(dd, from)
 	{
-		var d=new Date(dd.getFullYear(),dd.getMonth()-1,1);
-		return this.calendar(d);
+		if(from == 'daily') {
+			var d=new Date(dd.getFullYear(),dd.getMonth()-1,1);
+			return this.calendar(d);
+		} else if(from == 'weekly') {
+			var d=new Date(dd.getFullYear(),dd.getDay()-7,1);
+			return this.calendar(d);
+		} else if(from == 'monthly') {
+			var d=new Date(dd.getFullYear(),dd.getMonth()-1,1);
+			return this.calendar(d);
+		}
 	}
+
 	calendar(dt)
 	{
 		var delta=86400000;		

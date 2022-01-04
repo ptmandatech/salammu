@@ -29,11 +29,11 @@
           <!-- Segment kalender-->
           <div *ngSwitchCase="'kalender'" >
             <ion-toolbar>
-              <ion-button slot="start" fill="clear" button-icon (click)="prev()">
+              <ion-button slot="start" fill="clear" button-icon (click)="prev('monthly')">
               <ion-icon slot="icon-only" name="caret-back"></ion-icon>
               </ion-button>
               <ion-title class="date-title">{{selected | date:'dd, MMM y'}}</ion-title>
-              <ion-button slot="end" fill="clear" button-icon (click)="next()">
+              <ion-button slot="end" fill="clear" button-icon (click)="next('monthly')">
               <ion-icon slot="icon-only" name="caret-forward"></ion-icon>
               </ion-button>
             </ion-toolbar>

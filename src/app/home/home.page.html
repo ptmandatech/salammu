@@ -38,7 +38,7 @@
               <ion-row style="border-bottom: 1px solid #F2F2F2;">
                 <ion-col class="ion-text-center">
                   <ion-label *ngIf="timesToday != undefined">
-                    {{timesToday.date.gregorian | date: 'DDDD, dd MMMM yyyy' }}
+                    {{timesToday.date.gregorian | date: 'EEEE, dd MMMM yyyy' }}
                   </ion-label>
                   <ion-label *ngIf="timesToday == undefined">
                     <ion-skeleton-text animated></ion-skeleton-text>

@@ -56,13 +56,23 @@ export class ApiService {
     return data;
   }
 
-  async getWeek() {
+  async getThisWeek() {
     let data = await this.common.getTimes('this_week.json?city='+ this.city +'&school=1');
     return data;
   }
 
-  async getMonth() {
+  async getThisMonth() {
     let data = await this.common.getTimes('this_month.json?city='+ this.city +'&school=1');
+    return data;
+  }
+
+  async getWeek(start,end) {
+    let data = await this.common.getTimes('dates.json?city='+ this.city + '&start=' + start + '&end=' + end +'&school=1');
+    return data;
+  }
+
+  async getMonth(month) {
+    let data = await this.common.getTimes('month.json?city='+ this.city + '&month=' + month +'&school=1');
     return data;
   }
 

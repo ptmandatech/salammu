@@ -24,7 +24,6 @@ export class ProdukMUPage implements OnInit {
 
   ngOnInit() {
     this.serverImg = this.common.photoBaseUrl+'products/';
-    console.log(this.serverImg)
     this.getAllProducts();
   }
 
@@ -51,7 +50,6 @@ export class ProdukMUPage implements OnInit {
           this.listProductsTemp.push(res[i]);
         }
       }
-      console.log(this.listProducts)
     }
   }
 
