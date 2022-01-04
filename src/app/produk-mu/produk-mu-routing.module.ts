@@ -9,7 +9,7 @@ const routes: Routes = [
     component: ProdukMUPage
   },
   {
-    path: 'detail-produk',
+    path: 'detail-produk/:id',
     loadChildren: () => import('./detail-produk/detail-produk.module').then( m => m.DetailProdukPageModule)
   },
   {

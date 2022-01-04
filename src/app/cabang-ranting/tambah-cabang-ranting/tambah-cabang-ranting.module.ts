@@ -8,7 +8,7 @@ import { TambahCabangRantingPageRoutingModule } from './tambah-cabang-ranting-ro
 
 import { TambahCabangRantingPage } from './tambah-cabang-ranting.page';
 import { QuillModule } from 'ngx-quill';
-
+ 
 @NgModule({
   imports: [
     CommonModule,
@@ -20,7 +20,7 @@ import { QuillModule } from 'ngx-quill';
         syntax: true,
         toolbar: [
 
-        ]
+        ] 
       }
     }),
   ],

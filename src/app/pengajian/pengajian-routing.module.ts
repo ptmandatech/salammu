@@ -13,7 +13,7 @@ const routes: Routes = [
     loadChildren: () => import('./detail-pengajian/detail-pengajian.module').then( m => m.DetailPengajianPageModule)
   },
   {
-    path: 'tambah-pengajian',
+    path: 'tambah-pengajian/:id',
     loadChildren: () => import('./tambah-pengajian/tambah-pengajian.module').then( m => m.TambahPengajianPageModule)
   }
 ];

@@ -4,7 +4,7 @@
     <ion-title>produkMU</ion-title>
   </ion-toolbar>
   <ion-toolbar color="primary">
-    <ion-searchbar mode="ios" showCancelButton="never" placeholder="Cari produk"></ion-searchbar>
+    <ion-searchbar mode="ios" showCancelButton="never" [(ngModel)]="searchTerm" (ionChange)="searchChanged($event)" placeholder="Cari produk"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
@@ -14,36 +14,20 @@
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
 
-        <ion-row class="ion-no-padding" *ngFor="let n of [1,2,3,4,5,6]">
-          <ion-col size="6">
-            <ion-card class="rounded-15" routerLink="/produk-mu/detail-produk">
-              <img src="./assets/imgs/meja-set.jpg" class="object-bg" style="height: 150px;">
+        <ion-row class="ion-no-padding">
+          <ion-col size="6" *ngFor="let n of listProducts">
+            <ion-card class="rounded-15" [routerLink]="['/produk-mu/detail-produk', n.id]">
+              <img src="{{n.images.length == 0 ? './assets/imgs/pisang-coklat.jpg':(serverImg+n.images[0])}}" class="object-bg" style="height: 150px;">
               <ion-card-content>
                 <ion-label>
                   <ion-text color="primary">
-                    <h2>Furniture Set</h2>
+                    <h2>{{n.name}}</h2>
                   </ion-text>
                   <ion-text color="medium">
-                    <p class="text-elipsis">Furniture set yang di desain khusus keluarga</p>
+                    <p class="text-elipsis">{{n.descriptions}}<p>
                   </ion-text>
                 </ion-label>
-                <h2 style="margin-top: 20px;">Rp.1200.000</h2>
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
-          <ion-col size="6">
-            <ion-card class="rounded-15">
-              <img src="./assets/imgs/pisang-coklat.jpg" class="object-bg" style="height: 150px;">
-              <ion-card-content>
-                <ion-label>
-                  <ion-text color="primary">
-                    <h2>Pisang Coklat</h2>
-                  </ion-text>
-                  <ion-text color="medium">
-                    <p class="text-elipsis">Paduan coklat dan pisang</p>
-                  </ion-text>
-                </ion-label>
-                <h2 style="margin-top: 20px;">Rp.20.000</h2>
+                <h2 style="margin-top: 20px;">Rp.{{n.price | number:'1.0-0'}}</h2>
               </ion-card-content>
             </ion-card>
           </ion-col>

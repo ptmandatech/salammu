@@ -11,6 +11,8 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ModalJadwalComponent } from './jadwal-sholat/modal-jadwal/modal-jadwal.component';
 import { HttpClientModule } from '@angular/common/http';
+import { ImageUploaderPageModule } from './image-uploader/image-uploader.module';
+import { ImageCropperModule } from 'ngx-image-cropper';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,8 @@ import { HttpClientModule } from '@angular/common/http';
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
+    ImageUploaderPageModule,
+    ImageCropperModule,
   ],
   providers: [
     DatePipe,

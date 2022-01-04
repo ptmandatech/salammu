@@ -24,30 +24,30 @@
       <p>Email</p>
     </ion-text>
     <ion-item class="input">
-      <ion-input type="email"></ion-input>
+      <ion-input type="email" [(ngModel)]="user.email" required #email="ngModel" placeholder="Enter your email"></ion-input>
     </ion-item>
+    <p *ngIf="submited == true && email.invalid" style="color: red;">Username / Email can not be empty</p>
 
     <ion-text color="medium">
       <p>Password</p>
     </ion-text>
     <ion-item class="input">
-      <ion-input type="{{type}}" placeholder="Enter your password"></ion-input>
+      <ion-input type="{{type}}" [(ngModel)]="user.password" required #password="ngModel" placeholder="Enter your password"></ion-input>
       <ion-icon name="{{type == 'password' ? 'eye-outline':'eye-off-outline'}}" (click)="show()" slot="end" color="medium"></ion-icon>
     </ion-item>
+    <p *ngIf="submited == true && password.invalid" style="color: red;">Password can not be empty</p>
 
-
-        <div style="display: flex;">
-          <ion-button class="ion-text-capitalize" color="primary" fill="clear" size="small" (click)="modalForgot()">Lupa Password</ion-button>
-          <div style="flex-grow: 1;"></div>
-          <ion-button class="ion-text-capitalize" color="primary" fill="clear" size="small" (click)="modalRegister()">Registrasi</ion-button>
-        </div>
-
-          <ion-button color="primary" class="custom-button" (click)="login()">
-            Masuk
-          </ion-button>
-
-
+    <div style="display: flex;">
+      <ion-button class="ion-text-capitalize" color="primary" fill="clear" size="small" (click)="modalForgot()">Lupa Password</ion-button>
+      <div style="flex-grow: 1;"></div>
+      <ion-button class="ion-text-capitalize" color="primary" fill="clear" size="small" (click)="modalRegister()">Registrasi</ion-button>
     </div>
+    <p *ngIf="invalid == true" style="color: red; text-align: center;">Invalid email or password</p>
+
+    <ion-button color="primary" class="custom-button" [disabled]="loading" (click)="login(email, password)">
+      {{loading ? 'Mohon Tunggu...':'Masuk'}}
+    </ion-button>
+  </div>
 
 
 </ion-content>

@@ -13,9 +13,9 @@
 
             <ion-row>
               <ion-col class="ion-text-center">
-                <img src="./assets/imgs/blank-profil.png" class="img-profil">
+                <img src="{{userData.image == null ? image:(serverImg+userData.image)}}" class="img-profil">
                 <br>
-                <ion-button fill="clear">
+                <ion-button fill="clear" (click)="pilihFoto()">
                   Ganti foto
                 </ion-button>
               </ion-col>
@@ -23,24 +23,29 @@
 
             <ion-text color="medium">Nama</ion-text>
             <ion-item lines="none" class="input">
-              <ion-input></ion-input>
+              <ion-input [(ngModel)]="userData.name" required #name="ngModel" placeholder="Enter your name"></ion-input>
+            </ion-item>
+
+            <ion-text color="medium">Email</ion-text>
+            <ion-item lines="none" class="input">
+              <ion-input input="text" [(ngModel)]="userData.email" required #email="ngModel" placeholder="Enter your email"></ion-input>
             </ion-item>
 
             <ion-text color="medium">Nomor HP</ion-text>
             <ion-item lines="none" class="input">
-              <ion-input input="number"></ion-input>
+              <ion-input input="text" [(ngModel)]="userData.phone" required #phone="ngModel" placeholder="Enter your phone"></ion-input>
             </ion-item>
 
             <ion-text color="medium">Alamat</ion-text>
             <ion-item lines="none" class="input">
-              <ion-textarea  rows="4" cols="20"></ion-textarea>
+              <ion-textarea rows="4" [(ngModel)]="userData.address" required #address="ngModel" placeholder="Enter your address" cols="20"></ion-textarea>
             </ion-item>
 
             <div style="margin-top: 100px;"></div>
 
           <div class="footer">
-            <ion-button color="primary" expand="block">
-              Simpan
+            <ion-button color="primary" expand="block" [disabled]="loading || name.invalid || email.invalid || phone.invalid" (click)="uploadPhoto()">
+              {{loading ? 'Mohon tunggu...':'Simpan'}}
             </ion-button>
           </div>
 

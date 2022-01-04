@@ -15,28 +15,28 @@
 
           <ion-text color="medium">Nama Produk</ion-text>
           <ion-item lines="none" class="input">
-            <ion-input></ion-input>
+            <ion-input [(ngModel)]="productData.name" required #name="ngModel" placeholder="Product name"></ion-input>
           </ion-item>
 
           <ion-text color="medium">Harga</ion-text>
           <ion-item lines="none" class="input">
-            <ion-input type="number"></ion-input>
+            <ion-input type="number" [(ngModel)]="productData.price" required #price="ngModel" placeholder="Product price"></ion-input>
           </ion-item>
 
           <ion-text color="medium">Deskripsi Produk</ion-text>
           <ion-item lines="none" class="input">
-            <ion-textarea  rows="4" cols="20"></ion-textarea>
+            <ion-textarea  rows="4" cols="20" [(ngModel)]="productData.descriptions" required #descriptions="ngModel" placeholder="Product descriptions"></ion-textarea>
           </ion-item>
 
           <ion-text color="medium">Foto Produk</ion-text>
           <ion-row>
-            <ion-col size="4" style="margin-right: 5px;">
-              <img src="./assets/imgs/meja-set.jpg" style="width: 100%">
-              <ion-button size="small" fill="clear" style="position: absolute;top: 0; right: 0;" color="danger" shape="rounded">
+            <ion-col size="4" style="margin-right: 5px;" *ngFor="let n of images; let idx=index">
+              <img src="{{n}}" style="width: 100%">
+              <ion-button size="small" fill="clear" (click)="removeImg(idx)" style="position: absolute;top: 0; right: 0;" color="danger" shape="rounded">
                 <ion-icon name="close-outline"></ion-icon>
               </ion-button>
             </ion-col>
-            <ion-col size="4" style="margin-right: 5px;">
+            <ion-col size="4" style="margin-right: 5px;" (click)="pilihFoto()">
               <img src="assets/imgs/add_image.png" style="width: 100%">
             </ion-col>
           </ion-row>
@@ -44,8 +44,8 @@
           <div style="margin-top: 100px;"></div>
 
           <div class="footer">
-            <ion-button color="primary" expand="block">
-              Simpan
+            <ion-button color="primary" expand="block" [disabled]="loading || name.invalid || price.invalid || descriptions.invalid || images.length == 0" (click)="uploadPhoto()">
+              {{loading ? 'Mohon tunggu...':'Simpan'}}
             </ion-button>
           </div>
 

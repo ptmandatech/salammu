@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button [disabled]="loading" (click)="dismiss()">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>     
+    </ion-buttons>
+    <ion-title>Edit Foto</ion-title>
+
+    <ion-buttons slot="primary" >
+      <ion-button (click)="uploadImage()" *ngIf="!loading" >
+        <ion-icon slot="icon-only" name="checkmark"></ion-icon>
+      </ion-button>     
+      <ion-spinner slot="primary" *ngIf="loading"></ion-spinner>
+    </ion-buttons>
+
+   
+
+
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <image-cropper [imageURL]="imageData" [maintainAspectRatio]="false" format="png"
+        (imageCropped)="imageCropped($event)" [resizeToWidth]="500" (imageLoaded)="imageLoaded()" (cropperReady)="cropperReady()"
+        (loadImageFailed)="loadImageFailed()"></image-cropper>
+
+</ion-content>

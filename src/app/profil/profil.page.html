@@ -12,7 +12,7 @@
 
 <ion-content>
 
-  <ion-grid class="ion-no-padding">
+  <ion-grid *ngIf="userData != undefined" class="ion-no-padding">
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
 
@@ -20,10 +20,10 @@
         <div class="ion-padding">
             <ion-row class="card-profil">
               <ion-col class="ion-text-center">
-                <img src="./assets/imgs/blank-profil.png" class="img-profil">
+                <img src="{{userData.image == null ? './assets/imgs/blank-profil.png':(serverImg+userData.image)}}" class="img-profil">
                 <ion-label>
-                  <h2>Arif Muhammad</h2>
-                  <p>0877736629</p>
+                  <h2>{{userData.name}}</h2>
+                  <p>{{userData.phone}}</p>
                 </ion-label>
               </ion-col>
             </ion-row>

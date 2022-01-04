@@ -15,3 +15,4 @@ export class CabangRantingPage implements OnInit {
   }
 
 }
+ 

@@ -1,4 +1,13 @@
 <ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+  
   <ion-grid class="ion-no-padding">
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
@@ -8,11 +17,11 @@
               <ion-icon slot="icon-only" name="location-outline"></ion-icon>
               <span>Yogyakarta</span>
             </ion-button>
-            <ion-item class="fill-0" lines="none">
+            <ion-item class="fill-0" lines="none" *ngIf="nextTimeTimer != undefined">
               <ion-label>
                 <ion-text color="light">
-                  <h1>Ashar</h1>
-                  <p>2 Jam 33 menit lagi</p>
+                  <h1>{{nextTime.title == undefined ? '':nextTime.title}}</h1>
+                  <p>{{nextTimeTimer == undefined ? '':nextTimeTimer + ' lagi'}}</p>
                 </ion-text>
               </ion-label>
             </ion-item>
@@ -36,12 +45,12 @@
                   </ion-label>
                 </ion-col>
               </ion-row>
-              <ion-row>
-                <ion-col class="ion-text-center">
-                  <ion-label class="fs-10" *ngIf="timesToday != undefined">
-                    <ion-text color="{{checkTime(timesToday.times.Imsak, timesToday.times.Fajr) ? 'primary':'medium'}}">Imsak</ion-text>
-                    <ion-text color="{{checkTime(timesToday.times.Imsak, timesToday.times.Fajr) ? 'primary':'dark'}}">
-                      <p>{{timesToday.times.Imsak}}</p>
+              <ion-row *ngIf="timesToday != undefined">
+                <ion-col class="ion-text-center" *ngFor="let n of listTimes">
+                  <ion-label class="fs-10">
+                    <ion-text color="{{n.title_color}}">{{n.title}}</ion-text>
+                    <ion-text color="{{n.time_color}}">
+                      <p>{{n.time}}</p>
                     </ion-text>
                     <ion-text color="dark" *ngIf="timesToday == undefined">
                       <p><ion-skeleton-text animated></ion-skeleton-text></p>
@@ -53,86 +62,7 @@
                     </ion-text>
                   </ion-label>
                 </ion-col>
-                <ion-col class="ion-text-center">
-                  <ion-label class="fs-10" *ngIf="timesToday != undefined">
-                    <ion-text color="{{checkTime(timesToday.times.Fajr, timesToday.times.Sunrise) ? 'primary':'medium'}}">Subuh</ion-text>
-                    <ion-text color="{{checkTime(timesToday.times.Fajr, timesToday.times.Sunrise) ? 'primary':'dark'}}">
-                      <p>{{timesToday.times.Fajr}}</p>
-                    </ion-text>
-                    <ion-text color="dark" *ngIf="timesToday == undefined">
-                      <p><ion-skeleton-text animated></ion-skeleton-text></p>
-                    </ion-text>
-                  </ion-label>
-                  <ion-label class="fs-10" *ngIf="timesToday == undefined">
-                    <ion-text color="dark">
-                      <p><ion-skeleton-text animated></ion-skeleton-text></p>
-                    </ion-text>
-                  </ion-label>
-                </ion-col>
-                <ion-col class="ion-text-center">
-                  <ion-label class="fs-10" *ngIf="timesToday != undefined">
-                    <ion-text color="{{checkTime(timesToday.times.Dhuhr, timesToday.times.Asr) ? 'primary':'medium'}}">Dhuhur</ion-text>
-                    <ion-text color="{{checkTime(timesToday.times.Dhuhr, timesToday.times.Asr) ? 'primary':'dark'}}">
-                      <p>{{timesToday.times.Dhuhr}}</p>
-                    </ion-text>
-                    <ion-text color="dark" *ngIf="timesToday == undefined">
-                      <p><ion-skeleton-text animated></ion-skeleton-text></p>
-                    </ion-text>
-                  </ion-label>
-                  <ion-label class="fs-10" *ngIf="timesToday == undefined">
-                    <ion-text color="dark">
-                      <p><ion-skeleton-text animated></ion-skeleton-text></p>
-                    </ion-text>
-                  </ion-label>
-                </ion-col>
-                <ion-col class="ion-text-center">
-                  <ion-label class="fs-10" *ngIf="timesToday != undefined">
-                    <ion-text color="{{checkTime(timesToday.times.Asr, timesToday.times.Maghrib) ? 'primary':'medium'}}">Ashar</ion-text>
-                    <ion-text color="{{checkTime(timesToday.times.Asr, timesToday.times.Maghrib) ? 'primary':'dark'}}">
-                      <p>{{timesToday.times.Asr}}</p>
-                    </ion-text>
-                    <ion-text color="dark" *ngIf="timesToday == undefined">
-                      <p><ion-skeleton-text animated></ion-skeleton-text></p>
-                    </ion-text>
-                  </ion-label>
-                  <ion-label class="fs-10" *ngIf="timesToday == undefined">
-                    <ion-text color="dark">
-                      <p><ion-skeleton-text animated></ion-skeleton-text></p>
-                    </ion-text>
-                  </ion-label>
-                </ion-col>
-                <ion-col class="ion-text-center">
-                  <ion-label class="fs-10" *ngIf="timesToday != undefined">
-                    <ion-text color="{{checkTime(timesToday.times.Maghrib, timesToday.times.Isha) ? 'primary':'medium'}}">Maghrib</ion-text>
-                    <ion-text color="{{checkTime(timesToday.times.Maghrib, timesToday.times.Isha) ? 'primary':'dark'}}">
-                      <p>{{timesToday.times.Maghrib}}</p>
-                    </ion-text>
-                    <ion-text color="dark" *ngIf="timesToday == undefined">
-                      <p><ion-skeleton-text animated></ion-skeleton-text></p>
-                    </ion-text>
-                  </ion-label>
-                  <ion-label class="fs-10" *ngIf="timesToday == undefined">
-                    <ion-text color="dark">
-                      <p><ion-skeleton-text animated></ion-skeleton-text></p>
-                    </ion-text>
-                  </ion-label>
-                </ion-col>
-                <ion-col class="ion-text-center">
-                  <ion-label class="fs-10" *ngIf="timesToday != undefined">
-                    <ion-text color="{{checkTime(timesToday.times.Isha, '23:59') ? 'primary':'medium'}}">Isya</ion-text>
-                    <ion-text color="{{checkTime(timesToday.times.Isha, '23:59') ? 'primary':'dark'}}">
-                      <p>{{timesToday.times.Isha}}</p>
-                    </ion-text>
-                    <ion-text color="dark" *ngIf="timesToday == undefined">
-                      <p><ion-skeleton-text animated></ion-skeleton-text></p>
-                    </ion-text>
-                  </ion-label>
-                  <ion-label class="fs-10" *ngIf="timesToday == undefined">
-                    <ion-text color="dark">
-                      <p><ion-skeleton-text animated></ion-skeleton-text></p>
-                    </ion-text>
-                  </ion-label>
-                </ion-col>
+                
               </ion-row>
             </div>
           </div>
@@ -191,35 +121,19 @@
             </ion-item>
 
             <ion-row class="ion-no-padding">
-              <ion-col size="6">
-                <ion-card class="rounded-15" routerLink="/produk-mu/detail-produk">
-                  <img src="./assets/imgs/meja-set.jpg" class="object-bg" style="height: 150px;">
+              <ion-col size="6" *ngFor="let n of listProducts">
+                <ion-card class="rounded-15" [routerLink]="['/produk-mu/detail-produk', n.id]">
+                  <img src="{{n.images.length == 0 ? './assets/imgs/pisang-coklat.jpg':(serverImg+n.images[0])}}" class="object-bg" style="height: 150px;">
                   <ion-card-content>
                     <ion-label>
                       <ion-text color="primary">
-                        <h2>Furniture Set</h2>
+                        <h2>{{n.name}}</h2>
                       </ion-text>
                       <ion-text color="medium">
-                        <p class="text-elipsis">Furniture set yang di desain khusus keluarga</p>
+                        <p class="text-elipsis">{{n.descriptions}}<p>
                       </ion-text>
                     </ion-label>
-                    <h2 style="margin-top: 20px;">Rp.1200.000</h2>
-                  </ion-card-content>
-                </ion-card>
-              </ion-col>
-              <ion-col size="6">
-                <ion-card class="rounded-15" routerLink="/produk-mu/detail-produk">
-                  <img src="./assets/imgs/pisang-coklat.jpg" class="object-bg" style="height: 150px;">
-                  <ion-card-content>
-                    <ion-label>
-                      <ion-text color="primary">
-                        <h2>Pisang Coklat</h2>
-                      </ion-text>
-                      <ion-text color="medium">
-                        <p class="text-elipsis">Paduan coklat dan pisang</p>
-                      </ion-text>
-                    </ion-label>
-                    <h2 style="margin-top: 20px;">Rp.20.000</h2>
+                    <h2 style="margin-top: 20px;">Rp.{{n.price | number:'1.0-0'}}</h2>
                   </ion-card-content>
                 </ion-card>
               </ion-col>

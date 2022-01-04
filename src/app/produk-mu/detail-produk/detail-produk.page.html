@@ -11,14 +11,11 @@
 
   <ion-grid class="ion-no-padding">
     <ion-row class="ion-justify-content-center">
-      <ion-col size-md="6">
+      <ion-col size-md="6" *ngIf="detailProduct != undefined">
 
         <ion-slides pager="true" [options]="slideOpts">
-          <ion-slide>
-              <img src="./assets/imgs/meja-set.jpg">
-          </ion-slide>
-          <ion-slide>
-            <img src="./assets/imgs/pisang-coklat.jpg" >
+          <ion-slide *ngFor="let n of detailProduct.images">
+              <img src="{{serverImg+n}}">
           </ion-slide>
         </ion-slides>
 
@@ -27,9 +24,9 @@
         <ion-item>
           <ion-label>
             <ion-text color="primary">
-              <h1>Rp.1200.000</h1>
+              <h1>Rp.{{detailProduct.price | number:'1.0-0'}}</h1>
             </ion-text>
-            <p>Furniture Set</p>
+            <p>{{detailProduct.name}}</p>
           </ion-label>
         </ion-item>
 
@@ -37,13 +34,7 @@
           <ion-label>
             <h3>Deskripsi</h3>
             <p class="ion-text-wrap">
-              Beras Slyp Super
-              Kualitas Terbaik
-              Nasi Pulen
-              Beras Alami Tanpa 3P (Pengawet, Pewarna, Pewangi)
-              Isi Berat Beras 1 KG
-              Silahkan diorder gan
-              Happy shopping
+              {{detailProduct.descriptions}}
             </p>
           </ion-label>
         </ion-item>
@@ -51,7 +42,7 @@
         <div style="margin-top: 100px;"></div>
 
         <div class="footer">
-          <ion-button color="primary" expand="block">
+          <ion-button color="primary" expand="block" (click)="chatSeller()">
             Chat Penjual
           </ion-button>
         </div>
