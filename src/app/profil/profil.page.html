@@ -75,7 +75,7 @@
             </ion-item>
           </ion-card>
 
-          <ion-card class="rounded-15">
+          <ion-card class="rounded-15" routerLink="/change-password">
             <ion-item lines="none" detail>
               <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
               <ion-label>
@@ -84,7 +84,7 @@
             </ion-item>
           </ion-card>
 
-          <ion-card class="rounded-15">
+          <ion-card class="rounded-15" (click)="logout()">
             <ion-item lines="none" detail>
               <ion-icon color="danger" slot="start" name="exit-outline"></ion-icon>
               <ion-label>

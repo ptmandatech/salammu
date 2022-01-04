@@ -7,7 +7,7 @@
       refreshingText="Refreshing...">
     </ion-refresher-content>
   </ion-refresher>
-  
+
   <ion-grid class="ion-no-padding">
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
@@ -69,19 +69,9 @@
 
           <div class="container">
             <ion-slides pager="true" [options]="slideOpts" class="ion-padding" style="margin-top: 20px;">
-              <ion-slide>
-                <a href="https://muhammadiyah.or.id/">
-                  <img src="./assets/imgs/slide1.png" class="object-bg rounded-1" height="150">
-                </a>
-              </ion-slide>
-              <ion-slide>
-                <a href="https://suaramuhammadiyah.id/">
-                  <img src="./assets/imgs/slide2.png" class="object-bg rounded-1" height="150">
-                </a>
-              </ion-slide>
-              <ion-slide>
-                <a href="https://lazismu.org/">
-                  <img src="./assets/imgs/slide3.png" class="object-bg rounded-1" height="150">
+              <ion-slide *ngFor="let n of listBanners">
+                <a href="{{n.url}}">
+                  <img src="{{n.image == undefined ? './assets/imgs/slide1.png':(serverImgBanner+n.image)}}" class="object-bg rounded-1" height="150">
                 </a>
               </ion-slide>
             </ion-slides>

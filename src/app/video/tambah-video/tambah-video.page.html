@@ -13,20 +13,25 @@
 
         <ion-text color="medium">Judul Video</ion-text>
         <ion-item lines="none" class="input">
-          <ion-input></ion-input>
+          <ion-input [(ngModel)]="videoData.title" required #title="ngModel" placeholder="Video title"></ion-input>
         </ion-item>
 
         <ion-text color="medium">Deskripsi Video</ion-text>
           <ion-item lines="none" class="input">
-            <ion-textarea  rows="4" cols="20"></ion-textarea>
+            <ion-textarea [(ngModel)]="videoData.descriptions" required #descriptions="ngModel" placeholder="Video descriptions" rows="4" cols="20"></ion-textarea>
           </ion-item>
 
         <ion-text color="medium">Url</ion-text>
         <ion-item lines="none" class="input">
-          <ion-input></ion-input>
+          <ion-input [(ngModel)]="videoData.url" required #url="ngModel" placeholder="Video url"></ion-input>
         </ion-item>
-        <ion-row>
+        <ion-row *ngIf="image != undefined">
           <ion-col class="ion-text-center" style="border: dashed 1px #40A083; border-radius: 10px;">
+            <img src="{{image}}"/>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col class="ion-text-center" style="border: dashed 1px #40A083; border-radius: 10px;" (click)="pilihFoto()">
             <ion-label>
               <ion-icon name="camera-outline" size="large" color="primary"></ion-icon>
               <ion-text color="primary">
@@ -41,8 +46,8 @@
         <div style="margin-top: 100px;"></div>
 
         <div class="footer">
-          <ion-button color="primary" expand="block">
-            Simpan
+          <ion-button color="primary" [disabled]="loading || title.invalid || url.invalid || image == undefined" (click)="uploadPhoto()" expand="block">
+            {{loading ? 'Mohon tunggu...':'Simpan'}}
           </ion-button>
         </div>
 

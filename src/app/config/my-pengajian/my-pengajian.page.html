@@ -24,7 +24,7 @@
               <p class="ion-text-wrap">Lokasi: {{n.location}}</p>
             </ion-text>
             <ion-text color="primary">
-              <p>Dimulai Pukul {{n.datetime | date: 'H:mm'}}</p>
+              <p class="ion-text-wrap">Dimulai {{n.datetime | date: 'dd MMMM yyyy'}} Pukul {{n.datetime | date: 'H:mm'}}</p>
             </ion-text>
             <ion-badge color="{{n.status == 'soon' ? 'primary':'danger'}}">{{n.status == 'soon' ? 'Akan datang':'Selesai'}}</ion-badge>
           </ion-label>
@@ -48,14 +48,21 @@
 <ion-popover trigger="popover" [dismissOnSelect]="true" side="bottom" alignment="end">
   <ng-template>
     <ion-content>
-      <ion-item lines="none">
+      <ion-item lines="none" (click)="filterData('all')">
+        <ion-label>
+          <ion-text>
+            Semua
+          </ion-text>
+        </ion-label>
+      </ion-item>
+      <ion-item lines="none" (click)="filterData('soon')">
         <ion-label>
           <ion-text>
             Akan Datang
           </ion-text>
         </ion-label>
       </ion-item>
-      <ion-item lines="none">
+      <ion-item lines="none" (click)="filterData('done')">
         <ion-label>
           <ion-text>
             Selesai

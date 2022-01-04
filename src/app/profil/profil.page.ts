@@ -56,4 +56,13 @@ export class ProfilPage implements OnInit {
     })
   }
 
+  logout() {
+    var conf = confirm('Anda yakin ingin keluar dari akun ini?');
+    if (conf) {
+      localStorage.removeItem('userSalammu');
+      localStorage.removeItem('salammuToken');
+      this.router.navigate(['/login']);
+    }
+  }
+
 }

@@ -60,4 +60,20 @@ export class MyPengajianPage implements OnInit {
     });
   }
 
+  filterData(status) {
+    if(status == 'all') {
+      this.initializeItems();
+    } else {
+      this.initializeItems();
+      this.listPengajian = this.listPengajian.filter(pengajian => {
+        if (pengajian.status) {
+          if (pengajian.status == status) {
+            return true;
+          }
+          return false;
+        }
+      });
+    }
+  }
+
 }

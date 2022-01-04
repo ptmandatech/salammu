@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { LoginPage } from '../auth/login/login.page';
 import { ApiService } from '../services/api.service';
@@ -21,36 +22,61 @@ export class HomePage implements OnInit {
 
   dateNow:any;
   listProducts:any = [];
+  listBanners:any = [];
+  serverImgBanner:any;
   serverImg: any;
+  userData: any;
   constructor(
     public common: CommonService,
     private api: ApiService,
     private datePipe: DatePipe,
     public modalController: ModalController,
+    private router: Router
   ) {}
 
   prayTime:any;
   timesToday:any;
   async ngOnInit() {
     this.dateNow = new Date();
+    this.cekLogin();
     this.prayTime = await this.api.getToday();
     this.timesToday = await this.prayTime.datetime[0];
     this.parseTime(this.timesToday);
     this.serverImg = this.common.photoBaseUrl+'products/';
+    this.serverImgBanner = this.common.photoBaseUrl+'banners/';
     this.getAllProducts();
+    this.getAllBanners();
+  }
+
+  cekLogin()
+  {    
+    this.api.me().then(res=>{
+      this.userData = res;
+    }, error => {
+      console.log(error);
+    })
   }
 
   async doRefresh(event) {
     this.listProducts = [];
+    this.listBanners = [];
     this.listTimes = [];
     this.prayTime = await this.api.getToday();
     this.timesToday = await this.prayTime.datetime[0];
     this.parseTime(this.timesToday);
     this.serverImg = this.common.photoBaseUrl+'products/';
+    this.serverImgBanner = this.common.photoBaseUrl+'banners/';
     this.getAllProducts();
+    this.getAllBanners();
     setTimeout(() => {
       event.target.complete();
     }, 2000);
+  }
+
+  getAllBanners() {
+    this.api.get('banners').then(res => {
+      this.listBanners = res;
+    })
   }
 
   listTimes:any = [];
@@ -159,11 +185,15 @@ export class HomePage implements OnInit {
   }
 
   async modalLogin() {
-    const modal = await this.modalController.create({
-      component: LoginPage,
-      mode: "md",
-    });
-    return await modal.present();
+    if(this.userData == undefined) {
+      const modal = await this.modalController.create({
+        component: LoginPage,
+        mode: "md",
+      });
+      return await modal.present();
+    } else {
+      this.router.navigate(['/profil']);
+    }
   }
 
   getAllProducts() {

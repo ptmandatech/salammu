@@ -73,7 +73,6 @@ export class TambahPengajianPage implements OnInit {
     var conf = confirm('Anda yakin ingin menghapus data?');
     if (conf) {
       this.api.delete('pengajian/'+this.id).then(res => {
-        console.log(res)
         if(res) {
           alert('Berhasil menghapus data.');
           this.loading = false;

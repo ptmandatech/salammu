@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-back-button slot="start"></ion-back-button>
-    <ion-title>Tambah Cabang/Ranting</ion-title>
+    <ion-title>Tambah {{category == 'cabang' ? 'Cabang':'Ranting'}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -12,24 +12,28 @@
 
         <ion-text color="medium">Pilih Kategori</ion-text>
           <ion-item lines="none" class="input">
-              <ion-select [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" interface="popover" placeholder="Pilih kategori">
-                <ion-select-option *ngFor="let n of ['Cabang', 'Ranting']"  value="{{n}}">{{n}}</ion-select-option>
+              <ion-select [(ngModel)]="crData.category" required #category="ngModel" placeholder="Select category" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" interface="popover" placeholder="Pilih kategori">
+                <ion-select-option *ngFor="let n of ['cabang', 'ranting']" value="{{n}}">{{n}}</ion-select-option>
               </ion-select>
               <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
           </ion-item>
 
-          <ion-text color="medium">Nama Cabang</ion-text>
-          <ion-item lines="none" class="input">
-            <ion-input></ion-input>
+          <ion-text color="medium" *ngIf="crData.category != undefined">{{crData.category == 'cabang' ? 'Nama Cabang':'Nama Ranting'}}</ion-text>
+          <ion-item *ngIf="crData.category == 'cabang'" lines="none" class="input">
+            <ion-input [(ngModel)]="crData.name" required #name="ngModel" placeholder="Cabang name"></ion-input>
           </ion-item>
 
-          <ion-text color="medium">Nama Ranting</ion-text>
+          <ion-item *ngIf="crData.category == 'ranting'" lines="none" class="input">
+            <ion-input [(ngModel)]="crData.name" required #name="ngModel" placeholder="Ranting name"></ion-input>
+          </ion-item>
+
+          <ion-text color="medium">Alamat</ion-text>
           <ion-item lines="none" class="input">
-            <ion-input></ion-input>
+            <ion-input [(ngModel)]="crData.address" required #address="ngModel" placeholder="Cr address"></ion-input>
           </ion-item>
 
           <ion-text color="medium">Tentang</ion-text>
-          <quill-editor>
+          <quill-editor [(ngModel)]="crData.about" required #about="ngModel" placeholder="Cr about">
             <div quill-editor-toolbar>
               <span class="ql-formats">
                 <select class="ql-align" [title]="'Aligment'">
@@ -80,8 +84,8 @@
   <div style="margin-top: 100px;"></div>
 
           <div class="footer">
-            <ion-button color="primary" expand="block">
-              Simpan
+            <ion-button color="primary" expand="block" [disabled]="loading" (click)="save()">
+              {{loading ? 'Mohon tunggu...':'Simpan'}}
             </ion-button>
           </div>
 

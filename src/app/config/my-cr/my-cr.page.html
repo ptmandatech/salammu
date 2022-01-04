@@ -34,13 +34,13 @@
 
           <!-- Segment Cabang-->
           <div *ngSwitchCase="'cabang'" >
-            <ion-item detail *ngFor="let n of [1,2,3,4,5]" routerLink="/cabang-ranting/detail-cabang-ranting">
+            <ion-item detail *ngFor="let n of listCabang" [routerLink]="['/cabang-ranting/detail-cabang-ranting', n.id]">
               <ion-thumbnail slot="start">
                 <img src="./assets/icon/cabang.svg">
               </ion-thumbnail>
               <ion-label>
-                <h3>Cabang Cileungsi</h3>
-                <p>Alamat sekretariat</p>
+                <h3>{{n.name}}</h3>
+                <p>{{n.address}}</p>
               </ion-label>
             </ion-item>
           </div>
@@ -49,13 +49,13 @@
 
           <!-- Segment Ranting-->
           <div *ngSwitchCase="'ranting'" >
-            <ion-item detail *ngFor="let n of [1,2,3,4,5]" routerLink="/cabang-ranting/detail-cabang-ranting">
+            <ion-item detail *ngFor="let n of listRanting" [routerLink]="['/cabang-ranting/detail-cabang-ranting', n.id]">
               <ion-thumbnail slot="start">
                 <img src="./assets/icon/ranting.svg">
               </ion-thumbnail>
               <ion-label>
-                <h3>Ranting Ujungrusi</h3>
-                <p>Alamat sekretariat</p>
+                <h3>{{n.name}}</h3>
+                <p>{{n.address}}</p>
               </ion-label>
             </ion-item>
           </div>
@@ -70,7 +70,7 @@
 
   <div style="margin-top: 100px;"></div>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" routerLink="/cabang-ranting/tambah-cabang-ranting">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" [routerLink]="['/cabang-ranting/tambah-cabang-ranting',defaultSegment]">
     <ion-fab-button>
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>

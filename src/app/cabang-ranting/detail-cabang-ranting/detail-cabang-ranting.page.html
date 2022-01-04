@@ -1,6 +1,12 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-back-button slot="start"></ion-back-button>
+    <ion-title>Detail {{crData.category == undefined ? '':crData.category}}</ion-title>
+    <ion-buttons slot="end" *ngIf="userData != undefined">
+      <ion-button *ngIf="userData.role == 'superadmin'" (click)="delete()" fill="clear">
+        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -10,11 +16,9 @@
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
 
-        <h4>Cabang Cileungsi</h4>
+        <h4>{{crData.name}}</h4>
         <ion-text color="medium">
-          <p>
-            Muhammadiyah pertama kali di Cileungsi berdiri dengan tingkat ranting pada tahun 1960 di desa atau kampung kaum. Kampung Kaum dan desa Cileungsi merupakan kampung tua peninggalan belanda dengan adanya nama kampung BPM (nama Belanda) yang sampai sekarang masih dipakai.namun sebelum berdiri ranting Muhammadiyah sesungguhnya sudah ada sejak tahun 1952 di kampung tengahn desa cileungsi
-          </p>
+          <div [innerHTML]="crData.about"></div>
         </ion-text>
 
       </ion-col>

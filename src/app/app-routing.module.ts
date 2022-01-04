@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { GuardGuard } from './auth/guard.guard';
 import { ModalJadwalComponent } from './jadwal-sholat/modal-jadwal/modal-jadwal.component';
 
 const routes: Routes = [
@@ -38,7 +39,8 @@ const routes: Routes = [
   },
   {
     path: 'profil',
-    loadChildren: () => import('./profil/profil.module').then( m => m.ProfilPageModule)
+    loadChildren: () => import('./profil/profil.module').then( m => m.ProfilPageModule),
+    canLoad: [GuardGuard]
   },
   {
     path: 'my-product',
@@ -76,6 +78,12 @@ const routes: Routes = [
     path: 'forgot-password',
     loadChildren: () => import('./auth/forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule)
   },
+  {
+    path: 'change-password',
+    loadChildren: () => import('./auth/change-password/change-password.module').then( m => m.ChangePasswordPageModule),
+    canLoad: [GuardGuard]
+  },
+
 ];
 
 @NgModule({
