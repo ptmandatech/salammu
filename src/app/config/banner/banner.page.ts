@@ -28,11 +28,24 @@ export class BannerPage implements OnInit {
   }
 
   getAllBanners() {
+    this.listBanners = [];
+    this.listBannersTemp = [];
     this.api.get('banners').then(res => {
       this.listBanners = res;
       this.listBannersTemp = res;
-      console.log(this.listBanners)
     })
+  }
+
+  delete(n) {
+    var conf = confirm('Anda yakin ingin menghapus data?');
+    if (conf) {
+      this.api.delete('banners/'+n.id).then(res => {
+        if(res) {
+          alert('Berhasil menghapus data.');
+          this.getAllBanners();
+        }
+      })
+    }
   }
 
 }

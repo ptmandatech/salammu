@@ -43,7 +43,6 @@ export class DetailCabangRantingPage implements OnInit {
   getDetailCr() {
     this.api.get('cr/find/'+this.id).then(res => {
       this.crData = res;
-      console.log(res)
     })
   }
 

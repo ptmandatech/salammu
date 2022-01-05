@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-back-button slot="start"></ion-back-button>
-    <ion-title>Tambah {{category == 'cabang' ? 'Cabang':'Ranting'}}</ion-title>
+    <ion-title>Tambah Cabang/Ranting</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -33,7 +33,7 @@
           </ion-item>
 
           <ion-text color="medium">Tentang</ion-text>
-          <quill-editor [(ngModel)]="crData.about" required #about="ngModel" placeholder="Cr about">
+          <quill-editor [(ngModel)]="crData.about" #about="ngModel" placeholder="Cr about">
             <div quill-editor-toolbar>
               <span class="ql-formats">
                 <select class="ql-align" [title]="'Aligment'">

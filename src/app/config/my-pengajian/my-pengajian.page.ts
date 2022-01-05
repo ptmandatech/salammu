@@ -31,7 +31,6 @@ export class MyPengajianPage implements OnInit {
     this.api.get('pengajian').then(res => {
       this.listPengajian = res;
       this.listPengajianTemp = res;
-      console.log(this.listPengajian)
     })
   }
 

@@ -15,18 +15,19 @@ export class TambahCabangRantingPage implements OnInit {
   category:any;
   isCreated:boolean = true;
   loading:boolean;
+  byPassedHTMLString:any;
   constructor(
     public api: ApiService,
     public common: CommonService,
     public router:Router,
-    public routes:ActivatedRoute,
+    public activatedRoute:ActivatedRoute,
     public modalController: ModalController,
     private loadingController: LoadingController,
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.crData = {};
-    this.category = this.routes.snapshot.paramMap.get('category');
+    this.category = this.activatedRoute.snapshot.paramMap.get('id');
   }
 
   save() {

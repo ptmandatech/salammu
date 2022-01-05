@@ -167,9 +167,7 @@ export class JadwalSholatPage implements OnInit {
     this.weekly =true;
     this.monthly =false;
     this.prayTime = await this.api.getThisWeek();
-    console.log(this.prayTime)
     this.timesSelected = await this.prayTime.datetime;
-    console.log(this.timesSelected)
     this.firstDateHeader = this.timesSelected[0].date.gregorian;
     this.lastDateHeader = this.timesSelected[this.timesSelected.length-1].date.gregorian;
     this.parseTime(this.timesSelected, 'weekly')

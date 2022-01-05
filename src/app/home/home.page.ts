@@ -26,6 +26,7 @@ export class HomePage implements OnInit {
   serverImgBanner:any;
   serverImg: any;
   userData: any;
+  locationNow:any;
   constructor(
     public common: CommonService,
     private api: ApiService,
@@ -45,6 +46,7 @@ export class HomePage implements OnInit {
     this.parseTime(this.timesToday);
     this.serverImg = this.common.photoBaseUrl+'products/';
     this.serverImgBanner = this.common.photoBaseUrl+'banners/';
+    this.locationNow = await this.api.city;
     this.getAllProducts();
     this.getAllBanners();
   }
@@ -93,7 +95,7 @@ export class HomePage implements OnInit {
       this.data = {};
       let dt;
       if(title[i] == 'Imsak') {
-        await this.checkTime('00:01', times[i]).then(res => {
+        await this.checkTime(times[i], times[0]).then(res => {
           return dt = res;
         });
       } else if(title[i] == 'Isha') {

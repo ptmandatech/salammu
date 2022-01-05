@@ -10,7 +10,7 @@ import { CommonService } from 'src/app/services/common.service';
 })
 export class MyCrPage implements OnInit {
 
-  defaultSegment:any='cabang';
+  defaultSegment = 'cabang';
 
   listCabang:any = [];
   listRanting:any = [];
@@ -46,6 +46,10 @@ export class MyCrPage implements OnInit {
           }
       }
     }
+  }
+
+  addCr() {
+    this.router.navigate(['/cabang-ranting/tambah-cabang-ranting',this.defaultSegment]);
   }
 
 }
