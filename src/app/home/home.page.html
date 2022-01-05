@@ -17,6 +17,13 @@
               <ion-icon slot="icon-only" name="location-outline"></ion-icon>
               <span>Yogyakarta</span>
             </ion-button>
+            <!-- <ion-item class="fill-0" lines="none" *ngIf="prayTime.meta != undefined">
+              <ion-label>
+                <ion-text color="light">
+                  <p>{{prayTime.meta == undefined ? '':prayTime.meta.method.name}}</p>
+                </ion-text>
+              </ion-label>
+            </ion-item> -->
             <ion-item class="fill-0" lines="none" *ngIf="nextTimeTimer != undefined">
               <ion-label>
                 <ion-text color="light">
@@ -38,7 +45,7 @@
               <ion-row style="border-bottom: 1px solid #F2F2F2;">
                 <ion-col class="ion-text-center">
                   <ion-label *ngIf="timesToday != undefined">
-                    {{timesToday.date.gregorian | date: 'EEEE, dd MMMM yyyy' }}
+                    {{prayTime.date.readable | date: 'EEEE, dd MMMM yyyy' }}
                   </ion-label>
                   <ion-label *ngIf="timesToday == undefined">
                     <ion-skeleton-text animated></ion-skeleton-text>

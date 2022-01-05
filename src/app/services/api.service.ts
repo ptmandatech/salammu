@@ -52,22 +52,22 @@ export class ApiService {
 
   async getToday() {
     let date = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
-    let data = await this.common.getTimes('day.json?city='+ this.city +'&date='+ date +'&school=1');
+    let data = await this.common.getTimes('timingsByCity?city='+ this.city + '&country=Indonesia' + '&method=1');
     return data;
   }
 
   async getThisWeek() {
-    let data = await this.common.getTimes('this_week.json?city='+ this.city +'&school=1');
+    let data = await this.common.getWeekTimes('this_week.json?city='+ this.city +'&school=1');
     return data;
   }
 
-  async getThisMonth() {
-    let data = await this.common.getTimes('this_month.json?city='+ this.city +'&school=1');
+  async getThisMonth(month, year) {
+    let data = await this.common.getTimes('calendarByCity?city='+ this.city + '&country=Indonesia' + '&method=1' + '&month='+month+'&year='+year);
     return data;
   }
 
   async getWeek(start,end) {
-    let data = await this.common.getTimes('dates.json?city='+ this.city + '&start=' + start + '&end=' + end +'&school=1');
+    let data = await this.common.getWeekTimes('dates.json?city='+ this.city + '&start=' + start + '&end=' + end +'&school=1');
     return data;
   }
 

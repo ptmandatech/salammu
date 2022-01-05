@@ -40,7 +40,7 @@ export class HomePage implements OnInit {
     this.dateNow = new Date();
     this.cekLogin();
     this.prayTime = await this.api.getToday();
-    this.timesToday = await this.prayTime.datetime[0];
+    this.timesToday = await this.prayTime.timings;
     
     this.parseTime(this.timesToday);
     this.serverImg = this.common.photoBaseUrl+'products/';
@@ -63,7 +63,7 @@ export class HomePage implements OnInit {
     this.listBanners = [];
     this.listTimes = [];
     this.prayTime = await this.api.getToday();
-    this.timesToday = await this.prayTime.datetime[0];
+    this.timesToday = await this.prayTime.timings;
     this.parseTime(this.timesToday);
     this.serverImg = this.common.photoBaseUrl+'products/';
     this.serverImgBanner = this.common.photoBaseUrl+'banners/';
@@ -83,12 +83,10 @@ export class HomePage implements OnInit {
   listTimes:any = [];
   data:any = {};
   async parseTime(timesToday) {
-    let times = Object.values(timesToday.times);
-    let title = Object.keys(timesToday.times);
+    let times = Object.values(timesToday);
+    let title = Object.keys(timesToday);
     let t = [];
     let tt = [];
-    t = times.splice(1, 1);
-    tt = title.splice(1, 1);
     t = times.splice(4, 1);
     tt = title.splice(4, 1);
     for(var i=0; i<times.length-1; i++) {
@@ -96,6 +94,10 @@ export class HomePage implements OnInit {
       let dt;
       if(title[i] == 'Imsak') {
         await this.checkTime('00:01', times[i]).then(res => {
+          return dt = res;
+        });
+      } else if(title[i] == 'Isha') {
+        await this.checkTime(times[i], '23:59').then(res => {
           return dt = res;
         });
       } else {
@@ -109,7 +111,9 @@ export class HomePage implements OnInit {
         title[i] = 'Dhuhur';
       } else if(title[i] == 'Fajr') {
         title[i] = 'Subuh';
-      }
+      } else if(title[i] == 'Sunset') {
+        title[i] = 'Maghrib';
+      } 
       if(dt == true) {
         this.data.title = title[i]; 
         this.data.time = times[i];
@@ -138,15 +142,19 @@ export class HomePage implements OnInit {
     let now = undefined;
     arr = before.split(':');
     arr2 = next.split(':');
-    before_time = new Date(this.timesToday.date.gregorian).setHours(arr[0], arr[1], 0);
-    next_time = new Date(this.timesToday.date.gregorian).setHours(arr2[0], arr2[1], 0);
+    before_time = new Date(this.prayTime.date.readable).setHours(arr[0], arr[1], 0);
+    next_time = new Date(this.prayTime.date.readable).setHours(arr2[0], arr2[1], 0);
 
     timeNow = this.datePipe.transform(new Date(), 'HH:mm:ss');
     arr3 = timeNow.split(':');
-    now = new Date(this.timesToday.date.gregorian).setHours(Number(arr3[0]), Number(arr3[1]), Number(arr3[2]));
+    now = new Date(this.prayTime.date.readable).setHours(Number(arr3[0]), Number(arr3[1]), Number(arr3[2]));
     if(new Date(now) >= new Date(before_time) && new Date(now) < new Date(next_time)) {
-      let times = Object.values(this.timesToday.times);
-      let title = Object.keys(this.timesToday.times);
+      let times = Object.values(this.timesToday);
+      let title = Object.keys(this.timesToday);
+      let t = [];
+      let tt = [];
+      t = times.splice(4, 1);
+      tt = title.splice(4, 1);
       let idx = times.indexOf(next);
       if(title[idx] == 'Asr') {
         title[idx] = 'Ashar';
@@ -157,9 +165,13 @@ export class HomePage implements OnInit {
       } else if(title[idx] == 'Sunset') {
         title[idx] = 'Maghrib';
       }  
-      this.nextTime.title = title[idx];
+      if(title[idx] != undefined) {
+        this.nextTime.title = title[idx];
+      } else {
+        this.nextTime.title = 'Midnight';
+      }
       if(title[idx] == 'Fajr') {
-        let today = new Date(this.timesToday.date.gregorian);
+        let today = new Date(this.prayTime.date.readable);
         today.setDate(today.getDate() + 1);
         next_time = new Date(today).setHours(4, 10, 0);
         this.nextTime.time = new Date(next_time);

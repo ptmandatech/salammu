@@ -9,6 +9,7 @@ export class CommonService {
 
   httpOption:any;
   serverPrayTimes='https://api.pray.zone/v2/times/';
+  serverPrayTimes2='https://api.aladhan.com/v1/';
   serverUrl='https://api.sunhouse.co.id/salammu/index.php/';
   public photoBaseUrl='https://api.sunhouse.co.id/salammu/photos/';
   constructor(
@@ -48,8 +49,16 @@ export class CommonService {
   async getTimes(url)
   {
     this.times = undefined;
-    this.times = await this.http.get(this.serverPrayTimes+url).toPromise();
-    return this.times.results;
+    this.times = await this.http.get(this.serverPrayTimes2+url).toPromise();
+    return this.times.data;
+  }
+
+  weekTimes:any;
+  async getWeekTimes(url)
+  {
+    this.weekTimes = undefined;
+    this.weekTimes = await this.http.get(this.serverPrayTimes+url).toPromise();
+    return this.weekTimes.results;
   }
 
   data:any;

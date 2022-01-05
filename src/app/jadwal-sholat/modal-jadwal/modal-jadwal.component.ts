@@ -28,8 +28,8 @@ export class ModalJadwalComponent implements OnInit {
   listTimes:any = [];
   data:any = {};
   async parseTime(timesSelected) {
-    let times = Object.values(timesSelected.times);
-    let title = Object.keys(timesSelected.times);
+    let times = Object.values(timesSelected.timings);
+    let title = Object.keys(timesSelected.timings);
     let t = [];
     let tt = [];
     t = times.splice(1, 1);
@@ -44,7 +44,9 @@ export class ModalJadwalComponent implements OnInit {
         title[i] = 'Dhuhur';
       } else if(title[i] == 'Fajr') {
         title[i] = 'Subuh';
-      }
+      } else if(title[i] == 'Sunset') {
+        title[i] = 'Maghrib';
+      } 
       this.data.title = title[i]; 
       this.data.time = times[i];
       this.listTimes.push(this.data);

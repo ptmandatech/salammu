@@ -25,20 +25,20 @@
     <ion-button color="light" slot="start" fill="clear" button-icon (click)="prev('weekly')">
     <ion-icon slot="icon-only" name="caret-back"></ion-icon>
     </ion-button>
-    <ion-title class="date-title" *ngIf="timesSelected != undefined">{{timesSelected[0].date.gregorian | date:'dd'}} - {{timesSelected[timesSelected.length-1].date.gregorian | date:'dd'}} {{timesSelected[0].date.gregorian | date:'MMMM yyyy'}}</ion-title>
+    <ion-title class="date-title" *ngIf="timesSelected != undefined">{{firstDateHeader | date:'dd'}} - {{lastDateHeader | date:'dd'}} {{firstDateHeader | date:'MMMM yyyy'}}</ion-title>
     <ion-button color="light" slot="end" fill="clear" button-icon (click)="next('weekly')">
     <ion-icon slot="icon-only" name="caret-forward"></ion-icon>
     </ion-button>
   </ion-toolbar>
 
-  <!-- bulanan -->
+  <!-- bulanan ini -->
   <ion-toolbar color="primary" *ngIf="monthly">
     <ion-button color="light" slot="start" fill="clear" button-icon (click)="prev('monthly')">
-    <ion-icon slot="icon-only" name="caret-back"></ion-icon>
+      <ion-icon slot="icon-only" name="caret-back"></ion-icon>
     </ion-button>
-    <ion-title class="date-title" *ngIf="timesSelected != undefined">{{timesSelected[0].date.gregorian | date:'MMMM yyyy'}}</ion-title>
+    <ion-title class="date-title" *ngIf="timesSelected != undefined">{{firstDateHeader | date:'MMMM yyyy'}}</ion-title>
     <ion-button color="light" slot="end" fill="clear" button-icon (click)="next('monthly')">
-    <ion-icon slot="icon-only" name="caret-forward"></ion-icon>
+      <ion-icon slot="icon-only" name="caret-forward"></ion-icon>
     </ion-button>
   </ion-toolbar>
 
@@ -110,7 +110,7 @@
           <ion-row class="ion-align-items-center" *ngFor="let n of timesSelected">
             <ion-col class="cal-cell bg-gray">
               <div class="centered">
-                <ion-text color="secondary" class="cal-date fs-10">{{n.date.gregorian | date:'dd MMM yyyy'}}</ion-text>
+                <ion-text color="secondary" class="cal-date fs-10">{{n.date.readable | date:'dd MMM yyyy'}}</ion-text>
               </div>
             </ion-col>
             <ion-col class="cal-cell" *ngFor="let t of n.timesParsed">
