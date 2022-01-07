@@ -34,7 +34,7 @@
 
           <!-- Segment Cabang-->
           <div *ngSwitchCase="'cabang'" >
-            <ion-item detail *ngFor="let n of listCabang" [routerLink]="['/cabang-ranting/detail-cabang-ranting', n.id]">
+            <ion-item detail *ngFor="let n of listCabang" (click)="addCr(n.id)">
               <ion-thumbnail slot="start">
                 <img src="./assets/icon/cabang.svg">
               </ion-thumbnail>
@@ -49,7 +49,7 @@
 
           <!-- Segment Ranting-->
           <div *ngSwitchCase="'ranting'" >
-            <ion-item detail *ngFor="let n of listRanting" [routerLink]="['/cabang-ranting/detail-cabang-ranting', n.id]">
+            <ion-item detail *ngFor="let n of listRanting" (click)="addCr(n.id)">
               <ion-thumbnail slot="start">
                 <img src="./assets/icon/ranting.svg">
               </ion-thumbnail>
@@ -70,7 +70,7 @@
 
   <div style="margin-top: 100px;"></div>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="addCr()">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="addCr('0')">
     <ion-fab-button>
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>

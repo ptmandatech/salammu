@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController, LoadingController, ModalController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 import { ImageUploaderPage } from '../../image-uploader/image-uploader.page';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-tambah-produk',
@@ -15,16 +16,37 @@ export class TambahProdukPage implements OnInit {
   productData:any = {};
   loading:boolean;
   id:any;
+  serverImg:any;
+  imageNow = [];
+  isCreated:boolean = true;
   constructor(
     public api: ApiService,
     public router:Router,
+    public common: CommonService,
     public actionSheetController:ActionSheetController,
     public modalController: ModalController,
     private loadingController: LoadingController,
+    public routes:ActivatedRoute,
   ) { }
 
   ngOnInit() {
-    this.id = new Date().getTime().toString();
+    this.id = this.routes.snapshot.paramMap.get('id');
+    this.serverImg = this.common.photoBaseUrl+'products/';
+    if(this.id != 0) {
+      this.isCreated = false;
+      this.getDetailProduct();
+    } else {
+      this.id = new Date().getTime().toString();
+    }
+  }
+
+  getDetailProduct() {
+    this.api.get('products/find/'+this.id).then(res => {
+      this.productData = res;
+      if(this.productData.images != '') {
+        this.imageNow = JSON.parse(this.productData.images);
+      }
+    })
   }
 
   async pilihFoto() {
@@ -102,27 +124,46 @@ export class TambahProdukPage implements OnInit {
   imgUploaded:any = [];
   async uploadPhoto()
   {
-    for(var i=0; i<this.images.length; i++) {
-      await this.api.put('products/uploadfoto/'+this.id,{image: this.images[i]}).then(res=>{
-        this.imgUploaded.push(res);
-        if(i+1 == this.images.length) {
-          this.addProduct();
-        }
-      }, error => {
-        console.log(error)
-      });
+    if(this.images.length > 0) {
+      for(var i=0; i<this.images.length; i++) {
+        await this.api.put('products/uploadfoto/'+this.id,{image: this.images[i]}).then(res=>{
+          this.imgUploaded.push(res);
+          if(i+1 == this.images.length) {
+            this.addProduct();
+          }
+        }, error => {
+          console.log(error)
+        });
+      }
+    } else {
+      this.addProduct();
     }
   }
 
   addProduct() {
-    this.productData.images = JSON.stringify(this.imgUploaded);
-    this.api.post('products', this.productData).then(res => {
-      if(res) {
-        alert('Berhasil menambahkan produk.');
-        this.loading = false;
-        this.router.navigate(['/my-product']);
+    if(this.isCreated == true) {
+      this.productData.images = JSON.stringify(this.imgUploaded);
+      this.api.post('products', this.productData).then(res => {
+        if(res) {
+          alert('Berhasil menambahkan produk.');
+          this.loading = false;
+          this.router.navigate(['/my-product']);
+        }
+      })
+    } else {
+      if(this.images.length > 0) {
+        this.imgUploaded = this.imgUploaded.concat(this.imageNow);
+        this.productData.images = '';
+        this.productData.images = JSON.stringify(this.imgUploaded);
       }
-    })
+      this.api.put('products/'+ this.productData.id, this.productData).then(res => {
+        if(res) {
+          alert('Berhasil memperbarui produk.');
+          this.loading = false;
+          this.router.navigate(['/my-product']);
+        }
+      })
+    }
   }
 
   removeImg(idx) {

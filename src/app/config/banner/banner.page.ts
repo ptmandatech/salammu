@@ -36,6 +36,10 @@ export class BannerPage implements OnInit {
     })
   }
 
+  update(n) {
+    this.router.navigate(['/tambah-banner', n.id])
+  }
+
   delete(n) {
     var conf = confirm('Anda yakin ingin menghapus data?');
     if (conf) {

@@ -27,7 +27,7 @@
             </ion-item>
     
             <ion-item-options side="end">
-              <!-- <ion-item-option (click)="update(item)">Update</ion-item-option> -->
+              <ion-item-option (click)="update(n)">Update</ion-item-option>
               <ion-item-option color="danger" (click)="delete(n)">Delete</ion-item-option>
             </ion-item-options>
           </ion-item-sliding>
@@ -37,7 +37,7 @@
 
   <div style="margin-top: 100px;"></div>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" routerLink="/tambah-banner">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" [routerLink]="['/tambah-banner/0']">
     <ion-fab-button>
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>

@@ -9,10 +9,10 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <div class="ion-text-center ion-padding" hidden>
-    <img src="./assets/icon/no-pengajian.svg">
-    <p>Upss, Tidak ada pengajian</p>
-  </div>
+    <div class="ion-text-center ion-padding" *ngIf="listPengajian.length == 0">
+      <img src="./assets/icon/no-pengajian.svg">
+      <p>Upss, Tidak ada pengajian</p>
+    </div>
 
     <ion-item lines="none" detail class="list-custom" *ngFor="let n of listPengajian" (click)="detailPengajian(n)">
       <ion-label>

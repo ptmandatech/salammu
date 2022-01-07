@@ -18,6 +18,7 @@ export class TambahPengajianPage implements OnInit {
   id:any;
   isCreated:boolean = true;
   loading:boolean;
+  today:any;
   constructor(
     public api: ApiService,
     public common: CommonService,
@@ -28,6 +29,7 @@ export class TambahPengajianPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.today = new Date();
     this.id = this.routes.snapshot.paramMap.get('id');
     if(this.id != 0) {
       this.isCreated = false;
@@ -47,6 +49,12 @@ export class TambahPengajianPage implements OnInit {
   }
 
   save() {
+    if(new Date(this.dateValue) > this.today) {
+      this.pengajianData.status = 'soon';
+    } else {
+      this.pengajianData.status = 'done';
+    }
+    this.pengajianData.datetime = new Date(this.dateValue);
     if(this.isCreated == true) {
       this.api.post('pengajian', this.pengajianData).then(res => {
         if(res) {

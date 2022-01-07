@@ -13,7 +13,7 @@ const routes: Routes = [
     loadChildren: () => import('./detail-video/detail-video.module').then( m => m.DetailVideoPageModule)
   },
   {
-    path: 'tambah-video',
+    path: 'tambah-video/:id',
     loadChildren: () => import('./tambah-video/tambah-video.module').then( m => m.TambahVideoPageModule)
   }
 ];

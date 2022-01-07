@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { CalendarService } from '../services/calendar.service';
@@ -15,13 +16,17 @@ export class PengajianPage implements OnInit {
   cal:any={};
   week:any=[];
   selected:any;
+  dateToday:any;
 
   constructor(
+    private datePipe: DatePipe,
     private calendar:CalendarService,
     public modalController: ModalController,
   ) { }
 
   ngOnInit() {
+    let date = new Date();
+    this.dateToday = Number(this.datePipe.transform(new Date(date), 'dd'));
     this.getCal();
   }
 
@@ -32,6 +37,9 @@ export class PengajianPage implements OnInit {
     this.selected=this.calendar.today().selected;
   	this.parseCal(cal);
   }
+
+  m:any;
+  n:any;
   parseCal(cal)
   {
     var res={};
@@ -47,6 +55,19 @@ export class PengajianPage implements OnInit {
     }
     this.cal=res;
     this.week=Object.keys(res);
+
+    for(var i=0; i<this.week.length;i++)
+    {
+      for(var j=0; j<this.cal[this.week[i]].length;j++)
+      {
+        if(this.cal[this.week[i]][j].tanggal == this.dateToday) {
+          this.m = i.toString();
+          this.n = j.toString();
+          this.cellSelected={};
+          this.cellSelected[this.m+this.n]=true;
+        }
+      }
+    }
   }
   next(from)
   {

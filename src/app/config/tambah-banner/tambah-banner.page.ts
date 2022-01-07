@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController, LoadingController, ModalController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { ImageUploaderPage } from 'src/app/image-uploader/image-uploader.page';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-tambah-banner',
@@ -15,15 +16,33 @@ export class TambahBannerPage implements OnInit {
   bannerData:any = {};
   loading:boolean;
   id:any;
+  serverImg:any;
+  imageNow:any;
+  isCreated:boolean = true;
   constructor(
     public api: ApiService,
     public router:Router,
+    public common: CommonService,
     public actionSheetController:ActionSheetController,
     public modalController: ModalController,
+    public routes:ActivatedRoute,
     private loadingController: LoadingController,
   ) { }
 
   ngOnInit() {
+    this.id = this.routes.snapshot.paramMap.get('id');
+    this.serverImg = this.common.photoBaseUrl+'banners/';
+    if(this.id != 0) {
+      this.isCreated = false;
+      this.getDetailBanner();
+    }
+  }
+
+  getDetailBanner() {
+    this.api.get('banners/find/'+this.id).then(res => {
+      this.bannerData = res;
+      this.imageNow = this.serverImg+this.bannerData.image;
+    })
   }
 
   async pilihFoto() {
@@ -99,24 +118,38 @@ export class TambahBannerPage implements OnInit {
 
   async uploadPhoto()
   {
-    await this.api.put('banners/uploadfoto',{image: this.image}).then(res=>{
-      this.bannerData.image = res;
-      if(res) {
-        this.addBanner();
-      }
-    }, error => {
-      console.log(error)
-    });
+    if(this.image != undefined) {
+      await this.api.put('banners/uploadfoto',{image: this.image}).then(res=>{
+        this.bannerData.image = res;
+        if(res) {
+          this.addBanner();
+        }
+      }, error => {
+        console.log(error)
+      });
+    } else {
+      this.addBanner();
+    }
   }
 
   addBanner() {
-    this.api.post('banners', this.bannerData).then(res => {
-      if(res) {
-        alert('Berhasil menambahkan banner.');
-        this.loading = false;
-        this.router.navigate(['/banner']);
-      }
-    })
+    if(this.isCreated == true) {
+      this.api.post('banners', this.bannerData).then(res => {
+        if(res) {
+          alert('Berhasil menambahkan banner.');
+          this.loading = false;
+          this.router.navigate(['/banner']);
+        }
+      })
+    } else {
+      this.api.put('banners/'+ this.bannerData.id, this.bannerData).then(res => {
+        if(res) {
+          alert('Berhasil memperbarui banner.');
+          this.loading = false;
+          this.router.navigate(['/banner']);
+        }
+      })
+    }
   }
 
 }

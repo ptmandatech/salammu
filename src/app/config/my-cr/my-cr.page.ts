@@ -21,6 +21,9 @@ export class MyCrPage implements OnInit {
   ) { }
 
   ngOnInit() {
+  }
+
+  ionViewDidEnter() {
     this.listRanting = [];
     this.listCabang = [];
     this.getAllCr();
@@ -48,8 +51,8 @@ export class MyCrPage implements OnInit {
     }
   }
 
-  addCr() {
-    this.router.navigate(['/cabang-ranting/tambah-cabang-ranting',this.defaultSegment]);
+  addCr(id) {
+    this.router.navigate(['/cabang-ranting/tambah-cabang-ranting/'+this.defaultSegment+'/'+id]);
   }
 
 }

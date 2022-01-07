@@ -17,7 +17,7 @@ const routes: Routes = [
     loadChildren: () => import('./pencarian-cabangranting/pencarian-cabangranting.module').then( m => m.PencarianCabangrantingPageModule)
   },
   {
-    path: 'tambah-cabang-ranting/:id',
+    path: 'tambah-cabang-ranting/:category/:id',
     loadChildren: () => import('./tambah-cabang-ranting/tambah-cabang-ranting.module').then( m => m.TambahCabangRantingPageModule)
   }
 ];

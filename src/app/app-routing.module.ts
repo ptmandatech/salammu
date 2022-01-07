@@ -51,7 +51,7 @@ const routes: Routes = [
     loadChildren: () => import('./config/banner/banner.module').then( m => m.BannerPageModule)
   },
   {
-    path: 'tambah-banner',
+    path: 'tambah-banner/:id',
     loadChildren: () => import('./config/tambah-banner/tambah-banner.module').then( m => m.TambahBannerPageModule)
   },
   {

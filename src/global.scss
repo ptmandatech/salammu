@@ -78,6 +78,11 @@ ion-segment-button {
   background: #E7E7E7;
 }
 
+.cell-monthly {
+	background: var(--ion-color-primary);
+  color: white;
+}
+
 .object-bg {
   background-size: cover;
   object-fit: cover;

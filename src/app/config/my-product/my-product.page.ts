@@ -24,6 +24,11 @@ export class MyProductPage implements OnInit {
 
   ngOnInit() {
     this.serverImg = this.common.photoBaseUrl+'products/';
+  }
+
+  ionViewDidEnter() {
+    this.listProducts = [];
+    this.listProductsTemp = [];
     this.getAllProducts();
   }
 

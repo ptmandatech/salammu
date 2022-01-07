@@ -94,7 +94,7 @@ export class EditProfilPage implements OnInit {
     this.showImageUploader(image.dataUrl, from);
   }
 
-  image:any = './assets/imgs/blank-profil.png';
+  image = './assets/imgs/blank-profil.png';
   blobImage:any;
   //tampilkan image editor dan uploader
   async showImageUploader(imageData,from) {
@@ -146,7 +146,6 @@ export class EditProfilPage implements OnInit {
   }
 
   updateUser() {
-    console.log(this.userData)
     this.api.put('users/'+this.userData.id, this.userData).then(res=>{
       alert('Berhasil memperbarui profil.');
       this.loading = false;

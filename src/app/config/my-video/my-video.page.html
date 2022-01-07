@@ -12,7 +12,7 @@
       <ion-col size-md="6">
         <div style="margin-top: 20px;"></div>
 
-          <ion-item detail *ngFor="let n of listVideos" [routerLink]="['/video/detail-video', n.id]">
+          <ion-item detail *ngFor="let n of listVideos" [routerLink]="['/video/tambah-video', n.id]">
             <ion-row class="ion-align-items-center">
               <ion-col size="4">
                 <img src="{{n.image == undefined ? './assets/imgs/video.jpg':(serverImg+n.image)}}" class="rounded-15 object-bg" style="height: 75px;">
@@ -31,7 +31,7 @@
 
   <div style="margin-top: 100px;"></div>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" routerLink="/video/tambah-video">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" [routerLink]="['/video/tambah-video/0']">
     <ion-fab-button>
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>

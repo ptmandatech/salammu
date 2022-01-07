@@ -48,6 +48,7 @@ export class ApiService {
                   text: 'Pengaturan',
                   handler: () => {
                     this.diagnostic.switchToLocationSettings();
+                    this.loadingCheckLoc();
                     this.checkLocation();
                   }
                 }
@@ -56,6 +57,7 @@ export class ApiService {
             await confirm.present();
           } else {
             console.log('ok');
+            this.loadingCheckLoc();
             this.checkLocation();
           }
         }).catch(e => console.error(e));
@@ -170,6 +172,9 @@ export class ApiService {
 
   async getThisMonth(month, year) {
     this.checkPermission();
+    if(month == 0) {
+      month = 12
+    }
     let data = await this.common.getTimes('calendarByCity?city='+ this.city + '&country=Indonesia' + '&method=1' + '&month='+month+'&year='+year);
     return data;
   }

@@ -13,7 +13,7 @@ const routes: Routes = [
     loadChildren: () => import('./detail-produk/detail-produk.module').then( m => m.DetailProdukPageModule)
   },
   {
-    path: 'tambah-produk',
+    path: 'tambah-produk/:id',
     loadChildren: () => import('./tambah-produk/tambah-produk.module').then( m => m.TambahProdukPageModule)
   }
 ];

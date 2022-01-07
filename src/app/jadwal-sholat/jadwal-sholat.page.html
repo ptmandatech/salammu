@@ -25,6 +25,7 @@
     <ion-button color="light" slot="start" fill="clear" button-icon (click)="prev('weekly')">
     <ion-icon slot="icon-only" name="caret-back"></ion-icon>
     </ion-button>
+    <ion-title class="date-title" *ngIf="firstDateHeader == undefined"><ion-skeleton-text animated></ion-skeleton-text></ion-title>
     <ion-title class="date-title" *ngIf="timesSelected != undefined">{{firstDateHeader | date:'dd'}} - {{lastDateHeader | date:'dd'}} {{firstDateHeader | date:'MMMM yyyy'}}</ion-title>
     <ion-button color="light" slot="end" fill="clear" button-icon (click)="next('weekly')">
     <ion-icon slot="icon-only" name="caret-forward"></ion-icon>
@@ -36,6 +37,7 @@
     <ion-button color="light" slot="start" fill="clear" button-icon (click)="prev('monthly')">
       <ion-icon slot="icon-only" name="caret-back"></ion-icon>
     </ion-button>
+    <ion-title class="date-title" *ngIf="firstDateHeader == undefined"><ion-skeleton-text animated></ion-skeleton-text></ion-title>
     <ion-title class="date-title" *ngIf="timesSelected != undefined">{{firstDateHeader | date:'MMMM yyyy'}}</ion-title>
     <ion-button color="light" slot="end" fill="clear" button-icon (click)="next('monthly')">
       <ion-icon slot="icon-only" name="caret-forward"></ion-icon>
@@ -91,14 +93,14 @@
 
         <ion-grid *ngIf="weekly" class="ion-no-padding">
           <ion-row class="ion-align-items-center" *ngFor="let n of timesSelected">
-            <ion-col class="cal-cell bg-gray">
+            <ion-col class="{{n.date.gregorian == today ? 'cal-cell bg-gray':'cal-cell cell-monthly'}}">
               <div class="centered">
-                <ion-text color="secondary" class="cal-date fs-10">{{n.date.gregorian | date:'dd MMM yyyy'}}</ion-text>
+                <ion-text class="cal-date fs-10">{{n.date.gregorian | date:'dd MMM yyyy'}}</ion-text>
               </div>
             </ion-col>
-            <ion-col class="cal-cell" *ngFor="let t of n.timesParsed">
+            <ion-col *ngFor="let t of n.timesParsed" class="{{n.date.gregorian == today ? 'cal-cell bg-gray':'cal-cell'}}">
               <div class="centered">
-                <ion-text color="medium" class="cal-date fs-10">{{t.time}}</ion-text>
+                <ion-text class="cal-date fs-10">{{t.time}}</ion-text>
               </div>
             </ion-col>
           </ion-row>
@@ -108,17 +110,32 @@
         <ion-grid *ngIf="monthly" class="ion-no-padding">
 
           <ion-row class="ion-align-items-center" *ngFor="let n of timesSelected">
-            <ion-col class="cal-cell bg-gray">
+            <ion-col class="{{n.date.readable == today ? 'cal-cell bg-gray':'cal-cell cell-monthly'}}">
               <div class="centered">
-                <ion-text color="secondary" class="cal-date fs-10">{{n.date.readable | date:'dd MMM yyyy'}}</ion-text>
+                <ion-text class="cal-date fs-10">{{n.date.readable | date:'dd MMM yyyy'}}</ion-text>
               </div>
             </ion-col>
-            <ion-col class="cal-cell" *ngFor="let t of n.timesParsed">
+            <ion-col *ngFor="let t of n.timesParsed" class="{{n.date.readable == today ? 'cal-cell bg-gray':'cal-cell'}}">
               <div class="centered">
-                <ion-text color="medium" class="cal-date fs-10">{{t.time}}</ion-text>
+                <ion-text class="cal-date fs-10">{{t.time}}</ion-text>
               </div>
             </ion-col>
           </ion-row>
+          
+          <div *ngIf="timesSelected.length == 0">
+            <ion-row class="ion-align-items-center" *ngFor="let n of [1,2,3,4,5,6,7,8,9,10]">
+              <ion-col class="cal-cell bg-gray">
+                <div class="centered">
+                  <ion-text color="secondary" class="cal-date fs-10"><ion-skeleton-text animated></ion-skeleton-text></ion-text>
+                </div>
+              </ion-col>
+              <ion-col class="cal-cell" *ngFor="let t of [1,2,3,4,5,6]">
+                <div class="centered">
+                  <ion-text color="medium" class="cal-date fs-10"><ion-skeleton-text animated></ion-skeleton-text></ion-text>
+                </div>
+              </ion-col>
+            </ion-row>
+          </div>
         </ion-grid>
 
       </ion-col>
