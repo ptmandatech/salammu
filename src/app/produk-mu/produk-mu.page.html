@@ -13,6 +13,12 @@
   <ion-grid class="ion-no-padding">
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
+        <div class="centered" *ngIf="listProducts.length == 0">
+          <img src="./assets/icon/pencarian.svg">
+          <ion-label>
+            <p>Pencarian tidak ditemukan</p>
+          </ion-label>
+        </div>
 
         <ion-row class="ion-no-padding">
           <ion-col size="6" *ngFor="let n of listProducts">

@@ -13,7 +13,7 @@
   <ion-grid class="ion-no-padding">
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
-        <div class="centered" hidden>
+        <div class="centered" *ngIf="listCr.length == 0">
           <img src="./assets/icon/pencarian.svg">
           <ion-label>
             <p>Pencarian tidak ditemukan</p>

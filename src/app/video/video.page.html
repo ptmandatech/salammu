@@ -15,6 +15,12 @@
   <ion-grid class="ion-no-padding">
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
+        <div class="centered" *ngIf="listVideos.length == 0">
+          <img src="./assets/icon/pencarian.svg">
+          <ion-label>
+            <p>Pencarian tidak ditemukan</p>
+          </ion-label>
+        </div>
         <div style="margin-top: 20px;"></div>
 
           <ion-item detail *ngFor="let n of listVideos" [routerLink]="['/video/detail-video', n.id]">

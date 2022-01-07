@@ -53,6 +53,7 @@ export class EditProfilPage implements OnInit {
   {    
     this.api.me().then(res=>{
       this.userData = res;
+      this.uploadImg = false;
       this.loadingController.dismiss();
     }, error => {
       this.loadingController.dismiss();
@@ -94,7 +95,7 @@ export class EditProfilPage implements OnInit {
     this.showImageUploader(image.dataUrl, from);
   }
 
-  image = './assets/imgs/blank-profil.png';
+  image:any;
   blobImage:any;
   //tampilkan image editor dan uploader
   async showImageUploader(imageData,from) {
@@ -108,6 +109,7 @@ export class EditProfilPage implements OnInit {
       if(result)
       {
         this.image = result.data;
+        this.uploadImg = true;
       } else {
         this.loadingController.dismiss();
       } 
@@ -132,17 +134,22 @@ export class EditProfilPage implements OnInit {
   }
 
   imgUploaded:any;
+  uploadImg:boolean;
   async uploadPhoto()
   {
-    await this.api.put('users/uploadfoto/'+this.userData.id,{image: this.image}).then(res=>{
-      this.imgUploaded = res;
-      if(this.imgUploaded != undefined) {
-        this.userData.image = res;
-        this.updateUser();
-      }
-    }, error => {
-      console.log(error)
-    });
+    if(this.image != undefined) {
+      await this.api.put('users/uploadfoto/'+this.userData.id,{image: this.image}).then(res=>{
+        this.imgUploaded = res;
+        if(this.imgUploaded != undefined) {
+          this.userData.image = res;
+          this.updateUser();
+        }
+      }, error => {
+        console.log(error)
+      });
+    } else {
+      this.updateUser();
+    }
   }
 
   updateUser() {
