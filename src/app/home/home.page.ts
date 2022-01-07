@@ -27,6 +27,7 @@ export class HomePage implements OnInit {
   serverImg: any;
   userData: any;
   locationNow:any;
+  loading:boolean;
   constructor(
     public common: CommonService,
     private api: ApiService,
@@ -38,6 +39,7 @@ export class HomePage implements OnInit {
   prayTime:any;
   timesToday:any;
   async ngOnInit() {
+    this.loading = true;
     this.dateNow = new Date();
     this.cekLogin();
     this.prayTime = undefined;
@@ -59,10 +61,12 @@ export class HomePage implements OnInit {
       this.userData = res;
     }, error => {
       console.log(error);
+      this.loading = false;
     })
   }
 
   async doRefresh(event) {
+    this.loading = true;
     this.listProducts = [];
     this.listBanners = [];
     this.listTimes = [];
@@ -85,6 +89,7 @@ export class HomePage implements OnInit {
   getAllBanners() {
     this.api.get('banners').then(res => {
       this.listBanners = res;
+      this.loading = false;
     })
   }
 
@@ -103,7 +108,7 @@ export class HomePage implements OnInit {
       this.data = {};
       let dt;
       if(title[i] == 'Imsak') {
-        await this.checkTime(times[i], times[0]).then(res => {
+        await this.checkTime('00:01', times[i]).then(res => {
           return dt = res;
         });
       } else if(title[i] == 'Isha') {
@@ -257,5 +262,6 @@ export class HomePage implements OnInit {
         }
       }
     }
+    this.loading = false;
   }
 }

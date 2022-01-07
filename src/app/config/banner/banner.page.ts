@@ -13,6 +13,7 @@ export class BannerPage implements OnInit {
   listBanners:any = [];
   listBannersTemp:any = [];
   serverImg:any;
+  loading:boolean;
   constructor(
     public api: ApiService,
     public common: CommonService,
@@ -24,6 +25,7 @@ export class BannerPage implements OnInit {
   }
 
   ionViewDidEnter() {
+    this.loading = true;
     this.getAllBanners();
   }
 
@@ -33,6 +35,9 @@ export class BannerPage implements OnInit {
     this.api.get('banners').then(res => {
       this.listBanners = res;
       this.listBannersTemp = res;
+      this.loading = false;
+    }, error => {
+      this.loading = false;
     })
   }
 

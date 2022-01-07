@@ -9,7 +9,7 @@
 
   <ion-grid class="ion-no-padding">
     <ion-row class="ion-justify-content-center">
-      <ion-col size-md="6">
+      <ion-col size-md="6" *ngIf="!loading">
         <div style="margin-top: 20px;"></div>
 
           <ion-item detail *ngFor="let n of listVideos" [routerLink]="['/video/tambah-video', n.id]">
@@ -24,7 +24,24 @@
               </ion-col>
             </ion-row>
           </ion-item>
-
+      </ion-col>
+      <ion-col size-md="6" *ngIf="loading">
+        <div style="margin-top: 20px;"></div>
+        <ion-item detail *ngFor="let n of [1,2,3,4,5,6,7,8,9,10]">
+          <ion-thumbnail slot="start">
+            <ion-skeleton-text animated></ion-skeleton-text>
+          </ion-thumbnail>
+          <ion-label>
+            <h3><ion-skeleton-text animated></ion-skeleton-text></h3>
+            <ion-text color="medium">
+              <p class="ion-text-wrap"><ion-skeleton-text animated></ion-skeleton-text></p>
+            </ion-text>
+            <ion-text color="primary">
+              <p class="ion-text-wrap"><ion-skeleton-text animated></ion-skeleton-text></p>
+            </ion-text>
+            <p class="ion-text-wrap"><ion-skeleton-text animated></ion-skeleton-text></p>
+          </ion-label>
+        </ion-item>
       </ion-col>
     </ion-row>
   </ion-grid>

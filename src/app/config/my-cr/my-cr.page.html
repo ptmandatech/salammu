@@ -34,30 +34,56 @@
 
           <!-- Segment Cabang-->
           <div *ngSwitchCase="'cabang'" >
-            <ion-item detail *ngFor="let n of listCabang" (click)="addCr(n.id)">
-              <ion-thumbnail slot="start">
-                <img src="./assets/icon/cabang.svg">
-              </ion-thumbnail>
-              <ion-label>
-                <h3>{{n.name}}</h3>
-                <p>{{n.address}}</p>
-              </ion-label>
-            </ion-item>
+            <div *ngIf="!loading">
+              <ion-item detail *ngFor="let n of listCabang" (click)="addCr(n.id)">
+                <ion-thumbnail slot="start">
+                  <img src="./assets/icon/cabang.svg">
+                </ion-thumbnail>
+                <ion-label>
+                  <h3>{{n.name}}</h3>
+                  <p>{{n.address}}</p>
+                </ion-label>
+              </ion-item>
+            </div>
+            <div *ngIf="loading">
+              <ion-item detail *ngFor="let n of [1,2,3,4,5,6,7,8,9,10]">
+                <ion-thumbnail slot="start">
+                  <ion-skeleton-text animated></ion-skeleton-text>
+                </ion-thumbnail>
+                <ion-label>
+                  <h3><ion-skeleton-text animated></ion-skeleton-text></h3>
+                  <p><ion-skeleton-text animated></ion-skeleton-text></p>
+                </ion-label>
+              </ion-item>
+            </div>
           </div>
           <!-- End Segment Cabang-->
 
 
           <!-- Segment Ranting-->
           <div *ngSwitchCase="'ranting'" >
-            <ion-item detail *ngFor="let n of listRanting" (click)="addCr(n.id)">
-              <ion-thumbnail slot="start">
-                <img src="./assets/icon/ranting.svg">
-              </ion-thumbnail>
-              <ion-label>
-                <h3>{{n.name}}</h3>
-                <p>{{n.address}}</p>
-              </ion-label>
-            </ion-item>
+            <div *ngIf="!loading">
+              <ion-item detail *ngFor="let n of listRanting" (click)="addCr(n.id)">
+                <ion-thumbnail slot="start">
+                  <img src="./assets/icon/ranting.svg">
+                </ion-thumbnail>
+                <ion-label>
+                  <h3>{{n.name}}</h3>
+                  <p>{{n.address}}</p>
+                </ion-label>
+              </ion-item>
+            </div>
+            <div *ngIf="loading">
+              <ion-item detail *ngFor="let n of [1,2,3,4,5,6,7,8,9,10]">
+                <ion-thumbnail slot="start">
+                  <ion-skeleton-text animated></ion-skeleton-text>
+                </ion-thumbnail>
+                <ion-label>
+                  <h3><ion-skeleton-text animated></ion-skeleton-text></h3>
+                  <p><ion-skeleton-text animated></ion-skeleton-text></p>
+                </ion-label>
+              </ion-item>
+            </div>
           </div>
           <!-- End Segment Ranting-->
 
