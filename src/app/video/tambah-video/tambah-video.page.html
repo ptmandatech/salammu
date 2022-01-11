@@ -2,6 +2,11 @@
   <ion-toolbar color="primary">
     <ion-back-button slot="start"></ion-back-button>
     <ion-title>{{isCreated ? 'Tambah':'Perbarui'}} Video</ion-title>
+    <ion-buttons slot="end" >
+      <ion-button fill="clear">
+        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -25,7 +30,7 @@
         <ion-item lines="none" class="input">
           <ion-input [(ngModel)]="videoData.url" required #url="ngModel" placeholder="Video url"></ion-input>
         </ion-item>
-        <ion-row>
+        <ion-row style="margin-bottom: 16px;">
           <ion-col class="ion-text-center" style="border: dashed 1px #40A083; border-radius: 10px;">
             <img src="{{image == undefined ? imageNow:image}}"/>
           </ion-col>
