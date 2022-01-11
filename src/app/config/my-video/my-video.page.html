@@ -8,6 +8,16 @@
 <ion-content>
 
   <ion-grid class="ion-no-padding">
+    <ion-row class="ion-justify-content-center" *ngIf="!loading && listVideos.length == 0">
+      <ion-col size-md="6">
+        <div class="item-centered">
+          <img src="./assets/icon/pencarian.svg">
+          <ion-label>
+            <p>Data tidak ditemukan</p>
+          </ion-label>
+        </div>
+      </ion-col>
+    </ion-row>
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6" *ngIf="!loading">
         <div style="margin-top: 20px;"></div>

@@ -14,14 +14,17 @@
 <ion-content class="ion-padding">
 
   <ion-grid>
+    <ion-row class="ion-justify-content-center" *ngIf="!loading && listPengajian.length == 0">
+      <ion-col size-md="6">
+        <div class="item-centered">
+          <img src="./assets/icon/pencarian.svg">
+          <ion-label>
+            <p>Data tidak ditemukan</p>
+          </ion-label>
+        </div>
+      </ion-col>
+    </ion-row>
     <ion-row class="ion-justify-content-center">
-      <div class="item-centered" *ngIf="!loading && listPengajian.length == 0">
-        <img src="./assets/icon/pencarian.svg">
-        <ion-label>
-          <p>Data tidak ditemukan</p>
-        </ion-label>
-      </div>
-
       <ion-col size-md="6" *ngIf="!loading">
         <ion-item lines="none" detail class="list-custom" *ngFor="let n of listPengajian" [routerLink]="['/pengajian/tambah-pengajian', n.id]">
           <ion-label>
@@ -31,6 +34,9 @@
             </ion-text>
             <ion-text color="primary">
               <p class="ion-text-wrap">Dimulai {{n.datetime | date: 'dd MMMM yyyy'}} Pukul {{n.datetime | date: 'H:mm'}}</p>
+            </ion-text>
+            <ion-text color="medium" *ngIf="userData.role == 'superadmin'">
+              <p class="text-elipsis">{{users[n.created_by] == undefined ? '':'Dibuat Oleh: '+users[n.created_by].name}}<p>
             </ion-text>
             <ion-badge color="{{n.status == 'soon' ? 'primary':'danger'}}">{{n.status == 'soon' ? 'Akan datang':'Selesai'}}</ion-badge>
           </ion-label>

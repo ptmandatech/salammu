@@ -34,6 +34,12 @@
 
           <!-- Segment Cabang-->
           <div *ngSwitchCase="'cabang'" >
+            <div class="item-centered" *ngIf="!loading && listCabang.length == 0">
+              <img src="./assets/icon/pencarian.svg">
+              <ion-label>
+                <p>Data tidak ditemukan</p>
+              </ion-label>
+            </div>
             <div *ngIf="!loading">
               <ion-item detail *ngFor="let n of listCabang" (click)="addCr(n.id)">
                 <ion-thumbnail slot="start">
@@ -62,6 +68,12 @@
 
           <!-- Segment Ranting-->
           <div *ngSwitchCase="'ranting'" >
+            <div class="item-centered" *ngIf="!loading && listRanting.length == 0">
+              <img src="./assets/icon/pencarian.svg">
+              <ion-label>
+                <p>Data tidak ditemukan</p>
+              </ion-label>
+            </div>
             <div *ngIf="!loading">
               <ion-item detail *ngFor="let n of listRanting" (click)="addCr(n.id)">
                 <ion-thumbnail slot="start">

@@ -15,6 +15,7 @@ export class MyProductPage implements OnInit {
   listProductsTemp:any = [];
   serverImg: any;
   loading:boolean;
+  userData:any;
   constructor(
     public api: ApiService,
     public common: CommonService,
@@ -31,15 +32,53 @@ export class MyProductPage implements OnInit {
     this.loading = true;
     this.listProducts = [];
     this.listProductsTemp = [];
-    this.getAllProducts();
+    this.cekLogin();
   }
 
-  getAllProducts() {
-    this.api.get('products').then(res => {
-      this.parseImage(res);
+  cekLogin()
+  {    
+    this.api.me().then(async res=>{
+      this.userData = res;
+      if(this.userData.role == 'superadmin') {
+        this.getUsers();
+      }
+      this.getAllProducts();
+    }, async error => {
+      this.loading = false;
+      this.listProducts = [];
+      this.listProductsTemp = [];
+    })
+  }
+
+  users:any = {};
+  getUsers() {
+    this.api.get('users').then(res => {
+      this.parseUser(res);
     }, error => {
       this.loading = false;
     })
+  }
+
+  parseUser(res) {
+    for(var i=0; i<res.length; i++) {
+      this.users[res[i].id] = res[i];
+    }
+  }
+
+  getAllProducts() {
+    if(this.userData.role == 'superadmin') {
+      this.api.get('products').then(res => {
+        this.parseImage(res);
+      }, error => {
+        this.loading = false;
+      })
+    } else {
+      this.api.get('products?created_by='+ this.userData.id).then(res => {
+        this.parseImage(res);
+      }, error => {
+        this.loading = false;
+      })
+    }
   }
 
   parseImage(res) {

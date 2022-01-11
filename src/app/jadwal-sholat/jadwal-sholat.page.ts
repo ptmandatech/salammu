@@ -175,11 +175,13 @@ export class JadwalSholatPage implements OnInit {
     return await modal.present();
   }
 
-  dailyShow() {
+  async dailyShow() {
     this.timesSelected = [];
     this.daily =true;
     this.weekly =false;
     this.monthly =false;
+    this.prayTime = await this.api.getThisMonth(this.month,this.year);
+    this.timesSelected = await this.prayTime;
 
   }
 
@@ -218,16 +220,21 @@ export class JadwalSholatPage implements OnInit {
   }
 
   listTimes:any = [];
+  tempTimes1:any = {};
+  tempTimes2:any = {};
   data:any = {};
   times:any;
   title:any;
   async parseTime(timesSelected, from) {
     for(var i=0; i<timesSelected.length; i++) {
       this.timesSelected[i].timesParsed = [];
+      this.tempTimes1[i] = [];
+      this.tempTimes2[i] = [];
       if(from != 'weekly') {
         this.times = Object.values(timesSelected[i].timings);
         this.title = Object.keys(timesSelected[i].timings);
       } else {
+        this.timesSelected[i].timings = timesSelected[i].times;
         this.times = Object.values(timesSelected[i].times);
         this.title = Object.keys(timesSelected[i].times);
       }
@@ -250,7 +257,13 @@ export class JadwalSholatPage implements OnInit {
         } 
         this.data.title = this.title[j]; 
         this.data.time = this.times[j];
-        this.timesSelected[i].timesParsed.push(this.data);
+        if(this.data.title == 'Imsak') {
+          this.tempTimes1[i].push(this.data);
+        } else {
+          this.tempTimes2[i].push(this.data);
+        }
+  
+        this.timesSelected[i].timesParsed = this.tempTimes1[i].concat(this.tempTimes2[i]);
       }
     }
   }

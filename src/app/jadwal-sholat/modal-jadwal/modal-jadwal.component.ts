@@ -26,6 +26,8 @@ export class ModalJadwalComponent implements OnInit {
   }
 
   listTimes:any = [];
+  tempTimes1:any = [];
+  tempTimes2:any = [];
   data:any = {};
   async parseTime(timesSelected) {
     let times = Object.values(timesSelected.timings);
@@ -49,7 +51,13 @@ export class ModalJadwalComponent implements OnInit {
       } 
       this.data.title = title[i]; 
       this.data.time = times[i];
-      this.listTimes.push(this.data);
+      if(this.data.title == 'Imsak') {
+        this.tempTimes1.push(this.data);
+      } else {
+        this.tempTimes2.push(this.data);
+      }
+
+      this.listTimes = this.tempTimes1.concat(this.tempTimes2);
     }
     
   }

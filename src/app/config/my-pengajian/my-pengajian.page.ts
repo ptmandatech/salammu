@@ -13,6 +13,7 @@ export class MyPengajianPage implements OnInit {
 
   listPengajian:any = [];
   listPengajianTemp:any = [];
+  userData:any;
   loading:boolean;
   constructor(
     public api: ApiService,
@@ -28,17 +29,57 @@ export class MyPengajianPage implements OnInit {
     this.loading = true;
     this.listPengajian = [];
     this.listPengajianTemp = [];
-    this.getAllPengajian();
+    this.cekLogin();
   }
 
-  getAllPengajian() {
-    this.api.get('pengajian').then(res => {
-      this.listPengajian = res;
-      this.listPengajianTemp = res;
+  cekLogin()
+  {    
+    this.api.me().then(async res=>{
+      this.userData = res;
+      if(this.userData.role == 'superadmin') {
+        this.getUsers();
+      }
+      this.getAllPengajian();
+    }, async error => {
       this.loading = false;
+      this.listPengajian = [];
+      this.listPengajianTemp = [];
+    })
+  }
+
+  users:any = {};
+  getUsers() {
+    this.api.get('users').then(res => {
+      this.parseUser(res);
     }, error => {
       this.loading = false;
     })
+  }
+
+  parseUser(res) {
+    for(var i=0; i<res.length; i++) {
+      this.users[res[i].id] = res[i];
+    }
+  }
+
+  getAllPengajian() {
+    if(this.userData.role == 'superadmin') {
+      this.api.get('pengajian').then(res => {
+        this.listPengajian = res;
+        this.listPengajianTemp = res;
+        this.loading = false;
+      }, error => {
+        this.loading = false;
+      })
+    } else {
+      this.api.get('pengajian?created_by='+ this.userData.id).then(res => {
+        this.listPengajian = res;
+        this.listPengajianTemp = res;
+        this.loading = false;
+      }, error => {
+        this.loading = false;
+      })
+    }
   }
 
   initializeItems(): void {
