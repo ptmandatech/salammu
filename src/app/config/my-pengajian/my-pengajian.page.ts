@@ -13,6 +13,7 @@ export class MyPengajianPage implements OnInit {
 
   listPengajian:any = [];
   listPengajianTemp:any = [];
+  userData:any;
   loading:boolean;
   constructor(
     public api: ApiService,
@@ -28,11 +29,23 @@ export class MyPengajianPage implements OnInit {
     this.loading = true;
     this.listPengajian = [];
     this.listPengajianTemp = [];
-    this.getAllPengajian();
+    this.cekLogin();
+  }
+
+  cekLogin()
+  {    
+    this.api.me().then(async res=>{
+      this.userData = res;
+      this.getAllPengajian();
+    }, async error => {
+      this.loading = false;
+      this.listPengajian = [];
+      this.listPengajianTemp = [];
+    })
   }
 
   getAllPengajian() {
-    this.api.get('pengajian').then(res => {
+    this.api.get('pengajian?created_by='+ this.userData.id).then(res => {
       this.listPengajian = res;
       this.listPengajianTemp = res;
       this.loading = false;

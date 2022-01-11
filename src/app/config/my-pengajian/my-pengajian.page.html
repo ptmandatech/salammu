@@ -14,14 +14,18 @@
 <ion-content class="ion-padding">
 
   <ion-grid>
-    <ion-row class="ion-justify-content-center">
-      <div class="item-centered" *ngIf="!loading && listPengajian.length == 0">
-        <img src="./assets/icon/pencarian.svg">
-        <ion-label>
-          <p>Data tidak ditemukan</p>
-        </ion-label>
-      </div>
+    <ion-row class="ion-justify-content-center" *ngIf="!loading && listPengajian.length == 0">
+      <ion-col size-md="6">
+        <div class="item-centered">
+          <img src="./assets/icon/pencarian.svg">
+          <ion-label>
+            <p>Data tidak ditemukan</p>
+          </ion-label>
+        </div>
 
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-justify-content-center">
       <ion-col size-md="6" *ngIf="!loading">
         <ion-item lines="none" detail class="list-custom" *ngFor="let n of listPengajian" [routerLink]="['/pengajian/tambah-pengajian', n.id]">
           <ion-label>

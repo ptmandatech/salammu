@@ -151,7 +151,10 @@ export class ApiService {
   } 
 
   chatSeller(ownerData, detailProduct) {
-    var url = 'https://api.whatsapp.com/send?phone=' + ownerData.phone +'&text=Halo%20admin%20salammu,%20saya%20tertarik%20dengan%20produk%20'+ detailProduct.name +'.'
+    var msg = "Halo, " + ownerData.name + ' Saya tertarik dengan produk: %0A';
+    var dp = "Nama produk: " + detailProduct.name + '%0A' + "Harga: Rp." + detailProduct.price + '%0A';
+    var message = msg+dp;
+    var url = 'https://api.whatsapp.com/send?phone=' + ownerData.phone +'&text='+message;
     window.open(url, 'blank')
   }
 

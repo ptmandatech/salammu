@@ -15,6 +15,7 @@ export class MyProductPage implements OnInit {
   listProductsTemp:any = [];
   serverImg: any;
   loading:boolean;
+  userData:any;
   constructor(
     public api: ApiService,
     public common: CommonService,
@@ -31,11 +32,23 @@ export class MyProductPage implements OnInit {
     this.loading = true;
     this.listProducts = [];
     this.listProductsTemp = [];
-    this.getAllProducts();
+    this.cekLogin();
+  }
+
+  cekLogin()
+  {    
+    this.api.me().then(async res=>{
+      this.userData = res;
+      this.getAllProducts();
+    }, async error => {
+      this.loading = false;
+      this.listProducts = [];
+      this.listProductsTemp = [];
+    })
   }
 
   getAllProducts() {
-    this.api.get('products').then(res => {
+    this.api.get('products?created_by='+ this.userData.id).then(res => {
       this.parseImage(res);
     }, error => {
       this.loading = false;

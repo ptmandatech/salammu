@@ -218,12 +218,16 @@ export class JadwalSholatPage implements OnInit {
   }
 
   listTimes:any = [];
+  tempTimes1:any = {};
+  tempTimes2:any = {};
   data:any = {};
   times:any;
   title:any;
   async parseTime(timesSelected, from) {
     for(var i=0; i<timesSelected.length; i++) {
       this.timesSelected[i].timesParsed = [];
+      this.tempTimes1[i] = [];
+      this.tempTimes2[i] = [];
       if(from != 'weekly') {
         this.times = Object.values(timesSelected[i].timings);
         this.title = Object.keys(timesSelected[i].timings);
@@ -250,7 +254,13 @@ export class JadwalSholatPage implements OnInit {
         } 
         this.data.title = this.title[j]; 
         this.data.time = this.times[j];
-        this.timesSelected[i].timesParsed.push(this.data);
+        if(this.data.title == 'Imsak') {
+          this.tempTimes1[i].push(this.data);
+        } else {
+          this.tempTimes2[i].push(this.data);
+        }
+  
+        this.timesSelected[i].timesParsed = this.tempTimes1[i].concat(this.tempTimes2[i]);
       }
     }
   }

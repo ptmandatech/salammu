@@ -16,29 +16,29 @@
       <ion-col size-md="6">
           <ion-text color="medium">Nama</ion-text>
           <ion-item lines="none" class="input">
-            <ion-input></ion-input>
+            <ion-input [(ngModel)]="userData.name" required #name="ngModel" placeholder="Enter your name"></ion-input>
           </ion-item>
 
           <ion-text color="medium">Email</ion-text>
           <ion-item lines="none" class="input">
-            <ion-input type="email"></ion-input>
+            <ion-input [(ngModel)]="userData.email" required #email="ngModel" placeholder="Enter your email" type="email"></ion-input>
           </ion-item>
 
           <ion-text color="medium">Nomor Hp</ion-text>
           <ion-item lines="none" class="input">
-            <ion-input type="number"></ion-input>
+            <ion-input [(ngModel)]="userData.phone" required #phone="ngModel" placeholder="Enter your phone ex:(62825623)" type="text"></ion-input>
           </ion-item>
 
           <ion-text color="medium">Alamat</ion-text>
           <ion-item lines="none" class="input">
-            <ion-textarea  rows="4" cols="20"></ion-textarea>
+            <ion-textarea [(ngModel)]="userData.address" required #address="ngModel" placeholder="Enter your address" rows="4" cols="20"></ion-textarea>
           </ion-item>
 
           <ion-text color="medium">
             <p>Password</p>
           </ion-text>
           <ion-item class="input">
-            <ion-input type="{{type}}" placeholder="Enter your password"></ion-input>
+            <ion-input type="{{type}}" [(ngModel)]="userData.password" required #password="ngModel" (ngModelChange)="checkMatch()" placeholder="Enter your password"></ion-input>
             <ion-icon name="{{type == 'password' ? 'eye-outline':'eye-off-outline'}}" (click)="show()" slot="end" color="medium"></ion-icon>
           </ion-item>
 
@@ -46,15 +46,16 @@
             <p>Tulis Ulang Password</p>
           </ion-text>
           <ion-item class="input">
-            <ion-input type="{{type}}" placeholder="Enter your password"></ion-input>
+            <ion-input type="{{type}}" [(ngModel)]="userData.p2" required #p2="ngModel" (ngModelChange)="checkMatch()" placeholder="Enter your confirmation password"></ion-input>
             <ion-icon name="{{type == 'password' ? 'eye-outline':'eye-off-outline'}}" (click)="show()" slot="end" color="medium"></ion-icon>
           </ion-item>
+          <p *ngIf="match == false" style="color: red;">Confirmation Password not match!</p>
 
           <div style="margin-top: 100px;"></div>
 
           <div class="footer">
-            <ion-button color="primary" expand="block">
-              Simpan
+            <ion-button color="primary" expand="block" (click)="register()" [disabled]="loading || name.invalid || email.invalid || phone.invalid || address.invalid || password.invalid || p2.invalid">
+              {{loading ? 'Mohon Tunggu...':'Simpan'}}
             </ion-button>
           </div>
 

@@ -122,6 +122,8 @@ export class LoginPage implements OnInit {
   async dismiss() {
     this.modalController.dismiss({
       'dismissed': true
+    }).catch(error => {
+      this.router.navigate(['/home']);
     });
   }
 

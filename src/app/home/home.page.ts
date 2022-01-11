@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { LoadingController, ModalController } from '@ionic/angular';
 import { LoginPage } from '../auth/login/login.page';
 import { ApiService } from '../services/api.service';
 import { CommonService } from '../services/common.service';
@@ -31,6 +31,7 @@ export class HomePage implements OnInit {
   constructor(
     public common: CommonService,
     private api: ApiService,
+    private loadingController: LoadingController,
     private datePipe: DatePipe,
     public modalController: ModalController,
     private router: Router
@@ -55,13 +56,33 @@ export class HomePage implements OnInit {
     this.getAllBanners();
   }
 
+  ionViewWillEnter() {
+    this.cekLogin();
+  }
+
+  async loginStatus() {
+    this.loading = true;
+    return await this.loadingController.create({
+      spinner: 'crescent',
+      message: 'Mohon Tunggu...',
+      cssClass: 'custom-class custom-loading'
+    }).then(a => {
+      a.present().then(() => {
+        console.log('presented');
+        this.cekLogin();
+      });
+      this.loading = false;
+    });
+  }
+
   cekLogin()
   {    
-    this.api.me().then(res=>{
+    this.api.me().then(async res=>{
       this.userData = res;
-    }, error => {
-      console.log(error);
+      await this.loadingController.dismiss();
+    }, async error => {
       this.loading = false;
+      await this.loadingController.dismiss();
     })
   }
 

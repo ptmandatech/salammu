@@ -54,7 +54,7 @@ export class DetailProdukPage implements OnInit {
 
   ownerData:any;
   getDetailOwner() {
-    this.api.get('users/find/'+this.detailProduct.owner_id).then(res => {
+    this.api.get('users/find/'+this.detailProduct.created_by).then(res => {
       this.ownerData = res;
     })
   }
