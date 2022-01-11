@@ -175,11 +175,13 @@ export class JadwalSholatPage implements OnInit {
     return await modal.present();
   }
 
-  dailyShow() {
+  async dailyShow() {
     this.timesSelected = [];
     this.daily =true;
     this.weekly =false;
     this.monthly =false;
+    this.prayTime = await this.api.getThisMonth(this.month,this.year);
+    this.timesSelected = await this.prayTime;
 
   }
 
@@ -232,6 +234,7 @@ export class JadwalSholatPage implements OnInit {
         this.times = Object.values(timesSelected[i].timings);
         this.title = Object.keys(timesSelected[i].timings);
       } else {
+        this.timesSelected[i].timings = timesSelected[i].times;
         this.times = Object.values(timesSelected[i].times);
         this.title = Object.keys(timesSelected[i].times);
       }
