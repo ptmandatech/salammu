@@ -37,7 +37,7 @@ export class RegisterPage implements OnInit {
       this.userData.role = 'user';
       this.api.post('auth/register/',this.userData).then(res=>{
         alert('Pendaftaran berhasil.');
-        this.modalLogin();
+        this.login();
         this.loading=false;
       },err=>{
         this.loading=false;
@@ -48,16 +48,16 @@ export class RegisterPage implements OnInit {
     }
   }
 
-  async modalLogin() {
-    if(this.userData == undefined) {
-      const modal = await this.modalController.create({
-        component: LoginPage,
-        mode: "md",
-      });
-      return await modal.present();
-    } else {
-      this.router.navigate(['/profil']);
+  login() {
+    var dt = {
+      email: this.userData.email,
+      password: this.userData.password
     }
+    this.api.post('auth/login',dt).then(res=>{     
+      this.loading=false;
+      localStorage.setItem('salammuToken',JSON.stringify(res));
+      this.router.navigate(['/home']);
+    });
   }
 
   match!:boolean;

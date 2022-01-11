@@ -2,8 +2,8 @@
   <ion-toolbar color="primary">
     <ion-back-button slot="start"></ion-back-button>
     <ion-title>{{isCreated ? 'Tambah':'Perbarui'}} Data</ion-title>
-    <ion-buttons slot="end" >
-      <ion-button fill="clear">
+    <ion-buttons slot="end" *ngIf="isCreated == false">
+      <ion-button fill="clear" (click)="delete()">
         <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
       </ion-button>
     </ion-buttons>

@@ -16,7 +16,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ImageUploaderPageModule } from './image-uploader/image-uploader.module';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { Diagnostic } from '@awesome-cordova-plugins/diagnostic/ngx';
-import { Geolocation, Geoposition, PositionError } from '@awesome-cordova-plugins/geolocation/ngx';
+import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
  
 @NgModule({
   declarations: [

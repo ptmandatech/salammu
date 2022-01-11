@@ -60,20 +60,20 @@ export class HomePage implements OnInit {
     this.cekLogin();
   }
 
-  async loginStatus() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      message: 'Mohon Tunggu...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-        this.cekLogin();
-      });
-      this.loading = false;
-    });
-  }
+  // async loginStatus() {
+  //   this.loading = true;
+  //   return await this.loadingController.create({
+  //     spinner: 'crescent',
+  //     message: 'Mohon Tunggu...',
+  //     cssClass: 'custom-class custom-loading'
+  //   }).then(a => {
+  //     a.present().then(() => {
+  //       console.log('presented');
+  //       this.cekLogin();
+  //     });
+  //     this.loading = false;
+  //   });
+  // }
 
   cekLogin()
   {    

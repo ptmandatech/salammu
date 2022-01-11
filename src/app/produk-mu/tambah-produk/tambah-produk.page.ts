@@ -155,6 +155,9 @@ export class TambahProdukPage implements OnInit {
         this.imgUploaded = this.imgUploaded.concat(this.imageNow);
         this.productData.images = '';
         this.productData.images = JSON.stringify(this.imgUploaded);
+      } else {
+        this.productData.images = '';
+        this.productData.images = JSON.stringify(this.imageNow);
       }
       this.api.put('products/'+ this.productData.id, this.productData).then(res => {
         if(res) {
@@ -168,6 +171,23 @@ export class TambahProdukPage implements OnInit {
 
   removeImg(idx) {
     this.images.splice(idx, 1);
+  }
+
+  removeCImg(idx) {
+    this.imageNow.splice(idx, 1);
+  }
+
+  delete() {
+    var conf = confirm('Anda yakin ingin menghapus data?');
+    if (conf) {
+      this.api.delete('products/'+this.id).then(res => {
+        if(res) {
+          alert('Berhasil menghapus data.');
+          this.loading = false;
+          this.router.navigate(['/my-product']);
+        }
+      })
+    }
   }
 
 }

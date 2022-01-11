@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { PengajianPageRoutingModule } from './pengajian-routing.module';
 
 import { PengajianPage } from './pengajian.page';
+import { Geolocation, Geoposition, PositionError } from '@awesome-cordova-plugins/geolocation/ngx';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { PengajianPage } from './pengajian.page';
     IonicModule,
     PengajianPageRoutingModule
   ],
-  declarations: [PengajianPage]
+  declarations: [PengajianPage],
+  providers: [Geolocation]
 })
 export class PengajianPageModule {}
