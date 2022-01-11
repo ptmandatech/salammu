@@ -1,6 +1,6 @@
 {
-	"appId": "io.ionic.starter",
-	"appName": "salammu",
-	"webDir": "www",
-	"bundledWebRuntime": false
+  "appId": "com.salammu.id",
+  "appName": "SalamMU",
+  "webDir": "www",
+  "bundledWebRuntime": false
 }

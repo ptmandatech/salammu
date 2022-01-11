@@ -29,18 +29,21 @@ export class JadwalSholatPage implements OnInit {
   timesSelected:any;
   month:any;
   year:any;
+  dateToday:any;
+  today:any;
   firstDateHeader:any;
   lastDateHeader:any;
 
   async ngOnInit() {
+    let date = new Date();
+    this.month = Number(this.datePipe.transform(new Date(date), 'MM'));
+    this.dateToday = Number(this.datePipe.transform(new Date(date), 'dd'));
+    this.today = this.datePipe.transform(new Date(date), 'dd MMM yyyy');
+    this.year = date.getFullYear();
     this.getCal();
     this.dailyShow();
-    let date = new Date();
-    this.month = date.getMonth();
-    this.year = date.getFullYear();
     this.prayTime = await this.api.getThisMonth(this.month,this.year);
   }
-
 
   getCal()
   {
@@ -49,6 +52,9 @@ export class JadwalSholatPage implements OnInit {
     this.selected=this.calendar.today().selected;
   	this.parseCal(cal);
   }
+
+  m:any;
+  n:any;
   parseCal(cal)
   {
     var res={};
@@ -61,9 +67,25 @@ export class JadwalSholatPage implements OnInit {
       }else{
         res[key].push(cal[i]);
       }
+      if(cal[i].tanggal == this.dateToday) {
+        this.cellSelected = cal[i];
+      }
     }
     this.cal=res;
     this.week=Object.keys(res);
+
+    for(var i=0; i<this.week.length;i++)
+    {
+      for(var j=0; j<this.cal[this.week[i]].length;j++)
+      {
+        if(this.cal[this.week[i]][j].tanggal == this.dateToday) {
+          this.m = i.toString();
+          this.n = j.toString();
+          this.cellSelected={};
+          this.cellSelected[this.m+this.n]=true;
+        }
+      }
+    }
   }
   
   async next(from)
@@ -71,7 +93,7 @@ export class JadwalSholatPage implements OnInit {
       var cal=this.calendar.next(this.selected, from).data;
       this.selected=this.calendar.next(this.selected, from).selected;
       let date = new Date(this.selected);
-      this.month = date.getMonth();
+      this.month = Number(this.datePipe.transform(new Date(date), 'MM'));
       this.year = date.getFullYear();
       this.parseCal(cal);
       if(from == 'weekly') {
@@ -90,7 +112,7 @@ export class JadwalSholatPage implements OnInit {
         // this.prayTime = await this.api.getMonth(month);
         this.prayTime = await this.api.getThisMonth(this.month,this.year);
         this.timesSelected = await this.prayTime;
-        this.parseTime(this.timesSelected, 'monthly')
+        this.parseTime(this.timesSelected, 'monthly');
         this.firstDateHeader = this.timesSelected[0].date.readable;
         this.lastDateHeader = this.timesSelected[this.timesSelected.length-1].date.readable;
       }
@@ -101,7 +123,7 @@ export class JadwalSholatPage implements OnInit {
       var cal=this.calendar.previous(this.selected, from).data;
       this.selected=this.calendar.previous(this.selected, from).selected;
       let date = new Date(this.selected);
-      this.month = date.getMonth();
+      this.month = Number(this.datePipe.transform(new Date(date), 'MM'));
       this.year = date.getFullYear();
       this.parseCal(cal);
       if(from == 'weekly') {
@@ -122,7 +144,7 @@ export class JadwalSholatPage implements OnInit {
         this.timesSelected = await this.prayTime;
         this.firstDateHeader = this.timesSelected[0].date.readable;
         this.lastDateHeader = this.timesSelected[this.timesSelected.length-1].date.readable;
-        this.parseTime(this.timesSelected, 'monthly')
+        this.parseTime(this.timesSelected, 'monthly');
       }
   }
 
@@ -166,10 +188,12 @@ export class JadwalSholatPage implements OnInit {
     this.daily =false;
     this.weekly =true;
     this.monthly =false;
+    let date = new Date();
+    this.today = this.datePipe.transform(new Date(date), 'yyyy-MM-dd');
+    this.month = Number(this.datePipe.transform(new Date(date), 'MM'));
+    this.year = date.getFullYear();
     this.prayTime = await this.api.getThisWeek();
-    console.log(this.prayTime)
     this.timesSelected = await this.prayTime.datetime;
-    console.log(this.timesSelected)
     this.firstDateHeader = this.timesSelected[0].date.gregorian;
     this.lastDateHeader = this.timesSelected[this.timesSelected.length-1].date.gregorian;
     this.parseTime(this.timesSelected, 'weekly')
@@ -181,6 +205,10 @@ export class JadwalSholatPage implements OnInit {
     this.daily =false;
     this.weekly =false;
     this.monthly =true;
+    let date = new Date();
+    this.today = this.datePipe.transform(new Date(date), 'dd MMM yyyy');
+    this.month = Number(this.datePipe.transform(new Date(date), 'MM'));
+    this.year = date.getFullYear();
     this.prayTime = await this.api.getThisMonth(this.month,this.year);
     this.timesSelected = await this.prayTime;
     this.firstDateHeader = this.timesSelected[0].date.readable;

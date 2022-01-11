@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-back-button slot="start"></ion-back-button>
-    <ion-title>Tambah Banner</ion-title>
+    <ion-title>{{isCreated ? 'Tambah':'Perbarui'}} Banner</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -15,9 +15,9 @@
         <ion-item lines="none" class="input">
           <ion-input  [(ngModel)]="bannerData.url" required #url="ngModel" placeholder="Banner url"></ion-input>
         </ion-item>
-        <ion-row *ngIf="image != undefined">
+        <ion-row>
           <ion-col class="ion-text-center" style="border: dashed 1px #40A083; border-radius: 10px;">
-            <img src="{{image}}"/>
+            <img src="{{image == undefined ? imageNow:image}}"/>
           </ion-col>
         </ion-row>
         <ion-row>
@@ -36,7 +36,7 @@
         <div style="margin-top: 100px;"></div>
 
         <div class="footer">
-          <ion-button color="primary" [disabled]="loading || url.invalid || image == undefined" (click)="uploadPhoto()" expand="block">
+          <ion-button color="primary" [disabled]="loading || url.invalid" (click)="uploadPhoto()" expand="block">
             {{loading ? 'Mohon tunggu...':'Simpan'}}
           </ion-button>
         </div>

@@ -13,8 +13,14 @@
   <ion-grid class="ion-no-padding">
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
+        <div class="item-centered" *ngIf="!loading && listProducts.length == 0">
+          <img src="./assets/icon/pencarian.svg">
+          <ion-label>
+            <p>Pencarian tidak ditemukan</p>
+          </ion-label>
+        </div>
 
-        <ion-row class="ion-no-padding">
+        <ion-row class="ion-no-padding" *ngIf="!loading">
           <ion-col size="6" *ngFor="let n of listProducts">
             <ion-card class="rounded-15" [routerLink]="['/produk-mu/detail-produk', n.id]">
               <img src="{{n.images.length == 0 ? './assets/imgs/pisang-coklat.jpg':(serverImg+n.images[0])}}" class="object-bg" style="height: 150px;">
@@ -28,6 +34,25 @@
                   </ion-text>
                 </ion-label>
                 <h2 style="margin-top: 20px;">Rp.{{n.price | number:'1.0-0'}}</h2>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="ion-no-padding" *ngIf="loading">
+          <ion-col size="6" *ngFor="let n of [1,2,3,4,5,6,7,8,9,10]">
+            <ion-card class="rounded-15">
+              <ion-card-content>
+                <ion-skeleton-text animated style="height: 60px;"></ion-skeleton-text>
+                <ion-label>
+                  <ion-text color="primary">
+                    <h2><ion-skeleton-text animated></ion-skeleton-text></h2>
+                  </ion-text>
+                  <ion-text color="medium">
+                    <p class="text-elipsis"><ion-skeleton-text animated></ion-skeleton-text><p>
+                  </ion-text>
+                </ion-label>
+                <h2 style="margin-top: 20px;"><ion-skeleton-text animated></ion-skeleton-text></h2>
               </ion-card-content>
             </ion-card>
           </ion-col>

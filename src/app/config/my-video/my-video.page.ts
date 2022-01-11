@@ -13,6 +13,7 @@ export class MyVideoPage implements OnInit {
   listVideos:any = [];
   listVideosTemp:any = [];
   serverImg:any;
+  loading:boolean;
   constructor(
     public api: ApiService,
     public common: CommonService,
@@ -24,6 +25,7 @@ export class MyVideoPage implements OnInit {
   }
 
   ionViewDidEnter() {
+    this.loading = true;
     this.getAllVideos();
   }
 
@@ -31,6 +33,9 @@ export class MyVideoPage implements OnInit {
     this.api.get('videos').then(res => {
       this.listVideos = res;
       this.listVideosTemp = res;
+      this.loading = false;
+    }, error => {
+      this.loading = false;
     })
   }
 

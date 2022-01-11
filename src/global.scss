@@ -55,12 +55,21 @@ ion-button {
   transform: translateY(-50%);
 }
 
+.item-centered {
+  text-align: center;
+
+  position: relative;
+  left: 0;
+  right: 0;
+  top: 50%;
+}
+
 .modal-class {
   --border-radius: 15px 15px 0px 0px;;
 }
 
 .fs-10 {
-  font-size: 12px;
+  font-size: 10px;
 }
 
 ion-segment {
@@ -76,6 +85,11 @@ ion-segment-button {
 
 .bg-gray {
   background: #E7E7E7;
+}
+
+.cell-monthly {
+	background: var(--ion-color-primary);
+  color: white;
 }
 
 .object-bg {

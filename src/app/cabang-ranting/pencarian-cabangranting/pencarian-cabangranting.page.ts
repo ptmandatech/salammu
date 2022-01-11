@@ -12,6 +12,7 @@ export class PencarianCabangrantingPage implements OnInit {
 
   listCr:any = [];
   listCrTemp:any = [];
+  loading:boolean;
   constructor(
     public api: ApiService,
     public common: CommonService,
@@ -24,9 +25,13 @@ export class PencarianCabangrantingPage implements OnInit {
   }
 
   getAllCr() {
+    this.loading = true;
     this.api.get('cr').then(res => {
       this.listCr = res;
       this.listCrTemp = res;
+      this.loading = false;
+    }, error => {
+      this.loading = false;
     })
   }
 

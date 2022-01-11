@@ -14,6 +14,7 @@ export class MyProductPage implements OnInit {
   listProducts:any = [];
   listProductsTemp:any = [];
   serverImg: any;
+  loading:boolean;
   constructor(
     public api: ApiService,
     public common: CommonService,
@@ -24,12 +25,20 @@ export class MyProductPage implements OnInit {
 
   ngOnInit() {
     this.serverImg = this.common.photoBaseUrl+'products/';
+  }
+
+  ionViewDidEnter() {
+    this.loading = true;
+    this.listProducts = [];
+    this.listProductsTemp = [];
     this.getAllProducts();
   }
 
   getAllProducts() {
     this.api.get('products').then(res => {
       this.parseImage(res);
+    }, error => {
+      this.loading = false;
     })
   }
 
@@ -51,6 +60,7 @@ export class MyProductPage implements OnInit {
         }
       }
     }
+    this.loading = false;
   }
   
 

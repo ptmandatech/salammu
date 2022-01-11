@@ -13,6 +13,7 @@ export class BannerPage implements OnInit {
   listBanners:any = [];
   listBannersTemp:any = [];
   serverImg:any;
+  loading:boolean;
   constructor(
     public api: ApiService,
     public common: CommonService,
@@ -24,15 +25,36 @@ export class BannerPage implements OnInit {
   }
 
   ionViewDidEnter() {
+    this.loading = true;
     this.getAllBanners();
   }
 
   getAllBanners() {
+    this.listBanners = [];
+    this.listBannersTemp = [];
     this.api.get('banners').then(res => {
       this.listBanners = res;
       this.listBannersTemp = res;
-      console.log(this.listBanners)
+      this.loading = false;
+    }, error => {
+      this.loading = false;
     })
+  }
+
+  update(n) {
+    this.router.navigate(['/tambah-banner', n.id])
+  }
+
+  delete(n) {
+    var conf = confirm('Anda yakin ingin menghapus data?');
+    if (conf) {
+      this.api.delete('banners/'+n.id).then(res => {
+        if(res) {
+          alert('Berhasil menghapus data.');
+          this.getAllBanners();
+        }
+      })
+    }
   }
 
 }

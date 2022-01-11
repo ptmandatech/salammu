@@ -14,6 +14,7 @@ export class CabangRantingPage implements OnInit {
 
   listCabang:any = [];
   listRanting:any = [];
+  loading:boolean;
   constructor(
     public api: ApiService,
     public common: CommonService,
@@ -21,6 +22,7 @@ export class CabangRantingPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.loading = true;
     this.listRanting = [];
     this.listCabang = [];
     this.getAllCr();
@@ -29,6 +31,8 @@ export class CabangRantingPage implements OnInit {
   getAllCr() {
     this.api.get('cr').then(res => {
       this.parseData(res);
+    }, error => {
+      this.loading = false;
     })
   }
 
@@ -46,6 +50,7 @@ export class CabangRantingPage implements OnInit {
           }
       }
     }
+    this.loading = false;
   }
 
 }

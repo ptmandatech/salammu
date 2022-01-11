@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController, LoadingController, ModalController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { ImageUploaderPage } from 'src/app/image-uploader/image-uploader.page';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-tambah-video',
@@ -15,15 +16,33 @@ export class TambahVideoPage implements OnInit {
   videoData:any = {};
   loading:boolean;
   id:any;
+  serverImg:any;
+  imageNow:any;
+  isCreated:boolean = true;
   constructor(
     public api: ApiService,
     public router:Router,
+    public common: CommonService,
     public actionSheetController:ActionSheetController,
     public modalController: ModalController,
+    public routes:ActivatedRoute,
     private loadingController: LoadingController,
   ) { }
 
   ngOnInit() {
+    this.id = this.routes.snapshot.paramMap.get('id');
+    this.serverImg = this.common.photoBaseUrl+'videos/';
+    if(this.id != 0) {
+      this.isCreated = false;
+      this.getDetailVideo();
+    }
+  }
+
+  getDetailVideo() {
+    this.api.get('videos/find/'+this.id).then(res => {
+      this.videoData = res;
+      this.imageNow = this.serverImg+this.videoData.image;
+    })
   }
 
   async pilihFoto() {
@@ -99,24 +118,39 @@ export class TambahVideoPage implements OnInit {
 
   async uploadPhoto()
   {
-    await this.api.put('videos/uploadfoto',{image: this.image}).then(res=>{
-      this.videoData.image = res;
-      if(res) {
-        this.addVideo();
-      }
-    }, error => {
-      console.log(error)
-    });
+    if(this.image != undefined) {
+      await this.api.put('videos/uploadfoto',{image: this.image}).then(res=>{
+        this.videoData.image = res;
+        if(res) {
+          this.addVideo();
+        }
+      }, error => {
+        console.log(error)
+      });
+    } else {
+      this.addVideo();
+    }
   }
 
   addVideo() {
-    this.api.post('videos', this.videoData).then(res => {
-      if(res) {
-        alert('Berhasil menambahkan video.');
-        this.loading = false;
-        this.router.navigate(['/my-video']);
-      }
-    })
+    this.videoData.url = this.videoData.url.replace('watch?v=','embed/');
+    if(this.isCreated == true) {
+      this.api.post('videos', this.videoData).then(res => {
+        if(res) {
+          alert('Berhasil menambahkan video.');
+          this.loading = false;
+          this.router.navigate(['/my-video']);
+        }
+      })
+    } else {
+      this.api.put('videos/'+ this.videoData.id, this.videoData).then(res => {
+        if(res) {
+          alert('Berhasil memperbarui video.');
+          this.loading = false;
+          this.router.navigate(['/my-video']);
+        }
+      })
+    }
   }
 
 }

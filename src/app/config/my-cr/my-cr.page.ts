@@ -10,10 +10,11 @@ import { CommonService } from 'src/app/services/common.service';
 })
 export class MyCrPage implements OnInit {
 
-  defaultSegment:any='cabang';
+  defaultSegment = 'cabang';
 
   listCabang:any = [];
   listRanting:any = [];
+  loading:boolean;
   constructor(
     public api: ApiService,
     public common: CommonService,
@@ -21,6 +22,10 @@ export class MyCrPage implements OnInit {
   ) { }
 
   ngOnInit() {
+  }
+
+  ionViewDidEnter() {
+    this.loading = true;
     this.listRanting = [];
     this.listCabang = [];
     this.getAllCr();
@@ -29,6 +34,8 @@ export class MyCrPage implements OnInit {
   getAllCr() {
     this.api.get('cr').then(res => {
       this.parseData(res);
+    }, error => {
+      this.loading = false;
     })
   }
 
@@ -46,6 +53,11 @@ export class MyCrPage implements OnInit {
           }
       }
     }
+    this.loading = false;
+  }
+
+  addCr(id) {
+    this.router.navigate(['/cabang-ranting/tambah-cabang-ranting/'+this.defaultSegment+'/'+id]);
   }
 
 }

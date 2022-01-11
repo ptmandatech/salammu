@@ -15,8 +15,14 @@
 
   <ion-grid>
     <ion-row class="ion-justify-content-center">
-      <ion-col size-md="6">
+      <div class="item-centered" *ngIf="!loading && listPengajian.length == 0">
+        <img src="./assets/icon/pencarian.svg">
+        <ion-label>
+          <p>Data tidak ditemukan</p>
+        </ion-label>
+      </div>
 
+      <ion-col size-md="6" *ngIf="!loading">
         <ion-item lines="none" detail class="list-custom" *ngFor="let n of listPengajian" [routerLink]="['/pengajian/tambah-pengajian', n.id]">
           <ion-label>
             <h3>{{n.name}}</h3>
@@ -27,6 +33,21 @@
               <p class="ion-text-wrap">Dimulai {{n.datetime | date: 'dd MMMM yyyy'}} Pukul {{n.datetime | date: 'H:mm'}}</p>
             </ion-text>
             <ion-badge color="{{n.status == 'soon' ? 'primary':'danger'}}">{{n.status == 'soon' ? 'Akan datang':'Selesai'}}</ion-badge>
+          </ion-label>
+        </ion-item>
+      </ion-col>
+
+      <ion-col size-md="6" *ngIf="loading">
+        <ion-item lines="none" detail class="list-custom" *ngFor="let n of [1,2,3,4,5,6,7,8,9,10]">
+          <ion-label>
+            <h3><ion-skeleton-text animated></ion-skeleton-text></h3>
+            <ion-text color="medium">
+              <p class="ion-text-wrap"><ion-skeleton-text animated></ion-skeleton-text></p>
+            </ion-text>
+            <ion-text color="primary">
+              <p class="ion-text-wrap"><ion-skeleton-text animated></ion-skeleton-text></p>
+            </ion-text>
+            <p class="ion-text-wrap"><ion-skeleton-text animated></ion-skeleton-text></p>
           </ion-label>
         </ion-item>
       </ion-col>

@@ -41,6 +41,7 @@ export class ChangePasswordPage implements OnInit {
 
   match:boolean;
   loading:boolean;
+  submited:boolean;
   checkMatch() {
     this.user.password2 == this.user.password ? this.match = true:this.match = false;
   }
@@ -48,8 +49,10 @@ export class ChangePasswordPage implements OnInit {
   changePassword() {
     this.user.email = this.userData.email;
     this.loading = true;
+    this.submited = true;
     this.api.put('users/changePass/'+this.userData.id, this.user).then(async res => {
       if(res) {
+        this.submited = false;
         alert('Berhasil memperbarui password.');
         this.loading = false;
         localStorage.removeItem('userSalammu');
@@ -63,6 +66,7 @@ export class ChangePasswordPage implements OnInit {
     }, error => {
       console.log(error);
       this.loading = false;
+      this.submited = false;
     })
   }
 

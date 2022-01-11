@@ -13,6 +13,7 @@ export class MyPengajianPage implements OnInit {
 
   listPengajian:any = [];
   listPengajianTemp:any = [];
+  loading:boolean;
   constructor(
     public api: ApiService,
     public common: CommonService,
@@ -24,6 +25,9 @@ export class MyPengajianPage implements OnInit {
   }
 
   ionViewDidEnter() {
+    this.loading = true;
+    this.listPengajian = [];
+    this.listPengajianTemp = [];
     this.getAllPengajian();
   }
 
@@ -31,7 +35,9 @@ export class MyPengajianPage implements OnInit {
     this.api.get('pengajian').then(res => {
       this.listPengajian = res;
       this.listPengajianTemp = res;
-      console.log(this.listPengajian)
+      this.loading = false;
+    }, error => {
+      this.loading = false;
     })
   }
 

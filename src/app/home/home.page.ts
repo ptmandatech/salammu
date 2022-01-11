@@ -26,6 +26,8 @@ export class HomePage implements OnInit {
   serverImgBanner:any;
   serverImg: any;
   userData: any;
+  locationNow:any;
+  loading:boolean;
   constructor(
     public common: CommonService,
     private api: ApiService,
@@ -37,14 +39,18 @@ export class HomePage implements OnInit {
   prayTime:any;
   timesToday:any;
   async ngOnInit() {
+    this.loading = true;
     this.dateNow = new Date();
     this.cekLogin();
+    this.prayTime = undefined;
+    this.timesToday = undefined;
     this.prayTime = await this.api.getToday();
     this.timesToday = await this.prayTime.timings;
     
     this.parseTime(this.timesToday);
     this.serverImg = this.common.photoBaseUrl+'products/';
     this.serverImgBanner = this.common.photoBaseUrl+'banners/';
+    this.locationNow = await this.api.city;
     this.getAllProducts();
     this.getAllBanners();
   }
@@ -55,13 +61,19 @@ export class HomePage implements OnInit {
       this.userData = res;
     }, error => {
       console.log(error);
+      this.loading = false;
     })
   }
 
   async doRefresh(event) {
+    this.loading = true;
     this.listProducts = [];
     this.listBanners = [];
     this.listTimes = [];
+    this.tempTimes1 = [];
+    this.tempTimes2 = [];
+    this.prayTime = undefined;
+    this.timesToday = undefined;
     this.prayTime = await this.api.getToday();
     this.timesToday = await this.prayTime.timings;
     this.parseTime(this.timesToday);
@@ -77,10 +89,13 @@ export class HomePage implements OnInit {
   getAllBanners() {
     this.api.get('banners').then(res => {
       this.listBanners = res;
+      this.loading = false;
     })
   }
 
   listTimes:any = [];
+  tempTimes1:any = [];
+  tempTimes2:any = [];
   data:any = {};
   async parseTime(timesToday) {
     let times = Object.values(timesToday);
@@ -125,7 +140,13 @@ export class HomePage implements OnInit {
         this.data.title_color = 'medium'; 
         this.data.time_color = 'dark'; 
       }
-      this.listTimes.push(this.data);
+      if(this.data.title == 'Imsak') {
+        this.tempTimes1.push(this.data);
+      } else {
+        this.tempTimes2.push(this.data);
+      }
+
+      this.listTimes = this.tempTimes1.concat(this.tempTimes2);
     }
     
   }
@@ -174,9 +195,13 @@ export class HomePage implements OnInit {
         let today = new Date(this.prayTime.date.readable);
         today.setDate(today.getDate() + 1);
         next_time = new Date(today).setHours(4, 10, 0);
+        this.nextTime.time = undefined;
+        this.nextTimeTimer = undefined;
         this.nextTime.time = new Date(next_time);
         this.nextTimeTimer = await this.timeCalc(this.dateNow, this.nextTime.time);
       } else {
+        this.nextTime.time = undefined;
+        this.nextTimeTimer = undefined;
         this.nextTime.time = new Date(next_time);
         this.nextTimeTimer = await this.timeCalc(this.dateNow, this.nextTime.time);
       }
@@ -237,5 +262,6 @@ export class HomePage implements OnInit {
         }
       }
     }
+    this.loading = false;
   }
 }
