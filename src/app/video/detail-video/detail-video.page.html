@@ -11,28 +11,25 @@
 </ion-header>
 
 <ion-content>
-  <div class="ion-padding">
-    <ion-row>
-      <ion-col class="ion-text-center" style="border: dashed 1px #40A083; border-radius: 10px;">
-        <iframe width="auto" height="auto" 
-          [src]="unSaveUrl(videoData.url)" 
-          title="YouTube video player" 
-          frameborder="0" 
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+  <div class="video-container">
+    <iframe
+          [src]="unSaveUrl(videoData.url)"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen>
-        </iframe>
-      </ion-col>
-    </ion-row>
+    </iframe>
+  </div>
 
     <ion-item lines="none">
       <ion-label>
-        <h1 class="ion-text-wrap">
+        <h2 class="ion-text-wrap">
           {{videoData.title}}
-        </h1>
+        </h2>
         <p class="ion-text-wrap">
           {{videoData.descriptions}}
         </p>
       </ion-label>
     </ion-item>
-  </div>
+
 </ion-content>

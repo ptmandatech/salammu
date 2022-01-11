@@ -23,7 +23,7 @@
         <ion-row class="ion-no-padding" *ngIf="!loading">
           <ion-col size="6" *ngFor="let n of listProducts">
             <ion-card class="rounded-15" [routerLink]="['/produk-mu/detail-produk', n.id]">
-              <img src="{{n.images.length == 0 ? './assets/imgs/pisang-coklat.jpg':(serverImg+n.images[0])}}" class="object-bg" style="height: 150px;">
+              <img src="{{n.images.length == 0 ? './assets/imgs/no-product.png':(serverImg+n.images[0])}}" class="object-bg" style="height: 150px;">
               <ion-card-content>
                 <ion-label>
                   <ion-text color="primary">
