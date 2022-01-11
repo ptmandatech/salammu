@@ -34,13 +34,14 @@
             <p class="ion-text-wrap">{{pengajianData.location}}</p>
           </ion-label>
         </ion-item>
-        <ion-item>
+        <ion-item *ngIf="pengajianData.pin != null">
           <ion-icon slot="start" color="primary" name="location-outline"></ion-icon>
-          <ion-label>
+          <!-- <ion-label>
             <ion-text color="primary">
               <p class="ion-text-wrap">{{pengajianData.pin}}</p>
             </ion-text>
-          </ion-label>
+          </ion-label> -->
+          <div id="mapDetail" style="width: 400px; height: 300px;"></div>
         </ion-item>
 
       </ion-col>

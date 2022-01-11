@@ -57,16 +57,18 @@ export class TambahPengajianPage implements OnInit {
   ngOnInit() {
     this.today = new Date();
     this.id = this.routes.snapshot.paramMap.get('id');
-    this.checkPermission();
     if(this.id != 0) {
       this.isCreated = false;
       this.getDetailPengajian();
+    } else {
+      this.checkPermission();
     }
   }
 
-  getDetailPengajian() {
-    this.api.get('pengajian/find/'+this.id).then(res => {
+  async getDetailPengajian() {
+    await this.api.get('pengajian/find/'+this.id).then(res => {
       this.pengajianData = res;
+      this.checkPermission();
       this.dateValue = this.pengajianData.datetime;
     })
   }
@@ -84,7 +86,7 @@ export class TambahPengajianPage implements OnInit {
         .then(async (state) => {
           if (state == this.diagnostic.locationMode.LOCATION_OFF) {
             const confirm = await this.alertController.create({
-              header: 'LMSHD',
+              header: 'SalamMU',
               message: 'Lokasi belum diaktifkan di perangkat ini. Pergi ke pengaturan untuk mengaktifkan lokasi.',
               buttons: [
                 {
@@ -101,8 +103,47 @@ export class TambahPengajianPage implements OnInit {
             console.log('ok');
             this.checkLocation();
           }
-        }).catch(e => console.error(e));
+        }).catch(e => {
+          console.error(e)
+          function onSuccess(position) {
+            var element = document.getElementById('geolocation');
+            element.innerHTML = 'Latitude: '  + position.coords.latitude      + '<br />' +
+                                'Longitude: ' + position.coords.longitude     + '<br />';
+            if(this.isCreated == true) {
+              var dt = {
+                lat: position.coords.latitude, 
+                long: position.coords.longitude
+              }
+              if(this.pengajianData.pin == null) {
+                this.pengajianData.pin = JSON.stringify(dt);
+              }
+            }
+          }
+    
+          // onError Callback receives a PositionError object
+          //
+          function onError(error) {
+              alert('code: '    + error.code    + '\n' +
+                    'message: ' + error.message + '\n');
+          }
+          this.generateMap(undefined);
+        });
     } else {
+      console.log('aaaa')
+      function onSuccess(position) {
+        var element = document.getElementById('geolocation');
+        element.innerHTML = 'Latitude: '  + position.coords.latitude      + '<br />' +
+                            'Longitude: ' + position.coords.longitude     + '<br />';
+      }
+
+      // onError Callback receives a PositionError object
+      //
+      function onError(error) {
+          alert('code: '    + error.code    + '\n' +
+                'message: ' + error.message + '\n');
+      }
+      var watchID = navigator.geolocation.watchPosition(onSuccess, onError, { enableHighAccuracy: true });
+      console.log(watchID)
       this.generateMap(undefined);
     }
   }
@@ -138,6 +179,11 @@ export class TambahPengajianPage implements OnInit {
     var dt = {
       lat: this.locationNow.lat, 
       long: this.locationNow.long
+    }
+    if(this.isCreated == true) {
+      if(this.pengajianData.pin == null) {
+        this.pengajianData.pin = JSON.stringify(dt);
+      }
     }
     this.generateMap(dt);
     localStorage.setItem('latLong', JSON.stringify(dt));
@@ -208,20 +254,25 @@ export class TambahPengajianPage implements OnInit {
   vectorLayer: VectorLayer;
   height:any='300px';
   showToolbar:boolean=false;
-  title:any = 'LMSHD';
+  title:any = 'SalamMU';
   center:any=[110.3647,-7.8014];
   generateMap(data)
   {
-    console.log(data)
+    if(this.pengajianData.pin != null) {
+      data = JSON.parse(this.pengajianData.pin);
+    }
     var features = [];
     if(data == undefined) {
       this.longitude = 110.3647;
       this.latitude = -7.8014;
-      features.push(coloredSvgMarker([this.longitude,this.latitude], "LMSHD", "red"));
+      this.locationNow = {};
+      this.locationNow.lat = this.latitude;
+      this.locationNow.long = this.longitude;
+      features.push(coloredSvgMarker([this.longitude,this.latitude], "SalamMU", "red"));
     } else {
       this.latitude = data.lat;
       this.longitude = data.long;
-      features.push(coloredSvgMarker([this.longitude,this.latitude], "LMSHD", "red"));
+      features.push(coloredSvgMarker([this.longitude,this.latitude], "SalamMU", "red"));
     }
 
     this.vectorSource = new VectorSource({
@@ -288,6 +339,15 @@ export class TambahPengajianPage implements OnInit {
     });
 
     this.map.on('singleclick', (evt) => {
+      this.longitude = evt.coordinate[0];
+      this.latitude = evt.coordinate[1];
+      this.locationNow.lat = this.latitude;
+      this.locationNow.long = this.longitude;
+      var dt = {
+        lat: this.locationNow.lat, 
+        long: this.locationNow.long
+      }
+      this.pengajianData.pin = JSON.stringify(dt);
       this.map.removeLayer(this.vectorLayer);
       document.getElementById('info').innerHTML = '';
       var viewResolution = /** @type {number} */ (view.getResolution());
@@ -299,20 +359,17 @@ export class TambahPengajianPage implements OnInit {
       );
       if (url) {
         fetch(url)
-          .then(function (response) { return response.text(); })
+          .then(function (response) { 
+            return response.text(); 
+          })
           .then(function (html) {
             document.getElementById('info').innerHTML = html;
           });
       }
       
-      this.locationNow.lat = evt.coordinate_[0];
-      this.locationNow.long = evt.coordinate_[1];
-      var data = {
-        latitude: this.locationNow.lat,
-        longitude: this.locationNow.long
-      }
       features = [];
       features.push(coloredSvgMarker([this.locationNow.long,this.locationNow.lat], "Lokasi Anda", "red"));
+  
       this.vectorSource = new VectorSource({
         features: features 
       });
