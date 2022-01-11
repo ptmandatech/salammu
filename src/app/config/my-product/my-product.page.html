@@ -36,6 +36,9 @@
                   </ion-text>
                 </ion-label>
                 <h2 style="margin-top: 20px;">Rp.{{n.price | number:'1.0-0'}}</h2>
+                <ion-text color="medium" *ngIf="userData.role == 'superadmin'">
+                  <p class="text-elipsis">{{users[n.created_by] == undefined ? '':'Dibuat Oleh: '+users[n.created_by].name}}<p>
+                </ion-text>
               </ion-card-content>
             </ion-card>
           </ion-col>
