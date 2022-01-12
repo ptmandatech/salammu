@@ -168,7 +168,6 @@ export class PengajianPage implements OnInit {
   }
 
   async modalPeta(dataPengajian) {
-    console.log(dataPengajian)
     const modal = await this.modalController.create({
       component: ModalPetaComponent,
       componentProps: {data:dataPengajian},
@@ -256,12 +255,10 @@ export class PengajianPage implements OnInit {
     this.mapPengajian.on('singleclick', async function(evt) {
       var dataPengajian;
       that.mapPengajian.forEachFeatureAtPixel(evt.pixel, function(feature, HeritageLayer) {
-        console.log(feature)
         if(feature.id_ != undefined) {
           dataPengajian = that.listPengajian.find(x => x.id === feature.id_);
         } else {
           dataPengajian = that.listPengajian.find(x => x.id === feature.values_.id);
-          console.log(dataPengajian)
         }
       });
 

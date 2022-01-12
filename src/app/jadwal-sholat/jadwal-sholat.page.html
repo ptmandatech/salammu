@@ -104,6 +104,20 @@
               </div>
             </ion-col>
           </ion-row>
+          <div *ngIf="timesSelected.length == 0">
+            <ion-row class="ion-align-items-center" *ngFor="let n of [1,2,3,4,5,6,7,8,9,10]">
+              <ion-col class="cal-cell bg-gray">
+                <div class="centered">
+                  <ion-text color="secondary" class="cal-date fs-10"><ion-skeleton-text animated></ion-skeleton-text></ion-text>
+                </div>
+              </ion-col>
+              <ion-col class="cal-cell" *ngFor="let t of [1,2,3,4,5,6]">
+                <div class="centered">
+                  <ion-text color="medium" class="cal-date fs-10"><ion-skeleton-text animated></ion-skeleton-text></ion-text>
+                </div>
+              </ion-col>
+            </ion-row>
+          </div>
         </ion-grid>
 
 

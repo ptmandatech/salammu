@@ -20,7 +20,6 @@ export class ModalPetaComponent implements OnInit {
 
   ngOnInit() {
     this.dataPengajian = this.navParams.get('data');
-    console.log(this.dataPengajian)
     if(this.dataPengajian.pin != null) {
       let pin = JSON.parse(this.dataPengajian.pin);
       this.getDetailLocation(pin);
