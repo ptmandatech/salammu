@@ -3,7 +3,7 @@
     <ion-item lines="full">
       <ion-label>
         <ion-text class="ion-text-wrap judul">
-          Pengajian Rutin Muhammadiyah Ranting Adiwerna
+          {{dataPengajian.name == undefined ? '':dataPengajian.name}}
         </ion-text>
       </ion-label>
     </ion-item>
@@ -14,26 +14,26 @@
   <ion-item>
     <ion-icon slot="start" color="primary" name="calendar-outline"></ion-icon>
     <ion-label>
-      <p class="ion-text-wrap">21 Desember 2021</p>
+      <p class="ion-text-wrap">{{dataPengajian.datetime | date: 'dd MMMM yyyy'}}</p>
     </ion-label>
   </ion-item>
   <ion-item>
     <ion-icon slot="start" color="primary" name="time-outline"></ion-icon>
     <ion-label>
-      <p class="ion-text-wrap">Pukul : 20.00</p>
+      <p class="ion-text-wrap">Pukul : {{dataPengajian.datetime | date: 'H:mm'}}</p>
     </ion-label>
   </ion-item>
   <ion-item>
     <ion-icon slot="start" color="primary" name="home-outline"></ion-icon>
     <ion-label>
-      <p class="ion-text-wrap">Rumah Bapak Juwari</p>
+      <p class="ion-text-wrap">{{dataPengajian.location == undefined ? '':dataPengajian.location}}</p>
     </ion-label>
   </ion-item>
   <ion-item>
     <ion-icon slot="start" color="primary" name="location-outline"></ion-icon>
     <ion-label>
       <ion-text color="primary">
-        <p class="ion-text-wrap">Lokasi di Jl. Godean - Seyegan No 55561, Margodadi,Kec Seyegan, Kab Sleman, DIY 55561</p>
+        <p class="ion-text-wrap">Lokasi di {{locationNow == undefined ? '':locationNow.display_name}}</p>
       </ion-text>
     </ion-label>
   </ion-item>

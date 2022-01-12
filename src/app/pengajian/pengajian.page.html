@@ -10,7 +10,7 @@
           Kalender
         </ion-label>
       </ion-segment-button>
-      <ion-segment-button value="map">
+      <ion-segment-button value="map" (click)="generateMap()">
         <ion-label>
           Peta
         </ion-label>
@@ -62,7 +62,7 @@
           <div *ngSwitchCase="'map'" >
             <ion-row>
               <ion-col class="ion-text-center">
-                <img src="./assets/icon/marker.svg" width="35" (click)="modalPeta()">
+                <div id="mapPengajian" style="width: 100%; height: 100%; position:fixed" *ngIf="!loadingGetMap"></div>
               </ion-col>
             </ion-row>
 

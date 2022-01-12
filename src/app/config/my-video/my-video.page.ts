@@ -21,12 +21,21 @@ export class MyVideoPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.loading = true;
     this.serverImg = this.common.photoBaseUrl+'videos/';
+    this.listVideos = [];
+    this.listVideosTemp = [];
+    this.getAllVideos();
   }
 
-  ionViewDidEnter() {
+  async doRefresh(event) {
     this.loading = true;
+    this.listVideos = [];
+    this.listVideosTemp = [];
     this.getAllVideos();
+    setTimeout(() => {
+      event.target.complete();
+    }, 2000);
   }
 
   getAllVideos() {
@@ -37,6 +46,31 @@ export class MyVideoPage implements OnInit {
     }, error => {
       this.loading = false;
     })
+  }
+
+  initializeItems(): void {
+    this.listVideos = this.listVideosTemp;
+  }
+
+  searchTerm: string = '';
+  searchChanged(evt) {
+
+    this.initializeItems();
+
+    const searchTerm = evt.srcElement.value;
+
+    if (!searchTerm) {
+      return;
+    }
+
+    this.listVideos = this.listVideos.filter(video => {
+      if (video.title && searchTerm) {
+        if (video.title.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
+          return true;
+        }
+        return false;
+      }
+    });
   }
 
 }

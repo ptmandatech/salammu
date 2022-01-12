@@ -52,6 +52,13 @@
           </ion-item>
 
           <ion-text color="medium">Pin Lokasi</ion-text>
+          <ion-item lines="none" class="input">
+            <ion-label>
+              <ion-text color="primary">
+                <p class="ion-text-wrap">{{detailLocSelected == undefined ? '':detailLocSelected.display_name}}</p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
           <div id="map" style="width: auto; height: 300px;"></div>
           <div id="info">&nbsp;</div>
           <div id="geolocation"></div>

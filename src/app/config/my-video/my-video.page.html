@@ -3,9 +3,15 @@
     <ion-back-button slot="start"></ion-back-button>
     <ion-title>Video</ion-title>
   </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-searchbar mode="ios" showCancelButton="never" [(ngModel)]="searchTerm" (ionChange)="searchChanged($event)" placeholder="Cari Video"></ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
 
   <ion-grid class="ion-no-padding">
     <ion-row class="ion-justify-content-center" *ngIf="!loading && listVideos.length == 0">

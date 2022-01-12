@@ -26,7 +26,19 @@ export class ProdukMUPage implements OnInit {
   ngOnInit() {
     this.loading = true;
     this.serverImg = this.common.photoBaseUrl+'products/';
+    this.listProducts = [];
+    this.listProductsTemp = [];
     this.getAllProducts();
+  }
+
+  async doRefresh(event) {
+    this.loading = true;
+    this.listProducts = [];
+    this.listProductsTemp = [];
+    this.getAllProducts();
+    setTimeout(() => {
+      event.target.complete();
+    }, 2000);
   }
 
   getAllProducts() {

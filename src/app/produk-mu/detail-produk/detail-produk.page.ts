@@ -17,7 +17,7 @@ export class DetailProdukPage implements OnInit {
     loop: true
   };
 
-  detailProduct:any = {};
+  detailProduct:any;
   serverImg: any;
   id:any;
   constructor(
@@ -42,8 +42,9 @@ export class DetailProdukPage implements OnInit {
   }
 
   parseImage(res) {
-    if(res.images != null && res.images != '') {
-      res.images = JSON.parse(res.images);
+    let images = JSON.parse(res.images);
+    if(images.length > 0 && images != null && images != '') {
+      res.images = images;
       this.detailProduct = res;
     } else {
       res.images = [];

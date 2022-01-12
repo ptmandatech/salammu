@@ -21,12 +21,21 @@ export class VideoPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.loading = true;
     this.serverImg = this.common.photoBaseUrl+'videos/';
+    this.listVideos = [];
+    this.listVideosTemp = [];
+    this.getAllVideos();
   }
 
-  ionViewDidEnter() {
+  async doRefresh(event) {
     this.loading = true;
+    this.listVideos = [];
+    this.listVideosTemp = [];
     this.getAllVideos();
+    setTimeout(() => {
+      event.target.complete();
+    }, 2000);
   }
 
   getAllVideos() {

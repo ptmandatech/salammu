@@ -21,12 +21,17 @@ export class BannerPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.loading = true;
     this.serverImg = this.common.photoBaseUrl+'banners/';
+    this.getAllBanners();
   }
 
-  ionViewDidEnter() {
+  async doRefresh(event) {
     this.loading = true;
     this.getAllBanners();
+    setTimeout(() => {
+      event.target.complete();
+    }, 2000);
   }
 
   getAllBanners() {
@@ -39,6 +44,31 @@ export class BannerPage implements OnInit {
     }, error => {
       this.loading = false;
     })
+  }
+
+  initializeItems(): void {
+    this.listBanners = this.listBannersTemp;
+  }
+
+  searchTerm: string = '';
+  searchChanged(evt) {
+
+    this.initializeItems();
+
+    const searchTerm = evt.srcElement.value;
+
+    if (!searchTerm) {
+      return;
+    }
+
+    this.listBanners = this.listBanners.filter(banner => {
+      if (banner.url && searchTerm) {
+        if (banner.url.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
+          return true;
+        }
+        return false;
+      }
+    });
   }
 
   update(n) {

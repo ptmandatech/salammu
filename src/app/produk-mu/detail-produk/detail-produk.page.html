@@ -13,9 +13,14 @@
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6" *ngIf="detailProduct != undefined">
 
-        <ion-slides pager="true" [options]="slideOpts">
+        <ion-slides pager="true" [options]="slideOpts" *ngIf="detailProduct.images.length > 0">
           <ion-slide *ngFor="let n of detailProduct.images">
               <img src="{{serverImg+n}}">
+          </ion-slide>
+        </ion-slides>
+        <ion-slides pager="true" [options]="slideOpts" *ngIf="detailProduct.images.length == 0">
+          <ion-slide>
+              <img src="./assets/imgs/no-product.png">
           </ion-slide>
         </ion-slides>
 

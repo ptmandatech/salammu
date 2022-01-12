@@ -25,14 +25,21 @@ export class MyProductPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.loading = true;
     this.serverImg = this.common.photoBaseUrl+'products/';
+    this.listProducts = [];
+    this.listProductsTemp = [];
+    this.cekLogin();
   }
 
-  ionViewDidEnter() {
+  async doRefresh(event) {
     this.loading = true;
     this.listProducts = [];
     this.listProductsTemp = [];
     this.cekLogin();
+    setTimeout(() => {
+      event.target.complete();
+    }, 2000);
   }
 
   cekLogin()

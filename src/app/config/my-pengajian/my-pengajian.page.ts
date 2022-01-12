@@ -23,13 +23,20 @@ export class MyPengajianPage implements OnInit {
   ) { }
 
   ngOnInit() {
-  }
-
-  ionViewDidEnter() {
     this.loading = true;
     this.listPengajian = [];
     this.listPengajianTemp = [];
     this.cekLogin();
+  }
+
+  async doRefresh(event) {
+    this.loading = true;
+    this.listPengajian = [];
+    this.listPengajianTemp = [];
+    this.cekLogin();
+    setTimeout(() => {
+      event.target.complete();
+    }, 2000);
   }
 
   cekLogin()
@@ -98,8 +105,10 @@ export class MyPengajianPage implements OnInit {
     }
 
     this.listPengajian = this.listPengajian.filter(pengajian => {
-      if (pengajian.name && searchTerm) {
+      if (pengajian.name && pengajian.location && searchTerm) {
         if (pengajian.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
+          return true;
+        } else if (pengajian.location.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
           return true;
         }
         return false;

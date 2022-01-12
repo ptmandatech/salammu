@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ModalController, LoadingController, AlertController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 import { CommonService } from 'src/app/services/common.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 //map
 import 'ol/ol.css';
 import Map from 'ol/Map';
@@ -34,6 +35,7 @@ export class DetailPengajianPage implements OnInit {
   @ViewChild('mapElementRef', { static: true }) mapElementRef: ElementRef;
   mapDetail: Map;
   constructor(
+    public http:HttpClient, 
     public api: ApiService,
     public common: CommonService,
     public router:Router,
@@ -53,9 +55,37 @@ export class DetailPengajianPage implements OnInit {
       this.pengajianData = res;
       if(this.pengajianData.pin != null) {
         var dt = JSON.parse(this.pengajianData.pin);
+        this.getDetailLocation(dt);
         this.generateMap(dt);
       }
     })
+  }
+
+  httpOption:any;
+  locationNow:any;
+  city:any;
+  async getDetailLocation(dt) {
+    this.httpOption = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+      })
+    };
+
+    await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
+      this.locationNow = res;
+      this.city = this.locationNow.address.state_district.replace('Kota ', '');
+      if(this.locationNow == undefined) {
+        await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
+          this.locationNow = res;
+          this.city = this.locationNow.city.replace('Kota ', '');
+        })
+      }
+    }, async error => {
+      await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
+        this.locationNow = res;
+        this.city = this.locationNow.city.replace('Kota ', '');
+      })
+    });
   }
 
   longitude:any;
@@ -147,9 +177,6 @@ export class DetailPengajianPage implements OnInit {
         geometry: new Point(lonLat),
         name: name
       });
-      var svg = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 30 30" enable-background="new 0 0 30 30" xml:space="preserve">' +
-        '<path fill="' + color + '" d="M22.906,10.438c0,4.367-6.281,14.312-7.906,17.031c-1.719-2.75-7.906-12.665-7.906-17.031S10.634,2.531,15,2.531S22.906,6.071,22.906,10.438z"/>' +
-        '<circle fill="' + color + '" cx="15" cy="10.677" r="3.291"/></svg>';
     
       feature.setStyle(
         new Style({
@@ -157,7 +184,7 @@ export class DetailPengajianPage implements OnInit {
             anchor: [0.5, 1.0],
             anchorXUnits: 'fraction',
             anchorYUnits: 'fraction',
-            src: 'data:image/svg+xml,' + escape(svg),
+            src: './assets/icon/marker.svg',
             scale: 2,
             imgSize: [30, 30],
           })

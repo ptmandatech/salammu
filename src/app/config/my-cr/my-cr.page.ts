@@ -22,13 +22,20 @@ export class MyCrPage implements OnInit {
   ) { }
 
   ngOnInit() {
-  }
-
-  ionViewDidEnter() {
     this.loading = true;
     this.listRanting = [];
     this.listCabang = [];
     this.getAllCr();
+  }
+
+  async doRefresh(event) {
+    this.loading = true;
+    this.listRanting = [];
+    this.listCabang = [];
+    this.getAllCr();
+    setTimeout(() => {
+      event.target.complete();
+    }, 2000);
   }
 
   getAllCr() {

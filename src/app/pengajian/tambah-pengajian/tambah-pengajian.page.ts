@@ -23,6 +23,9 @@ import VectorLayer from 'ol/layer/Vector';
 import PluggableMap from 'ol/PluggableMap';
 import TileWMS from 'ol/source/TileWMS';
 import { Diagnostic } from '@awesome-cordova-plugins/diagnostic/ngx';
+import Geocoder from 'ol-geocoder';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { DatePipe } from '@angular/common';
 useGeographic();
 
 @Component({
@@ -42,6 +45,7 @@ export class TambahPengajianPage implements OnInit {
   loading:boolean;
   today:any;
   constructor(
+    public http:HttpClient, 
     public api: ApiService,
     public common: CommonService,
     private geolocation: Geolocation,
@@ -52,6 +56,7 @@ export class TambahPengajianPage implements OnInit {
     private platform: Platform,
     private loadingController: LoadingController,
     public alertController: AlertController,
+    private datePipe: DatePipe,
   ) { }
 
   ngOnInit() {
@@ -68,8 +73,12 @@ export class TambahPengajianPage implements OnInit {
   async getDetailPengajian() {
     await this.api.get('pengajian/find/'+this.id).then(res => {
       this.pengajianData = res;
+      if(this.pengajianData.pin != null) {
+        var dt = JSON.parse(this.pengajianData.pin);
+        this.getDetailLocation(dt);
+      }
       this.checkPermission();
-      this.dateValue = this.pengajianData.datetime;
+      this.dateValue = this.datePipe.transform(new Date(this.pengajianData.datetime), 'MMM dd yyyy HH:mm');
     })
   }
 
@@ -268,7 +277,7 @@ export class TambahPengajianPage implements OnInit {
       this.locationNow = {};
       this.locationNow.lat = this.latitude;
       this.locationNow.long = this.longitude;
-      features.push(coloredSvgMarker([this.longitude,this.latitude], "SalamMU", "red"));
+      features.push(coloredSvgMarker([0,0], "SalamMU", "red"));
     } else {
       this.latitude = data.lat;
       this.longitude = data.long;
@@ -341,12 +350,16 @@ export class TambahPengajianPage implements OnInit {
     this.map.on('singleclick', (evt) => {
       this.longitude = evt.coordinate[0];
       this.latitude = evt.coordinate[1];
+      if(this.locationNow == undefined) {
+        this.locationNow = {};
+      }
       this.locationNow.lat = this.latitude;
       this.locationNow.long = this.longitude;
       var dt = {
         lat: this.locationNow.lat, 
         long: this.locationNow.long
       }
+      this.getDetailLocation(dt);
       this.pengajianData.pin = JSON.stringify(dt);
       this.map.removeLayer(this.vectorLayer);
       document.getElementById('info').innerHTML = '';
@@ -381,15 +394,31 @@ export class TambahPengajianPage implements OnInit {
       this.map.addLayer(this.vectorLayer);
     });
 
+    var that = this;
+    //Instantiate with some options and add the Control
+    var geocoder = new Geocoder('nominatim', {
+      provider: 'osm',
+      lang: 'id',
+      placeholder: 'Cari Lokasi ...',
+      limit: 5,
+      debug: false,
+      autoComplete: true,
+      keepOpen: true
+    });
+    this.map.addControl(geocoder);
+
+    //Listen when an address is chosen
+    geocoder.on('addresschosen', function (evt) {
+      that.map.getView().setCenter([evt.place.lon, evt.place.lat]);
+      that.map.getView().setZoom(11);
+    });
+
     function coloredSvgMarker(lonLat,name, color) {
       if (!color) color = 'red';
       var feature = new Feature({
         geometry: new Point(lonLat),
         name: name
       });
-      var svg = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 30 30" enable-background="new 0 0 30 30" xml:space="preserve">' +
-        '<path fill="' + color + '" d="M22.906,10.438c0,4.367-6.281,14.312-7.906,17.031c-1.719-2.75-7.906-12.665-7.906-17.031S10.634,2.531,15,2.531S22.906,6.071,22.906,10.438z"/>' +
-        '<circle fill="' + color + '" cx="15" cy="10.677" r="3.291"/></svg>';
     
       feature.setStyle(
         new Style({
@@ -397,7 +426,7 @@ export class TambahPengajianPage implements OnInit {
             anchor: [0.5, 1.0],
             anchorXUnits: 'fraction',
             anchorYUnits: 'fraction',
-            src: 'data:image/svg+xml,' + escape(svg),
+            src: './assets/icon/marker.svg',
             scale: 2,
             imgSize: [30, 30],
           })
@@ -409,6 +438,33 @@ export class TambahPengajianPage implements OnInit {
     setTimeout(() => {
       this.map.setTarget(document.getElementById('map'));
     }, 1000);
+  }
+
+  httpOption:any;
+  detailLocSelected:any;
+  city:any;
+  async getDetailLocation(dt) {
+    this.httpOption = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+      })
+    };
+
+    await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
+      this.detailLocSelected = res;
+      this.city = this.detailLocSelected.address.state_district.replace('Kota ', '');
+      if(this.detailLocSelected == undefined) {
+        await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
+          this.detailLocSelected = res;
+          this.city = this.detailLocSelected.city.replace('Kota ', '');
+        })
+      }
+    }, async error => {
+      await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
+        this.detailLocSelected = res;
+        this.city = this.detailLocSelected.city.replace('Kota ', '');
+      })
+    });
   }
 
 }
