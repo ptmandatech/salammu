@@ -2,11 +2,6 @@
   <ion-toolbar color="primary">
     <ion-back-button slot="start"></ion-back-button>
     <ion-title>Detail {{crData.category == undefined ? '':crData.category}}</ion-title>
-    <ion-buttons slot="end" *ngIf="userData != undefined">
-      <ion-button *ngIf="userData.role == 'superadmin'" (click)="delete()" fill="clear">
-        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 

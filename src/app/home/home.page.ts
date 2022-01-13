@@ -1,10 +1,13 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController, ModalController } from '@ionic/angular';
+import { Diagnostic } from '@awesome-cordova-plugins/diagnostic/ngx';
+import { AlertController, LoadingController, ModalController, Platform } from '@ionic/angular';
 import { LoginPage } from '../auth/login/login.page';
 import { ApiService } from '../services/api.service';
 import { CommonService } from '../services/common.service';
+import { Geolocation, Geoposition, PositionError } from '@awesome-cordova-plugins/geolocation/ngx';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
@@ -27,14 +30,20 @@ export class HomePage implements OnInit {
   serverImg: any;
   userData: any;
   locationNow:any;
+  city:any;
   loading:boolean;
   constructor(
     public common: CommonService,
+    public http:HttpClient, 
     private api: ApiService,
     private loadingController: LoadingController,
     private datePipe: DatePipe,
     public modalController: ModalController,
-    private router: Router
+    private router: Router,
+    private geolocation: Geolocation,
+    public alertController: AlertController,
+    private diagnostic: Diagnostic,
+    private platform: Platform,
   ) {}
 
   prayTime:any;
@@ -42,22 +51,146 @@ export class HomePage implements OnInit {
   async ngOnInit() {
     this.loading = true;
     this.dateNow = new Date();
+    await this.checkPermission();
     this.cekLogin();
     this.prayTime = undefined;
     this.timesToday = undefined;
-    this.prayTime = await this.api.getToday();
+    this.prayTime = await this.api.getToday(this.city);
+    console.log(this.prayTime)
     this.timesToday = await this.prayTime.timings;
     
     this.parseTime(this.timesToday);
     this.serverImg = this.common.photoBaseUrl+'products/';
     this.serverImgBanner = this.common.photoBaseUrl+'banners/';
-    this.locationNow = await this.api.city;
     this.getAllProducts();
     this.getAllBanners();
   }
 
   ionViewWillEnter() {
+    this.checkPermission();
     this.cekLogin();
+  }
+
+  checkPermission() {
+    if (this.platform.is('android')) {
+      let successCallback = (isAvailable) => { console.log('Is available? ' + isAvailable); };
+      let errorCallback = (e) => console.error(e);
+      
+      this.diagnostic.isLocationAvailable().then(successCallback).catch(errorCallback);
+    
+      this.diagnostic.isGpsLocationAvailable().then(successCallback, errorCallback);
+    
+      this.diagnostic.getLocationMode()
+        .then(async (state) => {
+          if (state == this.diagnostic.locationMode.LOCATION_OFF) {
+            const confirm = await this.alertController.create({
+              header: 'SalamMU',
+              message: 'Lokasi belum diaktifkan di perangkat ini. Pergi ke pengaturan untuk mengaktifkan lokasi.',
+              buttons: [
+                {
+                  text: 'Pengaturan',
+                  handler: () => {
+                    this.diagnostic.switchToLocationSettings();
+                    this.checkLocation();
+                  }
+                }
+              ]
+            });
+            await confirm.present();
+          } else {
+            console.log('ok');
+            this.checkLocation();
+          }
+        }).catch(e => {
+          this.getCurrentLocations();
+          console.log(e)
+        });
+    } else {
+      this.checkLocation();
+    }
+  }
+
+  getCurrentLocations() {
+    this.geolocation.getCurrentPosition().then((resp) => {
+      const location = {
+        lat: resp.coords.latitude,
+        long: resp.coords.longitude
+      };
+      this.getDetailLocation(location);
+    }).catch((error) => {
+      console.log('Error getting location', error);
+    });
+  }
+
+  async loadingCheckLoc() {
+    return await this.loadingController.create({
+      spinner: 'crescent',
+      message: 'Mengambil Data Lokasi...',
+      cssClass: 'custom-class custom-loading'
+    }).then(a => {
+      a.present().then(() => {
+        console.log('presented');
+      });
+    });
+  }
+  
+  options:any;
+  currentPos:any;
+  checkLocation() {
+    return new Promise((resolve, reject) => {
+    this.options = {
+      maximumAge: 3000,
+      enableHighAccuracy: true
+    };
+   
+    this.geolocation.getCurrentPosition(this.options).then((pos: Geoposition) => {
+      this.currentPos = pos;
+      const location = {
+        lat: pos.coords.latitude,
+        long: pos.coords.longitude,
+        time: new Date(),
+      };
+      this.getDetailLocation(location);
+      resolve(pos);
+   }, (err: PositionError) => {
+     reject(err.message);
+    });
+   });
+  }
+
+  httpOption:any;
+  async getDetailLocation(dt) {
+    this.httpOption = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+      })
+    };
+
+    await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
+      this.locationNow = res;
+      if(this.locationNow.address.state_district != undefined) {
+        this.city = this.locationNow.address.state_district.replace('Kota ', '');
+      } else {
+        await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
+          this.checkCity(res);
+        })
+      }
+      if(this.locationNow == undefined) {
+        await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
+          this.checkCity(res);
+        })
+      }
+    }, async error => {
+      await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
+        this.locationNow = res;
+        this.city = this.locationNow.city.replace('Kota ', '');
+      })
+    });
+  }
+
+  checkCity(res) {
+    this.locationNow = res.features[0].properties;
+    this.city = res.features[0].properties.address.city;
   }
 
   // async loginStatus() {
@@ -95,7 +228,8 @@ export class HomePage implements OnInit {
     this.tempTimes2 = [];
     this.prayTime = undefined;
     this.timesToday = undefined;
-    this.prayTime = await this.api.getToday();
+    await this.checkPermission();
+    this.prayTime = await this.api.getToday(this.city);
     this.timesToday = await this.prayTime.timings;
     this.parseTime(this.timesToday);
     this.serverImg = this.common.photoBaseUrl+'products/';

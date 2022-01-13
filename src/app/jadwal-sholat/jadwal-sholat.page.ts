@@ -1,9 +1,13 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { AlertController, LoadingController, ModalController, Platform } from '@ionic/angular';
 import { ApiService } from '../services/api.service';
 import { CalendarService } from '../services/calendar.service';
 import { ModalJadwalComponent } from './modal-jadwal/modal-jadwal.component';
+import { CommonService } from '../services/common.service';
+import { Geolocation, Geoposition, PositionError } from '@awesome-cordova-plugins/geolocation/ngx';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Diagnostic } from '@awesome-cordova-plugins/diagnostic/ngx';
 
 @Component({
   selector: 'app-jadwal-sholat',
@@ -17,6 +21,12 @@ export class JadwalSholatPage implements OnInit {
     public modalController: ModalController,
     private api: ApiService,
     private datePipe: DatePipe,
+    public http:HttpClient, 
+    private geolocation: Geolocation,
+    public alertController: AlertController,
+    private diagnostic: Diagnostic,
+    private loadingController: LoadingController,
+    private platform: Platform,
   ) { }
 
   cal:any={};
@@ -33,16 +43,147 @@ export class JadwalSholatPage implements OnInit {
   today:any;
   firstDateHeader:any;
   lastDateHeader:any;
+  locationNow:any;
+  city:any;
+  loading:boolean;
 
   async ngOnInit() {
+    this.loading = true;
+    this.checkPermission();
     let date = new Date();
     this.month = Number(this.datePipe.transform(new Date(date), 'MM'));
     this.dateToday = Number(this.datePipe.transform(new Date(date), 'dd'));
     this.today = this.datePipe.transform(new Date(date), 'dd MMM yyyy');
     this.year = date.getFullYear();
+    this.prayTime = await this.api.getThisMonth(this.month,this.year, this.city);
+  }
+
+  checkPermission() {
+    if (this.platform.is('android')) {
+      let successCallback = (isAvailable) => { console.log('Is available? ' + isAvailable); };
+      let errorCallback = (e) => console.error(e);
+      
+      this.diagnostic.isLocationAvailable().then(successCallback).catch(errorCallback);
+    
+      this.diagnostic.isGpsLocationAvailable().then(successCallback, errorCallback);
+    
+      this.diagnostic.getLocationMode()
+        .then(async (state) => {
+          if (state == this.diagnostic.locationMode.LOCATION_OFF) {
+            const confirm = await this.alertController.create({
+              header: 'SalamMU',
+              message: 'Lokasi belum diaktifkan di perangkat ini. Pergi ke pengaturan untuk mengaktifkan lokasi.',
+              buttons: [
+                {
+                  text: 'Pengaturan',
+                  handler: () => {
+                    this.diagnostic.switchToLocationSettings();
+                    this.checkLocation();
+                  }
+                }
+              ]
+            });
+            await confirm.present();
+          } else {
+            console.log('ok');
+            this.checkLocation();
+          }
+        }).catch(e => {
+          this.getCurrentLocations();
+          console.log(e)
+        });
+    } else {
+      this.checkLocation();
+    }
+  }
+
+  getCurrentLocations() {
+    this.geolocation.getCurrentPosition().then((resp) => {
+      const location = {
+        lat: resp.coords.latitude,
+        long: resp.coords.longitude
+      };
+      this.getDetailLocation(location);
+    }).catch((error) => {
+      console.log('Error getting location', error);
+    });
+  }
+
+  async loadingCheckLoc() {
+    return await this.loadingController.create({
+      spinner: 'crescent',
+      message: 'Mengambil Data Lokasi...',
+      cssClass: 'custom-class custom-loading'
+    }).then(a => {
+      a.present().then(() => {
+        console.log('presented');
+      });
+    });
+  }
+  
+  options:any;
+  currentPos:any;
+  checkLocation() {
+    return new Promise((resolve, reject) => {
+    this.options = {
+      maximumAge: 3000,
+      enableHighAccuracy: true
+    };
+   
+    this.geolocation.getCurrentPosition(this.options).then((pos: Geoposition) => {
+      this.currentPos = pos;
+      const location = {
+        lat: pos.coords.latitude,
+        long: pos.coords.longitude,
+        time: new Date(),
+      };
+      this.getDetailLocation(location);
+      resolve(pos);
+   }, (err: PositionError) => {
+     reject(err.message);
+    });
+   });
+  }
+
+  httpOption:any;
+  async getDetailLocation(dt) {
+    this.httpOption = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+      })
+    };
+
+    await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
+      this.locationNow = res;
+      if(this.locationNow.address.state_district != undefined) {
+        this.city = this.locationNow.address.state_district.replace('Kota ', '');
+        this.getCal();
+        this.dailyShow();
+      } else {
+        await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
+          this.checkCity(res);
+        })
+      }
+      if(this.locationNow == undefined) {
+        await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
+          this.checkCity(res);
+        })
+      }
+    }, async error => {
+      await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
+        this.locationNow = res;
+        this.city = this.locationNow.city.replace('Kota ', '');
+        this.getCal();
+        this.dailyShow();
+      })
+    });
+  }
+
+  checkCity(res) {
+    this.locationNow = res.features[0].properties;
+    this.city = res.features[0].properties.address.city;
     this.getCal();
     this.dailyShow();
-    this.prayTime = await this.api.getThisMonth(this.month,this.year);
   }
 
   getCal()
@@ -100,7 +241,7 @@ export class JadwalSholatPage implements OnInit {
         let date = new Date(this.timesSelected[this.timesSelected.length-1].date.gregorian);
         let start = this.datePipe.transform(new Date(date).setDate(date.getDate() + 1), 'yyyy-MM-dd');
         let end = this.datePipe.transform(new Date(date).setDate(date.getDate() + 7), 'yyyy-MM-dd');
-        this.prayTime = await this.api.getWeek(start, end);
+        this.prayTime = await this.api.getWeek(start, end, this.city);
         // this.prayTime = await this.api.getThisMonth(this.month,this.year);
         this.timesSelected = await this.prayTime.datetime;
         this.firstDateHeader = this.timesSelected[0].date.gregorian;
@@ -110,7 +251,7 @@ export class JadwalSholatPage implements OnInit {
         // let date = new Date(this.timesSelected[this.timesSelected.length-1].date.gregorian);
         // let month = this.datePipe.transform(new Date(date).setDate(date.getMonth() + 1), 'yyyy-MM');
         // this.prayTime = await this.api.getMonth(month);
-        this.prayTime = await this.api.getThisMonth(this.month,this.year);
+        this.prayTime = await this.api.getThisMonth(this.month,this.year, this.city);
         this.timesSelected = await this.prayTime;
         this.parseTime(this.timesSelected, 'monthly');
         this.firstDateHeader = this.timesSelected[0].date.readable;
@@ -130,7 +271,7 @@ export class JadwalSholatPage implements OnInit {
         let date = new Date(this.timesSelected[0].date.gregorian);
         let start = this.datePipe.transform(new Date(date).setDate(date.getDate() - 7), 'yyyy-MM-dd');
         let end = this.datePipe.transform(new Date(date).setDate(date.getDate() - 1), 'yyyy-MM-dd');
-        this.prayTime = await this.api.getWeek(start, end);
+        this.prayTime = await this.api.getWeek(start, end, this.city);
         // this.prayTime = await this.api.getThisMonth(this.month,this.year);
         this.timesSelected = await this.prayTime.datetime;
         this.firstDateHeader = this.timesSelected[0].date.gregorian;
@@ -140,7 +281,7 @@ export class JadwalSholatPage implements OnInit {
         // let date = new Date(this.timesSelected[0].date.gregorian);
         // let month = this.datePipe.transform(new Date(date).setDate(date.getMonth() - 1), 'yyyy-MM');
         // this.prayTime = await this.api.getMonth(month);
-        this.prayTime = await this.api.getThisMonth(this.month,this.year);
+        this.prayTime = await this.api.getThisMonth(this.month,this.year, this.city);
         this.timesSelected = await this.prayTime;
         this.firstDateHeader = this.timesSelected[0].date.readable;
         this.lastDateHeader = this.timesSelected[this.timesSelected.length-1].date.readable;
@@ -180,8 +321,9 @@ export class JadwalSholatPage implements OnInit {
     this.daily =true;
     this.weekly =false;
     this.monthly =false;
-    this.prayTime = await this.api.getThisMonth(this.month,this.year);
+    this.prayTime = await this.api.getThisMonth(this.month,this.year, this.city);
     this.timesSelected = await this.prayTime;
+    this.loading = false;
 
   }
 
@@ -194,7 +336,7 @@ export class JadwalSholatPage implements OnInit {
     this.today = this.datePipe.transform(new Date(date), 'yyyy-MM-dd');
     this.month = Number(this.datePipe.transform(new Date(date), 'MM'));
     this.year = date.getFullYear();
-    this.prayTime = await this.api.getThisWeek();
+    this.prayTime = await this.api.getThisWeek(this.city);
     this.timesSelected = await this.prayTime.datetime;
     this.firstDateHeader = this.timesSelected[0].date.gregorian;
     this.lastDateHeader = this.timesSelected[this.timesSelected.length-1].date.gregorian;
@@ -211,7 +353,7 @@ export class JadwalSholatPage implements OnInit {
     this.today = this.datePipe.transform(new Date(date), 'dd MMM yyyy');
     this.month = Number(this.datePipe.transform(new Date(date), 'MM'));
     this.year = date.getFullYear();
-    this.prayTime = await this.api.getThisMonth(this.month,this.year);
+    this.prayTime = await this.api.getThisMonth(this.month,this.year, this.city);
     this.timesSelected = await this.prayTime;
     this.firstDateHeader = this.timesSelected[0].date.readable;
     this.lastDateHeader = this.timesSelected[this.timesSelected.length-1].date.readable;

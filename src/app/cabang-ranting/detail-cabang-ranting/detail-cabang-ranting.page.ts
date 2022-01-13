@@ -46,17 +46,4 @@ export class DetailCabangRantingPage implements OnInit {
     })
   }
 
-  delete() {
-    var conf = confirm('Anda yakin ingin menghapus data?');
-    if (conf) {
-      this.api.delete('cr/'+this.id).then(res => {
-        if(res) {
-          alert('Berhasil menghapus data.');
-          this.loading = false;
-          this.router.navigate(['/my-cr']);
-        }
-      })
-    }
-  }
-
 }

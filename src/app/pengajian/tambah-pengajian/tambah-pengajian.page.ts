@@ -66,137 +66,23 @@ export class TambahPengajianPage implements OnInit {
       this.isCreated = false;
       this.getDetailPengajian();
     } else {
-      this.checkPermission();
+      this.generateMap(undefined);
     }
   }
 
+  locationNow:any;
   async getDetailPengajian() {
     await this.api.get('pengajian/find/'+this.id).then(res => {
       this.pengajianData = res;
       if(this.pengajianData.pin != null) {
         var dt = JSON.parse(this.pengajianData.pin);
+        this.generateMap(dt);
         this.getDetailLocation(dt);
+      } else {
+        this.generateMap(undefined);
       }
-      this.checkPermission();
       this.dateValue = this.datePipe.transform(new Date(this.pengajianData.datetime), 'MMM dd yyyy HH:mm');
     })
-  }
-
-  checkPermission() {
-    if (this.platform.is('android')) {
-      let successCallback = (isAvailable) => { console.log('Is available? ' + isAvailable); };
-      let errorCallback = (e) => console.error(e);
-      
-      this.diagnostic.isLocationAvailable().then(successCallback).catch(errorCallback);
-    
-      this.diagnostic.isGpsLocationAvailable().then(successCallback, errorCallback);
-    
-      this.diagnostic.getLocationMode()
-        .then(async (state) => {
-          if (state == this.diagnostic.locationMode.LOCATION_OFF) {
-            const confirm = await this.alertController.create({
-              header: 'SalamMU',
-              message: 'Lokasi belum diaktifkan di perangkat ini. Pergi ke pengaturan untuk mengaktifkan lokasi.',
-              buttons: [
-                {
-                  text: 'Pengaturan',
-                  handler: () => {
-                    this.diagnostic.switchToLocationSettings();
-                    this.checkLocation();
-                  }
-                }
-              ]
-            });
-            await confirm.present();
-          } else {
-            console.log('ok');
-            this.checkLocation();
-          }
-        }).catch(e => {
-          console.error(e)
-          function onSuccess(position) {
-            var element = document.getElementById('geolocation');
-            element.innerHTML = 'Latitude: '  + position.coords.latitude      + '<br />' +
-                                'Longitude: ' + position.coords.longitude     + '<br />';
-            if(this.isCreated == true) {
-              var dt = {
-                lat: position.coords.latitude, 
-                long: position.coords.longitude
-              }
-              if(this.pengajianData.pin == null) {
-                this.pengajianData.pin = JSON.stringify(dt);
-              }
-            }
-          }
-    
-          // onError Callback receives a PositionError object
-          //
-          function onError(error) {
-              alert('code: '    + error.code    + '\n' +
-                    'message: ' + error.message + '\n');
-          }
-          this.generateMap(undefined);
-        });
-    } else {
-      console.log('aaaa')
-      function onSuccess(position) {
-        var element = document.getElementById('geolocation');
-        element.innerHTML = 'Latitude: '  + position.coords.latitude      + '<br />' +
-                            'Longitude: ' + position.coords.longitude     + '<br />';
-      }
-
-      // onError Callback receives a PositionError object
-      //
-      function onError(error) {
-          alert('code: '    + error.code    + '\n' +
-                'message: ' + error.message + '\n');
-      }
-      var watchID = navigator.geolocation.watchPosition(onSuccess, onError, { enableHighAccuracy: true });
-      console.log(watchID)
-      this.generateMap(undefined);
-    }
-  }
-  
-  options:any;
-  currentPos:any;
-  checkLocation() {
-    return new Promise((resolve, reject) => {
-    this.options = {
-      maximumAge: 3000,
-      enableHighAccuracy: true
-    };
-   
-    this.geolocation.getCurrentPosition(this.options).then((pos: Geoposition) => {
-      this.currentPos = pos;
-      const location = {
-        lat: pos.coords.latitude,
-        long: pos.coords.longitude,
-        time: new Date(),
-      };
-      this.setCoord(location);
-      resolve(pos);
-   }, (err: PositionError) => {
-     reject(err.message);
-    });
-   });
-  }
-
-  locationNow:any;
-  setCoord(data) {
-    this.locationNow.lat = data.lat;
-    this.locationNow.long = data.long;
-    var dt = {
-      lat: this.locationNow.lat, 
-      long: this.locationNow.long
-    }
-    if(this.isCreated == true) {
-      if(this.pengajianData.pin == null) {
-        this.pengajianData.pin = JSON.stringify(dt);
-      }
-    }
-    this.generateMap(dt);
-    localStorage.setItem('latLong', JSON.stringify(dt));
-    this.loadingController.dismiss();
   }
 
   formatDate(value: string) {

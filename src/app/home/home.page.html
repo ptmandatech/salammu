@@ -10,7 +10,7 @@
           <div class="top-left">
             <ion-button fill="clear" color="light">
               <ion-icon slot="icon-only" name="location-outline"></ion-icon>
-              <span *ngIf="!loading">{{locationNow == undefined ? 'Yogyakarta':locationNow}}</span>
+              <span *ngIf="!loading">{{city == undefined ? '':city}}</span>
               <span *ngIf="loading"><ion-skeleton-text animated style="width: 50%;"></ion-skeleton-text></span>
             </ion-button>
             <!-- <ion-item class="fill-0" lines="none" *ngIf="prayTime.meta != undefined">

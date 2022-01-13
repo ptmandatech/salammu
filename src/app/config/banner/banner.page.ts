@@ -25,6 +25,11 @@ export class BannerPage implements OnInit {
     this.serverImg = this.common.photoBaseUrl+'banners/';
     this.getAllBanners();
   }
+  
+  onDidViewEnter() {
+    this.loading = true;
+    this.getAllBanners();
+  }
 
   async doRefresh(event) {
     this.loading = true;

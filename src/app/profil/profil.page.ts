@@ -52,6 +52,7 @@ export class ProfilPage implements OnInit {
       this.userData = res;
       this.loadingController.dismiss();
     }, error => {
+      console.log(error)
       this.loadingController.dismiss();
     })
   }

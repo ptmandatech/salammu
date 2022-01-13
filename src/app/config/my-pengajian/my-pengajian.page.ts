@@ -29,6 +29,13 @@ export class MyPengajianPage implements OnInit {
     this.cekLogin();
   }
 
+  onDidViewEnter() {
+    this.loading = true;
+    this.listPengajian = [];
+    this.listPengajianTemp = [];
+    this.cekLogin();
+  }
+
   async doRefresh(event) {
     this.loading = true;
     this.listPengajian = [];

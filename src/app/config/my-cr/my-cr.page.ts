@@ -28,6 +28,13 @@ export class MyCrPage implements OnInit {
     this.getAllCr();
   }
 
+  onDidViewEnter() {
+    this.loading = true;
+    this.listRanting = [];
+    this.listCabang = [];
+    this.getAllCr();
+  }
+
   async doRefresh(event) {
     this.loading = true;
     this.listRanting = [];

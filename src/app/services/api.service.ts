@@ -25,103 +25,6 @@ export class ApiService {
     public alertController: AlertController,
   ) 
   { 
-    this.checkPermission();
-  }
-
-  checkPermission() {
-    if (this.platform.is('android')) {
-      let successCallback = (isAvailable) => { console.log('Is available? ' + isAvailable); };
-      let errorCallback = (e) => console.error(e);
-      
-      this.diagnostic.isLocationAvailable().then(successCallback).catch(errorCallback);
-    
-      this.diagnostic.isGpsLocationAvailable().then(successCallback, errorCallback);
-    
-      this.diagnostic.getLocationMode()
-        .then(async (state) => {
-          if (state == this.diagnostic.locationMode.LOCATION_OFF) {
-            const confirm = await this.alertController.create({
-              header: 'SalamMU',
-              message: 'Lokasi belum diaktifkan di perangkat ini. Pergi ke pengaturan untuk mengaktifkan lokasi.',
-              buttons: [
-                {
-                  text: 'Pengaturan',
-                  handler: () => {
-                    this.diagnostic.switchToLocationSettings();
-                    this.checkLocation();
-                  }
-                }
-              ]
-            });
-            await confirm.present();
-          } else {
-            console.log('ok');
-            this.checkLocation();
-          }
-        }).catch(e => console.error(e));
-    }
-  }
-
-  async loadingCheckLoc() {
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      message: 'Mengambil Data Lokasi...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-      });
-    });
-  }
-  
-  options:any;
-  currentPos:any;
-  checkLocation() {
-    return new Promise((resolve, reject) => {
-    this.options = {
-      maximumAge: 3000,
-      enableHighAccuracy: true
-    };
-   
-    this.geolocation.getCurrentPosition(this.options).then((pos: Geoposition) => {
-      this.currentPos = pos;
-      const location = {
-        lat: pos.coords.latitude,
-        long: pos.coords.longitude,
-        time: new Date(),
-      };
-      this.getDetailLocation(location);
-      resolve(pos);
-   }, (err: PositionError) => {
-     reject(err.message);
-    });
-   });
-  }
-
-  httpOption:any;
-  locationNow:any;
-  async getDetailLocation(dt) {
-    this.httpOption = {
-      headers: new HttpHeaders({
-        'Content-Type':  'application/json',
-      })
-    };
-
-    await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
-      this.locationNow = res;
-      this.city = this.locationNow.address.state_district.replace('Kota ', '');
-      if(this.locationNow == undefined) {
-        await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
-          this.locationNow = res;
-          this.city = this.locationNow.city.replace('Kota ', '');
-        })
-      }
-    }, async error => {
-      await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
-        this.locationNow = res;
-        this.city = this.locationNow.city.replace('Kota ', '');
-      })
-    });
   }
   
   async get(url) {
@@ -158,37 +61,32 @@ export class ApiService {
     window.open(url, 'blank')
   }
 
-  async getToday() {
-    this.checkPermission();
+  async getToday(city) {
     let date = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
-    let data = await this.common.getTimes('timingsByCity?city='+ this.city + '&country=Indonesia' + '&method=1');
+    let data = await this.common.getTimes('timingsByCity?city='+ city + '&country=Indonesia' + '&method=1');
     return data;
   }
 
-  async getThisWeek() {
-    this.checkPermission();
-    let data = await this.common.getWeekTimes('this_week.json?city='+ this.city +'&school=1');
+  async getThisWeek(city) {
+    let data = await this.common.getWeekTimes('this_week.json?city='+ city +'&school=1');
     return data;
   }
 
-  async getThisMonth(month, year) {
-    this.checkPermission();
+  async getThisMonth(month, year, city) {
     if(month == 0) {
       month = 12
     }
-    let data = await this.common.getTimes('calendarByCity?city='+ this.city + '&country=Indonesia' + '&method=1' + '&month='+month+'&year='+year);
+    let data = await this.common.getTimes('calendarByCity?city='+ city + '&country=Indonesia' + '&method=1' + '&month='+month+'&year='+year);
     return data;
   }
 
-  async getWeek(start,end) {
-    this.checkPermission();
-    let data = await this.common.getWeekTimes('dates.json?city='+ this.city + '&start=' + start + '&end=' + end +'&school=1');
+  async getWeek(start,end,city) {
+    let data = await this.common.getWeekTimes('dates.json?city='+ city + '&start=' + start + '&end=' + end +'&school=1');
     return data;
   }
 
-  async getMonth(month) {
-    this.checkPermission();
-    let data = await this.common.getTimes('month.json?city='+ this.city + '&month=' + month +'&school=1');
+  async getMonth(month,city) {
+    let data = await this.common.getTimes('month.json?city='+ city + '&month=' + month +'&school=1');
     return data;
   }
 

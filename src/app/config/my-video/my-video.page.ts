@@ -28,6 +28,13 @@ export class MyVideoPage implements OnInit {
     this.getAllVideos();
   }
 
+  onDidViewEnter() {
+    this.loading = true;
+    this.listVideos = [];
+    this.listVideosTemp = [];
+    this.getAllVideos();
+  }
+
   async doRefresh(event) {
     this.loading = true;
     this.listVideos = [];

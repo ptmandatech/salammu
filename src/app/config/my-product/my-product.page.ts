@@ -32,6 +32,13 @@ export class MyProductPage implements OnInit {
     this.cekLogin();
   }
 
+  onDidViewEnter() {
+    this.loading = true;
+    this.listProducts = [];
+    this.listProductsTemp = [];
+    this.cekLogin();
+  }
+
   async doRefresh(event) {
     this.loading = true;
     this.listProducts = [];

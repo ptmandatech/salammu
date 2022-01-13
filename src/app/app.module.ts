@@ -17,6 +17,7 @@ import { ImageUploaderPageModule } from './image-uploader/image-uploader.module'
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { Diagnostic } from '@awesome-cordova-plugins/diagnostic/ngx';
 import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
+import { QuillModule } from 'ngx-quill';
  
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
     HttpClientModule,
     ImageUploaderPageModule,
     ImageCropperModule,
+    QuillModule.forRoot()
   ],
   providers: [
     DatePipe,
