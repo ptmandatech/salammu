@@ -38,9 +38,12 @@
             </ion-item>
           </div>
 
-          <div class="top-right">
+          <div class="top-right" *ngIf="!loading">
             <ion-button fill="clear" color="light" size="large" (click)="modalLogin()">
-              <ion-icon style="font-size: 3rem;" slot="icon-only" name="person-circle"></ion-icon>
+              <ion-icon *ngIf="userData == undefined" style="font-size: 3rem;" slot="icon-only" name="person-circle"></ion-icon>
+              <div *ngIf="userData != undefined">
+                <img *ngIf="userData.image != null" src="{{(serverImgProfil+userData.image)}}" class="img-profil">
+              </div>
             </ion-button>
           </div>
 

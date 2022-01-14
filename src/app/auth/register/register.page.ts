@@ -37,8 +37,7 @@ export class RegisterPage implements OnInit {
       this.userData.role = 'user';
       this.api.post('auth/register/',this.userData).then(res=>{
         alert('Pendaftaran berhasil.');
-        this.login();
-        this.loading=false;
+        this.login(this.userData);
       },err=>{
         this.loading=false;
         alert('Ada masalah. Coba lagi!');
@@ -48,19 +47,22 @@ export class RegisterPage implements OnInit {
     }
   }
 
-  login() {
+  async login(userData) {
     var dt = {
-      email: this.userData.email,
-      password: this.userData.password
+      email: userData.email,
+      password: userData.password
     }
-    this.api.post('auth/login',dt).then(res=>{     
-      this.loading=false;
+    await this.api.post('auth/login',dt).then(res=>{     
       localStorage.setItem('salammuToken',JSON.stringify(res));
+      this.dismiss();
       this.router.navigate(['/home']);
+      this.loading=false;
+    }).catch(error => {
+      this.loading=false;
     });
   }
 
-  match!:boolean;
+  match:boolean;
   checkMatch() {
     this.userData.p2 == this.userData.password ? this.match = true:this.match = false;
   }

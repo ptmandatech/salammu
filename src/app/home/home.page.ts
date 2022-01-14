@@ -8,6 +8,7 @@ import { ApiService } from '../services/api.service';
 import { CommonService } from '../services/common.service';
 import { Geolocation, Geoposition, PositionError } from '@awesome-cordova-plugins/geolocation/ngx';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { AppComponent } from '../app.component';
 
 @Component({
   selector: 'app-home',
@@ -27,6 +28,7 @@ export class HomePage implements OnInit {
   listProducts:any = [];
   listBanners:any = [];
   serverImgBanner:any;
+  serverImgProfil:any;
   serverImg: any;
   userData: any;
   locationNow:any;
@@ -44,6 +46,7 @@ export class HomePage implements OnInit {
     public alertController: AlertController,
     private diagnostic: Diagnostic,
     private platform: Platform,
+    private appComponent: AppComponent,
   ) {}
 
   prayTime:any;
@@ -52,26 +55,20 @@ export class HomePage implements OnInit {
     this.loading = true;
     this.dateNow = new Date();
     await this.checkPermission();
-    this.cekLogin();
-    this.prayTime = undefined;
-    this.timesToday = undefined;
-    this.prayTime = await this.api.getToday(this.city);
-    console.log(this.prayTime)
-    this.timesToday = await this.prayTime.timings;
-    
-    this.parseTime(this.timesToday);
+    // this.cekLogin();
     this.serverImg = this.common.photoBaseUrl+'products/';
     this.serverImgBanner = this.common.photoBaseUrl+'banners/';
+    this.serverImgProfil = this.common.photoBaseUrl+'users/';
     this.getAllProducts();
     this.getAllBanners();
   }
 
   ionViewWillEnter() {
-    this.checkPermission();
+    // this.checkPermission();
     this.cekLogin();
   }
 
-  checkPermission() {
+  async checkPermission() {
     if (this.platform.is('android')) {
       let successCallback = (isAvailable) => { console.log('Is available? ' + isAvailable); };
       let errorCallback = (e) => console.error(e);
@@ -89,9 +86,9 @@ export class HomePage implements OnInit {
               buttons: [
                 {
                   text: 'Pengaturan',
-                  handler: () => {
+                  handler: async () => {
                     this.diagnostic.switchToLocationSettings();
-                    this.checkLocation();
+                    await this.checkLocation();
                   }
                 }
               ]
@@ -99,24 +96,24 @@ export class HomePage implements OnInit {
             await confirm.present();
           } else {
             console.log('ok');
-            this.checkLocation();
+            await this.checkLocation();
           }
-        }).catch(e => {
-          this.getCurrentLocations();
+        }).catch(async e => {
+          await this.getCurrentLocations();
           console.log(e)
         });
     } else {
-      this.checkLocation();
+      await this.checkLocation();
     }
   }
 
-  getCurrentLocations() {
-    this.geolocation.getCurrentPosition().then((resp) => {
+  async getCurrentLocations() {
+    await this.geolocation.getCurrentPosition().then(async (resp) => {
       const location = {
         lat: resp.coords.latitude,
         long: resp.coords.longitude
       };
-      this.getDetailLocation(location);
+      await this.getDetailLocation(location);
     }).catch((error) => {
       console.log('Error getting location', error);
     });
@@ -143,16 +140,17 @@ export class HomePage implements OnInit {
       enableHighAccuracy: true
     };
    
-    this.geolocation.getCurrentPosition(this.options).then((pos: Geoposition) => {
+    this.geolocation.getCurrentPosition(this.options).then(async (pos: Geoposition) => {
       this.currentPos = pos;
       const location = {
         lat: pos.coords.latitude,
         long: pos.coords.longitude,
         time: new Date(),
       };
-      this.getDetailLocation(location);
+      await this.getDetailLocation(location);
       resolve(pos);
    }, (err: PositionError) => {
+     console.log(err)
      reject(err.message);
     });
    });
@@ -168,29 +166,76 @@ export class HomePage implements OnInit {
 
     await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
       this.locationNow = res;
-      if(this.locationNow.address.state_district != undefined) {
-        this.city = this.locationNow.address.state_district.replace('Kota ', '');
-      } else {
-        await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
-          this.checkCity(res);
-        })
-      }
       if(this.locationNow == undefined) {
         await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
           this.checkCity(res);
         })
+      } else {
+        if(this.locationNow.address.state_district != undefined) {
+          this.city = this.locationNow.address.state_district.replace('Kota ', '');
+          if(this.city != undefined) {
+            this.listTimes = [];
+            this.tempTimes1 = [];
+            this.tempTimes2 = [];
+            this.prayTime = undefined;
+            this.timesToday = undefined;
+            this.prayTime = await this.api.getToday(this.city);
+            this.timesToday = await this.prayTime.timings;
+            
+            this.parseTime(this.timesToday);
+          }
+        } else {
+          await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
+            this.checkCity(res);
+          })
+        }
       }
     }, async error => {
-      await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
+      await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(async res => {
         this.locationNow = res;
         this.city = this.locationNow.city.replace('Kota ', '');
+        if(this.city != undefined) {
+          this.listTimes = [];
+          this.tempTimes1 = [];
+          this.tempTimes2 = [];
+          this.prayTime = undefined;
+          this.timesToday = undefined;
+          this.prayTime = await this.api.getToday(this.city);
+          this.timesToday = await this.prayTime.timings;
+          
+          this.parseTime(this.timesToday);
+        }
+      }, async error => {
+        this.city = 'Yogyakarta';
+        if(this.city != undefined) {
+          this.listTimes = [];
+          this.tempTimes1 = [];
+          this.tempTimes2 = [];
+          this.prayTime = undefined;
+          this.timesToday = undefined;
+          this.prayTime = await this.api.getToday(this.city);
+          this.timesToday = await this.prayTime.timings;
+          
+          this.parseTime(this.timesToday);
+        }
       })
     });
   }
 
-  checkCity(res) {
+  async checkCity(res) {
     this.locationNow = res.features[0].properties;
     this.city = res.features[0].properties.address.city;
+    if(this.city != undefined) {
+      this.listTimes = [];
+      this.tempTimes1 = [];
+      this.tempTimes2 = [];
+      this.prayTime = undefined;
+      this.timesToday = undefined;
+      this.prayTime = await this.api.getToday(this.city);
+      this.timesToday = await this.prayTime.timings;
+      
+      this.parseTime(this.timesToday);
+    }
   }
 
   // async loginStatus() {
@@ -215,30 +260,36 @@ export class HomePage implements OnInit {
       await this.loadingController.dismiss();
     }, async error => {
       this.loading = false;
+      this.userData = undefined;
       await this.loadingController.dismiss();
     })
   }
 
   async doRefresh(event) {
-    this.loading = true;
-    this.listProducts = [];
-    this.listBanners = [];
-    this.listTimes = [];
-    this.tempTimes1 = [];
-    this.tempTimes2 = [];
-    this.prayTime = undefined;
-    this.timesToday = undefined;
-    await this.checkPermission();
-    this.prayTime = await this.api.getToday(this.city);
-    this.timesToday = await this.prayTime.timings;
-    this.parseTime(this.timesToday);
-    this.serverImg = this.common.photoBaseUrl+'products/';
-    this.serverImgBanner = this.common.photoBaseUrl+'banners/';
-    this.getAllProducts();
-    this.getAllBanners();
-    setTimeout(() => {
-      event.target.complete();
-    }, 2000);
+    if(this.appComponent.networkStatus.connected == true) {
+      this.loading = true;
+      this.listProducts = [];
+      this.listBanners = [];
+      this.listTimes = [];
+      this.tempTimes1 = [];
+      this.tempTimes2 = [];
+      this.prayTime = undefined;
+      this.timesToday = undefined;
+      await this.checkPermission();
+      this.cekLogin();
+      this.serverImg = this.common.photoBaseUrl+'products/';
+      this.serverImgBanner = this.common.photoBaseUrl+'banners/';
+      this.getAllProducts();
+      this.getAllBanners();
+      setTimeout(() => {
+        event.target.complete();
+      }, 2000);
+    } else {
+      this.appComponent.cekKoneksi();
+      setTimeout(() => {
+        event.target.complete();
+      }, 2000);
+    }
   }
 
   getAllBanners() {
@@ -353,12 +404,16 @@ export class HomePage implements OnInit {
         this.nextTime.time = undefined;
         this.nextTimeTimer = undefined;
         this.nextTime.time = new Date(next_time);
-        this.nextTimeTimer = await this.timeCalc(this.dateNow, this.nextTime.time);
+        let date = new Date();
+        this.nextTimeTimer = await this.timeCalc(date, this.nextTime.time);
+        this.checkCurrentTime();
       } else {
         this.nextTime.time = undefined;
         this.nextTimeTimer = undefined;
         this.nextTime.time = new Date(next_time);
-        this.nextTimeTimer = await this.timeCalc(this.dateNow, this.nextTime.time);
+        let date = new Date();
+        this.nextTimeTimer = await this.timeCalc(date, this.nextTime.time);
+        this.checkCurrentTime();
       }
       return true;
     } else {
@@ -366,8 +421,15 @@ export class HomePage implements OnInit {
     }
   }
 
+  checkCurrentTime() {
+    setInterval(async ()=> { 
+      let date = new Date();
+      this.nextTimeTimer = await this.timeCalc(date, this.nextTime.time);
+      console.log(this.nextTimeTimer)
+    },3000);
+  }
+
   timeCalc(d1, d2){
-	
     let date1 = d1.getTime();
     let date2 = d2.getTime();
 
@@ -384,11 +446,17 @@ export class HomePage implements OnInit {
   }
 
   async modalLogin() {
-    if(this.userData == undefined) {
+    await this.cekLogin();
+    let userData = JSON.parse(localStorage.getItem('salammuToken'));
+    if(userData == undefined) {
       const modal = await this.modalController.create({
         component: LoginPage,
         mode: "md",
       });
+      modal.onDidDismiss().then(async res => {
+        this.userData = undefined;
+        this.cekLogin();
+      })
       return await modal.present();
     } else {
       this.router.navigate(['/profil']);

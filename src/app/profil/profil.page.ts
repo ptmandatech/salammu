@@ -62,7 +62,7 @@ export class ProfilPage implements OnInit {
     if (conf) {
       localStorage.removeItem('userSalammu');
       localStorage.removeItem('salammuToken');
-      this.router.navigate(['/login']);
+      this.router.navigate(['/home']);
     }
   }
 

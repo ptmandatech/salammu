@@ -18,6 +18,7 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { Diagnostic } from '@awesome-cordova-plugins/diagnostic/ngx';
 import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
 import { QuillModule } from 'ngx-quill';
+import { Toast } from '@awesome-cordova-plugins/toast/ngx';
  
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { QuillModule } from 'ngx-quill';
     DatePipe,
     Diagnostic,
     Geolocation,
+    Toast,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {provide: LOCALE_ID, useValue: "id-ID" }
   ],

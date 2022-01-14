@@ -207,6 +207,7 @@ export class PengajianPage implements OnInit {
   center:any=[110.3647,-7.8014];
   async generateMap()
   {
+    this.loadingGetMap = true;
     var features = [];
     for(var i=0; i<this.listPengajian.length; i++) {
       if(this.listPengajian[i].pin != null) {

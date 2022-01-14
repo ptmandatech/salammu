@@ -57,17 +57,26 @@ export class ChangePasswordPage implements OnInit {
         this.loading = false;
         localStorage.removeItem('userSalammu');
         localStorage.removeItem('salammuToken');
-        const modal = await this.modalController.create({
-          component: LoginPage,
-          mode: "md",
-        });
-        return await modal.present();
+        this.login(this.user);
       }
     }, error => {
-      console.log(error);
       this.loading = false;
       this.submited = false;
     })
+  }
+
+  async login(userData) {
+    var dt = {
+      email: userData.email,
+      password: userData.password
+    }
+    await this.api.post('auth/login',dt).then(res=>{     
+      localStorage.setItem('salammuToken',JSON.stringify(res));
+      this.router.navigate(['/home']);
+      this.loading=false;
+    }).catch(error => {
+      this.loading=false;
+    });
   }
 
 }

@@ -92,7 +92,7 @@
           <div *ngIf="loading">
             <ion-row *ngFor="let m of [0,1,2,3,4,5,6]" class="ion-align-items-center">
               <ion-col class="cal-cell" *ngFor="let n of [0,1,2,3,4,5,6]" [ngClass]="{'cell-selected':cellSelected[m+n]}">
-                <div *ngIf="cal[m][n]!=0" class="centered ion-padding">
+                <div class="centered ion-padding">
                   <ion-text class="cal-date"><ion-skeleton-text animated></ion-skeleton-text></ion-text>
                 </div>
               </ion-col>

@@ -14,6 +14,7 @@
             <ion-row>
               <ion-col class="ion-text-center">
                 <img *ngIf="userData.image != undefined && uploadImg == false" src="{{(serverImg+userData.image)}}" class="img-profil">
+                <img *ngIf="userData.image == null && uploadImg == false" src="{{userData.image == null ? './assets/imgs/blank-profil.png':(serverImg+userData.image)}}" class="img-profil">
                 <img *ngIf="image != undefined && uploadImg == true" src="{{image == undefined ? './assets/imgs/blank-profil.png':image}}" class="img-profil">
                 <br>
                 <ion-button fill="clear" (click)="pilihFoto()">

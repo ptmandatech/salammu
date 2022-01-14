@@ -1,7 +1,7 @@
 <ion-header class="ion-no-border">
   <ion-toolbar color="primary">
     <ion-back-button slot="start"></ion-back-button>
-    <ion-title>Perbarui Password</ion-title>
+    <ion-title>Buat Password Baru</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -29,14 +29,14 @@
       <p>Ulangi Password</p>
     </ion-text>
     <ion-item class="input">
-      <ion-input type="{{type}}" [(ngModel)]="user.password2" required #password2="ngModel" (ngModelChange)="checkMatch()" placeholder="Enter your password"></ion-input>
+      <ion-input type="{{type}}" [(ngModel)]="user.password2" required #password2="ngModel" (ngModelChange)="checkMatch()" placeholder="Re - Enter your password"></ion-input>
       <ion-icon name="{{type == 'password' ? 'eye-outline':'eye-off-outline'}}" (click)="show()" slot="end" color="medium"></ion-icon>
     </ion-item>
     <p *ngIf="match == false" style="color: red;">Confirmation New Password not match!</p>
     <p *ngIf="submited == true && password2.invalid" style="color: red;">Password can not be empty</p>
 
-    <ion-button color="primary" class="custom-button" [disabled]="loading || password.invalid || password2.invalid" (click)="changePassword()">
-      {{loading ? 'Mohon Tunggu...':'Perbarui'}}
+    <ion-button color="primary" class="custom-button" [disabled]="loading" (click)="reset()">
+      {{loading ? 'Mohon Tunggu...':'Reset'}}
     </ion-button>
   </div>
 

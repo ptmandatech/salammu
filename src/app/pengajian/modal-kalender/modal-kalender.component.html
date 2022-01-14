@@ -9,22 +9,40 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-    <div class="ion-text-center ion-padding" *ngIf="listPengajian.length == 0">
+    <div class="ion-text-center ion-padding" *ngIf="!loading && listPengajian.length == 0">
       <img src="./assets/icon/no-pengajian.svg">
       <p>Upss, Tidak ada pengajian</p>
     </div>
 
-    <ion-item lines="none" detail class="list-custom" *ngFor="let n of listPengajian" (click)="detailPengajian(n)">
-      <ion-label>
-        <h3>{{n.name}}</h3>
-        <ion-text color="medium">
-          <p class="ion-text-wrap">Lokasi: {{n.location}}</p>
-        </ion-text>
-        <ion-text color="primary">
-          <p *ngIf="n.status == 'soon'">Dimulai {{n.datetime | date: 'dd MMMM yyyy'}} Pukul {{n.datetime | date: 'H:mm'}}</p>
-          <ion-badge *ngIf="n.status == 'done'" color="danger">Selesai</ion-badge>
-        </ion-text>
-      </ion-label>
-    </ion-item>
+    <div *ngIf="loading">
+      <ion-item lines="none" detail class="list-custom">
+        <ion-label>
+          <h3><ion-skeleton-text animated></ion-skeleton-text></h3>
+          <ion-text color="medium">
+            <p class="ion-text-wrap"><ion-skeleton-text animated></ion-skeleton-text></p>
+          </ion-text>
+          <ion-text color="primary">
+            <p ><ion-skeleton-text animated></ion-skeleton-text></p>
+            <p ><ion-skeleton-text animated></ion-skeleton-text></p>
+            <p ><ion-skeleton-text animated></ion-skeleton-text></p>
+          </ion-text>
+        </ion-label>
+      </ion-item>
+    </div>
+
+    <div *ngIf="!loading && listPengajian.length > 0">
+      <ion-item lines="none" detail class="list-custom" *ngFor="let n of listPengajian" (click)="detailPengajian(n)">
+        <ion-label>
+          <h3>{{n.name}}</h3>
+          <ion-text color="medium">
+            <p class="ion-text-wrap">Lokasi: {{n.location}}</p>
+          </ion-text>
+          <ion-text color="primary">
+            <p *ngIf="n.status == 'soon'">Dimulai {{n.datetime | date: 'dd MMMM yyyy'}} Pukul {{n.datetime | date: 'H:mm'}}</p>
+            <ion-badge *ngIf="n.status == 'done'" color="danger">Selesai</ion-badge>
+          </ion-text>
+        </ion-label>
+      </ion-item>
+    </div>
 
 </ion-content>

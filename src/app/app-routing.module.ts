@@ -83,6 +83,11 @@ const routes: Routes = [
     loadChildren: () => import('./auth/change-password/change-password.module').then( m => m.ChangePasswordPageModule),
     canLoad: [GuardGuard]
   },
+  {
+    path: 'reset/:token',
+    loadChildren: () => import('./auth/reset/reset.module').then( m => m.ResetPageModule)
+  },
+
 
 ];
 

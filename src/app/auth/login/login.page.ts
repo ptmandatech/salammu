@@ -132,7 +132,11 @@ export class LoginPage implements OnInit {
       component: RegisterPage,
       mode: "md",
     });
-    this.dismiss();
+
+    modal.onDidDismiss().then(res => {
+      this.dismiss();
+      this.router.navigate(['/profil']);
+    })
     return await modal.present();
   }
 
@@ -141,7 +145,10 @@ export class LoginPage implements OnInit {
       component: ForgotPasswordPage,
       mode: "md",
     });
-    this.dismiss();
+    modal.onDidDismiss().then(res => {
+      this.dismiss();
+      this.router.navigate(['/profil']);
+    })
     return await modal.present();
   }
 
