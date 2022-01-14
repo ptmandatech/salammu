@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
@@ -15,7 +16,8 @@ export class ResetPage implements OnInit {
   constructor(
     public routes: ActivatedRoute,
     private router: Router,
-    private api:ApiService
+    private api:ApiService,
+    private navCtrl: NavController
   ) { }
 
   ngOnInit() {
@@ -43,7 +45,7 @@ export class ResetPage implements OnInit {
       this.loading=false;
       this.submited = false;
       localStorage.removeItem('salammuToken');
-      this.router.navigate(['/home']);
+      this.navCtrl.navigateRoot(['/home']);
     },err=>{
       alert('Tidak dapat memperbarui password');
       this.loading=false;
