@@ -20,8 +20,8 @@
         <ion-text>
           {{selected | date:'dd, MMM y'}}
         </ion-text>
-        <ion-text>
-          <p class="fs-10 ion-no-padding"> {{prayTime[dateToday-1].date.hijri.day}} {{prayTime[dateToday-1].date.hijri.month.en}} {{prayTime[dateToday-1].date.hijri.year}}</p>
+        <ion-text *ngIf="prayTime != undefined">
+          <p class="fs-10 ion-no-padding" *ngIf="prayTime[dateToday-1].date != undefined"> {{prayTime[dateToday-1].date.hijri.day}} {{prayTime[dateToday-1].date.hijri.month.en}} {{prayTime[dateToday-1].date.hijri.year}}</p>
         </ion-text>
       </ion-label>
     </ion-title>

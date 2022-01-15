@@ -260,16 +260,26 @@ export class PengajianPage implements OnInit {
       }
     }
   }
-  next(from)
+  async next(from)
   {
       var cal=this.calendar.next(this.selected, from).data;
       this.selected=this.calendar.next(this.selected, from).selected;
+      let date = new Date(this.selected);
+      this.month = Number(this.datePipe.transform(new Date(date), 'MM'));
+      this.year = date.getFullYear();
+      this.prayTime = undefined;
+      this.prayTime = await this.api.getThisMonth(this.month,this.year, this.city);
       this.parseCal(cal);
   }
-  prev(from)
+  async prev(from)
   {
       var cal=this.calendar.previous(this.selected, from).data;
       this.selected=this.calendar.previous(this.selected, from).selected;
+      let date = new Date(this.selected);
+      this.month = Number(this.datePipe.transform(new Date(date), 'MM'));
+      this.year = date.getFullYear();
+      this.prayTime = undefined;
+      this.prayTime = await this.api.getThisMonth(this.month,this.year, this.city);
       this.parseCal(cal);
   }
 
@@ -277,11 +287,14 @@ export class PengajianPage implements OnInit {
   cellSelected:any={};
   selectCell(m,n)
   {
-     this.cellSelected={};
-     this.cellSelected[m+n]=true;
      var date=this.cal[m][n];
-     this.selected=new Date(date.tahun,date.bulan-1,date.tanggal);
-     this.modalKelander(this.selected);
+     if(date != 0) {
+      this.cellSelected={};
+      this.cellSelected[m+n]=true;
+      this.selected=new Date(date.tahun,date.bulan-1,date.tanggal);
+      this.dateToday = date.tanggal;
+      this.modalKelander(this.selected);
+     }
   }
 
   //Modal Kalender

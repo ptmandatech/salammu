@@ -1,13 +1,16 @@
 import { Component, NgZone, ViewChild } from '@angular/core';
 import { App, URLOpenListenerEvent } from '@capacitor/app';
 import { Router } from '@angular/router';
-import { AlertController, IonRouterOutlet, NavController, Platform } from '@ionic/angular';
+import { AlertController, IonRouterOutlet, NavController, Platform, ToastController } from '@ionic/angular';
 import { Diagnostic } from '@awesome-cordova-plugins/diagnostic/ngx';
 import { Keyboard } from '@capacitor/keyboard';
 import { Toast } from '@awesome-cordova-plugins/toast/ngx';
 import { SweetAlert } from 'sweetalert/typings/core';
 const swal: SweetAlert = require('sweetalert');
 import { Network } from '@capacitor/network';
+import { Location } from "@angular/common";
+import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
+import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
 
 @Component({
   selector: 'app-root',
@@ -17,33 +20,25 @@ import { Network } from '@capacitor/network';
 export class AppComponent {
   
   @ViewChild(IonRouterOutlet, {static: false}) routerOutlet: IonRouterOutlet;
+  private lastBackTime: number = 0;
+  private intervalExitApp: number = 2000;
   constructor(
     private router: Router, 
     private diagnostic: Diagnostic,
     private platform: Platform,
+    private splashScreen: SplashScreen,
+    private statusBar: StatusBar,
     private zone: NgZone,
     private alertController: AlertController,
     private navController: NavController,
+    private toastController: ToastController,
+    private location: Location,
     private toast: Toast
   ) {
     this.initializeApp();
     this.platform.backButton.subscribe(() => {
       if (this.routerOutlet && this.routerOutlet.canGoBack()) {
         this.routerOutlet.pop();
-      } else if (this.router.url === '/home') {
-        let a = 0;
-        this.platform.backButton.subscribe(() => {
-            a++;
-            if (a == 2) {
-              navigator['app'].exitApp();
-            } else {
-              this.toast.show(`Tekan sekali lagi untuk keluar`, '2000', 'center').subscribe(
-                toast => {
-                  console.log(toast);
-                }
-              );
-            }
-        });
       } else if (this.router.url === '/profil' || this.router.url === '/login' || 
         this.router.url === '/video' || this.router.url === '/pengajian' || this.router.url === '/produk-mu' || 
         this.router.url === '/jadwal-sholat' || this.router.url === '/cabang-ranting') {
@@ -54,8 +49,14 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
+      this.statusBar.styleDefault();
+      // this.splashScreen.hide();
+      this.statusBar.overlaysWebView(false);
+      this.statusBar.backgroundColorByHexString('#0fc1a7');
+
       this.checkPermission();
       this.cekKoneksi();
+      this.backButtonEvent();
       Keyboard.addListener('keyboardWillShow', info => {
         console.log('keyboard will show with height:', info.keyboardHeight);
       });
@@ -84,6 +85,43 @@ export class AppComponent {
             // logic take over
         });
     });
+  }
+
+  private backButtonEvent() {
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      let currentTime = new Date().getTime();
+      console.log("currentTime", currentTime);
+      console.log("lastBackTime -> ", this.lastBackTime);
+      console.log("Subtraction -> ", currentTime - this.lastBackTime);
+      if (
+        !this.routerOutlet.canGoBack() &&
+        this.lastBackTime &&
+        this.lastBackTime > 0 &&
+        currentTime - this.lastBackTime < this.intervalExitApp
+      ) {
+        navigator["app"].exitApp();
+        return;
+      }
+      if (!this.routerOutlet.canGoBack()) {
+        this.createToastExitApp();
+      } else {
+        this.location.back();
+      }
+      console.log("backButton.subscribeWithPriority");
+    });
+  }
+
+  private createToastExitApp() {
+    this.toastController
+      .create({
+        message: 'Tekan sekali lagi untuk keluar',
+        duration: 2000,
+        color: "primary",
+      })
+      .then((toastEl) => {
+        toastEl.present();
+        this.lastBackTime = new Date().getTime();
+      });
   }
 
   networkListener: any;
