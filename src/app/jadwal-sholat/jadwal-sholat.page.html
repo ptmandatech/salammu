@@ -15,8 +15,18 @@
     <ion-icon slot="icon-only" name="caret-back"></ion-icon>
     </ion-button>
     <ion-title class="date-title" *ngIf="selected == undefined"><ion-skeleton-text animated></ion-skeleton-text></ion-title>
-    <ion-title class="date-title" *ngIf="selected != undefined">{{selected | date:'dd, MMM y'}}</ion-title>
-    <p style="text-align: center;" *ngIf="selected != undefined && prayTime.length > 0">{{prayTime[dateToday-1].date.hijri.day}} {{prayTime[dateToday-1].date.hijri.month.en}} {{prayTime[dateToday-1].date.hijri.year}}</p>
+    <ion-title class="date-title" *ngIf="selected != undefined">
+      <ion-label>
+        <ion-text>
+          {{selected | date:'dd, MMM y'}}
+        </ion-text>
+        <ion-text>
+          <p class="fs-10 ion-no-padding"> {{prayTime[dateToday-1].date.hijri.day}} {{prayTime[dateToday-1].date.hijri.month.en}} {{prayTime[dateToday-1].date.hijri.year}}</p>
+        </ion-text>
+      </ion-label>
+    </ion-title>
+    <!-- <ion-title class="date-title" *ngIf="selected != undefined">{{selected | date:'dd, MMM y'}}</ion-title>
+    <p style="text-align: center;" *ngIf="selected != undefined && prayTime.length > 0">{{prayTime[dateToday-1].date.hijri.day}} {{prayTime[dateToday-1].date.hijri.month.en}} {{prayTime[dateToday-1].date.hijri.year}}</p> -->
     <ion-button color="light" slot="end" fill="clear" button-icon (click)="next('daily')">
     <ion-icon slot="icon-only" name="caret-forward"></ion-icon>
     </ion-button>
@@ -146,7 +156,7 @@
               </div>
             </ion-col>
           </ion-row>
-          
+
           <div *ngIf="timesSelected.length == 0">
             <ion-row class="ion-align-items-center" *ngFor="let n of [1,2,3,4,5,6,7,8,9,10]">
               <ion-col class="cal-cell bg-gray">

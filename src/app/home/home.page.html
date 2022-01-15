@@ -53,7 +53,14 @@
               <ion-row style="border-bottom: 1px solid #F2F2F2;">
                 <ion-col class="ion-text-center">
                   <ion-label *ngIf="timesToday != undefined">
-                    {{prayTime.date.readable | date: 'EEEE, dd MMMM yyyy' }} <br> {{prayTime.date.hijri.day}} {{prayTime.date.hijri.month.en}} {{prayTime.date.hijri.year}}
+                    <ion-text>
+                      {{prayTime.date.readable | date: 'EEEE, dd MMMM yyyy' }}
+                    </ion-text>
+                    <ion-text color="medium">
+                      <p>
+                        {{prayTime.date.hijri.day}} {{prayTime.date.hijri.month.en}} {{prayTime.date.hijri.year}}
+                      </p>
+                    </ion-text>
                   </ion-label>
                   <ion-label *ngIf="timesToday == undefined">
                     <ion-skeleton-text animated></ion-skeleton-text>

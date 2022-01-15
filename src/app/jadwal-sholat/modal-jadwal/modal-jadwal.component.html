@@ -1,9 +1,21 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-item lines="full">
+    <!-- <ion-item lines="full">
       <ion-label class="ion-text-wrap">
         <ion-text color="medium">{{dateSelected | date: 'EEEE, dd MMMM yyyy'}} / {{times.date.hijri.day}} {{times.date.hijri.month.en}} {{times.date.hijri.year}}</ion-text>
       </ion-label>
+    </ion-item> -->
+    <ion-item lines="full" class="ion-padding">
+      <ion-title class="date-title">
+        <ion-label>
+          <ion-text>
+            {{dateSelected | date: 'EEEE, dd MMMM yyyy'}}
+          </ion-text>
+          <ion-text color="medium">
+            <p class="fs-10 ion-no-padding">{{times.date.hijri.day}} {{times.date.hijri.month.en}} {{times.date.hijri.year}}</p>
+          </ion-text>
+        </ion-label>
+      </ion-title>
     </ion-item>
   </ion-toolbar>
 </ion-header>

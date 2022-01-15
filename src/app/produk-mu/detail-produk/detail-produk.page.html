@@ -15,42 +15,42 @@
 
         <!-- <ion-slides pager="true" #slides (ionSlideTouchEnd)=ionSlideTouchEnd($event) [options]="slideOpts" *ngIf="detailProduct.images.length > 0">
           <ion-slide tappable *ngFor="let n of detailProduct.images" (click)="openViewer(serverImg+n)">
-              <ion-img-viewer 
-                text="SalamMU" 
-                scheme="dark" 
+              <ion-img-viewer
+                text="SalamMU"
+                scheme="dark"
                 src="{{serverImg+n}}">
               </ion-img-viewer>
           </ion-slide>
         </ion-slides>
         <ion-slides pager="true" [options]="slideOpts" *ngIf="detailProduct.images.length == 0">
           <ion-slide tappable (click)="openViewer('./assets/imgs/no-product.png')">
-            <ion-img-viewer 
-              text="SalamMU" 
-              scheme="dark" 
+            <ion-img-viewer
+              text="SalamMU"
+              scheme="dark"
               src="./assets/imgs/no-product.png">
             </ion-img-viewer>
           </ion-slide>
         </ion-slides> -->
 
-        <swiper 
+        <swiper style="height: 280px;"
           *ngIf="detailProduct.images.length > 0"
           [config]="config">
           <ng-template swiperSlide *ngFor="let n of detailProduct.images">
-            <ion-img-viewer
-                text="{{detailProduct.name}}" 
-                scheme="dark" 
+            <ion-img-viewer style="width:100%; background-size: cover; object-fit: cover;"
+                text="{{detailProduct.name}}"
+                scheme="dark"
                 src="{{serverImg+n}}">
               </ion-img-viewer>
           </ng-template>
         </swiper>
 
-        <swiper 
+        <swiper style="height: 280px;"
           *ngIf="detailProduct.images.length == 0"
           [config]="config">
           <ng-template swiperSlide>
-            <ion-img-viewer 
-              text="SalamMU" 
-              scheme="dark" 
+            <ion-img-viewer style="width:100%; background-size: cover; object-fit: cover;"
+              text="SalamMU"
+              scheme="dark"
               src="./assets/imgs/no-product.png">
             </ion-img-viewer>
           </ng-template>

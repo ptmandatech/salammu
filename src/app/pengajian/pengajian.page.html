@@ -32,8 +32,16 @@
               <ion-button slot="start" fill="clear" button-icon (click)="prev('monthly')">
               <ion-icon slot="icon-only" name="caret-back"></ion-icon>
               </ion-button>
-              <ion-title class="date-title" *ngIf="selected != undefined">{{selected | date:'dd, MMM y'}}</ion-title>
-              <p style="text-align: center;" *ngIf="selected != undefined && prayTime.length > 0">{{prayTime[dateToday-1].date.hijri.day}} {{prayTime[dateToday-1].date.hijri.month.en}} {{prayTime[dateToday-1].date.hijri.year}}</p>
+              <ion-title class="date-title" *ngIf="selected != undefined">
+                <ion-label>
+                  <ion-text>
+                    {{selected | date:'dd, MMM y'}}
+                  </ion-text>
+                  <ion-text color="medium">
+                    <p class="fs-10 ion-no-padding"> {{prayTime[dateToday-1].date.hijri.day}} {{prayTime[dateToday-1].date.hijri.month.en}} {{prayTime[dateToday-1].date.hijri.year}}</p>
+                  </ion-text>
+                </ion-label>
+              </ion-title>
               <ion-title class="date-title" *ngIf="selected == undefined"><ion-skeleton-text animated></ion-skeleton-text></ion-title>
               <ion-button slot="end" fill="clear" button-icon (click)="next('monthly')">
               <ion-icon slot="icon-only" name="caret-forward"></ion-icon>
@@ -41,7 +49,7 @@
             </ion-toolbar>
 
             <ion-grid class="ion-no-padding">
-              <ion-row>
+              <ion-row style="margin-top: 16px;">
                 <ion-col class="ion-text-center" *ngFor="let h of ['Min','Sen','Sel','Rab','Kam','Jum','Sab']">
                   <ion-text color="medium">
                     {{h}}
