@@ -19,6 +19,8 @@ import { Diagnostic } from '@awesome-cordova-plugins/diagnostic/ngx';
 import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
 import { QuillModule } from 'ngx-quill';
 import { Toast } from '@awesome-cordova-plugins/toast/ngx';
+import { NgxIonicImageViewerModule } from 'ngx-ionic-image-viewer';
+import { SwiperModule } from 'swiper/angular';
  
 @NgModule({
   declarations: [
@@ -39,7 +41,9 @@ import { Toast } from '@awesome-cordova-plugins/toast/ngx';
     HttpClientModule,
     ImageUploaderPageModule,
     ImageCropperModule,
-    QuillModule.forRoot()
+    QuillModule.forRoot(),
+    NgxIonicImageViewerModule,
+    SwiperModule
   ],
   providers: [
     DatePipe,

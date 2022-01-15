@@ -58,13 +58,13 @@ export class DetailVideoPage implements OnInit {
   getDetailVideo() {
     this.api.get('videos/find/'+this.id).then(res => {
       this.videoData = res;
+      this.unSaveUrl(this.videoData.url);
     })
-  }
+  } 
 
   urlSafe: SafeResourceUrl;
-  unSaveUrl(url) {
-    this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    return this.urlSafe;
+  async unSaveUrl(url) {
+    this.urlSafe = await this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
   openUrl() {

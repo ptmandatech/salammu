@@ -4,27 +4,28 @@
     <ion-title>Detail Video</ion-title>
   </ion-toolbar>
 </ion-header>
-
+ 
 <ion-content>
-  <div class="video-container">
+  <div class="video-container" *ngIf="urlSafe != undefined">
     <iframe
-          [src]="unSaveUrl(videoData.url)"
+          [src]="urlSafe"
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen>
     </iframe>
   </div>
+  <p class="ion-text-wrap" *ngIf="urlSafe == undefined"><ion-skeleton-text animated style="height: 400px"></ion-skeleton-text></p>
 
-    <ion-item lines="none">
-      <ion-label>
-        <h2 class="ion-text-wrap">
-          {{videoData.title}}
-        </h2>
-        <p class="ion-text-wrap">
-          {{videoData.descriptions}}
-        </p>
-      </ion-label>
-    </ion-item>
+  <ion-item lines="none">
+    <ion-label>
+      <h2 class="ion-text-wrap">
+        {{videoData.title}}
+      </h2>
+      <p class="ion-text-wrap">
+        {{videoData.descriptions}}
+      </p>
+    </ion-label>
+  </ion-item>
 
 </ion-content>

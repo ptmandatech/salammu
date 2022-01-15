@@ -42,6 +42,7 @@
             <ion-button fill="clear" color="light" size="large" (click)="modalLogin()">
               <ion-icon *ngIf="userData == undefined" style="font-size: 3rem;" slot="icon-only" name="person-circle"></ion-icon>
               <div *ngIf="userData != undefined">
+                <ion-icon *ngIf="userData.image == null" style="font-size: 3rem;" slot="icon-only" name="person-circle"></ion-icon>
                 <img *ngIf="userData.image != null" src="{{(serverImgProfil+userData.image)}}" class="img-profil">
               </div>
             </ion-button>
@@ -52,7 +53,7 @@
               <ion-row style="border-bottom: 1px solid #F2F2F2;">
                 <ion-col class="ion-text-center">
                   <ion-label *ngIf="timesToday != undefined">
-                    {{prayTime.date.readable | date: 'EEEE, dd MMMM yyyy' }}
+                    {{prayTime.date.readable | date: 'EEEE, dd MMMM yyyy' }} <br> {{prayTime.date.hijri.day}} {{prayTime.date.hijri.month.en}} {{prayTime.date.hijri.year}}
                   </ion-label>
                   <ion-label *ngIf="timesToday == undefined">
                     <ion-skeleton-text animated></ion-skeleton-text>

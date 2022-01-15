@@ -53,11 +53,11 @@ export class CabangRantingPage implements OnInit {
         if(idx == -1) {
           this.listCabang.push(res[i]);
         }
-      } else {
+      } else if(res[i].category == 'ranting') {
         let idx = this.listRanting.indexOf(res[i]);
-          if(idx == -1) {
-            this.listRanting.push(res[i]);
-          }
+        if(idx == -1) {
+          this.listRanting.push(res[i]);
+        }
       }
     }
     this.loading = false;

@@ -2,5 +2,10 @@
   "appId": "com.salammu.id",
   "appName": "SalamMU",
   "webDir": "www",
-  "bundledWebRuntime": false
+  "bundledWebRuntime": false,
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  }
 }

@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingController, ModalController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 import { CommonService } from 'src/app/services/common.service';
+import { ViewerModalComponent } from 'ngx-ionic-image-viewer';
+import {IonSlides} from '@ionic/angular';
+import SwiperCore, { SwiperOptions } from 'swiper';
 
 @Component({
   selector: 'app-detail-produk',
@@ -10,16 +13,20 @@ import { CommonService } from 'src/app/services/common.service';
   styleUrls: ['./detail-produk.page.scss'],
 })
 export class DetailProdukPage implements OnInit {
-
-  slideOpts = {
+  
+  config: SwiperOptions = {
     initialSlide: 1,
     speed: 400,
-    loop: true
+    loop: true,
+    pagination: { clickable: true },
+    scrollbar: { draggable: true },
   };
 
   detailProduct:any;
   serverImg: any;
   id:any;
+  @ViewChild(IonSlides) slides: IonSlides;
+  
   constructor(
     public api: ApiService,
     public common: CommonService,
@@ -35,6 +42,13 @@ export class DetailProdukPage implements OnInit {
     this.getDetailProduct();
   }
 
+  onSwiper(swiper) {
+    console.log(swiper);
+  }
+  onSlideChange() {
+    console.log('slide change');
+  }
+  
   getDetailProduct() {
     this.api.get('products/find/'+this.id).then(res => {
       this.parseImage(res);
@@ -62,6 +76,24 @@ export class DetailProdukPage implements OnInit {
 
   chatSeller() {
     this.api.chatSeller(this.ownerData, this.detailProduct);
+  }
+
+  ionSlideTouchEnd(){
+    // Lock the ability to slide to the next or previous slide.
+    this.slides.lockSwipes(true);
+}
+
+  async openViewer(url) {
+    console.log(url)
+    const modal = await this.modalController.create({
+      component: ViewerModalComponent,
+      componentProps: {
+        src: url
+      },
+      cssClass: 'ion-img-viewer'
+    });
+ 
+    return await modal.present();
   }
 
 }

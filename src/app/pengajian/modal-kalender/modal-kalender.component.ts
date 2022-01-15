@@ -14,6 +14,7 @@ export class ModalKalenderComponent implements OnInit {
   dateSelected:any;
   listPengajian:any = [];
   loading:boolean;
+  times:any;
   constructor(
     public api: ApiService,
     public router: Router,
@@ -25,6 +26,7 @@ export class ModalKalenderComponent implements OnInit {
   ngOnInit() {
     this.loading = true;
     this.dateSelected = this.navParams.get('data');
+    this.times = this.navParams.get('times');
     let datetime = this.datePipe.transform(new Date(this.dateSelected), 'yyyy-MM-dd');
     this.getPengajian(datetime);
   }
@@ -47,7 +49,6 @@ export class ModalKalenderComponent implements OnInit {
         }
       }
     }
-    console.log(this.listPengajian)
     this.loading = false;
   }
 

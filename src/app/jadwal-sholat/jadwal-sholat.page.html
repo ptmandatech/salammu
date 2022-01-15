@@ -14,7 +14,9 @@
     <ion-button color="light" slot="start" fill="clear" button-icon (click)="prev('daily')">
     <ion-icon slot="icon-only" name="caret-back"></ion-icon>
     </ion-button>
-    <ion-title class="date-title">{{selected | date:'dd, MMM y'}}</ion-title>
+    <ion-title class="date-title" *ngIf="selected == undefined"><ion-skeleton-text animated></ion-skeleton-text></ion-title>
+    <ion-title class="date-title" *ngIf="selected != undefined">{{selected | date:'dd, MMM y'}}</ion-title>
+    <p style="text-align: center;" *ngIf="selected != undefined && prayTime.length > 0">{{prayTime[dateToday-1].date.hijri.day}} {{prayTime[dateToday-1].date.hijri.month.en}} {{prayTime[dateToday-1].date.hijri.year}}</p>
     <ion-button color="light" slot="end" fill="clear" button-icon (click)="next('daily')">
     <ion-icon slot="icon-only" name="caret-forward"></ion-icon>
     </ion-button>
@@ -80,7 +82,7 @@
               </ion-text>
             </ion-col>
           </ion-row>
-          <div *ngIf="!loading">
+          <div *ngIf="selected != undefined">
             <ion-row *ngFor="let m of week" class="ion-align-items-center">
               <ion-col class="cal-cell" *ngFor="let n of [0,1,2,3,4,5,6]" [ngClass]="{'cell-selected':cellSelected[m+n]}" (click)="selectCell(m,n)">
                 <div *ngIf="cal[m][n]!=0" class="centered ion-padding">
@@ -89,7 +91,7 @@
               </ion-col>
             </ion-row>
           </div>
-          <div *ngIf="loading">
+          <div *ngIf="selected == undefined">
             <ion-row *ngFor="let m of [0,1,2,3,4,5,6]" class="ion-align-items-center">
               <ion-col class="cal-cell" *ngFor="let n of [0,1,2,3,4,5,6]" [ngClass]="{'cell-selected':cellSelected[m+n]}">
                 <div class="centered ion-padding">

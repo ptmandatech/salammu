@@ -48,6 +48,7 @@ export class JadwalSholatPage implements OnInit {
   loading:boolean;
 
   async ngOnInit() {
+    this.daily = true;
     this.loading = true;
     this.checkPermission();
     let date = new Date();

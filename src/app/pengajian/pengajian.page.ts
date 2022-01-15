@@ -1,10 +1,15 @@
 import { DatePipe } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ActionSheetController, ModalController } from '@ionic/angular';
+import { ActionSheetController, AlertController, LoadingController, ModalController, Platform } from '@ionic/angular';
 import { CalendarService } from '../services/calendar.service';
 import { ModalKalenderComponent } from './modal-kalender/modal-kalender.component';
 import { ModalPetaComponent } from './modal-peta/modal-peta.component';
 import { Geolocation, Geoposition, PositionError } from '@awesome-cordova-plugins/geolocation/ngx';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Diagnostic } from '@awesome-cordova-plugins/diagnostic/ngx';
+import { Router } from '@angular/router';
+import { ApiService } from '../services/api.service';
+import { CommonService } from '../services/common.service';
 
 //map
 import 'ol/ol.css';
@@ -23,10 +28,6 @@ import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import PluggableMap from 'ol/PluggableMap';
 import TileWMS from 'ol/source/TileWMS';
-import { Diagnostic } from '@awesome-cordova-plugins/diagnostic/ngx';
-import { Router } from '@angular/router';
-import { ApiService } from '../services/api.service';
-import { CommonService } from '../services/common.service';
 import Geocoder from 'ol-geocoder';
 useGeographic();
 
@@ -46,6 +47,12 @@ export class PengajianPage implements OnInit {
   mapPengajian: Map;
   loadingGetMap:boolean;
   userData:any;
+  month:any;
+  year:any;
+  today:any;
+  city:any;
+  prayTime:any = [];
+  locationNow:any;
 
   constructor(
     public api: ApiService,
@@ -56,14 +63,150 @@ export class PengajianPage implements OnInit {
     private calendar:CalendarService,
     public modalController: ModalController,
     public actionSheetController: ActionSheetController,
+    public http:HttpClient, 
+    public alertController: AlertController,
+    private diagnostic: Diagnostic,
+    private loadingController: LoadingController,
+    private platform: Platform,
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.loadingGetMap = true;
+    this.checkPermission();
     this.cekLogin();
     this.getAllPengajian();
     let date = new Date();
     this.dateToday = Number(this.datePipe.transform(new Date(date), 'dd'));
+    this.month = Number(this.datePipe.transform(new Date(date), 'MM'));
+    this.today = this.datePipe.transform(new Date(date), 'dd MMM yyyy');
+    this.year = date.getFullYear();
+    this.prayTime = await this.api.getThisMonth(this.month,this.year, this.city);
+  }
+
+  checkPermission() {
+    if (this.platform.is('android')) {
+      let successCallback = (isAvailable) => { console.log('Is available? ' + isAvailable); };
+      let errorCallback = (e) => console.error(e);
+      
+      this.diagnostic.isLocationAvailable().then(successCallback).catch(errorCallback);
+    
+      this.diagnostic.isGpsLocationAvailable().then(successCallback, errorCallback);
+    
+      this.diagnostic.getLocationMode()
+        .then(async (state) => {
+          if (state == this.diagnostic.locationMode.LOCATION_OFF) {
+            const confirm = await this.alertController.create({
+              header: 'SalamMU',
+              message: 'Lokasi belum diaktifkan di perangkat ini. Pergi ke pengaturan untuk mengaktifkan lokasi.',
+              buttons: [
+                {
+                  text: 'Pengaturan',
+                  handler: () => {
+                    this.diagnostic.switchToLocationSettings();
+                    this.checkLocation();
+                  }
+                }
+              ]
+            });
+            await confirm.present();
+          } else {
+            console.log('ok');
+            this.checkLocation();
+          }
+        }).catch(e => {
+          this.getCurrentLocations();
+          console.log(e)
+        });
+    } else {
+      this.checkLocation();
+    }
+  }
+
+  getCurrentLocations() {
+    this.geolocation.getCurrentPosition().then((resp) => {
+      const location = {
+        lat: resp.coords.latitude,
+        long: resp.coords.longitude
+      };
+      this.latitude = resp.coords.latitude;
+      this.longitude = resp.coords.longitude;
+      this.getDetailLocation(location);
+    }).catch((error) => {
+      console.log('Error getting location', error);
+    });
+  }
+
+  async loadingCheckLoc() {
+    return await this.loadingController.create({
+      spinner: 'crescent',
+      message: 'Mengambil Data Lokasi...',
+      cssClass: 'custom-class custom-loading'
+    }).then(a => {
+      a.present().then(() => {
+        console.log('presented');
+      });
+    });
+  }
+  
+  options:any;
+  currentPos:any;
+  checkLocation() {
+    return new Promise((resolve, reject) => {
+    this.options = {
+      maximumAge: 3000,
+      enableHighAccuracy: true
+    };
+   
+    this.geolocation.getCurrentPosition(this.options).then((pos: Geoposition) => {
+      this.currentPos = pos;
+      const location = {
+        lat: pos.coords.latitude,
+        long: pos.coords.longitude,
+        time: new Date(),
+      };
+      this.getDetailLocation(location);
+      resolve(pos);
+   }, (err: PositionError) => {
+     reject(err.message);
+    });
+   });
+  }
+
+  httpOption:any;
+  async getDetailLocation(dt) {
+    this.httpOption = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+      })
+    };
+
+    await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
+      this.locationNow = res;
+      if(this.locationNow.address.state_district != undefined) {
+        this.city = this.locationNow.address.state_district.replace('Kota ', '');
+        this.getCal();
+      } else {
+        await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
+          this.checkCity(res);
+        })
+      }
+      if(this.locationNow == undefined) {
+        await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
+          this.checkCity(res);
+        })
+      }
+    }, async error => {
+      await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
+        this.locationNow = res;
+        this.city = this.locationNow.city.replace('Kota ', '');
+        this.getCal();
+      })
+    });
+  }
+
+  checkCity(res) {
+    this.locationNow = res.features[0].properties;
+    this.city = res.features[0].properties.address.city;
     this.getCal();
   }
 
@@ -76,19 +219,6 @@ export class PengajianPage implements OnInit {
       this.getCurrentLocations();
       this.loading = false;
     })
-  }
-
-  getCurrentLocations() {
-    this.geolocation.getCurrentPosition().then((resp) => {
-      this.latitude = resp.coords.latitude;
-      this.longitude = resp.coords.longitude;
-    }).catch((error) => {
-      if(this.latitude == undefined && this.longitude == undefined) {
-        this.latitude = this.center[1];
-        this.longitude = this.center[0];
-      }
-      console.log('Error getting location', error);
-    });
   }
 
   getCal()
@@ -156,13 +286,17 @@ export class PengajianPage implements OnInit {
 
   //Modal Kalender
   async modalKelander(selected) {
+    const time = selected.getDate();
     const modal = await this.modalController.create({
       component: ModalKalenderComponent,
       mode: "md",
       cssClass: 'modal-class',
       initialBreakpoint: 0.5,
       breakpoints: [0, 0.5, 1],
-      componentProps: {data:selected}
+      componentProps: {
+        data:selected,
+        times: this.prayTime[time-1]
+      }
     });
     return await modal.present();
   }

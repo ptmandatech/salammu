@@ -39,10 +39,12 @@
           <ion-label>
             <ion-text color="primary">
               <p class="ion-text-wrap">{{locationNow == undefined ? '':locationNow.display_name}}</p>
+              <p class="ion-text-wrap" *ngIf="locationNow == undefined"><ion-skeleton-text animated></ion-skeleton-text></p>
             </ion-text>
           </ion-label>
         </ion-item>
-        <div id="mapDetail" style="width: 400px; height: 300px;"></div>
+        <p class="ion-text-wrap" *ngIf="locationNow == undefined"><ion-skeleton-text animated style="height: 400px"></ion-skeleton-text></p>
+        <div id="mapDetail" style="width: auto; height: 300px;"></div>
 
       </ion-col>
     </ion-row>

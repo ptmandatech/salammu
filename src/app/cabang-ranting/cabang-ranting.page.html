@@ -59,6 +59,14 @@
                 </ion-label>
               </ion-item>
             </div>
+            <div class="item-centered" *ngIf="!loading && listCabang.length == 0">
+              <div style="margin-top: 20px;"></div>
+              <div style="margin-top: 20px;"></div>
+              <img src="./assets/icon/pencarian.svg">
+              <ion-label>
+                <p>Data tidak ditemukan</p>
+              </ion-label>
+            </div>
           </div>
           <!-- End Segment Cabang-->
 
@@ -86,6 +94,14 @@
                   <p><ion-skeleton-text animated></ion-skeleton-text></p>
                 </ion-label>
               </ion-item>
+            </div>
+            <div class="item-centered" *ngIf="!loading && listRanting.length == 0">
+              <div style="margin-top: 20px;"></div>
+              <div style="margin-top: 20px;"></div>
+              <img src="./assets/icon/pencarian.svg">
+              <ion-label>
+                <p>Data tidak ditemukan</p>
+              </ion-label>
             </div>
           </div>
           <!-- End Segment Ranting-->
