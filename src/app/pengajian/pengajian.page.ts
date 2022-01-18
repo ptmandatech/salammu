@@ -271,6 +271,7 @@ export class PengajianPage implements OnInit {
   }
   async next(from)
   {
+      this.dataPengajian = {};
       var cal=this.calendar.next(this.selected, from).data;
       this.selected=this.calendar.next(this.selected, from).selected;
       let date = new Date(this.selected);
@@ -282,6 +283,7 @@ export class PengajianPage implements OnInit {
   }
   async prev(from)
   {
+    this.dataPengajian = {};
       var cal=this.calendar.previous(this.selected, from).data;
       this.selected=this.calendar.previous(this.selected, from).selected;
       let date = new Date(this.selected);
