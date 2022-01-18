@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActionSheetController, LoadingController, ModalController } from '@ionic/angular';
+import { ActionSheetController, LoadingController, ModalController, ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { ImageUploaderPage } from 'src/app/image-uploader/image-uploader.page';
@@ -27,6 +27,7 @@ export class TambahVideoPage implements OnInit {
     public modalController: ModalController,
     public routes:ActivatedRoute,
     private loadingController: LoadingController,
+    private toastController: ToastController,
   ) { }
 
   ngOnInit() {
@@ -137,7 +138,15 @@ export class TambahVideoPage implements OnInit {
     if(this.isCreated == true) {
       this.api.post('videos', this.videoData).then(res => {
         if(res) {
-          alert('Berhasil menambahkan video.');
+          this.toastController
+          .create({
+            message: 'Berhasil menambahkan video.',
+            duration: 2000,
+            color: "primary",
+          })
+          .then((toastEl) => {
+            toastEl.present();
+          });
           this.loading = false;
           this.router.navigate(['/my-video']);
         }
@@ -145,7 +154,15 @@ export class TambahVideoPage implements OnInit {
     } else {
       this.api.put('videos/'+ this.videoData.id, this.videoData).then(res => {
         if(res) {
-          alert('Berhasil memperbarui video.');
+          this.toastController
+          .create({
+            message: 'Berhasil memperbarui video.',
+            duration: 2000,
+            color: "primary",
+          })
+          .then((toastEl) => {
+            toastEl.present();
+          });
           this.loading = false;
           this.router.navigate(['/my-video']);
         }
@@ -158,7 +175,15 @@ export class TambahVideoPage implements OnInit {
     if (conf) {
       this.api.delete('videos/'+this.id).then(res => {
         if(res) {
-          alert('Berhasil menghapus data.');
+          this.toastController
+          .create({
+            message: 'Berhasil menghapus video.',
+            duration: 2000,
+            color: "primary",
+          })
+          .then((toastEl) => {
+            toastEl.present();
+          });
           this.loading = false;
           this.router.navigate(['/my-video']);
         }

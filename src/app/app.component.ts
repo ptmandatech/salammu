@@ -105,7 +105,7 @@ export class AppComponent {
       if (!this.routerOutlet.canGoBack()) {
         this.createToastExitApp();
       } else {
-        this.location.back();
+        this.routerOutlet.pop();
       }
       console.log("backButton.subscribeWithPriority");
     });

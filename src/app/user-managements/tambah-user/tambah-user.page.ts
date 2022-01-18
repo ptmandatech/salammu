@@ -1,63 +1,50 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ActionSheetController, LoadingController, ModalController, ToastController } from '@ionic/angular';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { ActionSheetController, ModalController, LoadingController, ToastController } from '@ionic/angular';
 import { ImageUploaderPage } from 'src/app/image-uploader/image-uploader.page';
 import { ApiService } from 'src/app/services/api.service';
 import { CommonService } from 'src/app/services/common.service';
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 @Component({
-  selector: 'app-edit-profil',
-  templateUrl: './edit-profil.page.html',
-  styleUrls: ['./edit-profil.page.scss'],
+  selector: 'app-tambah-user',
+  templateUrl: './tambah-user.page.html',
+  styleUrls: ['./tambah-user.page.scss'],
 })
-export class EditProfilPage implements OnInit {
+export class TambahUserPage implements OnInit {
 
   userData:any = {};
+  loading:boolean;
+  id:any;
   serverImg:any;
+  imageNow = [];
+  isCreated:boolean = true;
   constructor(
     public api: ApiService,
-    public common: CommonService,
     public router:Router,
+    public common: CommonService,
+    public actionSheetController:ActionSheetController,
     public modalController: ModalController,
     private loadingController: LoadingController,
-    public actionSheetController:ActionSheetController,
     private toastController: ToastController,
+    public routes:ActivatedRoute,
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.id = this.routes.snapshot.paramMap.get('id');
     this.serverImg = this.common.photoBaseUrl+'users/';
-    this.cekLogin();
+    if(this.id != 0) {
+      this.isCreated = false;
+      this.getDetailUser();
+    } else {
+      this.id = new Date().getTime().toString();
+    }
   }
 
-  ionViewWillEnter() {
-    this.loginStatus();
-  }
-
-  loading:boolean;
-  async loginStatus() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      message: 'Mohon Tunggu...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-        this.cekLogin();
-      });
-      this.loading = false;
-    });
-  }
-
-  cekLogin()
-  {    
-    this.api.me().then(res=>{
+  getDetailUser() {
+    this.api.get('users/find/'+this.id).then(res => {
       this.userData = res;
       this.uploadImg = false;
-      this.loadingController.dismiss();
-    }, error => {
-      this.loadingController.dismiss();
     })
   }
 
@@ -153,11 +140,22 @@ export class EditProfilPage implements OnInit {
     }
   }
 
+  type = 'password';
+  show() {
+    this.type == 'password' ? this.type = 'text': this.type = 'password';
+  }
+
+  match:boolean;
+  checkMatch() {
+    this.userData.p2 == this.userData.password ? this.match = true:this.match = false;
+  }
+
   updateUser() {
-    this.api.put('users/'+this.userData.id, this.userData).then(res=>{
+
+    this.api.put('users/'+this.id, this.userData).then(res=>{
       this.toastController
       .create({
-        message: 'Berhasil memperbarui profil.',
+        message: 'Berhasil memperbarui profil '+this.userData.name +'.',
         duration: 2000,
         color: "primary",
       })
@@ -165,7 +163,7 @@ export class EditProfilPage implements OnInit {
         toastEl.present();
       });
       this.loading = false;
-      this.router.navigate(['/home']);
+      this.router.navigate(['/user-managements']);
     }, error => {
       console.log(error)
     });

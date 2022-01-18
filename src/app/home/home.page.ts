@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Diagnostic } from '@awesome-cordova-plugins/diagnostic/ngx';
-import { AlertController, LoadingController, ModalController, Platform } from '@ionic/angular';
+import { AlertController, LoadingController, ModalController, Platform, ToastController } from '@ionic/angular';
 import { LoginPage } from '../auth/login/login.page';
 import { ApiService } from '../services/api.service';
 import { CommonService } from '../services/common.service';
@@ -46,6 +46,7 @@ export class HomePage implements OnInit {
     public alertController: AlertController,
     private diagnostic: Diagnostic,
     private platform: Platform,
+    private toastController: ToastController,
     private appComponent: AppComponent,
   ) {}
 
@@ -55,7 +56,7 @@ export class HomePage implements OnInit {
     this.loading = true;
     this.dateNow = new Date();
     await this.checkPermission();
-    // this.cekLogin();
+    this.cekLogin();
     this.serverImg = this.common.photoBaseUrl+'products/';
     this.serverImgBanner = this.common.photoBaseUrl+'banners/';
     this.serverImgProfil = this.common.photoBaseUrl+'users/';
@@ -65,7 +66,6 @@ export class HomePage implements OnInit {
 
   ionViewWillEnter() {
     // this.checkPermission();
-    this.cekLogin();
   }
 
   async checkPermission() {
@@ -260,6 +260,8 @@ export class HomePage implements OnInit {
       await this.loadingController.dismiss();
     }, async error => {
       this.loading = false;
+      localStorage.removeItem('userSalammu');
+      localStorage.removeItem('salammuToken');
       this.userData = undefined;
       await this.loadingController.dismiss();
     })

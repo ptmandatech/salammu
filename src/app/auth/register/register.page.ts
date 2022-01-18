@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 import { LoginPage } from '../login/login.page';
 
@@ -16,6 +16,7 @@ export class RegisterPage implements OnInit {
     private router: Router,
     private api: ApiService,
     public modalController: ModalController,
+    private toastController: ToastController,
   ) { }
 
   ngOnInit() {
@@ -36,7 +37,15 @@ export class RegisterPage implements OnInit {
       this.userData.id = new Date().getTime().toString() + '' + [Math.floor((Math.random() * 1000))];
       this.userData.role = 'user';
       this.api.post('auth/register/',this.userData).then(res=>{
-        alert('Pendaftaran berhasil.');
+        this.toastController
+        .create({
+          message: 'Pendaftaran berhasil.',
+          duration: 2000,
+          color: "primary",
+        })
+        .then((toastEl) => {
+          toastEl.present();
+        });
         this.login(this.userData);
       },err=>{
         this.loading=false;

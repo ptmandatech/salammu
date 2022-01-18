@@ -23,6 +23,9 @@ export class CabangRantingPage implements OnInit {
 
   ngOnInit() {
     this.loading = true;
+  }
+
+  ionViewWillEnter() {
     this.listRanting = [];
     this.listCabang = [];
     this.getAllCr();

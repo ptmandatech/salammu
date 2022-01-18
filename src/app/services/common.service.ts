@@ -11,6 +11,7 @@ export class CommonService {
   serverPrayTimes='https://api.pray.zone/v2/times/';
   serverPrayTimes2='https://api.aladhan.com/v1/';
   serverUrl='https://api.sunhouse.co.id/salammu/index.php/';
+  serverImgPath='https://api.sunhouse.co.id/salammu/';
   public photoBaseUrl='https://api.sunhouse.co.id/salammu/photos/';
   constructor(
     public http:HttpClient
@@ -35,6 +36,23 @@ export class CommonService {
       })
     };
   }
+  
+  httpOption2:any;
+  getToken2()
+  {
+    var tokens=localStorage.getItem('salammuToken');
+    this.token={email:'',jwt:''};
+    if(tokens!=null)
+    {
+      this.token=JSON.parse(tokens);      
+    }
+    this.httpOption2 = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer '+this.token.jwt
+      })
+    };
+  }
+
   generateOption(bearer)
   {
     this.httpOption = {
@@ -74,6 +92,12 @@ export class CommonService {
   {
     this.getToken();
     return this.http.post(this.serverUrl+url,data, this.httpOption).toPromise();
+  }
+
+  postCrImg(url,data)
+  {
+    this.getToken2();
+    return this.http.post(this.serverUrl+url,data, this.httpOption2).toPromise();
   }
   
   put(url,data)

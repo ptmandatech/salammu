@@ -86,7 +86,11 @@ const routes: Routes = [
   {
     path: 'reset/:token',
     loadChildren: () => import('./auth/reset/reset.module').then( m => m.ResetPageModule)
+  },  {
+    path: 'user-managements',
+    loadChildren: () => import('./user-managements/user-managements.module').then( m => m.UserManagementsPageModule)
   },
+
 
 
 ];

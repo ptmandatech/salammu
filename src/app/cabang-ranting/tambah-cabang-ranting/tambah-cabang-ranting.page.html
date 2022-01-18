@@ -38,7 +38,7 @@
           </ion-item>
 
           <ion-text color="medium">Tentang</ion-text>
-          <quill-editor [(ngModel)]="crData.about" #about="ngModel" placeholder="Cr about">
+          <quill-editor [(ngModel)]="crData.about" [modules]="modules" #about="ngModel" placeholder="Cr about">
             <div quill-editor-toolbar>
               <span class="ql-formats">
                 <select class="ql-align" [title]="'Aligment'">

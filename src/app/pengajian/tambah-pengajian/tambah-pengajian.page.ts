@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController, IonDatetime, LoadingController, ModalController, Platform } from '@ionic/angular';
+import { AlertController, IonDatetime, LoadingController, ModalController, Platform, ToastController } from '@ionic/angular';
 import { format, parseISO } from 'date-fns';
 import { ApiService } from 'src/app/services/api.service';
 import { CommonService } from 'src/app/services/common.service';
@@ -56,6 +56,7 @@ export class TambahPengajianPage implements OnInit {
     private platform: Platform,
     private loadingController: LoadingController,
     public alertController: AlertController,
+    private toastController: ToastController,
     private datePipe: DatePipe,
   ) { }
 
@@ -99,7 +100,15 @@ export class TambahPengajianPage implements OnInit {
     if(this.isCreated == true) {
       this.api.post('pengajian', this.pengajianData).then(res => {
         if(res) {
-          alert('Berhasil menambahkan data.');
+          this.toastController
+          .create({
+            message: 'Berhasil menambahkan data.',
+            duration: 2000,
+            color: "primary",
+          })
+          .then((toastEl) => {
+            toastEl.present();
+          });
           this.loading = false;
           this.router.navigate(['/my-pengajian']);
         }
@@ -107,7 +116,15 @@ export class TambahPengajianPage implements OnInit {
     } else {
       this.api.put('pengajian/'+this.id, this.pengajianData).then(res => {
         if(res) {
-          alert('Berhasil memperbarui data.');
+          this.toastController
+          .create({
+            message: 'Berhasil memperbarui data.',
+            duration: 2000,
+            color: "primary",
+          })
+          .then((toastEl) => {
+            toastEl.present();
+          });
           this.loading = false;
           this.router.navigate(['/my-pengajian']);
         }
@@ -121,7 +138,15 @@ export class TambahPengajianPage implements OnInit {
       this.pengajianData.status = 'done';
       this.api.put('pengajian/'+this.id, this.pengajianData).then(res => {
         if(res) {
-          alert('Berhasil memperbarui data.');
+          this.toastController
+          .create({
+            message: 'Berhasil memperbarui data.',
+            duration: 2000,
+            color: "primary",
+          })
+          .then((toastEl) => {
+            toastEl.present();
+          });
           this.loading = false;
           this.router.navigate(['/my-pengajian']);
         }
@@ -134,7 +159,15 @@ export class TambahPengajianPage implements OnInit {
     if (conf) {
       this.api.delete('pengajian/'+this.id).then(res => {
         if(res) {
-          alert('Berhasil menghapus data.');
+          this.toastController
+          .create({
+            message: 'Berhasil menghapus data.',
+            duration: 2000,
+            color: "primary",
+          })
+          .then((toastEl) => {
+            toastEl.present();
+          });
           this.loading = false;
           this.router.navigate(['/my-pengajian']);
         }

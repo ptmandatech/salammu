@@ -1,0 +1,56 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title>Detail Pengguna</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-grid>
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-md="6">
+        <ion-row *ngIf="userData != undefined">
+          <ion-col class="ion-text-center">
+            <img *ngIf="userData.image != undefined && uploadImg == false" src="{{(serverImg+userData.image)}}" class="img-profil">
+            <img *ngIf="userData.image == null && uploadImg == false" src="{{userData.image == null ? './assets/imgs/blank-profil.png':(serverImg+userData.image)}}" class="img-profil">
+            <img *ngIf="image != undefined && uploadImg == true" src="{{image == undefined ? './assets/imgs/blank-profil.png':image}}" class="img-profil">
+            <br>
+            <ion-button fill="clear" (click)="pilihFoto()">
+              Ganti foto
+            </ion-button>
+          </ion-col>
+        </ion-row>
+
+          <ion-text color="medium">Nama</ion-text>
+          <ion-item lines="none" class="input">
+            <ion-input [(ngModel)]="userData.name" required #name="ngModel" placeholder="Enter your name"></ion-input>
+          </ion-item>
+
+          <ion-text color="medium">Email</ion-text>
+          <ion-item lines="none" class="input">
+            <ion-input [(ngModel)]="userData.email" required #email="ngModel" placeholder="Enter your email" type="email"></ion-input>
+          </ion-item>
+
+          <ion-text color="medium">Nomor Hp</ion-text>
+          <ion-item lines="none" class="input">
+            <ion-input [(ngModel)]="userData.phone" required #phone="ngModel" placeholder="Enter your phone ex:(62825623)" type="text"></ion-input>
+          </ion-item>
+
+          <ion-text color="medium">Alamat</ion-text>
+          <ion-item lines="none" class="input">
+            <ion-textarea [(ngModel)]="userData.address" required #address="ngModel" placeholder="Enter your address" rows="4" cols="20"></ion-textarea>
+          </ion-item>
+          
+          <div style="margin-top: 100px;"></div>
+
+          <div class="footer">
+            <ion-button color="primary" expand="block" (click)="uploadPhoto()" [disabled]="loading || name.invalid || email.invalid || phone.invalid || address.invalid">
+              {{loading ? 'Mohon Tunggu...':'Simpan'}}
+            </ion-button>
+          </div>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

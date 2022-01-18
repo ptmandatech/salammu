@@ -75,6 +75,15 @@
             </ion-item>
           </ion-card>
 
+          <ion-card *ngIf="userData.role == 'superadmin'" class="rounded-15" routerLink="/user-managements">
+            <ion-item lines="none" detail>
+              <ion-icon slot="start" name="people-outline"></ion-icon>
+              <ion-label>
+                <h3>Kelola Pengguna</h3>
+              </ion-label>
+            </ion-item>
+          </ion-card>
+
           <ion-card class="rounded-15" routerLink="/change-password">
             <ion-item lines="none" detail>
               <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
