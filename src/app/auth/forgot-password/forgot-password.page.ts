@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
@@ -13,6 +13,7 @@ export class ForgotPasswordPage implements OnInit {
   constructor(
     private router: Router,
     private api: ApiService,
+    private toastController: ToastController,
     public modalController: ModalController,
   ) { }
 
@@ -28,7 +29,15 @@ export class ForgotPasswordPage implements OnInit {
     var email = this.user.email == undefined ? '':this.user.email.toLowerCase();
     this.loading=true;
     this.api.post('auth/reset',{email:email}).then(res=>{
-      alert('Tautan pembaharuan password berhasil dikirim.');
+      this.toastController
+      .create({
+        message: 'Tautan pembaharuan password berhasil dikirim.',
+        duration: 2000,
+        color: "primary",
+      })
+      .then((toastEl) => {
+        toastEl.present();
+      });
       this.loading=false;
       this.submited = false;
       localStorage.removeItem('salammuToken');

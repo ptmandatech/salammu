@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NavController } from '@ionic/angular';
+import { NavController, ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
@@ -17,7 +17,8 @@ export class ResetPage implements OnInit {
     public routes: ActivatedRoute,
     private router: Router,
     private api:ApiService,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private toastController: ToastController,
   ) { }
 
   ngOnInit() {
@@ -31,7 +32,15 @@ export class ResetPage implements OnInit {
     this.api.get('auth/reset?token='+token).then(res=>{
       this.userData=res;
     },err=>{
-      alert('Token tidak valid!');
+      this.toastController
+      .create({
+        message: 'Token tidak valid!',
+        duration: 2000,
+        color: "danger",
+      })
+      .then((toastEl) => {
+        toastEl.present();
+      });
       this.router.navigate(['/home']);
     })
   }
@@ -41,13 +50,29 @@ export class ResetPage implements OnInit {
     var email = this.userData.email == null ? this.userData.username:this.userData.email;
     this.loading=true;
     this.api.put('auth/reset',{password:this.user.password, email:email}).then(res=>{
-      alert('Pembaruan password berhasil');
+      this.toastController
+      .create({
+        message: 'Pembaruan password berhasil.',
+        duration: 2000,
+        color: "primary",
+      })
+      .then((toastEl) => {
+        toastEl.present();
+      });
       this.loading=false;
       this.submited = false;
       localStorage.removeItem('salammuToken');
       this.navCtrl.navigateRoot(['/home']);
     },err=>{
-      alert('Tidak dapat memperbarui password');
+      this.toastController
+      .create({
+        message: 'Tidak dapat memperbarui password',
+        duration: 2000,
+        color: "danger",
+      })
+      .then((toastEl) => {
+        toastEl.present();
+      });
       this.loading=false;
       var that = this;
       setTimeout(function () {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalController, LoadingController } from '@ionic/angular';
+import { ModalController, LoadingController, ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 import { LoginPage } from '../login/login.page';
 
@@ -17,6 +17,7 @@ export class ChangePasswordPage implements OnInit {
     public api: ApiService,
     public router:Router,
     public modalController: ModalController,
+    private toastController: ToastController,
     private loadingController: LoadingController,
   ) { }
 
@@ -53,7 +54,15 @@ export class ChangePasswordPage implements OnInit {
     this.api.put('users/changePass/'+this.userData.id, this.user).then(async res => {
       if(res) {
         this.submited = false;
-        alert('Berhasil memperbarui password.');
+        this.toastController
+        .create({
+          message: 'Berhasil memperbarui password.',
+          duration: 2000,
+          color: "primary",
+        })
+        .then((toastEl) => {
+          toastEl.present();
+        });
         this.loading = false;
         localStorage.removeItem('userSalammu');
         localStorage.removeItem('salammuToken');

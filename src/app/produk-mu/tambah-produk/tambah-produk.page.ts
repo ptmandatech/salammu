@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActionSheetController, LoadingController, ModalController } from '@ionic/angular';
+import { ActionSheetController, LoadingController, ModalController, ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 import { ImageUploaderPage } from '../../image-uploader/image-uploader.page';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
@@ -26,6 +26,7 @@ export class TambahProdukPage implements OnInit {
     public actionSheetController:ActionSheetController,
     public modalController: ModalController,
     private loadingController: LoadingController,
+    private toastController: ToastController,
     public routes:ActivatedRoute,
   ) { }
 
@@ -145,7 +146,15 @@ export class TambahProdukPage implements OnInit {
       this.productData.images = JSON.stringify(this.imgUploaded);
       this.api.post('products', this.productData).then(res => {
         if(res) {
-          alert('Berhasil menambahkan produk.');
+          this.toastController
+          .create({
+            message: 'Berhasil menambahkan produk.',
+            duration: 2000,
+            color: "primary",
+          })
+          .then((toastEl) => {
+            toastEl.present();
+          });
           this.loading = false;
           this.router.navigate(['/my-product']);
         }
@@ -161,7 +170,15 @@ export class TambahProdukPage implements OnInit {
       }
       this.api.put('products/'+ this.productData.id, this.productData).then(res => {
         if(res) {
-          alert('Berhasil memperbarui produk.');
+          this.toastController
+          .create({
+            message: 'Berhasil memperbarui produk.',
+            duration: 2000,
+            color: "primary",
+          })
+          .then((toastEl) => {
+            toastEl.present();
+          });
           this.loading = false;
           this.router.navigate(['/my-product']);
         }
@@ -182,7 +199,15 @@ export class TambahProdukPage implements OnInit {
     if (conf) {
       this.api.delete('products/'+this.id).then(res => {
         if(res) {
-          alert('Berhasil menghapus data.');
+          this.toastController
+          .create({
+            message: 'Berhasil menghapus data produk.',
+            duration: 2000,
+            color: "primary",
+          })
+          .then((toastEl) => {
+            toastEl.present();
+          });
           this.loading = false;
           this.router.navigate(['/my-product']);
         }

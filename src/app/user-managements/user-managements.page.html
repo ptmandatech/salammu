@@ -1,0 +1,65 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title class="ion-text-center">Kelola Pengguna</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-searchbar mode="ios" showCancelButton="never" [(ngModel)]="searchTerm" (ionChange)="searchChanged($event)" placeholder="Cari pengguna"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-grid class="ion-no-padding">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-md="6">
+        <div *ngIf="!loading">
+          <ion-item-sliding *ngFor="let n of listUsers">
+            <ion-item detail>
+              <ion-thumbnail slot="start">
+                <img class="img-profil" src="{{n.image == null ? './assets/imgs/blank-profil.png':(serverImg+n.image)}}">
+              </ion-thumbnail>
+              <ion-label>
+                <h3>{{n.name}}</h3>
+                <p>{{n.address}}</p>
+              </ion-label>
+              <ion-chip color="primary" *ngIf="n.id == userData.id">
+                <ion-label>
+                  Anda
+                </ion-label>
+              </ion-chip>
+            </ion-item>
+    
+            <ion-item-options side="end">
+              <ion-item-option (click)="update(n)">Update</ion-item-option>
+              <ion-item-option color="danger" (click)="delete(n)">Delete</ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
+        </div>
+        <div *ngIf="loading">
+          <ion-item detail *ngFor="let n of [1,2,3,4,5,6,7,8,9,10]">
+            <ion-thumbnail slot="start">
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-thumbnail>
+            <ion-label>
+              <h3><ion-skeleton-text animated></ion-skeleton-text></h3>
+              <p><ion-skeleton-text animated></ion-skeleton-text></p>
+            </ion-label>
+          </ion-item>
+        </div>
+        <div class="item-centered" *ngIf="!loading && listUsers.length == 0">
+          <div style="margin-top: 20px;"></div>
+          <div style="margin-top: 20px;"></div>
+          <img src="./assets/icon/pencarian.svg">
+          <ion-label>
+            <p>Data tidak ditemukan</p>
+          </ion-label>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

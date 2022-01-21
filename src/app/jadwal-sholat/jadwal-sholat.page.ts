@@ -238,7 +238,15 @@ export class JadwalSholatPage implements OnInit {
       this.month = Number(this.datePipe.transform(new Date(date), 'MM'));
       this.year = date.getFullYear();
       this.parseCal(cal);
-      if(from == 'weekly') {
+      if(from == 'daily') {
+        this.timesSelected = [];
+        this.daily =true;
+        this.weekly =false;
+        this.monthly =false;
+        this.prayTime = undefined;
+        this.prayTime = await this.api.getThisMonth(this.month,this.year, this.city);
+        this.timesSelected = await this.prayTime;
+      } else if(from == 'weekly') {
         let date = new Date(this.timesSelected[this.timesSelected.length-1].date.gregorian);
         let start = this.datePipe.transform(new Date(date).setDate(date.getDate() + 1), 'yyyy-MM-dd');
         let end = this.datePipe.transform(new Date(date).setDate(date.getDate() + 7), 'yyyy-MM-dd');
@@ -268,7 +276,15 @@ export class JadwalSholatPage implements OnInit {
       this.month = Number(this.datePipe.transform(new Date(date), 'MM'));
       this.year = date.getFullYear();
       this.parseCal(cal);
-      if(from == 'weekly') {
+      if(from == 'daily') {
+        this.timesSelected = [];
+        this.daily =true;
+        this.weekly =false;
+        this.monthly =false;
+        this.prayTime = undefined;
+        this.prayTime = await this.api.getThisMonth(this.month,this.year, this.city);
+        this.timesSelected = await this.prayTime;
+      } else if(from == 'weekly') {
         let date = new Date(this.timesSelected[0].date.gregorian);
         let start = this.datePipe.transform(new Date(date).setDate(date.getDate() - 7), 'yyyy-MM-dd');
         let end = this.datePipe.transform(new Date(date).setDate(date.getDate() - 1), 'yyyy-MM-dd');
@@ -294,11 +310,14 @@ export class JadwalSholatPage implements OnInit {
   cellSelected:any={};
   selectCell(m,n)
   {
-     this.cellSelected={};
-     this.cellSelected[m+n]=true;
      var date=this.cal[m][n];
-     this.selected=new Date(date.tahun,date.bulan-1,date.tanggal);
-     this.presentModal(this.selected);
+     if(date != 0) {
+      this.cellSelected={};
+      this.cellSelected[m+n]=true;
+      this.selected=new Date(date.tahun,date.bulan-1,date.tanggal);
+      this.dateToday = date.tanggal;
+      this.presentModal(this.selected);
+     }
   }
 
   async presentModal(selected) {
@@ -311,7 +330,7 @@ export class JadwalSholatPage implements OnInit {
       breakpoints: [0, 0.5, 1],
       componentProps: {
         data:selected,
-        times: this.prayTime[time-1]
+        times: this.prayTime[time-1] 
       }
     });
     return await modal.present();

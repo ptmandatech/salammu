@@ -38,7 +38,7 @@
                     {{selected | date:'dd, MMM y'}}
                   </ion-text>
                   <ion-text color="medium">
-                    <p class="fs-10 ion-no-padding"> {{prayTime[dateToday-1].date.hijri.day}} {{prayTime[dateToday-1].date.hijri.month.en}} {{prayTime[dateToday-1].date.hijri.year}}</p>
+                    <p class="fs-10 ion-no-padding" *ngIf="prayTime != undefined"> {{prayTime[dateToday-1].date.hijri.day}} {{prayTime[dateToday-1].date.hijri.month.en}} {{prayTime[dateToday-1].date.hijri.year}}</p>
                   </ion-text>
                 </ion-label>
               </ion-title>
@@ -60,7 +60,8 @@
                 <ion-row *ngFor="let m of week" class="ion-align-items-center">
                   <ion-col class="cal-cell" *ngFor="let n of [0,1,2,3,4,5,6]" [ngClass]="{'cell-selected':cellSelected[m+n]}" (click)="selectCell(m,n)">
                     <div *ngIf="cal[m][n]!=0" class="centered ion-padding">
-                      <ion-text class="cal-date">{{cal[m][n]!=0 ? cal[m][n].tanggal : ''}}</ion-text>
+                      <ion-text class="cal-date">{{cal[m][n]!=0 ? cal[m][n].tanggal : ''}}</ion-text><br>
+                      <ion-icon *ngIf="dataPengajian[cal[m][n].tanggal] != undefined" name="ellipsis-horizontal-outline" color="{{cellSelected[m+n] ? '':'primary'}}"></ion-icon>
                     </div>
                   </ion-col>
                 </ion-row>

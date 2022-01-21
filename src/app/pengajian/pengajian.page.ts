@@ -75,6 +75,7 @@ export class PengajianPage implements OnInit {
     this.checkPermission();
     this.cekLogin();
     this.getAllPengajian();
+    this.getPengajian();
     let date = new Date();
     this.dateToday = Number(this.datePipe.transform(new Date(date), 'dd'));
     this.month = Number(this.datePipe.transform(new Date(date), 'MM'));
@@ -231,7 +232,7 @@ export class PengajianPage implements OnInit {
 
   m:any;
   n:any;
-  parseCal(cal)
+  async parseCal(cal)
   {
     var res={};
     for(var i=0; i<cal.length;i++)
@@ -251,6 +252,14 @@ export class PengajianPage implements OnInit {
     {
       for(var j=0; j<this.cal[this.week[i]].length;j++)
       {
+        if(this.cal[this.week[i]][j] != 0) {
+          let tahun = this.cal[this.week[i]][j].tahun;
+          let bulan = this.cal[this.week[i]][j].bulan;
+          let tanggal = this.cal[this.week[i]][j].tanggal;
+          let datetime = this.datePipe.transform(new Date(tahun, bulan-1, tanggal), 'yyyy-MM-dd');
+          await this.parseDataPengajian(datetime, this.cal[this.week[i]][j].tanggal);
+        }
+
         if(this.cal[this.week[i]][j].tanggal == this.dateToday) {
           this.m = i.toString();
           this.n = j.toString();
@@ -260,16 +269,28 @@ export class PengajianPage implements OnInit {
       }
     }
   }
-  next(from)
+  async next(from)
   {
+      this.dataPengajian = {};
       var cal=this.calendar.next(this.selected, from).data;
       this.selected=this.calendar.next(this.selected, from).selected;
+      let date = new Date(this.selected);
+      this.month = Number(this.datePipe.transform(new Date(date), 'MM'));
+      this.year = date.getFullYear();
+      this.prayTime = undefined;
+      this.prayTime = await this.api.getThisMonth(this.month,this.year, this.city);
       this.parseCal(cal);
   }
-  prev(from)
+  async prev(from)
   {
+    this.dataPengajian = {};
       var cal=this.calendar.previous(this.selected, from).data;
       this.selected=this.calendar.previous(this.selected, from).selected;
+      let date = new Date(this.selected);
+      this.month = Number(this.datePipe.transform(new Date(date), 'MM'));
+      this.year = date.getFullYear();
+      this.prayTime = undefined;
+      this.prayTime = await this.api.getThisMonth(this.month,this.year, this.city);
       this.parseCal(cal);
   }
 
@@ -277,11 +298,39 @@ export class PengajianPage implements OnInit {
   cellSelected:any={};
   selectCell(m,n)
   {
-     this.cellSelected={};
-     this.cellSelected[m+n]=true;
      var date=this.cal[m][n];
-     this.selected=new Date(date.tahun,date.bulan-1,date.tanggal);
-     this.modalKelander(this.selected);
+     if(date != 0) {
+      this.cellSelected={};
+      this.cellSelected[m+n]=true;
+      this.selected=new Date(date.tahun,date.bulan-1,date.tanggal);
+      this.dateToday = date.tanggal;
+      this.modalKelander(this.selected);
+     }
+  }
+
+  dataPengajian:any = {};
+  pengajian:any = [];
+  getPengajian() {
+    this.api.get('pengajian').then(res => {
+      this.pengajian = res;
+    }, error => {
+      this.loading = false;
+    })
+  }
+
+  parseDataPengajian(datetime, date) {
+    for(var i=0; i<this.pengajian.length; i++) {
+      let dt = this.datePipe.transform(new Date(this.pengajian[i].datetime), 'yyyy-MM-dd');
+      if(dt == datetime) {
+        if(this.dataPengajian[date] == undefined) {
+          this.dataPengajian[date] = [];
+        }
+        let idx = this.dataPengajian[date].indexOf(this.pengajian[i]);
+        if(idx == -1) {
+          this.dataPengajian[date].push(this.pengajian[i]);
+        }
+      }
+    }
   }
 
   //Modal Kalender

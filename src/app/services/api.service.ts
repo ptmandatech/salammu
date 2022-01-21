@@ -37,6 +37,11 @@ export class ApiService {
     return dt;
   }
 
+  async postCrImg(url, data) {
+    let dt = await this.common.postCrImg(url, data);
+    return dt;
+  }
+
   async put(url, data) {
     let dt = await this.common.put(url, data);
     return dt;

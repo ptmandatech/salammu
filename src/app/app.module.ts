@@ -21,7 +21,10 @@ import { QuillModule } from 'ngx-quill';
 import { Toast } from '@awesome-cordova-plugins/toast/ngx';
 import { NgxIonicImageViewerModule } from 'ngx-ionic-image-viewer';
 import { SwiperModule } from 'swiper/angular';
- 
+import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
+import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
+import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
+
 @NgModule({
   declarations: [
     AppComponent, 
@@ -46,6 +49,9 @@ import { SwiperModule } from 'swiper/angular';
     SwiperModule
   ],
   providers: [
+    StatusBar,
+    InAppBrowser,
+    SplashScreen,
     DatePipe,
     Diagnostic,
     Geolocation,
