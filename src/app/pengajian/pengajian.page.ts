@@ -311,7 +311,7 @@ export class PengajianPage implements OnInit {
   dataPengajian:any = {};
   pengajian:any = [];
   getPengajian() {
-    this.api.get('pengajian').then(res => {
+    this.api.get('pengajian?all=ok').then(res => {
       this.pengajian = res;
     }, error => {
       this.loading = false;

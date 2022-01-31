@@ -19,6 +19,7 @@ export class TambahProdukPage implements OnInit {
   serverImg:any;
   imageNow = [];
   isCreated:boolean = true;
+  userData:any;
   constructor(
     public api: ApiService,
     public router:Router,
@@ -31,6 +32,7 @@ export class TambahProdukPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.cekLogin();
     this.id = this.routes.snapshot.paramMap.get('id');
     this.serverImg = this.common.photoBaseUrl+'products/';
     if(this.id != 0) {
@@ -39,6 +41,20 @@ export class TambahProdukPage implements OnInit {
     } else {
       this.id = new Date().getTime().toString();
     }
+  }
+
+  cekLogin()
+  {    
+    this.api.me().then(async res=>{
+      this.userData = res;
+      await this.loadingController.dismiss();
+    }, async error => {
+      this.loading = false;
+      localStorage.removeItem('userSalammu');
+      localStorage.removeItem('salammuToken');
+      this.userData = undefined;
+      await this.loadingController.dismiss();
+    })
   }
 
   getDetailProduct() {
@@ -143,6 +159,7 @@ export class TambahProdukPage implements OnInit {
 
   addProduct() {
     if(this.isCreated == true) {
+      this.productData.verified = false;
       this.productData.images = JSON.stringify(this.imgUploaded);
       this.api.post('products', this.productData).then(res => {
         if(res) {
@@ -212,6 +229,34 @@ export class TambahProdukPage implements OnInit {
           this.router.navigate(['/my-product']);
         }
       })
+    }
+  }
+
+  verifikasi() {
+    this.loading = true;
+    var conf = confirm('Anda yakin ingin melanjutkan verifikasi produk?');
+    if (conf) {
+      this.productData.verified = true;
+      this.api.put('products/'+ this.productData.id, this.productData).then(res => {
+        if(res) {
+          this.loading = false;
+          this.toastController
+          .create({
+            message: 'Berhasil memverifikasi produk.',
+            duration: 2000,
+            color: "primary",
+          })
+          .then((toastEl) => {
+            toastEl.present();
+          });
+          this.loading = false;
+          this.router.navigate(['/my-product']);
+        }
+      }).catch(error => {
+        this.loading = false;
+      })
+    } else {
+      this.loading = false;
     }
   }
 
