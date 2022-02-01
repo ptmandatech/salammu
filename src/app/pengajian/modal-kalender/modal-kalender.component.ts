@@ -32,7 +32,7 @@ export class ModalKalenderComponent implements OnInit {
   }
 
   getPengajian(datetime) {
-    this.api.get('pengajian').then(res => {
+    this.api.get('pengajian?all=ok').then(res => {
       this.parseData(res, datetime);
     }, error => {
       this.loading = false;

@@ -42,7 +42,7 @@ export class ProdukMUPage implements OnInit {
   }
 
   getAllProducts() {
-    this.api.get('products').then(res => {
+    this.api.get('products?all=ok').then(res => {
       this.parseImage(res);
     }, error => {
       this.loading = false;

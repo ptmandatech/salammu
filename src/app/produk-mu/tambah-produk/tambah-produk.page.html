@@ -52,12 +52,31 @@
             </ion-col>
           </ion-row>
 
+          <div style="margin-top: 20px;"></div>
+
+          <div class="item-centered" *ngIf="productData.verified == 0">
+            <ion-label>
+              <p>Menunggu proses verifikasi produk.</p>
+            </ion-label>
+          </div>
+
           <div style="margin-top: 100px;"></div>
 
           <div class="footer">
-            <ion-button color="primary" expand="block" [disabled]="loading || name.invalid || price.invalid || descriptions.invalid" (click)="uploadPhoto()">
-              {{loading ? 'Mohon tunggu...':'Simpan'}}
-            </ion-button>
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  <ion-button color="primary" expand="block" [disabled]="loading || name.invalid || price.invalid || descriptions.invalid" (click)="uploadPhoto()">
+                    {{loading ? 'Mohon tunggu...':'Simpan'}}
+                  </ion-button>
+                </ion-col>
+                <ion-col *ngIf="productData.verified == 0 && userData.role == 'superadmin'">
+                  <ion-button color="secondary" expand="block" [disabled]="loading" (click)="verifikasi()">
+                    {{loading ? 'Mohon tunggu...':'Verifikasi'}}
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
           </div>
 
 

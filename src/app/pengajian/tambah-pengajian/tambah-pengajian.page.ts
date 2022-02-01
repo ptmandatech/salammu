@@ -43,6 +43,7 @@ export class TambahPengajianPage implements OnInit {
   id:any;
   isCreated:boolean = true;
   loading:boolean;
+  userData:any;
   today:any;
   constructor(
     public http:HttpClient, 
@@ -61,6 +62,7 @@ export class TambahPengajianPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.cekLogin();
     this.today = new Date();
     this.id = this.routes.snapshot.paramMap.get('id');
     if(this.id != 0) {
@@ -69,6 +71,20 @@ export class TambahPengajianPage implements OnInit {
     } else {
       this.generateMap(undefined);
     }
+  }
+
+  cekLogin()
+  {    
+    this.api.me().then(async res=>{
+      this.userData = res;
+      await this.loadingController.dismiss();
+    }, async error => {
+      this.loading = false;
+      localStorage.removeItem('userSalammu');
+      localStorage.removeItem('salammuToken');
+      this.userData = undefined;
+      await this.loadingController.dismiss();
+    })
   }
 
   locationNow:any;
@@ -96,6 +112,7 @@ export class TambahPengajianPage implements OnInit {
     } else {
       this.pengajianData.status = 'done';
     }
+    this.pengajianData.verified = false;
     this.pengajianData.datetime = new Date(this.dateValue);
     if(this.isCreated == true) {
       this.api.post('pengajian', this.pengajianData).then(res => {
@@ -172,6 +189,34 @@ export class TambahPengajianPage implements OnInit {
           this.router.navigate(['/my-pengajian']);
         }
       })
+    }
+  }
+
+  verifikasi() {
+    this.loading = true;
+    var conf = confirm('Anda yakin ingin melanjutkan verifikasi data pengajian?');
+    if (conf) {
+      this.pengajianData.verified = true;
+      this.api.put('pengajian/'+ this.id, this.pengajianData).then(res => {
+        if(res) {
+          this.loading = false;
+          this.toastController
+          .create({
+            message: 'Berhasil memverifikasi data pengajian.',
+            duration: 2000,
+            color: "primary",
+          })
+          .then((toastEl) => {
+            toastEl.present();
+          });
+          this.loading = false;
+          this.router.navigate(['/my-pengajian']);
+        }
+      }).catch(error => {
+        this.loading = false;
+      })
+    } else {
+      this.loading = false;
     }
   }
 
