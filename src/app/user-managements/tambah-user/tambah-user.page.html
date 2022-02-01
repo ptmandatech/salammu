@@ -41,7 +41,13 @@
           <ion-item lines="none" class="input">
             <ion-textarea [(ngModel)]="userData.address" required #address="ngModel" placeholder="Enter your address" rows="4" cols="20"></ion-textarea>
           </ion-item>
-          
+
+          <ion-text color="medium">Editor</ion-text>
+          <ion-item lines="none" class="input">
+            <ion-label>Aktif/Non-Aktif</ion-label>
+            <ion-toggle></ion-toggle>
+          </ion-item>
+
           <div style="margin-top: 100px;"></div>
 
           <div class="footer">

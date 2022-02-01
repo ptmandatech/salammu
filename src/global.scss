@@ -123,3 +123,13 @@ ion-card{
 ion-select::part(icon) {
   display: none;
 }
+
+.text-elipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mb-16 {
+  margin-bottom: 16px;
+}

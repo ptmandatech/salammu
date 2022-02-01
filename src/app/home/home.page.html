@@ -114,21 +114,47 @@
 
             <ion-grid>
               <ion-row>
-                <ion-col size="3" class="ion-text-center" routerLink="/pengajian">
+                <ion-col size="3" class="ion-text-center mb-16" routerLink="/pengajian">
                   <img src="./assets/icon/pengajian.svg"/>
                   <p class="fs-10" style="margin-top: -1px;">Pengajian</p>
                 </ion-col>
-                <ion-col size="3" class="ion-text-center" routerLink="/cabang-ranting">
+                <ion-col size="3" class="ion-text-center mb-16" routerLink="/cabang-ranting">
                   <img src="./assets/icon/cabang-ranting.svg"/>
-                  <p class="fs-10" style="margin-top: -1px;">Cabang dan Ranting</p>
+                  <p class="fs-10" style="margin-top: -1px;">Cabang & Ranting</p>
                 </ion-col>
-                <ion-col size="3" class="ion-text-center" routerLink="/jadwal-sholat">
+                <ion-col size="3" class="ion-text-center mb-16" routerLink="/jadwal-sholat">
                   <img src="./assets/icon/jadwal-sholat.svg"/>
                   <p class="fs-10" style="margin-top: -1px;">Jadwal Sholat</p>
                 </ion-col>
-                <ion-col size="3" class="ion-text-center" routerLink="/video">
+                <ion-col size="3" class="ion-text-center mb-16" routerLink="/video">
                   <img src="./assets/icon/video.svg"/>
                   <p class="fs-10" style="margin-top: -1px;">Video</p>
+                </ion-col>
+                <ion-col size="3" class="ion-text-center mb-16" >
+                  <img src="./assets/icon/al-quran.svg"/>
+                  <p class="fs-10" style="margin-top: -1px;">Al-Quran</p>
+                  <ion-chip color="danger" style="margin-top: -140px;">
+                    <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
+                    <ion-label class="fs-10">Segera</ion-label>
+                  </ion-chip>
+                </ion-col>
+                <ion-col size="3" class="ion-text-center mb-16" >
+                  <img src="./assets/icon/dzikir.svg"/>
+                  <p class="fs-10" style="margin-top: -1px;">Doa & Dzikir</p>
+                  <ion-chip color="danger" style="margin-top: -140px;">
+                    <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
+                    <ion-label class="fs-10">Segera</ion-label>
+                  </ion-chip>
+                </ion-col>
+                <ion-col size="3" class="ion-text-center mb-16" >
+                  <a href="https://tarjihmu.com/">
+                    <img src="./assets/icon/tarjih.svg"/>
+                  </a>
+                  <p class="fs-10" style="margin-top: -1px;">Tarjih</p>
+                </ion-col>
+                <ion-col size="3" class="ion-text-center mb-16" (click)="allMenu()">
+                  <img src="./assets/icon/wrapper.svg"/>
+                  <p class="fs-10" style="margin-top: -1px;">Semua</p>
                 </ion-col>
               </ion-row>
             </ion-grid>

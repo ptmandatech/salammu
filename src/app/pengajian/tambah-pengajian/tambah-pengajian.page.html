@@ -1,14 +1,14 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-back-button slot="start"></ion-back-button>
-    <ion-title class="ion-text-center">{{isCreated ? 'Tambah':'Perbarui'}} Pengajian</ion-title>
+    <ion-title>{{isCreated ? 'Tambah':'Perbarui'}} Pengajian</ion-title>
     <ion-buttons slot="end" *ngIf="!isCreated">
       <ion-button (click)="delete()" fill="clear">
         <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
       </ion-button>
-      <ion-button (click)="done()" fill="clear" *ngIf="pengajianData.status == 'soon'">
+      <!-- <ion-button (click)="done()" fill="clear" *ngIf="pengajianData.status == 'soon'">
         <ion-icon slot="icon-only" name="checkmark-outline"></ion-icon>
-      </ion-button>
+      </ion-button> -->
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -21,14 +21,71 @@
 
         <div class="ion-padding">
 
+          <div class="item-centered" *ngIf="pengajianData.verified == 0">
+            <ion-chip color="danger">
+              <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
+              <ion-label>Data Belum di Verifikasi</ion-label>
+            </ion-chip>
+          </div>
+
           <ion-text color="medium">Nama Pengajian</ion-text>
           <ion-item lines="none" class="input">
             <ion-input [(ngModel)]="pengajianData.name" required #name="ngModel" placeholder="Pengajian name"></ion-input>
           </ion-item>
 
+          <ion-text color="medium">Nama Pembicara</ion-text>
+          <ion-item lines="none" class="input">
+            <ion-input placeholder="Nama Pembicara"></ion-input>
+          </ion-item>
+
           <ion-text color="medium">Deskripsi pengajian</ion-text>
           <ion-item lines="none" class="input">
             <ion-textarea [(ngModel)]="pengajianData.descriptions" required #descriptions="ngModel" placeholder="Pengajian descriptions" rows="4" cols="20"></ion-textarea>
+          </ion-item>
+
+          <ion-text color="medium">Penyelenggara</ion-text>
+          <ion-item lines="none" class="input">
+            <ion-select [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" interface="popover" placeholder="Pilih Penyelenggara">
+              <ion-select-option *ngFor="let n of ['cabang', 'ranting', 'lainnya']" value="{{n}}">{{n}}</ion-select-option>
+            </ion-select>
+            <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
+          </ion-item>
+
+          <ion-text color="medium">Nama Cabang Penyelenggara</ion-text>
+          <ion-item  lines="none" class="input">
+            <ionic-selectable
+              placeholder="Pilih Cabang"
+              [(ngModel)]="port"
+              [items]="ports"
+              itemValueField="id"
+              itemTextField="name"
+              [canSearch]="true"
+              (onChange)="portChange($event)">
+              <ng-template ionicSelectableCloseButtonTemplate>
+                <ion-icon name="close-circle" style="font-size: 24px;"></ion-icon>
+              </ng-template>
+            </ionic-selectable>
+          </ion-item>
+
+          <ion-text color="medium">Nama Ranting Penyelenggara</ion-text>
+          <ion-item  lines="none" class="input">
+            <ionic-selectable
+              placeholder="Pilih Cabang"
+              [(ngModel)]="port"
+              [items]="ports"
+              itemValueField="id"
+              itemTextField="name"
+              [canSearch]="true"
+              (onChange)="portChange($event)">
+              <ng-template ionicSelectableCloseButtonTemplate>
+                <ion-icon name="close-circle" style="font-size: 24px;"></ion-icon>
+              </ng-template>
+            </ionic-selectable>
+          </ion-item>
+
+          <ion-text color="medium">Nama Penyelenggara</ion-text>
+          <ion-item lines="none" class="input">
+            <ion-input placeholder="Nama Penyelenggara"></ion-input>
           </ion-item>
 
           <ion-text color="medium">Tanggal dan Jam Pengajian</ion-text>
@@ -46,12 +103,17 @@
             </ion-popover>
           </ion-item>
 
+          <ion-text color="medium">Link Live Streaming</ion-text>
+          <ion-item lines="none" class="input">
+            <ion-input placeholder="Input link streaming"></ion-input>
+          </ion-item>
+
           <ion-text color="medium">Lokasi Lengkap</ion-text>
           <ion-item lines="none" class="input">
             <ion-textarea [(ngModel)]="pengajianData.location" required #location="ngModel" placeholder="Pengajian location" rows="4" cols="20"></ion-textarea>
           </ion-item>
 
-          <ion-text color="medium">Pin Lokasi</ion-text>
+          <ion-text color="medium">Pin Lokasi (Terisi otomatis)</ion-text>
           <ion-item lines="none" class="input">
             <ion-label>
               <ion-text color="primary">
@@ -62,14 +124,6 @@
           <div id="map" style="width: auto; height: 300px;"></div>
           <div id="info">&nbsp;</div>
           <div id="geolocation"></div>
-
-          <div style="margin-top: 20px;"></div>
-
-          <div class="item-centered" *ngIf="pengajianData.verified == 0">
-            <ion-label>
-              <p>Menunggu proses verifikasi data.</p>
-            </ion-label>
-          </div>
 
           <div style="margin-top: 100px;"></div>
 

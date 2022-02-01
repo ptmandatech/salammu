@@ -9,6 +9,7 @@ import { CommonService } from '../services/common.service';
 import { Geolocation, Geoposition, PositionError } from '@awesome-cordova-plugins/geolocation/ngx';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AppComponent } from '../app.component';
+import { SemuaMenuPage } from './semua-menu/semua-menu.page';
 
 @Component({
   selector: 'app-home',
@@ -36,7 +37,7 @@ export class HomePage implements OnInit {
   loading:boolean;
   constructor(
     public common: CommonService,
-    public http:HttpClient, 
+    public http:HttpClient,
     private api: ApiService,
     private loadingController: LoadingController,
     private datePipe: DatePipe,
@@ -72,11 +73,11 @@ export class HomePage implements OnInit {
     if (this.platform.is('android')) {
       let successCallback = (isAvailable) => { console.log('Is available? ' + isAvailable); };
       let errorCallback = (e) => console.error(e);
-      
+
       this.diagnostic.isLocationAvailable().then(successCallback).catch(errorCallback);
-    
+
       this.diagnostic.isGpsLocationAvailable().then(successCallback, errorCallback);
-    
+
       this.diagnostic.getLocationMode()
         .then(async (state) => {
           if (state == this.diagnostic.locationMode.LOCATION_OFF) {
@@ -130,7 +131,7 @@ export class HomePage implements OnInit {
       });
     });
   }
-  
+
   options:any;
   currentPos:any;
   checkLocation() {
@@ -139,7 +140,7 @@ export class HomePage implements OnInit {
       maximumAge: 3000,
       enableHighAccuracy: true
     };
-   
+
     this.geolocation.getCurrentPosition(this.options).then(async (pos: Geoposition) => {
       this.currentPos = pos;
       const location = {
@@ -181,7 +182,7 @@ export class HomePage implements OnInit {
             this.timesToday = undefined;
             this.prayTime = await this.api.getToday(this.city);
             this.timesToday = await this.prayTime.timings;
-            
+
             this.parseTime(this.timesToday);
           }
         } else {
@@ -202,7 +203,7 @@ export class HomePage implements OnInit {
           this.timesToday = undefined;
           this.prayTime = await this.api.getToday(this.city);
           this.timesToday = await this.prayTime.timings;
-          
+
           this.parseTime(this.timesToday);
         }
       }, async error => {
@@ -215,7 +216,7 @@ export class HomePage implements OnInit {
           this.timesToday = undefined;
           this.prayTime = await this.api.getToday(this.city);
           this.timesToday = await this.prayTime.timings;
-          
+
           this.parseTime(this.timesToday);
         }
       })
@@ -233,7 +234,7 @@ export class HomePage implements OnInit {
       this.timesToday = undefined;
       this.prayTime = await this.api.getToday(this.city);
       this.timesToday = await this.prayTime.timings;
-      
+
       this.parseTime(this.timesToday);
     }
   }
@@ -254,7 +255,7 @@ export class HomePage implements OnInit {
   // }
 
   cekLogin()
-  {    
+  {
     this.api.me().then(async res=>{
       this.userData = res;
       await this.loadingController.dismiss();
@@ -336,17 +337,17 @@ export class HomePage implements OnInit {
         title[i] = 'Subuh';
       } else if(title[i] == 'Sunset') {
         title[i] = 'Maghrib';
-      } 
+      }
       if(dt == true) {
-        this.data.title = title[i]; 
+        this.data.title = title[i];
         this.data.time = times[i];
-        this.data.title_color = 'primary'; 
-        this.data.time_color = 'primary'; 
+        this.data.title_color = 'primary';
+        this.data.time_color = 'primary';
       } else {
-        this.data.title = title[i]; 
+        this.data.title = title[i];
         this.data.time = times[i];
-        this.data.title_color = 'medium'; 
-        this.data.time_color = 'dark'; 
+        this.data.title_color = 'medium';
+        this.data.time_color = 'dark';
       }
       if(this.data.title == 'Imsak') {
         this.tempTimes1.push(this.data);
@@ -356,7 +357,7 @@ export class HomePage implements OnInit {
 
       this.listTimes = this.tempTimes1.concat(this.tempTimes2);
     }
-    
+
   }
 
   nextTime:any = {};
@@ -393,7 +394,7 @@ export class HomePage implements OnInit {
         title[idx] = 'Subuh';
       } else if(title[idx] == 'Sunset') {
         title[idx] = 'Maghrib';
-      }  
+      }
       if(title[idx] != undefined) {
         this.nextTime.title = title[idx];
       } else {
@@ -424,7 +425,7 @@ export class HomePage implements OnInit {
   }
 
   checkCurrentTime() {
-    setInterval(async ()=> { 
+    setInterval(async ()=> {
       let date = new Date();
       this.nextTimeTimer = await this.timeCalc(date, this.nextTime.time);
       console.log(this.nextTimeTimer)
@@ -439,11 +440,11 @@ export class HomePage implements OnInit {
     let mins = Math.floor(msec / 60000);
     let hrs = Math.floor(mins / 60);
     let days = Math.floor(hrs / 24);
-    
+
     mins = mins % 60;
 
     let tValue1= `${hrs} Jam,  ${mins}  Menit`
- 
+
     return tValue1;
   }
 
@@ -488,5 +489,17 @@ export class HomePage implements OnInit {
       }
     }
     this.loading = false;
+  }
+
+  //Modal Semua Menu
+  async allMenu() {
+    const modal = await this.modalController.create({
+      component: SemuaMenuPage,
+      mode: "md",
+      cssClass: 'modal-class',
+      initialBreakpoint: 0.5,
+      breakpoints: [0, 0.5, 1]
+    });
+    return await modal.present();
   }
 }

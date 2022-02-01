@@ -16,6 +16,7 @@ export class DetailCabangRantingPage implements OnInit {
   loading:boolean;
   crData:any = {};
   userData:any;
+  defaultSegment:any='tentang';
   constructor(
     public api: ApiService,
     public common: CommonService,
@@ -32,7 +33,7 @@ export class DetailCabangRantingPage implements OnInit {
   }
 
   cekLogin()
-  {    
+  {
     this.api.me().then(res=>{
       this.userData = res;
     }, error => {

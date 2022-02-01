@@ -24,10 +24,11 @@ import { SwiperModule } from 'swiper/angular';
 import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
 import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
+import { IonicSelectableModule } from 'ionic-selectable';
 
 @NgModule({
   declarations: [
-    AppComponent, 
+    AppComponent,
     ModalJadwalComponent,
     ModalKalenderComponent,
     ModalPetaComponent
@@ -38,7 +39,7 @@ import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
     ModalPetaComponent
   ],
   imports: [
-    BrowserModule, 
+    BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
@@ -46,7 +47,8 @@ import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
     ImageCropperModule,
     QuillModule.forRoot(),
     NgxIonicImageViewerModule,
-    SwiperModule
+    SwiperModule,
+    IonicSelectableModule
   ],
   providers: [
     StatusBar,

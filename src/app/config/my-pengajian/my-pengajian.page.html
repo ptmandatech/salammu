@@ -34,6 +34,10 @@
       <ion-col size-md="6" *ngIf="!loading">
         <ion-item lines="none" detail class="list-custom" *ngFor="let n of listPengajian" [routerLink]="['/pengajian/tambah-pengajian', n.id]">
           <ion-label>
+            <ion-chip color="danger">
+              <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
+              <ion-label>Data Belum di Verifikasi</ion-label>
+            </ion-chip>
             <h3>{{n.name}}</h3>
             <ion-text color="medium">
               <p class="ion-text-wrap">Lokasi: {{n.location}}</p>
@@ -44,7 +48,7 @@
             <ion-text color="medium" *ngIf="userData.role == 'superadmin'">
               <p class="text-elipsis">{{users[n.created_by] == undefined ? '':'Dibuat Oleh: '+users[n.created_by].name}}<p>
             </ion-text>
-            <ion-badge color="{{n.status == 'soon' ? 'primary':'danger'}}">{{n.status == 'soon' ? 'Akan datang':'Selesai'}}</ion-badge>
+            <!-- <ion-badge color="{{n.status == 'soon' ? 'primary':'danger'}}">{{n.status == 'soon' ? 'Akan datang':'Selesai'}}</ion-badge> -->
           </ion-label>
         </ion-item>
       </ion-col>

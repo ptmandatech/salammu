@@ -5,6 +5,7 @@ import { format, parseISO } from 'date-fns';
 import { ApiService } from 'src/app/services/api.service';
 import { CommonService } from 'src/app/services/common.service';
 import { Geolocation, Geoposition, PositionError } from '@awesome-cordova-plugins/geolocation/ngx';
+import { IonicSelectableComponent } from 'ionic-selectable';
 //map
 import 'ol/ol.css';
 import Map from 'ol/Map';
@@ -28,13 +29,21 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 useGeographic();
 
+class Port {
+  public id: number;
+  public name: string;
+}
+
 @Component({
   selector: 'app-tambah-pengajian',
   templateUrl: './tambah-pengajian.page.html',
   styleUrls: ['./tambah-pengajian.page.scss'],
 })
 export class TambahPengajianPage implements OnInit {
-  
+
+  ports: Port[];
+  port: Port;
+
   @ViewChild('mapElementRef', { static: true }) mapElementRef: ElementRef;
   map: Map;
   @ViewChild(IonDatetime, { static: true }) datetime: IonDatetime;
@@ -46,7 +55,7 @@ export class TambahPengajianPage implements OnInit {
   userData:any;
   today:any;
   constructor(
-    public http:HttpClient, 
+    public http:HttpClient,
     public api: ApiService,
     public common: CommonService,
     private geolocation: Geolocation,
@@ -59,7 +68,20 @@ export class TambahPengajianPage implements OnInit {
     public alertController: AlertController,
     private toastController: ToastController,
     private datePipe: DatePipe,
-  ) { }
+  ) {
+    this.ports = [
+      { id: 1, name: 'Tokai' },
+      { id: 2, name: 'Vladivostok' },
+      { id: 3, name: 'Navlakhi' }
+    ];
+  }
+
+  portChange(event: {
+    component: IonicSelectableComponent,
+    value: any
+  }) {
+    console.log('port:', event.value);
+  }
 
   ngOnInit() {
     this.cekLogin();
@@ -74,7 +96,7 @@ export class TambahPengajianPage implements OnInit {
   }
 
   cekLogin()
-  {    
+  {
     this.api.me().then(async res=>{
       this.userData = res;
       await this.loadingController.dismiss();
@@ -249,9 +271,9 @@ export class TambahPengajianPage implements OnInit {
     }
 
     this.vectorSource = new VectorSource({
-      features: features 
+      features: features
     });
-    
+
     this.vectorLayer = new VectorLayer({
       source: this.vectorSource
     });
@@ -281,7 +303,7 @@ export class TambahPengajianPage implements OnInit {
       ],
       view: new View({
         center: [this.longitude, this.latitude],
-        zoom: 14 
+        zoom: 14
       }),
       style: new Style({
         image: new Icon(/** @type {module:ol/style/Icon~Options} */ ({
@@ -320,7 +342,7 @@ export class TambahPengajianPage implements OnInit {
       this.locationNow.lat = this.latitude;
       this.locationNow.long = this.longitude;
       var dt = {
-        lat: this.locationNow.lat, 
+        lat: this.locationNow.lat,
         long: this.locationNow.long
       }
       this.getDetailLocation(dt);
@@ -336,21 +358,21 @@ export class TambahPengajianPage implements OnInit {
       );
       if (url) {
         fetch(url)
-          .then(function (response) { 
-            return response.text(); 
+          .then(function (response) {
+            return response.text();
           })
           .then(function (html) {
             document.getElementById('info').innerHTML = html;
           });
       }
-      
+
       features = [];
       features.push(coloredSvgMarker([this.locationNow.long,this.locationNow.lat], "Lokasi Anda", "red"));
-  
+
       this.vectorSource = new VectorSource({
-        features: features 
+        features: features
       });
-      
+
       this.vectorLayer = new VectorLayer({
         source: this.vectorSource
       });
@@ -383,7 +405,7 @@ export class TambahPengajianPage implements OnInit {
         geometry: new Point(lonLat),
         name: name
       });
-    
+
       feature.setStyle(
         new Style({
           image: new Icon({

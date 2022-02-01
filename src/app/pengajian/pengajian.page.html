@@ -5,6 +5,11 @@
   </ion-toolbar>
   <ion-toolbar color="primary">
     <ion-segment mode="md" [(ngModel)]="defaultSegment">
+      <ion-segment-button value="list">
+        <ion-label>
+          List
+        </ion-label>
+      </ion-segment-button>
       <ion-segment-button value="kalender">
         <ion-label>
           Kalender
@@ -25,6 +30,24 @@
       <ion-col size-md="6">
 
         <div [ngSwitch]="defaultSegment">
+
+          <!-- Segment List -->
+          <div *ngSwitchCase="'list'" >
+            <ion-list class="ion-padding">
+              <ion-item lines="none" detail class="list-custom" *ngFor="let n of listPengajian" (click)="detailPengajian(n)">
+                <ion-label>
+                  <h3>{{n.name}}</h3>
+                  <ion-text color="medium" class="ion-text-wrap">
+                    Lokasi: {{n.location}}
+                  </ion-text>
+                  <ion-text color="primary">
+                    <span >{{n.datetime | date: 'dd MMMM yyyy'}} Pukul {{n.datetime | date: 'H:mm'}}</span>
+                  </ion-text>
+                </ion-label>
+              </ion-item>
+            </ion-list>
+          </div>
+          <!-- End Segment List -->
 
           <!-- Segment kalender-->
           <div *ngSwitchCase="'kalender'" >

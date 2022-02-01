@@ -30,18 +30,20 @@
         <div style="margin-top: 20px;"></div>
           <ion-item-sliding *ngFor="let n of listBanners">
             <ion-item detail>
-              <ion-row class="ion-align-items-center">
-                <ion-col size="4">
-                  <img src="{{n.image == undefined ? './assets/imgs/slide1.png':(serverImg+n.image)}}" class="rounded-15 object-bg" style="height: 75px;">
-                </ion-col>
-                <ion-col size="8" class="ion-padding">
-                  <ion-label>
-                    <p class="ion-text-wrap">{{n.url}}</p>
-                  </ion-label>
-                </ion-col>
-              </ion-row>
+              <ion-grid>
+                <ion-row class="ion-align-items-center">
+                  <ion-col size="4">
+                    <img src="{{n.image == undefined ? './assets/imgs/slide1.png':(serverImg+n.image)}}" class="rounded-15 object-bg" style="height: 75px;">
+                  </ion-col>
+                  <ion-col size="8" class="ion-padding">
+                    <ion-label>
+                      <p class="ion-text-wrap">{{n.url}}</p>
+                    </ion-label>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
             </ion-item>
-    
+
             <ion-item-options side="end">
               <ion-item-option (click)="update(n)">Update</ion-item-option>
               <ion-item-option color="danger" (click)="delete(n)">Delete</ion-item-option>

@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { TambahPengajianPageRoutingModule } from './tambah-pengajian-routing.module';
 
 import { TambahPengajianPage } from './tambah-pengajian.page';
+import { IonicSelectableModule } from 'ionic-selectable';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    TambahPengajianPageRoutingModule
+    TambahPengajianPageRoutingModule,
+    IonicSelectableModule
   ],
   declarations: [TambahPengajianPage]
 })

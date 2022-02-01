@@ -25,6 +25,10 @@
               <ion-label>
                 <h3>{{n.name}}</h3>
                 <p>{{n.address}}</p>
+                <ion-chip color="medium">
+                  <ion-icon name="create-outline" color="dark"></ion-icon>
+                  <ion-label class="fs-10">Editor</ion-label>
+                </ion-chip>
               </ion-label>
               <ion-chip color="primary" *ngIf="n.id == userData.id">
                 <ion-label>
@@ -32,7 +36,7 @@
                 </ion-label>
               </ion-chip>
             </ion-item>
-    
+
             <ion-item-options side="end">
               <ion-item-option (click)="update(n)">Update</ion-item-option>
               <ion-item-option color="danger" (click)="delete(n)">Delete</ion-item-option>

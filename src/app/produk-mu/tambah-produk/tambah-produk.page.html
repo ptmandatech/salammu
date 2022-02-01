@@ -18,6 +18,13 @@
 
         <div class="ion-padding">
 
+          <div class="item-centered" *ngIf="productData.verified == 0">
+            <ion-chip color="danger">
+              <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
+              <ion-label>Data Belum di Verifikasi</ion-label>
+            </ion-chip>
+          </div>
+
           <ion-text color="medium">Nama Produk</ion-text>
           <ion-item lines="none" class="input">
             <ion-input [(ngModel)]="productData.name" required #name="ngModel" placeholder="Product name"></ion-input>
@@ -51,14 +58,6 @@
               <img src="assets/imgs/add_image.png" style="width: 100%">
             </ion-col>
           </ion-row>
-
-          <div style="margin-top: 20px;"></div>
-
-          <div class="item-centered" *ngIf="productData.verified == 0">
-            <ion-label>
-              <p>Menunggu proses verifikasi produk.</p>
-            </ion-label>
-          </div>
 
           <div style="margin-top: 100px;"></div>
 

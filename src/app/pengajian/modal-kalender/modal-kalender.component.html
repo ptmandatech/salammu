@@ -41,12 +41,12 @@
       <ion-item lines="none" detail class="list-custom" *ngFor="let n of listPengajian" (click)="detailPengajian(n)">
         <ion-label>
           <h3>{{n.name}}</h3>
-          <ion-text color="medium">
-            <p class="ion-text-wrap">Lokasi: {{n.location}}</p>
+          <ion-text color="medium" class="ion-text-wrap">
+            Lokasi: {{n.location}}
           </ion-text>
           <ion-text color="primary">
-            <p *ngIf="n.status == 'soon'">Dimulai {{n.datetime | date: 'dd MMMM yyyy'}} Pukul {{n.datetime | date: 'H:mm'}}</p>
-            <ion-badge *ngIf="n.status == 'done'" color="danger">Selesai</ion-badge>
+            <span >{{n.datetime | date: 'dd MMMM yyyy'}} Pukul {{n.datetime | date: 'H:mm'}}</span>
+            <!-- <ion-badge *ngIf="n.status == 'done'" color="danger">Selesai</ion-badge> -->
           </ion-text>
         </ion-label>
       </ion-item>

@@ -6,7 +6,11 @@ const routes: Routes = [
   {
     path: '',
     component: HomePage,
+  },  {
+    path: 'semua-menu',
+    loadChildren: () => import('./semua-menu/semua-menu.module').then( m => m.SemuaMenuPageModule)
   }
+
 ];
 
 @NgModule({

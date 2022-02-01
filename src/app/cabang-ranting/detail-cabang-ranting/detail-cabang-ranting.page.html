@@ -1,7 +1,22 @@
 <ion-header class="ion-no-padding">
   <ion-toolbar color="primary">
     <ion-back-button slot="start"></ion-back-button>
-    <!-- <ion-title>Detail {{crData.category == undefined ? '':crData.category}}</ion-title> -->
+    <ion-title>{{crData.name == undefined ? '':crData.name}}</ion-title>
+  </ion-toolbar>
+
+  <ion-toolbar color="primary">
+    <ion-segment mode="md" [(ngModel)]="defaultSegment">
+      <ion-segment-button value="tentang">
+        <ion-label>
+          Tentang
+        </ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="pengajian">
+        <ion-label>
+          Pengajian
+        </ion-label>
+      </ion-segment-button>
+    </ion-segment>
   </ion-toolbar>
 </ion-header>
 
@@ -11,10 +26,37 @@
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
 
-        <h4>{{crData.name}}</h4>
-        <ion-text color="medium">
-          <div [innerHTML]="crData.about"></div>
-        </ion-text>
+        <div [ngSwitch]="defaultSegment">
+
+          <!-- Segment Tentang -->
+          <div *ngSwitchCase="'tentang'" >
+            <ion-text color="medium">
+              <div [innerHTML]="crData.about"></div>
+            </ion-text>
+          </div>
+          <!-- End Segment Tentang -->
+
+
+          <!-- Segment pengajian -->
+          <div *ngSwitchCase="'pengajian'" >
+            <ion-list>
+              <ion-item lines="none" detail class="list-custom" *ngFor="let n of [1,2,3,4]">
+                <ion-label>
+                  <h3>Nama Pengajian</h3>
+                  <ion-text color="medium" class="ion-text-wrap">
+                    Lokasi: Jl Teratai No 25
+                  </ion-text>
+                  <ion-text color="primary">
+                    <span>19 Februari 2022 Pukul 20.00</span>
+                  </ion-text>
+                </ion-label>
+              </ion-item>
+            </ion-list>
+          </div>
+          <!-- End Segment pengajian -->
+
+        </div>
+
 
       </ion-col>
     </ion-row>

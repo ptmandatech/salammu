@@ -31,6 +31,10 @@
               <img src="{{n.images.length == 0 ? './assets/imgs/no-product.png':(serverImg+n.images[0])}}" class="object-bg" style="height: 150px;">
               <ion-card-content>
                 <ion-label>
+                  <ion-chip color="danger">
+                    <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
+                    <ion-label>Data Belum di Verifikasi</ion-label>
+                  </ion-chip>
                   <ion-text color="primary">
                     <h2>{{n.name}}</h2>
                   </ion-text>
@@ -40,7 +44,7 @@
                 </ion-label>
                 <h2 style="margin-top: 20px;">Rp.{{n.price | number:'1.0-0'}}</h2>
                 <ion-text color="medium" *ngIf="userData.role == 'superadmin'">
-                  <p class="text-elipsis">{{users[n.created_by] == undefined ? '':'Dibuat Oleh: '+users[n.created_by].name}}<p>
+                  <p>{{users[n.created_by] == undefined ? '':'Dibuat Oleh: '+users[n.created_by].name}}<p>
                 </ion-text>
               </ion-card-content>
             </ion-card>
