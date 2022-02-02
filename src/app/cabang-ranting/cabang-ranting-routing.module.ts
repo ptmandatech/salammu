@@ -9,7 +9,7 @@ const routes: Routes = [
     component: CabangRantingPage
   },
   {
-    path: 'detail-cabang-ranting/:id',
+    path: 'detail-cabang-ranting/:cr/:id',
     loadChildren: () => import('./detail-cabang-ranting/detail-cabang-ranting.module').then( m => m.DetailCabangRantingPageModule)
   },
   {

@@ -24,13 +24,9 @@ export class MyPengajianPage implements OnInit {
 
   ngOnInit() {
     this.loading = true;
-    this.listPengajian = [];
-    this.listPengajianTemp = [];
-    this.cekLogin();
   }
 
-  onDidViewEnter() {
-    this.loading = true;
+  ionViewWillEnter() {
     this.listPengajian = [];
     this.listPengajianTemp = [];
     this.cekLogin();

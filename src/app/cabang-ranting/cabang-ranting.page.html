@@ -38,7 +38,7 @@
           <!-- Segment Cabang-->
           <div *ngSwitchCase="'cabang'" >
             <div *ngIf="!loading">
-              <ion-item detail *ngFor="let n of listCabang" [routerLink]="['/cabang-ranting/detail-cabang-ranting', n.id]">
+              <ion-item detail *ngFor="let n of listCabang" [routerLink]="['/cabang-ranting/detail-cabang-ranting/cabang', n.id]">
                 <ion-thumbnail slot="start">
                   <img src="./assets/icon/cabang.svg">
                 </ion-thumbnail>
@@ -74,7 +74,7 @@
           <!-- Segment Ranting-->
           <div *ngSwitchCase="'ranting'" >
             <div *ngIf="!loading">
-              <ion-item detail *ngFor="let n of listRanting" [routerLink]="['/cabang-ranting/detail-cabang-ranting', n.id]">
+              <ion-item detail *ngFor="let n of listRanting" [routerLink]="['/cabang-ranting/detail-cabang-ranting/ranting', n.id]">
                 <ion-thumbnail slot="start">
                   <img src="./assets/icon/ranting.svg">
                 </ion-thumbnail>

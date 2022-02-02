@@ -34,7 +34,7 @@
           <!-- Segment List -->
           <div *ngSwitchCase="'list'" >
             <ion-list class="ion-padding">
-              <ion-item lines="none" detail class="list-custom" *ngFor="let n of listPengajian" (click)="detailPengajian(n)">
+              <ion-item lines="none" detail class="list-custom" *ngFor="let n of listPengajian" (click)="modalPeta(n)">
                 <ion-label>
                   <h3>{{n.name}}</h3>
                   <ion-text color="medium" class="ion-text-wrap">
@@ -46,6 +46,19 @@
                 </ion-label>
               </ion-item>
             </ion-list>
+
+            <ion-grid *ngIf="listPengajian.length == 0">
+              <ion-row class="ion-justify-content-center">
+                <ion-col size-md="6">
+                  <div class="item-centered">
+                    <img src="./assets/icon/no-pengajian.svg">
+                    <ion-label>
+                      <p>Upss, Tidak ada pengajian</p>
+                    </ion-label>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
           </div>
           <!-- End Segment List -->
 

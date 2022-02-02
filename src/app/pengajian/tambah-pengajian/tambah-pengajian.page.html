@@ -35,7 +35,7 @@
 
           <ion-text color="medium">Nama Pembicara</ion-text>
           <ion-item lines="none" class="input">
-            <ion-input placeholder="Nama Pembicara"></ion-input>
+            <ion-input [(ngModel)]="pengajianData.speaker" placeholder="Nama Pembicara"></ion-input>
           </ion-item>
 
           <ion-text color="medium">Deskripsi pengajian</ion-text>
@@ -45,7 +45,7 @@
 
           <ion-text color="medium">Penyelenggara</ion-text>
           <ion-item lines="none" class="input">
-            <ion-select [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" interface="popover" placeholder="Pilih Penyelenggara">
+            <ion-select [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" [(ngModel)]="pengajianData.organizer" interface="popover" placeholder="Pilih Penyelenggara">
               <ion-select-option *ngFor="let n of ['cabang', 'ranting', 'lainnya']" value="{{n}}">{{n}}</ion-select-option>
             </ion-select>
             <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
@@ -55,12 +55,12 @@
           <ion-item  lines="none" class="input">
             <ionic-selectable
               placeholder="Pilih Cabang"
-              [(ngModel)]="port"
-              [items]="ports"
+              [(ngModel)]="branchSelected"
+              [items]="listCabang"
               itemValueField="id"
               itemTextField="name"
               [canSearch]="true"
-              (onChange)="portChange($event)">
+              (onChange)="pilihCabang($event)">
               <ng-template ionicSelectableCloseButtonTemplate>
                 <ion-icon name="close-circle" style="font-size: 24px;"></ion-icon>
               </ng-template>
@@ -71,12 +71,12 @@
           <ion-item  lines="none" class="input">
             <ionic-selectable
               placeholder="Pilih Cabang"
-              [(ngModel)]="port"
-              [items]="ports"
+              [(ngModel)]="twigSelected"
+              [items]="listRanting"
               itemValueField="id"
               itemTextField="name"
               [canSearch]="true"
-              (onChange)="portChange($event)">
+              (onChange)="pilihRanting($event)">
               <ng-template ionicSelectableCloseButtonTemplate>
                 <ion-icon name="close-circle" style="font-size: 24px;"></ion-icon>
               </ng-template>
@@ -85,7 +85,7 @@
 
           <ion-text color="medium">Nama Penyelenggara</ion-text>
           <ion-item lines="none" class="input">
-            <ion-input placeholder="Nama Penyelenggara"></ion-input>
+            <ion-input [(ngModel)]="pengajianData.organizer_name" placeholder="Nama Penyelenggara"></ion-input>
           </ion-item>
 
           <ion-text color="medium">Tanggal dan Jam Pengajian</ion-text>
@@ -105,7 +105,7 @@
 
           <ion-text color="medium">Link Live Streaming</ion-text>
           <ion-item lines="none" class="input">
-            <ion-input placeholder="Input link streaming"></ion-input>
+            <ion-input [(ngModel)]="pengajianData.url_livestream" placeholder="Input link streaming"></ion-input>
           </ion-item>
 
           <ion-text color="medium">Lokasi Lengkap</ion-text>

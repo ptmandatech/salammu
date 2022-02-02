@@ -368,7 +368,7 @@ export class PengajianPage implements OnInit {
   getAllPengajian() {
     this.listPengajian = [];
     this.listPengajianTemp = [];
-    this.api.get('pengajian').then(res => {
+    this.api.get('pengajian?all=ok').then(res => {
       this.listPengajian = res;
       this.listPengajianTemp = res;
       this.loading = false;

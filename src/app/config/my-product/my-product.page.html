@@ -31,7 +31,7 @@
               <img src="{{n.images.length == 0 ? './assets/imgs/no-product.png':(serverImg+n.images[0])}}" class="object-bg" style="height: 150px;">
               <ion-card-content>
                 <ion-label>
-                  <ion-chip color="danger">
+                  <ion-chip *ngIf="n.verified == 0" color="danger">
                     <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
                     <ion-label>Data Belum di Verifikasi</ion-label>
                   </ion-chip>

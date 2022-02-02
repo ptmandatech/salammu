@@ -29,20 +29,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 useGeographic();
 
-class Port {
-  public id: number;
-  public name: string;
-}
-
 @Component({
   selector: 'app-tambah-pengajian',
   templateUrl: './tambah-pengajian.page.html',
   styleUrls: ['./tambah-pengajian.page.scss'],
 })
 export class TambahPengajianPage implements OnInit {
-
-  ports: Port[];
-  port: Port;
 
   @ViewChild('mapElementRef', { static: true }) mapElementRef: ElementRef;
   map: Map;
@@ -69,22 +61,27 @@ export class TambahPengajianPage implements OnInit {
     private toastController: ToastController,
     private datePipe: DatePipe,
   ) {
-    this.ports = [
-      { id: 1, name: 'Tokai' },
-      { id: 2, name: 'Vladivostok' },
-      { id: 3, name: 'Navlakhi' }
-    ];
   }
 
-  portChange(event: {
+  branchSelected:any;
+  twigSelected:any;
+  pilihCabang(event: {
     component: IonicSelectableComponent,
     value: any
   }) {
-    console.log('port:', event.value);
+    this.branchSelected = event.value;
+  }
+
+  pilihRanting(event: {
+    component: IonicSelectableComponent,
+    value: any
+  }) {
+    this.twigSelected = event.value;
   }
 
   ngOnInit() {
     this.cekLogin();
+    this.getAllCr();
     this.today = new Date();
     this.id = this.routes.snapshot.paramMap.get('id');
     if(this.id != 0) {
@@ -109,6 +106,33 @@ export class TambahPengajianPage implements OnInit {
     })
   }
 
+  listCabang:any = [];
+  listRanting:any = [];
+  getAllCr() {
+    this.api.get('cr').then(res => {
+      this.parseData(res);
+    }, error => {
+      this.loading = false;
+    })
+  }
+
+  parseData(res) {
+    for(var i=0; i<res.length; i++) {
+      if(res[i].category == 'cabang') {
+        let idx = this.listCabang.indexOf(res[i]);
+        if(idx == -1) {
+          this.listCabang.push(res[i]);
+        }
+      } else if(res[i].category == 'ranting') {
+        let idx = this.listRanting.indexOf(res[i]);
+        if(idx == -1) {
+          this.listRanting.push(res[i]);
+        }
+      }
+    }
+    this.loading = false;
+  }
+
   locationNow:any;
   async getDetailPengajian() {
     await this.api.get('pengajian/find/'+this.id).then(res => {
@@ -120,6 +144,12 @@ export class TambahPengajianPage implements OnInit {
       } else {
         this.generateMap(undefined);
       }
+      if(this.pengajianData.branch != null) {
+        this.branchSelected = this.listCabang.find(x => x.id === this.pengajianData.branch);
+      }
+      if(this.pengajianData.twig != null) {
+        this.twigSelected = this.listRanting.find(x => x.id === this.pengajianData.twig);
+      }
       this.dateValue = this.datePipe.transform(new Date(this.pengajianData.datetime), 'MMM dd yyyy HH:mm');
     })
   }
@@ -129,14 +159,17 @@ export class TambahPengajianPage implements OnInit {
   }
 
   save() {
+    if(this.branchSelected != undefined) this.pengajianData.branch = this.branchSelected.id;
+    if(this.twigSelected != undefined) this.pengajianData.twig = this.twigSelected.id;
+
     if(new Date(this.dateValue) > this.today) {
       this.pengajianData.status = 'soon';
     } else {
       this.pengajianData.status = 'done';
     }
-    this.pengajianData.verified = false;
     this.pengajianData.datetime = new Date(this.dateValue);
     if(this.isCreated == true) {
+      this.pengajianData.verified = false;
       this.api.post('pengajian', this.pengajianData).then(res => {
         if(res) {
           this.toastController
@@ -438,12 +471,13 @@ export class TambahPengajianPage implements OnInit {
 
     await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
       this.detailLocSelected = res;
-      this.city = this.detailLocSelected.address.state_district.replace('Kota ', '');
-      if(this.detailLocSelected == undefined) {
+      if(this.detailLocSelected == undefined || this.detailLocSelected.address.state_district == undefined) {
         await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
           this.detailLocSelected = res;
-          this.city = this.detailLocSelected.city.replace('Kota ', '');
+          this.city = this.detailLocSelected.features[0].properties.address.state;
         })
+      } else {
+        this.city = this.detailLocSelected.address.state_district.replace('Kota ', '');
       }
     }, async error => {
       await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {

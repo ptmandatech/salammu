@@ -34,7 +34,7 @@
       <ion-col size-md="6" *ngIf="!loading">
         <ion-item lines="none" detail class="list-custom" *ngFor="let n of listPengajian" [routerLink]="['/pengajian/tambah-pengajian', n.id]">
           <ion-label>
-            <ion-chip color="danger">
+            <ion-chip *ngIf="n.verified == 0" color="danger">
               <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
               <ion-label>Data Belum di Verifikasi</ion-label>
             </ion-chip>

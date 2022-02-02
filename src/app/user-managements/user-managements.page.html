@@ -25,7 +25,7 @@
               <ion-label>
                 <h3>{{n.name}}</h3>
                 <p>{{n.address}}</p>
-                <ion-chip color="medium">
+                <ion-chip *ngIf="n.editor == 1" color="medium">
                   <ion-icon name="create-outline" color="dark"></ion-icon>
                   <ion-label class="fs-10">Editor</ion-label>
                 </ion-chip>

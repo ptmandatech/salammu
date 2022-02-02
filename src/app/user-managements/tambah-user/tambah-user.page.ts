@@ -44,6 +44,11 @@ export class TambahUserPage implements OnInit {
   getDetailUser() {
     this.api.get('users/find/'+this.id).then(res => {
       this.userData = res;
+      if(this.userData.editor == 0) {
+        this.userData.editor = false;
+      } else {
+        this.userData.editor = true;
+      }
       this.uploadImg = false;
     })
   }

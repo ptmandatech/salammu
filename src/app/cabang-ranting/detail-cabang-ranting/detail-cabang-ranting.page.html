@@ -30,6 +30,19 @@
 
           <!-- Segment Tentang -->
           <div *ngSwitchCase="'tentang'" >
+            <ion-grid *ngIf="crData.about == null">
+              <ion-row class="ion-justify-content-center">
+                <ion-col size-md="6">
+                  <div class="item-centered">
+                    <img src="./assets/icon/pencarian.svg">
+                    <ion-label>
+                      <p>Belum ada deskripsi.</p>
+                    </ion-label>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
             <ion-text color="medium">
               <div [innerHTML]="crData.about"></div>
             </ion-text>
@@ -39,19 +52,44 @@
 
           <!-- Segment pengajian -->
           <div *ngSwitchCase="'pengajian'" >
+            <ion-grid *ngIf="!loading && listPengajian.length == 0">
+              <ion-row class="ion-justify-content-center">
+                <ion-col size-md="6">
+                  <div class="item-centered">
+                    <img src="./assets/icon/no-pengajian.svg">
+                    <ion-label>
+                      <p>Upss, Tidak ada pengajian</p>
+                    </ion-label>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
             <ion-list>
-              <ion-item lines="none" detail class="list-custom" *ngFor="let n of [1,2,3,4]">
+              <ion-item lines="none" detail class="list-custom" *ngFor="let n of listPengajian" (click)="modalPeta(n)">
                 <ion-label>
-                  <h3>Nama Pengajian</h3>
+                  <h3>{{n.name}}</h3>
                   <ion-text color="medium" class="ion-text-wrap">
-                    Lokasi: Jl Teratai No 25
+                    Lokasi: {{n.location}}
                   </ion-text>
                   <ion-text color="primary">
-                    <span>19 Februari 2022 Pukul 20.00</span>
+                    <span >{{n.datetime | date: 'dd MMMM yyyy'}} Pukul {{n.datetime | date: 'H:mm'}}</span>
                   </ion-text>
                 </ion-label>
               </ion-item>
             </ion-list>
+            
+            <div *ngIf="loading">
+              <ion-item detail *ngFor="let n of [1,2,3,4,5,6,7,8,9,10]">
+                <ion-thumbnail slot="start">
+                  <ion-skeleton-text animated></ion-skeleton-text>
+                </ion-thumbnail>
+                <ion-label>
+                  <h3><ion-skeleton-text animated></ion-skeleton-text></h3>
+                  <p><ion-skeleton-text animated></ion-skeleton-text></p>
+                </ion-label>
+              </ion-item>
+            </div>
           </div>
           <!-- End Segment pengajian -->
 
