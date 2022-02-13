@@ -52,7 +52,7 @@ export class AppComponent {
       this.statusBar.styleDefault();
       // this.splashScreen.hide();
       this.statusBar.overlaysWebView(false);
-      this.statusBar.backgroundColorByHexString('#0fc1a7');
+      this.statusBar.backgroundColorByHexString('#349075');
 
       this.checkPermission();
       this.cekKoneksi();

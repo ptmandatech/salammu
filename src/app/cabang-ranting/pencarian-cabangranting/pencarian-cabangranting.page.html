@@ -21,7 +21,7 @@
         </div>
 
         <div *ngIf="!loading">
-          <ion-item detail *ngFor="let n of listCr" [routerLink]="['/cabang-ranting/detail-cabang-ranting', n.id]">
+          <ion-item detail *ngFor="let n of listCr" [routerLink]="['/cabang-ranting/detail-cabang-ranting/'+n.category, n.id]">
             <ion-thumbnail slot="start">
               <img src="{{n.category == 'cabang' ? './assets/icon/cabang.svg':'./assets/icon/ranting.svg'}}">
             </ion-thumbnail>

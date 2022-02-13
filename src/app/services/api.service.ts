@@ -32,6 +32,12 @@ export class ApiService {
     return dt;
   }
 
+  //external API
+  async getExternal(url) {
+    let dt = await this.common.getExternal(url);
+    return dt;
+  }
+
   async post(url, data) {
     let dt = await this.common.post(url, data);
     return dt;
@@ -95,4 +101,9 @@ export class ApiService {
     return data;
   }
 
+  //al Quran
+  async getSurat(url) {
+    let dt = await this.common.getSurat(url);
+    return dt;
+  }
 }

@@ -1,0 +1,33 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-item class="ion-padding">
+      <ion-icon color="primary" slot="end" name="close-circle-outline" (click)="dismiss()"></ion-icon>
+      <ion-label>
+        <ion-text color="primary">
+          <h2>Putar Audio Surat</h2>
+        </ion-text>
+      </ion-label>
+    </ion-item>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid class="ion-no-padding">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-md="2">
+      </ion-col>
+      <ion-col size-md="6">
+        <ion-list class="ion-padding" lines="none">
+          <ion-item lines="none" class="list-custom">
+            <audio controls>
+              <source src="{{detailSurat.audio}}" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col size-md="2">
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

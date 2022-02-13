@@ -1,0 +1,108 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title>Tafsir Surat</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid class="ion-no-padding" *ngIf="tafsirSurat != undefined">
+    <ion-row class="ion-justify-content-center">
+      <ion-button *ngIf="tafsirSurat.surat_sebelumnya != false" [routerLink]="['/al-quran/tafsir-surat', tafsirSurat.surat_sebelumnya.nomor]" style="position: sticky; margin-top: 85px;" fill="clear"><ion-icon name="arrow-back-circle-outline"></ion-icon></ion-button>
+      <ion-col size-md="6">
+        <ion-list class="ion-padding" lines="none">
+          <ion-item lines="none" class="list-custom">
+            <ion-label>
+              <h2>{{tafsirSurat.nama_latin}} - {{tafsirSurat.nama}}</h2>
+              <ion-text color="medium" class="ion-text-wrap">
+                Jumlah Ayat: {{tafsirSurat.jumlah_ayat}} / Arti: {{tafsirSurat.arti}}
+              </ion-text>
+
+              <!-- Button -->
+              <ion-grid>
+                <ion-row>
+                  <ion-col>
+                    <ion-button color="primary" [routerLink]="['/al-quran/detail-surat', tafsirSurat.nomor]" expand="block"><ion-icon name="document-text-outline"></ion-icon> Lihat Surat</ion-button>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-button *ngIf="tafsirSurat.surat_selanjutnya != false" [routerLink]="['/al-quran/tafsir-surat', tafsirSurat.surat_selanjutnya.nomor]" style="position: sticky; margin-top: 85px;" fill="clear"><ion-icon name="arrow-forward-circle-outline"></ion-icon></ion-button>
+    </ion-row>
+  </ion-grid>
+
+  <div *ngIf="tafsirSurat != undefined">
+    <ion-card *ngFor="let s of tafsirSurat.tafsir" class="card-surat ion-padding">
+        <ion-item lines="none">
+          <ion-label>
+            <h3 class="ion-text-wrap">{{s.surah}}:{{s.ayat}}</h3>
+          </ion-label>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label>
+            <p class="ion-text-wrap">
+              {{s.tafsir}}
+            </p>
+          </ion-label>
+        </ion-item>
+    </ion-card>
+  </div>
+
+  <div *ngIf="tafsirSurat == undefined">
+    <ion-grid class="ion-no-padding">
+      <ion-row class="ion-justify-content-center">
+        <ion-col size-md="6">
+          <ion-list class="ion-padding" lines="none">
+            <ion-item lines="none" class="list-custom">
+              <ion-label>
+                <h2><ion-skeleton-text animated></ion-skeleton-text></h2>
+                <ion-text color="medium" class="ion-text-wrap">
+                  <ion-skeleton-text animated></ion-skeleton-text>
+                </ion-text>
+  
+                <!-- Button -->
+                <ion-grid>
+                  <ion-row>
+                    <ion-col>
+                      <ion-skeleton-text animated></ion-skeleton-text>
+                    </ion-col>
+                    <ion-col>
+                      <ion-skeleton-text animated></ion-skeleton-text>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+  
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-card *ngFor="let s of [1,2,3]" class="card-surat ion-padding">
+        <ion-item lines="none">
+          <ion-label>
+            <h3 class="ion-text-wrap"><ion-skeleton-text animated></ion-skeleton-text></h3>
+          </ion-label>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-text slot="end"><h3><ion-skeleton-text animated></ion-skeleton-text></h3></ion-text>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label>
+            <div class="ion-text-wrap"><ion-skeleton-text animated></ion-skeleton-text></div><br>
+            <p class="ion-text-wrap">
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </p>
+          </ion-label>
+        </ion-item>
+    </ion-card>
+  </div>
+
+</ion-content>
