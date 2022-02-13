@@ -1,0 +1,69 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title>Al-Quran</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" >
+        <ion-icon slot="icon-only" name="bookmarks-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-segment mode="md" [(ngModel)]="defaultSegment">
+      <ion-segment-button value="surah">
+        <ion-label>
+          Surah
+        </ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="juz">
+        <ion-label>
+          Juz
+        </ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-grid class="ion-no-padding">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-md="6">
+
+        <div [ngSwitch]="defaultSegment">
+          <!-- Segment surah-->
+          <div *ngSwitchCase="'surah'" >
+            <div >
+              <ion-toolbar class="fixed-top">
+                <ion-searchbar mode="ios" showCancelButton="never" placeholder="Cari nama Surah"></ion-searchbar>
+              </ion-toolbar>
+            </div>
+
+            <ion-list lines="full">
+              <ion-item *ngFor="let n of [1,2,3,4,5,6,7]">
+                <ion-label>
+                  <h2>Al-Fatihah</h2>
+                  <ion-text color="warning">
+                    <p>
+                      Mekkah - 7 Ayat
+                    </p>
+                  </ion-text>
+                </ion-label>
+              </ion-item>
+            </ion-list>
+
+          </div>
+
+
+          <!-- Segment juz-->
+          <div *ngSwitchCase="'juz'" >
+          </div>
+
+
+        </div>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

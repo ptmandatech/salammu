@@ -90,6 +90,10 @@ const routes: Routes = [
     path: 'user-managements',
     loadChildren: () => import('./user-managements/user-managements.module').then( m => m.UserManagementsPageModule)
   },
+  {
+    path: 'al-quran',
+    loadChildren: () => import('./al-quran/al-quran.module').then( m => m.AlQuranPageModule)
+  },
 
 
 
