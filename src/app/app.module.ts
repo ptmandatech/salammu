@@ -25,18 +25,22 @@ import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
 import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 import { IonicSelectableModule } from 'ionic-selectable';
+import { MusicControls } from '@awesome-cordova-plugins/music-controls/ngx';
+import { ModalSuratComponent } from './al-quran/modal-surat/modal-surat.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ModalJadwalComponent,
     ModalKalenderComponent,
-    ModalPetaComponent
+    ModalPetaComponent,
+    ModalSuratComponent
   ],
   entryComponents: [
     ModalJadwalComponent,
     ModalKalenderComponent,
-    ModalPetaComponent
+    ModalPetaComponent,
+    ModalSuratComponent
   ],
   imports: [
     BrowserModule,
@@ -58,6 +62,7 @@ import { IonicSelectableModule } from 'ionic-selectable';
     Diagnostic,
     Geolocation,
     Toast,
+    MusicControls,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {provide: LOCALE_ID, useValue: "id-ID" }
   ],

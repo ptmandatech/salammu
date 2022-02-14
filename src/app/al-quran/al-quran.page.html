@@ -1,6 +1,10 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-back-button slot="start"></ion-back-button>
+    <ion-buttons slot="start">
+      <ion-button fill="clear" routerLink="/home">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title>Al-Quran</ion-title>
     <ion-buttons slot="end">
       <ion-button fill="clear" >
@@ -33,21 +37,26 @@
         <div [ngSwitch]="defaultSegment">
           <!-- Segment surah-->
           <div *ngSwitchCase="'surah'" >
-            <div >
+            <div style="margin-top: 10px;">
               <ion-toolbar class="fixed-top">
-                <ion-searchbar mode="ios" showCancelButton="never" placeholder="Cari nama Surah"></ion-searchbar>
+                <ion-searchbar mode="ios" showCancelButton="never" [(ngModel)]="searchTerm" (ionChange)="searchChanged($event)" placeholder="Cari nama Surah"></ion-searchbar>
               </ion-toolbar>
             </div>
 
             <ion-list lines="full">
-              <ion-item *ngFor="let n of [1,2,3,4,5,6,7]">
+              <ion-item *ngFor="let n of surat" [routerLink]="['/al-quran/detail-surat', n.nomor]">
                 <ion-label>
-                  <h2>Al-Fatihah</h2>
+                  <h2>{{n.nomor}}. {{n.nama_latin}}</h2>
                   <ion-text color="warning">
                     <p>
-                      Mekkah - 7 Ayat
+                      {{n.tempat_turun}} - {{n.jumlah_ayat}} Ayat
                     </p>
                   </ion-text>
+                </ion-label>
+                <ion-label slot="end" color="primary">
+                  <h1>
+                    {{n.nama}}
+                  </h1>
                 </ion-label>
               </ion-item>
             </ion-list>

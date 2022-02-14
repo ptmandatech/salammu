@@ -50,58 +50,61 @@
             </ion-select>
             <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
           </ion-item>
-
-          <ion-text color="medium">Nama Cabang Penyelenggara</ion-text>
-          <ion-item  lines="none" class="input">
-            <ionic-selectable
-              placeholder="Pilih Cabang"
-              [(ngModel)]="branchSelected"
-              [items]="listCabang"
-              itemValueField="id"
-              itemTextField="name"
-              [canSearch]="true"
-              (onChange)="pilihCabang($event)">
-              <ng-template ionicSelectableCloseButtonTemplate>
-                <ion-icon name="close-circle" style="font-size: 24px;"></ion-icon>
-              </ng-template>
-            </ionic-selectable>
-          </ion-item>
-
-          <ion-text color="medium">Nama Ranting Penyelenggara</ion-text>
-          <ion-item  lines="none" class="input">
-            <ionic-selectable
-              placeholder="Pilih Cabang"
-              [(ngModel)]="twigSelected"
-              [items]="listRanting"
-              itemValueField="id"
-              itemTextField="name"
-              [canSearch]="true"
-              (onChange)="pilihRanting($event)">
-              <ng-template ionicSelectableCloseButtonTemplate>
-                <ion-icon name="close-circle" style="font-size: 24px;"></ion-icon>
-              </ng-template>
-            </ionic-selectable>
-          </ion-item>
-
-          <ion-text color="medium">Nama Penyelenggara</ion-text>
-          <ion-item lines="none" class="input">
-            <ion-input [(ngModel)]="pengajianData.organizer_name" placeholder="Nama Penyelenggara"></ion-input>
-          </ion-item>
-
-          <ion-text color="medium">Tanggal dan Jam Pengajian</ion-text>
-          <ion-item lines="none" class="input" button="true" id="open-date-input">
-            <ion-label>Tanggal:Jam</ion-label>
-            <ion-text slot="end">{{ dateValue }}</ion-text>
-            <ion-popover trigger="open-date-input" show-backdrop="false">
-              <ng-template>
-                <ion-datetime
-                  #popoverDatetime
-                  presentation="time-date"
-                  (ionChange)="dateValue = formatDate(popoverDatetime.value)"
-                ></ion-datetime>
-              </ng-template>
-            </ion-popover>
-          </ion-item>
+          <div *ngIf="pengajianData.organizer == 'cabang'">
+            <ion-text color="medium">Nama Cabang Penyelenggara</ion-text>
+            <ion-item  lines="none" class="input">
+              <ionic-selectable
+                placeholder="Pilih Cabang"
+                [(ngModel)]="branchSelected"
+                [items]="listCabang"
+                itemValueField="id"
+                itemTextField="name"
+                [canSearch]="true"
+                (onChange)="pilihCabang($event)">
+                <ng-template ionicSelectableCloseButtonTemplate>
+                  <ion-icon name="close-circle" style="font-size: 24px;"></ion-icon>
+                </ng-template>
+              </ionic-selectable>
+            </ion-item>
+          </div>
+          <div *ngIf="pengajianData.organizer == 'ranting'">
+            <ion-text color="medium">Nama Ranting Penyelenggara</ion-text>
+            <ion-item  lines="none" class="input">
+              <ionic-selectable
+                placeholder="Pilih Cabang"
+                [(ngModel)]="twigSelected"
+                [items]="listRanting"
+                itemValueField="id"
+                itemTextField="name"
+                [canSearch]="true"
+                (onChange)="pilihRanting($event)">
+                <ng-template ionicSelectableCloseButtonTemplate>
+                  <ion-icon name="close-circle" style="font-size: 24px;"></ion-icon>
+                </ng-template>
+              </ionic-selectable>
+            </ion-item>
+          </div>
+          <div *ngIf="pengajianData.organizer == 'lainnya'">
+            <ion-text color="medium">Nama Penyelenggara</ion-text>
+            <ion-item lines="none" class="input">
+              <ion-input [(ngModel)]="pengajianData.organizer_name" placeholder="Nama Penyelenggara"></ion-input>
+            </ion-item>
+  
+            <ion-text color="medium">Tanggal dan Jam Pengajian</ion-text>
+            <ion-item lines="none" class="input" button="true" id="open-date-input">
+              <ion-label>Tanggal:Jam</ion-label>
+              <ion-text slot="end">{{ dateValue }}</ion-text>
+              <ion-popover trigger="open-date-input" show-backdrop="false">
+                <ng-template>
+                  <ion-datetime
+                    #popoverDatetime
+                    presentation="time-date"
+                    (ionChange)="dateValue = formatDate(popoverDatetime.value)"
+                  ></ion-datetime>
+                </ng-template>
+              </ion-popover>
+            </ion-item>
+          </div>
 
           <ion-text color="medium">Link Live Streaming</ion-text>
           <ion-item lines="none" class="input">

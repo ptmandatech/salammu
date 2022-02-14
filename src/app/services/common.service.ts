@@ -13,6 +13,9 @@ export class CommonService {
   serverUrl='https://api.sunhouse.co.id/salammu/index.php/';
   serverImgPath='https://api.sunhouse.co.id/salammu/';
   public photoBaseUrl='https://api.sunhouse.co.id/salammu/photos/';
+
+  //server Al Quran
+  serverAlQuran = 'https://equran.id/api/';
   constructor(
     public http:HttpClient
   ) 
@@ -87,6 +90,14 @@ export class CommonService {
     this.data = await this.http.get(this.serverUrl+url, this.httpOption).toPromise();
     return this.data;
   }
+
+  serverExternal = 'https://sicara.id/api/v0/';
+  async getExternal(url)
+  {
+    this.data = undefined;
+    this.data = await this.http.get(this.serverExternal+url).toPromise();
+    return this.data;
+  }
   
   post(url,data)
   {
@@ -110,6 +121,13 @@ export class CommonService {
   {
     this.getToken();
     return this.http.delete(this.serverUrl+url, this.httpOption).toPromise();
+  }
+
+  //Al Quran
+  async getSurat(url) {
+    this.data = undefined;
+    this.data = await this.http.get(this.serverAlQuran+url).toPromise();
+    return this.data;
   }
 
 }
