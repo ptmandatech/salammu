@@ -94,6 +94,10 @@ const routes: Routes = [
     path: 'al-quran',
     loadChildren: () => import('./al-quran/al-quran.module').then( m => m.AlQuranPageModule)
   },
+  {
+    path: 'sicara',
+    loadChildren: () => import('./sicara/sicara.module').then( m => m.SicaraPageModule)
+  },
 
 
 

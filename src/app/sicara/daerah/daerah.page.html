@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title>Pilih Daerah</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-searchbar mode="ios" showCancelButton="never" placeholder="Cari nama daerah"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-item detail *ngFor="let n of ['PDM LOKHSUMAWE', 'PDM SEMARANG', 'PDM TEGAL']" [routerLink]="['/sicara/cabang']">
+    <ion-thumbnail slot="start">
+      <img src="./assets/icon/daerah.svg">
+    </ion-thumbnail>
+    <ion-label>
+      <h3>{{n}}</h3>
+    </ion-label>
+  </ion-item>
+
+</ion-content>

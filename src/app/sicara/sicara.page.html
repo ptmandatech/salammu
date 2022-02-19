@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title>Pilih Wilayah</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-searchbar mode="ios" showCancelButton="never" placeholder="Cari nama wilayah"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-item detail *ngFor="let n of ['PWM ACEH', 'PWM MEDAN', 'PWM JATENG']" [routerLink]="['/sicara/daerah']">
+    <ion-thumbnail slot="start">
+      <img src="./assets/icon/wilayah.svg">
+    </ion-thumbnail>
+    <ion-label>
+      <h3>{{n}}</h3>
+    </ion-label>
+  </ion-item>
+
+</ion-content>
