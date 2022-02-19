@@ -89,8 +89,9 @@
             <ion-item lines="none" class="input">
               <ion-input [(ngModel)]="pengajianData.organizer_name" placeholder="Nama Penyelenggara"></ion-input>
             </ion-item>
-  
-            <ion-text color="medium">Tanggal dan Jam Pengajian</ion-text>
+          </div>
+
+          <ion-text color="medium">Tanggal dan Jam Pengajian</ion-text>
             <ion-item lines="none" class="input" button="true" id="open-date-input">
               <ion-label>Tanggal:Jam</ion-label>
               <ion-text slot="end">{{ dateValue }}</ion-text>
@@ -104,7 +105,6 @@
                 </ng-template>
               </ion-popover>
             </ion-item>
-          </div>
 
           <ion-text color="medium">Link Live Streaming</ion-text>
           <ion-item lines="none" class="input">
