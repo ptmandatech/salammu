@@ -159,6 +159,7 @@ export class TambahProdukPage implements OnInit {
 
   addProduct() {
     if(this.isCreated == true) {
+      this.productData.id = this.id;
       this.productData.verified = false;
       this.productData.images = JSON.stringify(this.imgUploaded);
       this.api.post('products', this.productData).then(res => {
