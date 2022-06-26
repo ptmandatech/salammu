@@ -155,7 +155,7 @@
             <!-- ProdukMU -->
             <ion-item lines="none">
               <ion-label>
-                <h2>ProdukMU</h2>
+                <h2>Rekomendasi ProdukMU</h2>
               </ion-label>
               <ion-chip color="primary" routerLink="/produk-mu">
                 <ion-label>
@@ -164,8 +164,8 @@
               </ion-chip>
             </ion-item>
 
-            <ion-row class="ion-no-padding" *ngIf="!loading">
-              <ion-col size="6" *ngFor="let n of listProducts">
+            <!-- <ion-row class="ion-no-padding pins" *ngIf="!loading">
+              <ion-col class="pin" *ngFor="let n of listProducts">
                 <ion-card class="rounded-15" [routerLink]="['/produk-mu/detail-produk', n.id]">
                   <img src="{{n.images.length == 0 ? './assets/imgs/no-product.png':(serverImg+n.images[0])}}" class="object-bg" style="height: 150px;">
                   <ion-card-content>
@@ -178,7 +178,21 @@
                   </ion-card-content>
                 </ion-card>
               </ion-col>
-            </ion-row>
+            </ion-row> -->
+
+            <div class="pins" *ngIf="!loading">
+              <ion-card *ngFor="let n of listProducts" class="rounded-15" [routerLink]="['/produk-mu/detail-produk', n.id]">
+                <img src="{{n.images.length == 0 ? './assets/imgs/no-product.png':(serverImg+n.images[0])}}" class="object-bg" style="height: 150px;">
+                <ion-card-content>
+                  <ion-label>
+                    <ion-text color="primary">
+                      <h2>{{n.name}}</h2>
+                    </ion-text>
+                  </ion-label>
+                  <h2 style="margin-top: 20px;">Rp.{{n.price | number:'1.0-0'}}</h2>
+                </ion-card-content>
+              </ion-card>
+            </div>
 
             <ion-row class="ion-no-padding" *ngIf="loading">
               <ion-col size="6" *ngFor="let n of [1,2,3,4,5,6,7,8,9,10]">

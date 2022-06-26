@@ -133,3 +133,15 @@ ion-select::part(icon) {
 .mb-16 {
   margin-bottom: 16px;
 }
+
+// Mansory Layout
+.pins {
+  column-count: 2;
+  column-gap: 10px;
+  padding: 16px;
+  ion-card {
+    width: 100%;
+  margin: 0 0 10px 0;
+  break-inside: avoid;
+  }
+}
