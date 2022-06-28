@@ -3,6 +3,13 @@
     <ion-back-button slot="start"></ion-back-button>
     <ion-title>produkMU</ion-title>
   </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment scrollable="true">
+      <ion-button class="btn-filter" *ngFor="let m of ['Pakaian', 'furniture', 'Buku', 'Makanan', 'Minuman']" color="{{m==selectedCat ? 'light':'primary'}}" (click)=selectCat(m)>
+      {{m}}
+      </ion-button>
+    </ion-segment>
+  </ion-toolbar>
   <ion-toolbar color="primary">
     <ion-searchbar mode="ios" showCancelButton="never" [(ngModel)]="searchTerm" (ionChange)="searchChanged($event)" placeholder="Cari produk"></ion-searchbar>
   </ion-toolbar>

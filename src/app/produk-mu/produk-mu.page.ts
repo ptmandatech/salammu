@@ -95,4 +95,16 @@ export class ProdukMUPage implements OnInit {
     });
   }
 
+  // Pilihan Kategori 
+  selectedCat:any;
+  selectCat(cat)
+  {
+  		if(this.selectedCat!=cat)
+  		{
+  			this.selectedCat=cat;
+  		}else{
+  			this.selectedCat=null;
+  		} 
+  }
+
 }
