@@ -134,6 +134,7 @@ export class TambahBannerPage implements OnInit {
 
   addBanner() {
     if(this.isCreated == true) {
+      this.bannerData.id = new Date().getTime().toString() + '' + [Math.floor((Math.random() * 1000))];
       this.api.post('banners', this.bannerData).then(res => {
         if(res) {
           alert('Berhasil menambahkan banner.');
