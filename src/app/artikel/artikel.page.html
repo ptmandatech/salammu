@@ -1,9 +1,36 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>artikel</ion-title>
+  <ion-toolbar color="primary">
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title>Artikel</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-searchbar mode="ios" showCancelButton="never" placeholder="Cari Artikel"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
 
+<ion-content>
+  <ion-grid class="ion-no-padding">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-md="6">
+        <ion-card *ngFor="let n of [1,2,3,4]" routerLink="/detail-artikel">
+          <div style="text-align: center;" >
+            <img src="../../assets/imgs/no-product.png" />
+          </div>
+          <ion-card-header>
+            <ion-card-subtitle>Oleh Admin Salammu</ion-card-subtitle>
+            <ion-card-title>Judul Artikel</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            Intro artikel ada disini      
+          </ion-card-content>
+          <div class="ion-padding">
+            <small> 28 Juni 2022 </small>
+          </div>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  
 </ion-content>

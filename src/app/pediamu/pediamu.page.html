@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title>Pediamu</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-searchbar mode="ios" showCancelButton="never" placeholder="Cari Pedia"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-grid class="ion-no-padding">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-md="6">
+
+        <ion-card *ngFor="let n of [1,2,3,4,5]" class="rounded-15">
+          <ion-item lines="none" detail >
+            <ion-thumbnail slot="start">
+              <img src="../../assets/imgs/no-product.png">
+            </ion-thumbnail>
+            <ion-label>
+              <ion-text color="primary">
+                <h3>Judul Pediamu</h3>
+              </ion-text>
+              <p>Ringkasan</p>
+              <ion-text color="medium">
+                <small class="fs-10">12 Januari 2022</small>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+        </ion-card>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

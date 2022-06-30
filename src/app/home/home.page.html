@@ -130,11 +130,11 @@
                   <img src="./assets/icon/dzikir.svg"/>
                   <p class="fs-10" style="margin-top: -1px;">Doa & Dzikir</p>
                 </ion-col>
-                <ion-col size="3" class="ion-text-center mb-16" >
+                <ion-col size="3" class="ion-text-center mb-16" routerLink="/artikel">
                   <img src="./assets/icon/artikelmu.svg"/>
                   <p class="fs-10" style="margin-top: -1px;">ArtikelMU</p>
                 </ion-col>
-                <ion-col size="3" class="ion-text-center mb-16" >
+                <ion-col size="3" class="ion-text-center mb-16" routerLink="/pediamu">
                   <img src="./assets/icon/tentangmu.svg"/>
                   <p class="fs-10" style="margin-top: -1px;">PediaMU</p>
                 </ion-col>
@@ -203,14 +203,14 @@
             <ion-label>
               <h2>Atikel Terbaru</h2>
             </ion-label>
-            <ion-chip color="primary">
+            <ion-chip color="primary" routerLink="/artikel">
               <ion-label>
                 Lihat Semua
               </ion-label>
             </ion-chip>
           </ion-item>
 
-          <ion-item detail *ngFor="let n of [1,2,3,4,5]">
+          <ion-item detail *ngFor="let n of [1,2,3,4,5]" routerLink="/detail-artikel">
             <ion-thumbnail slot="start">
               <img src="../../assets/imgs/no-product.png">
             </ion-thumbnail>
@@ -232,12 +232,27 @@
             <ion-label>
               <h2>Video Terbaru</h2>
             </ion-label>
-            <ion-chip color="primary">
+            <ion-chip color="primary" routerLink="/video">
               <ion-label>
                 Lihat Semua
               </ion-label>
             </ion-chip>
           </ion-item>
+
+
+          <ion-slides [options]="sliderOption" class="ion-padding">
+            <ion-slide *ngFor="let n of [1,2,3,4,5,6]">
+              <ion-card class="rounded-15">
+                <img src="../../assets/imgs/no-product.png">
+                <ion-card-content style="height: 80px;">
+                  <ion-card-title style="font-size: 12px">
+                  <b class="ion-text-wrap">Judul Video</b>
+                  </ion-card-title>
+                  <div style="position: absolute; height: 40px; bottom: 0; left:0; right:0;  background-image: linear-gradient(to top, rgba(255,255,255,1), rgba(255,0,0,0));"></div>
+                </ion-card-content>
+              </ion-card>
+            </ion-slide>
+          </ion-slides>
           <!-- End Video Section -->
 
           </div>

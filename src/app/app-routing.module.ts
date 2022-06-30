@@ -86,7 +86,8 @@ const routes: Routes = [
   {
     path: 'reset/:token',
     loadChildren: () => import('./auth/reset/reset.module').then( m => m.ResetPageModule)
-  },  {
+  },
+  {
     path: 'user-managements',
     loadChildren: () => import('./user-managements/user-managements.module').then( m => m.UserManagementsPageModule)
   },
@@ -102,6 +103,14 @@ const routes: Routes = [
     path: 'artikel',
     loadChildren: () => import('./artikel/artikel.module').then( m => m.ArtikelPageModule)
   },
+  {
+    path: 'detail-artikel',
+    loadChildren: () => import('./artikel/detail-artikel/detail-artikel.module').then( m => m.DetailArtikelPageModule)
+  },  {
+    path: 'pediamu',
+    loadChildren: () => import('./pediamu/pediamu.module').then( m => m.PediamuPageModule)
+  },
+
 
 
 

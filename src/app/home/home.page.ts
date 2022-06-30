@@ -25,6 +25,15 @@ export class HomePage implements OnInit {
     autoplay: true
   };
 
+  sliderOption = {
+    slidesPerView: 2,
+    spaceBetween: 1,
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+  };
+
   dateNow:any;
   listProducts:any = [];
   listBanners:any = [];
