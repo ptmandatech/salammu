@@ -136,6 +136,7 @@ export class TambahVideoPage implements OnInit {
   addVideo() {
     this.videoData.url = this.videoData.url.replace('watch?v=','embed/');
     if(this.isCreated == true) {
+      this.videoData.id = new Date().getTime().toString() + '' + [Math.floor((Math.random() * 1000))];
       this.api.post('videos', this.videoData).then(res => {
         if(res) {
           this.toastController

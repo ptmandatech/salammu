@@ -169,6 +169,7 @@ export class TambahPengajianPage implements OnInit {
     }
     this.pengajianData.datetime = new Date(this.dateValue);
     if(this.isCreated == true) {
+      this.pengajianData.id = new Date().getTime().toString() + '' + [Math.floor((Math.random() * 1000))];
       this.pengajianData.verified = false;
       this.api.post('pengajian', this.pengajianData).then(res => {
         if(res) {

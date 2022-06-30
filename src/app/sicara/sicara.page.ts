@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { ApiService } from '../services/api.service';
+import { CommonService } from '../services/common.service';
 
 @Component({
   selector: 'app-sicara',
@@ -7,9 +10,25 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SicaraPage implements OnInit {
 
-  constructor() { }
+  listWilayah:any = [];
+  loading:boolean;
+  constructor(
+    public api: ApiService,
+    public common: CommonService,
+    public router:Router,
+  ) { }
 
   ngOnInit() {
+    this.loading = true;
+    this.getAllWilayah();
+  }
+
+  getAllWilayah() {
+    this.api.getExternal('organisation').then(res => {
+      console.log(res)
+    }, error => {
+      this.loading = false;
+    })
   }
 
 }

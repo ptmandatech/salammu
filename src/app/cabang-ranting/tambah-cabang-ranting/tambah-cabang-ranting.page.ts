@@ -102,6 +102,7 @@ export class TambahCabangRantingPage implements OnInit {
 
   save() {
     if(this.isCreated == true) {
+      this.crData.id = new Date().getTime().toString() + '' + [Math.floor((Math.random() * 1000))];
       this.api.post('cr', this.crData).then(res => {
         if(res) {
           this.toastController
