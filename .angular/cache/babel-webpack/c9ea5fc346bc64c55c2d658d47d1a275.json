@@ -1,0 +1,1 @@
+{"ast":null,"code":"export default function slideToLoop(index = 0, speed = this.params.speed, runCallbacks = true, internal) {\n  const swiper = this;\n  let newIndex = index;\n\n  if (swiper.params.loop) {\n    newIndex += swiper.loopedSlides;\n  }\n\n  return swiper.slideTo(newIndex, speed, runCallbacks, internal);\n}","map":null,"metadata":{},"sourceType":"module"}

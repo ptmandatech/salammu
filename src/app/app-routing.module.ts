@@ -98,6 +98,10 @@ const routes: Routes = [
     path: 'sicara',
     loadChildren: () => import('./sicara/sicara.module').then( m => m.SicaraPageModule)
   },
+  {
+    path: 'artikel',
+    loadChildren: () => import('./artikel/artikel.module').then( m => m.ArtikelPageModule)
+  },
 
 
 
