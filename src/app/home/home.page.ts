@@ -38,7 +38,9 @@ export class HomePage implements OnInit {
   listProducts:any = [];
   listBanners:any = [];
   serverImgBanner:any;
+  serverImgArticles:any;
   serverImgProfil:any;
+  serverImgVideos:any;
   serverImg: any;
   userData: any;
   locationNow:any;
@@ -70,8 +72,12 @@ export class HomePage implements OnInit {
     this.serverImg = this.common.photoBaseUrl+'products/';
     this.serverImgBanner = this.common.photoBaseUrl+'banners/';
     this.serverImgProfil = this.common.photoBaseUrl+'users/';
+    this.serverImgArticles = this.common.photoBaseUrl+'articles/';
+    this.serverImgVideos = this.common.photoBaseUrl+'videos/';
     this.getAllProducts();
     this.getAllBanners();
+    this.getAllArticles();
+    this.getAllVideos();
   }
 
   ionViewWillEnter() {
@@ -282,6 +288,8 @@ export class HomePage implements OnInit {
       this.loading = true;
       this.listProducts = [];
       this.listBanners = [];
+      this.listVideos = [];
+      this.listArticles = [];
       this.listTimes = [];
       this.tempTimes1 = [];
       this.tempTimes2 = [];
@@ -293,6 +301,8 @@ export class HomePage implements OnInit {
       this.serverImgBanner = this.common.photoBaseUrl+'banners/';
       this.getAllProducts();
       this.getAllBanners();
+      this.getAllArticles();
+      this.getAllVideos();
       setTimeout(() => {
         event.target.complete();
       }, 2000);
@@ -302,6 +312,25 @@ export class HomePage implements OnInit {
         event.target.complete();
       }, 2000);
     }
+  }
+
+  listArticles:any = [];
+  getAllArticles() {
+    this.api.get('articles').then(res => {
+      this.listArticles = res;
+    }, error => {
+      this.loading = false;
+    })
+  }
+
+  listVideos:any = [];
+  getAllVideos() {
+    this.api.get('videos').then(res => {
+      this.listVideos = res;
+      console.log(res)
+    }, error => {
+      this.loading = false;
+    })
   }
 
   getAllBanners() {
@@ -476,7 +505,7 @@ export class HomePage implements OnInit {
   }
 
   getAllProducts() {
-    this.api.get('products?limit=4').then(res => {
+    this.api.get('products?getBy=fav').then(res => {
       this.parseImage(res);
     })
   }

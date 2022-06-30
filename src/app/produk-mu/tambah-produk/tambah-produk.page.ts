@@ -32,6 +32,7 @@ export class TambahProdukPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.getCategories();
     this.cekLogin();
     this.id = this.routes.snapshot.paramMap.get('id');
     this.serverImg = this.common.photoBaseUrl+'products/';
@@ -39,8 +40,16 @@ export class TambahProdukPage implements OnInit {
       this.isCreated = false;
       this.getDetailProduct();
     } else {
-      this.id = new Date().getTime().toString();
+      this.productData.id = new Date().getTime().toString() + '' + [Math.floor((Math.random() * 1000))];
     }
+  }
+
+  allCategories:any = [];
+  getCategories() {
+    this.api.get('categories').then(res=>{
+      this.allCategories = res;
+    }, err => {
+    });
   }
 
   cekLogin()
@@ -143,7 +152,7 @@ export class TambahProdukPage implements OnInit {
   {
     if(this.images.length > 0) {
       for(var i=0; i<this.images.length; i++) {
-        await this.api.put('products/uploadfoto/'+this.id,{image: this.images[i]}).then(res=>{
+        await this.api.put('products/uploadfoto/'+this.productData.id,{image: this.images[i]}).then(res=>{
           this.imgUploaded.push(res);
           if(i+1 == this.images.length) {
             this.addProduct();
@@ -159,7 +168,6 @@ export class TambahProdukPage implements OnInit {
 
   addProduct() {
     if(this.isCreated == true) {
-      this.productData.id = new Date().getTime().toString() + '' + [Math.floor((Math.random() * 1000))];
       this.productData.verified = false;
       this.productData.images = JSON.stringify(this.imgUploaded);
       this.api.post('products', this.productData).then(res => {

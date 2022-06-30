@@ -4,7 +4,7 @@
     <ion-title>Pediamu</ion-title>
   </ion-toolbar>
   <ion-toolbar color="primary">
-    <ion-searchbar mode="ios" showCancelButton="never" placeholder="Cari Pedia"></ion-searchbar>
+    <ion-searchbar mode="ios" showCancelButton="never" showCancelButton="never" [(ngModel)]="searchTerm" (ionChange)="searchChanged($event)" placeholder="Cari Pedia"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
@@ -14,18 +14,18 @@
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
 
-        <ion-card *ngFor="let n of [1,2,3,4,5]" class="rounded-15">
+        <ion-card *ngFor="let n of listPediamu" class="rounded-15">
           <ion-item lines="none" detail >
             <ion-thumbnail slot="start">
-              <img src="../../assets/imgs/no-product.png">
+              <img src="{{n.image == undefined || n.image == '' ? '../../assets/imgs/no-product.png':(serverImg+n.image)}}">
             </ion-thumbnail>
             <ion-label>
               <ion-text color="primary">
-                <h3>Judul Pediamu</h3>
+                <h3>{{n.title}}</h3>
               </ion-text>
-              <p>Ringkasan</p>
+              <p>{{n.summary}}</p>
               <ion-text color="medium">
-                <small class="fs-10">12 Januari 2022</small>
+                <small class="fs-10">{{n.created_at | date:'dd MMMM yyyy'}}</small>
               </ion-text>
             </ion-label>
           </ion-item>

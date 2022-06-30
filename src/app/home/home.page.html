@@ -129,6 +129,9 @@
                 <ion-col size="3" class="ion-text-center mb-16" >
                   <img src="./assets/icon/dzikir.svg"/>
                   <p class="fs-10" style="margin-top: -1px;">Doa & Dzikir</p>
+                  <ion-chip color="danger" style="margin-top: -140px;">
+                    <ion-label class="fs-10">Segera</ion-label>
+                  </ion-chip>
                 </ion-col>
                 <ion-col size="3" class="ion-text-center mb-16" routerLink="/artikel">
                   <img src="./assets/icon/artikelmu.svg"/>
@@ -210,17 +213,17 @@
             </ion-chip>
           </ion-item>
 
-          <ion-item detail *ngFor="let n of [1,2,3,4,5]" routerLink="/detail-artikel">
+          <ion-item detail *ngFor="let n of listArticles" [routerLink]="['/detail-artikel', n.id]">
             <ion-thumbnail slot="start">
-              <img src="../../assets/imgs/no-product.png">
+              <img src="{{n.image == undefined || n.image == '' ? '../../assets/imgs/no-product.png':(serverImgArticles+n.image)}}">
             </ion-thumbnail>
             <ion-label>
               <ion-text color="primary">
-                <h3>Judul Artikel</h3>
+                <h3>{{n.title}}</h3>
               </ion-text>
-              <p>Intro Artikel</p>
+              <p>{{n.summary}}</p>
               <ion-text color="medium">
-                <small class="fs-10">12 Januari 2022</small>
+                <small class="fs-10">{{n.created_at | date:'dd MMMM yyyy'}}</small>
               </ion-text>
               
             </ion-label>
@@ -241,12 +244,12 @@
 
 
           <ion-slides [options]="sliderOption" class="ion-padding">
-            <ion-slide *ngFor="let n of [1,2,3,4,5,6]">
+            <ion-slide *ngFor="let n of listVideos">
               <ion-card class="rounded-15">
-                <img src="../../assets/imgs/no-product.png">
+                <img src="{{n.image == undefined ? '../../assets/imgs/no-product.png':(serverImgVideos+n.image)}}">
                 <ion-card-content style="height: 80px;">
                   <ion-card-title style="font-size: 12px">
-                  <b class="ion-text-wrap">Judul Video</b>
+                  <b class="ion-text-wrap">{{n.title}}</b>
                   </ion-card-title>
                   <div style="position: absolute; height: 40px; bottom: 0; left:0; right:0;  background-image: linear-gradient(to top, rgba(255,255,255,1), rgba(255,0,0,0));"></div>
                 </ion-card-content>

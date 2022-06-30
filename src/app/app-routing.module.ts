@@ -104,9 +104,10 @@ const routes: Routes = [
     loadChildren: () => import('./artikel/artikel.module').then( m => m.ArtikelPageModule)
   },
   {
-    path: 'detail-artikel',
+    path: 'detail-artikel/:id',
     loadChildren: () => import('./artikel/detail-artikel/detail-artikel.module').then( m => m.DetailArtikelPageModule)
-  },  {
+  },
+  {
     path: 'pediamu',
     loadChildren: () => import('./pediamu/pediamu.module').then( m => m.PediamuPageModule)
   },

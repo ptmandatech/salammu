@@ -29,12 +29,15 @@
       <ion-col size="3" class="ion-text-center mb-16" >
         <img src="./assets/icon/dzikir.svg"/>
         <p class="fs-10" style="margin-top: -1px;">Doa & Dzikir</p>
+        <ion-chip color="danger" style="margin-top: -140px;">
+          <ion-label class="fs-10">Segera</ion-label>
+        </ion-chip>
       </ion-col>
-      <ion-col size="3" class="ion-text-center mb-16" >
+      <ion-col size="3" class="ion-text-center mb-16" routerLink="/artikel" (click)="dismiss()">
         <img src="./assets/icon/artikelmu.svg"/>
         <p class="fs-10" style="margin-top: -1px;">ArtikelMU</p>
       </ion-col>
-      <ion-col size="3" class="ion-text-center mb-16" >
+      <ion-col size="3" class="ion-text-center mb-16" routerLink="/pediamu" (click)="dismiss()">
         <img src="./assets/icon/tentangmu.svg"/>
         <p class="fs-10" style="margin-top: -1px;">PediaMU</p>
       </ion-col>

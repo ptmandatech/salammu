@@ -14,16 +14,14 @@
       <ion-col size-md="6">
 
         <div padding>
-          <h2>Judul Artikel</h2>
-          <p>Oleh : Admin salammu</p>
+          <h2>{{articles.title}}</h2>
+          <p>Oleh : {{articles.user_name}}</p>
         </div>
 
-        <img src="../../../assets/imgs/no-product.png" style="width: 100%">
+        <img src="{{articles.image == undefined || articles.image == '' ? '../../../assets/imgs/no-product.png':(serverImg+articles.image)}}" style="width: 100%">
 
         <div class="ion-padding">
-          <p>
-            Disini isi artikel
-          </p>
+          <p [innerHTML]="articles.descriptions"></p>
         </div>
         
       </ion-col>

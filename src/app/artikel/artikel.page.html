@@ -4,7 +4,7 @@
     <ion-title>Artikel</ion-title>
   </ion-toolbar>
   <ion-toolbar color="primary">
-    <ion-searchbar mode="ios" showCancelButton="never" placeholder="Cari Artikel"></ion-searchbar>
+    <ion-searchbar mode="ios" showCancelButton="never" showCancelButton="never" [(ngModel)]="searchTerm" (ionChange)="searchChanged($event)" placeholder="Cari Artikel"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
@@ -13,19 +13,19 @@
   <ion-grid class="ion-no-padding">
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
-        <ion-card *ngFor="let n of [1,2,3,4]" routerLink="/detail-artikel">
+        <ion-card *ngFor="let n of listArticles" [routerLink]="['/detail-artikel', n.id]">
           <div style="text-align: center;" >
-            <img src="../../assets/imgs/no-product.png" />
+            <img src="{{n.image == undefined || n.image == '' ? '../../assets/imgs/no-product.png':(serverImg+n.image)}}" />
           </div>
           <ion-card-header>
-            <ion-card-subtitle>Oleh Admin Salammu</ion-card-subtitle>
-            <ion-card-title>Judul Artikel</ion-card-title>
+            <ion-card-subtitle>Oleh {{n.user_name}}</ion-card-subtitle>
+            <ion-card-title>{{n.title}}</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            Intro artikel ada disini      
+            {{n.summary}}     
           </ion-card-content>
           <div class="ion-padding">
-            <small> 28 Juni 2022 </small>
+            <small> {{n.created_at | date:'dd MMMM yyyy'}} </small>
           </div>
         </ion-card>
       </ion-col>
