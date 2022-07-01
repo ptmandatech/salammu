@@ -126,12 +126,9 @@
                   <img src="./assets/icon/video.svg"/>
                   <p class="fs-10" style="margin-top: -1px;">Video</p>
                 </ion-col>
-                <ion-col size="3" class="ion-text-center mb-16" >
+                <ion-col size="3" class="ion-text-center mb-16" routerLink="/doa-dzikir">
                   <img src="./assets/icon/dzikir.svg"/>
                   <p class="fs-10" style="margin-top: -1px;">Doa & Dzikir</p>
-                  <ion-chip color="danger" style="margin-top: -140px;">
-                    <ion-label class="fs-10">Segera</ion-label>
-                  </ion-chip>
                 </ion-col>
                 <ion-col size="3" class="ion-text-center mb-16" routerLink="/artikel">
                   <img src="./assets/icon/artikelmu.svg"/>
@@ -213,24 +210,26 @@
             </ion-chip>
           </ion-item>
 
-          <ion-item detail *ngFor="let n of listArticles" [routerLink]="['/detail-artikel', n.id]">
-            <ion-thumbnail slot="start">
-              <img src="{{n.image == undefined || n.image == '' ? '../../assets/imgs/no-product.png':(serverImgArticles+n.image)}}">
-            </ion-thumbnail>
-            <ion-label>
-              <ion-text color="primary">
-                <h3>{{n.title}}</h3>
-              </ion-text>
-              <p>{{n.summary}}</p>
-              <ion-text color="medium">
-                <small class="fs-10">{{n.created_at | date:'dd MMMM yyyy'}}</small>
-              </ion-text>
-              
-            </ion-label>
-          </ion-item>
+          <ion-card class="rounded-15" style="border-left: #40A083 solid 3px;">
+            <ion-item lines="none" detail *ngFor="let n of listArticles" [routerLink]="['/detail-artikel', n.id]">
+              <ion-thumbnail slot="start">
+                <img src="{{n.image == undefined || n.image == '' ? '../../assets/imgs/no-product.png':(serverImgArticles+n.image)}}">
+              </ion-thumbnail>
+              <ion-label>
+                <ion-text color="primary">
+                  <h3>{{n.title}}</h3>
+                </ion-text>
+                <p>{{n.summary}}</p>
+                <ion-text color="medium">
+                  <small class="fs-10">{{n.created_at | date:'dd MMMM yyyy'}}</small>
+                </ion-text>
+              </ion-label>
+            </ion-item>
+          </ion-card>
           <!-- End Artikel section -->
 
           <!-- Video Section -->
+          <div style="margin-top: 16px;"></div>
           <ion-item lines="none">
             <ion-label>
               <h2>Video Terbaru</h2>

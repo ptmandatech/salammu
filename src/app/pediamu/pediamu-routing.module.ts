@@ -7,6 +7,10 @@ const routes: Routes = [
   {
     path: '',
     component: PediamuPage
+  },
+  {
+    path: 'detail-pediamu',
+    loadChildren: () => import('./detail-pediamu/detail-pediamu.module').then( m => m.DetailPediamuPageModule)
   }
 ];
 

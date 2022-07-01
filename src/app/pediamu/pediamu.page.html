@@ -14,21 +14,20 @@
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
 
-        <ion-card *ngFor="let n of listPediamu" class="rounded-15">
-          <ion-item lines="none" detail >
-            <ion-thumbnail slot="start">
-              <img src="{{n.image == undefined || n.image == '' ? '../../assets/imgs/no-product.png':(serverImg+n.image)}}">
-            </ion-thumbnail>
-            <ion-label>
-              <ion-text color="primary">
-                <h3>{{n.title}}</h3>
-              </ion-text>
-              <p>{{n.summary}}</p>
-              <ion-text color="medium">
-                <small class="fs-10">{{n.created_at | date:'dd MMMM yyyy'}}</small>
-              </ion-text>
-            </ion-label>
-          </ion-item>
+        <ion-card *ngFor="let n of listPediamu" routerLink="/detail-pediamu" class="rounded-15">
+          <div style="text-align: center;" >
+            <img src="{{n.image == undefined || n.image == '' ? '../../assets/imgs/no-product.png':(serverImg+n.image)}}" />
+          </div>
+          <ion-card-header>
+            <ion-card-subtitle>Oleh {{n.user_name}}</ion-card-subtitle>
+            <ion-card-title>{{n.title}}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            {{n.summary}}     
+          </ion-card-content>
+          <div class="ion-padding">
+            <small> {{n.created_at | date:'dd MMMM yyyy'}} </small>
+          </div>
         </ion-card>
 
       </ion-col>

@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title color="primary">Baca Artikel</ion-title>
+    <ion-title color="primary">Baca Doa dan Dzikir</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -14,14 +14,14 @@
       <ion-col size-md="6">
 
         <div padding>
-          <h2>{{articles.title}}</h2>
-          <p>Oleh : {{articles.user_name}}</p>
+          <h2>Judul Doa dan Dzikir</h2>
+          <p>Oleh : Admin Salammu</p>
         </div>
 
-        <img src="{{articles.image == undefined || articles.image == '' ? '../../../assets/imgs/no-product.png':(serverImg+articles.image)}}" style="width: 100%">
+        <img src="../../../assets/imgs/no-product.png" style="width: 100%">
 
         <div class="ion-padding">
-          <p [innerHTML]="articles.descriptions"></p>
+          <p>Disini isi Doa dan Dzikir</p>
         </div>
         
       </ion-col>
