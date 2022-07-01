@@ -210,8 +210,8 @@
             </ion-chip>
           </ion-item>
 
-          <ion-card class="rounded-15" style="border-left: #40A083 solid 3px;">
-            <ion-item lines="none" detail *ngFor="let n of listArticles" [routerLink]="['/detail-artikel', n.id]">
+          <ion-card class="rounded-15" style="border-left: #40A083 solid 3px;" *ngFor="let n of listArticles" [routerLink]="['/detail-artikel', n.id]">
+            <ion-item lines="none" detail >
               <ion-thumbnail slot="start">
                 <img src="{{n.image == undefined || n.image == '' ? '../../assets/imgs/no-product.png':(serverImgArticles+n.image)}}">
               </ion-thumbnail>
