@@ -66,6 +66,7 @@ export class HomePage implements OnInit {
   timesToday:any;
   async ngOnInit() {
     this.loading = true;
+    this.present();
     this.dateNow = new Date();
     await this.checkPermission();
     this.cekLogin();
@@ -82,6 +83,25 @@ export class HomePage implements OnInit {
 
   ionViewWillEnter() {
     // this.checkPermission();
+  }
+
+  async present() {
+    this.loading = true;
+    return await this.loadingController.create({
+      spinner: 'crescent',
+      duration: 10000,
+      message: 'Tunggu Sebentar...',
+      cssClass: 'custom-class custom-loading'
+    }).then(a => {
+      a.present().then(() => {
+        console.log('presented');
+        if (!this.loading) {
+          a.dismiss().then(() => console.log('abort presenting'));
+          this.loading = false;
+        }
+      });
+      this.loading = false;
+    });
   }
 
   async checkPermission() {

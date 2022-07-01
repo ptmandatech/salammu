@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+import { LoadingController, ToastController } from '@ionic/angular';
 import { ApiService } from '../services/api.service';
 import { CommonService } from '../services/common.service';
 
@@ -20,10 +20,12 @@ export class UserManagementsPage implements OnInit {
     public api: ApiService,
     public common: CommonService,
     private toastController: ToastController,
+    private loadingController: LoadingController,
     public router:Router,
   ) { }
 
   ngOnInit() {
+    this.present();
     this.loading = true;
   }
 
@@ -38,10 +40,30 @@ export class UserManagementsPage implements OnInit {
     this.loading = true;
     this.listUsers = [];
     this.listUsersTemp = [];
+    this.present();
     this.cekLogin();
     setTimeout(() => {
       event.target.complete();
     }, 2000);
+  }
+
+  async present() {
+    this.loading = true;
+    return await this.loadingController.create({
+      spinner: 'crescent',
+      duration: 10000,
+      message: 'Tunggu Sebentar...',
+      cssClass: 'custom-class custom-loading'
+    }).then(a => {
+      a.present().then(() => {
+        console.log('presented');
+        if (!this.loading) {
+          a.dismiss().then(() => console.log('abort presenting'));
+          this.loading = false;
+        }
+      });
+      this.loading = false;
+    });
   }
 
   cekLogin()

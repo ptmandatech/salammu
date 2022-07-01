@@ -29,6 +29,7 @@ export class DetailPediamuPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.present();
     this.id = this.routes.snapshot.paramMap.get('id');
     this.cekLogin();
     this.serverImg = this.common.photoBaseUrl+'pediamu/';
@@ -36,6 +37,25 @@ export class DetailPediamuPage implements OnInit {
       this.isCreated = false;
       this.getDetailPediamu();
     }
+  }
+
+  async present() {
+    this.loading = true;
+    return await this.loadingController.create({
+      spinner: 'crescent',
+      duration: 10000,
+      message: 'Tunggu Sebentar...',
+      cssClass: 'custom-class custom-loading'
+    }).then(a => {
+      a.present().then(() => {
+        console.log('presented');
+        if (!this.loading) {
+          a.dismiss().then(() => console.log('abort presenting'));
+          this.loading = false;
+        }
+      });
+      this.loading = false;
+    });
   }
 
   cekLogin()

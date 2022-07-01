@@ -25,6 +25,7 @@ export class MyProductPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.present();
     this.loading = true;
     this.serverImg = this.common.photoBaseUrl+'products/';
     this.listProducts = [];
@@ -38,11 +39,31 @@ export class MyProductPage implements OnInit {
     this.listProductsTemp = [];
     this.cekLogin();
   }
+  
+  async present() {
+    this.loading = true;
+    return await this.loadingController.create({
+      spinner: 'crescent',
+      duration: 10000,
+      message: 'Tunggu Sebentar...',
+      cssClass: 'custom-class custom-loading'
+    }).then(a => {
+      a.present().then(() => {
+        console.log('presented');
+        if (!this.loading) {
+          a.dismiss().then(() => console.log('abort presenting'));
+          this.loading = false;
+        }
+      });
+      this.loading = false;
+    });
+  }
 
   async doRefresh(event) {
     this.loading = true;
     this.listProducts = [];
     this.listProductsTemp = [];
+    this.present();
     this.cekLogin();
     setTimeout(() => {
       event.target.complete();

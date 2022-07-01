@@ -31,11 +31,31 @@ export class DetailArtikelPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.present();
     this.id = this.routes.snapshot.paramMap.get('id');
     this.serverImg = this.common.photoBaseUrl+'articles/';
     if(this.id != 0) {
       this.getDetailArticles();
     }
+  }
+
+  async present() {
+    this.loading = true;
+    return await this.loadingController.create({
+      spinner: 'crescent',
+      duration: 10000,
+      message: 'Tunggu Sebentar...',
+      cssClass: 'custom-class custom-loading'
+    }).then(a => {
+      a.present().then(() => {
+        console.log('presented');
+        if (!this.loading) {
+          a.dismiss().then(() => console.log('abort presenting'));
+          this.loading = false;
+        }
+      });
+      this.loading = false;
+    });
   }
 
   getDetailArticles() {

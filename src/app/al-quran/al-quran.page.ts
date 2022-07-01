@@ -20,6 +20,7 @@ export class AlQuranPage implements OnInit {
   ) { }
 
   async ngOnInit() {
+    this.present();
     this.loading = true;
     this.surat = JSON.parse(localStorage.getItem('suratAlQuran'));
     this.suratTemp = this.surat;
@@ -27,6 +28,25 @@ export class AlQuranPage implements OnInit {
       this.getSurat();
     }
     this.cekLogin();
+  }
+
+  async present() {
+    this.loading = true;
+    return await this.loadingController.create({
+      spinner: 'crescent',
+      duration: 10000,
+      message: 'Tunggu Sebentar...',
+      cssClass: 'custom-class custom-loading'
+    }).then(a => {
+      a.present().then(() => {
+        console.log('presented');
+        if (!this.loading) {
+          a.dismiss().then(() => console.log('abort presenting'));
+          this.loading = false;
+        }
+      });
+      this.loading = false;
+    });
   }
 
   cekLogin()

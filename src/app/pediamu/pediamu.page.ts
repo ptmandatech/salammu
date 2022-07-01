@@ -26,6 +26,7 @@ export class PediamuPage implements OnInit {
 
   ngOnInit() {
     this.loading = true;
+    this.present();
     this.serverImg = this.common.photoBaseUrl+'pediamu/';
     this.listPediamu = [];
     this.listPediamuTemp = [];
@@ -36,10 +37,30 @@ export class PediamuPage implements OnInit {
     this.loading = true;
     this.listPediamu = [];
     this.listPediamuTemp = [];
+    this.present();
     this.getAllPediamu();
     setTimeout(() => {
       event.target.complete();
     }, 2000);
+  }
+
+  async present() {
+    this.loading = true;
+    return await this.loadingController.create({
+      spinner: 'crescent',
+      duration: 10000,
+      message: 'Tunggu Sebentar...',
+      cssClass: 'custom-class custom-loading'
+    }).then(a => {
+      a.present().then(() => {
+        console.log('presented');
+        if (!this.loading) {
+          a.dismiss().then(() => console.log('abort presenting'));
+          this.loading = false;
+        }
+      });
+      this.loading = false;
+    });
   }
 
   getAllPediamu() {

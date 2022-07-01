@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { LoadingController, ModalController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 import { CommonService } from 'src/app/services/common.service';
 
@@ -20,10 +20,12 @@ export class MyPengajianPage implements OnInit {
     public common: CommonService,
     public router:Router,
     public modalController: ModalController,
+    private loadingController:LoadingController
   ) { }
 
   ngOnInit() {
     this.loading = true;
+    this.present();
   }
 
   ionViewWillEnter() {
@@ -31,11 +33,31 @@ export class MyPengajianPage implements OnInit {
     this.listPengajianTemp = [];
     this.cekLogin();
   }
+  
+  async present() {
+    this.loading = true;
+    return await this.loadingController.create({
+      spinner: 'crescent',
+      duration: 10000,
+      message: 'Tunggu Sebentar...',
+      cssClass: 'custom-class custom-loading'
+    }).then(a => {
+      a.present().then(() => {
+        console.log('presented');
+        if (!this.loading) {
+          a.dismiss().then(() => console.log('abort presenting'));
+          this.loading = false;
+        }
+      });
+      this.loading = false;
+    });
+  }
 
   async doRefresh(event) {
     this.loading = true;
     this.listPengajian = [];
     this.listPengajianTemp = [];
+    this.present();
     this.cekLogin();
     setTimeout(() => {
       event.target.complete();

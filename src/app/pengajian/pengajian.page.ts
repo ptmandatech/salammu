@@ -72,6 +72,7 @@ export class PengajianPage implements OnInit {
 
   async ngOnInit() {
     this.loadingGetMap = true;
+    this.present();
     this.checkPermission();
     this.cekLogin();
     this.getAllPengajian();
@@ -82,6 +83,25 @@ export class PengajianPage implements OnInit {
     this.today = this.datePipe.transform(new Date(date), 'dd MMM yyyy');
     this.year = date.getFullYear();
     this.prayTime = await this.api.getThisMonth(this.month,this.year, this.city);
+  }
+
+  async present() {
+    this.loading = true;
+    return await this.loadingController.create({
+      spinner: 'crescent',
+      duration: 10000,
+      message: 'Tunggu Sebentar...',
+      cssClass: 'custom-class custom-loading'
+    }).then(a => {
+      a.present().then(() => {
+        console.log('presented');
+        if (!this.loading) {
+          a.dismiss().then(() => console.log('abort presenting'));
+          this.loading = false;
+        }
+      });
+      this.loading = false;
+    });
   }
 
   checkPermission() {

@@ -24,12 +24,32 @@ export class DetailSuratPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.present();
     this.id = this.routes.snapshot.paramMap.get('id');
     this.detailSurat = JSON.parse(localStorage.getItem('detailSurat-'+this.id));
     if(this.detailSurat == null) {
       this.getDetailSurat();
     }
     this.cekLogin();
+  }
+
+  async present() {
+    this.loading = true;
+    return await this.loadingController.create({
+      spinner: 'crescent',
+      duration: 10000,
+      message: 'Tunggu Sebentar...',
+      cssClass: 'custom-class custom-loading'
+    }).then(a => {
+      a.present().then(() => {
+        console.log('presented');
+        if (!this.loading) {
+          a.dismiss().then(() => console.log('abort presenting'));
+          this.loading = false;
+        }
+      });
+      this.loading = false;
+    });
   }
 
   cekLogin()

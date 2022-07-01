@@ -25,6 +25,7 @@ export class DoaDzikirPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.present();
     this.loading = true;
     this.serverImg = this.common.photoBaseUrl+'doadzikir/';
     this.listDoaDzikir = [];
@@ -33,6 +34,7 @@ export class DoaDzikirPage implements OnInit {
   }
 
   async doRefresh(event) {
+    this.present();
     this.loading = true;
     this.listDoaDzikir = [];
     this.listDoaDzikirTemp = [];
@@ -40,6 +42,25 @@ export class DoaDzikirPage implements OnInit {
     setTimeout(() => {
       event.target.complete();
     }, 2000);
+  }
+
+  async present() {
+    this.loading = true;
+    return await this.loadingController.create({
+      spinner: 'crescent',
+      duration: 10000,
+      message: 'Tunggu Sebentar...',
+      cssClass: 'custom-class custom-loading'
+    }).then(a => {
+      a.present().then(() => {
+        console.log('presented');
+        if (!this.loading) {
+          a.dismiss().then(() => console.log('abort presenting'));
+          this.loading = false;
+        }
+      });
+      this.loading = false;
+    });
   }
 
   getAllDoaDzikir() {

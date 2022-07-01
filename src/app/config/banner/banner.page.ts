@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { LoadingController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 import { CommonService } from 'src/app/services/common.service';
 
@@ -18,12 +19,33 @@ export class BannerPage implements OnInit {
     public api: ApiService,
     public common: CommonService,
     public router:Router,
+    private loadingController:LoadingController
   ) { }
 
   ngOnInit() {
+    this.present();
     this.loading = true;
     this.serverImg = this.common.photoBaseUrl+'banners/';
     this.getAllBanners();
+  }
+
+  async present() {
+    this.loading = true;
+    return await this.loadingController.create({
+      spinner: 'crescent',
+      duration: 10000,
+      message: 'Tunggu Sebentar...',
+      cssClass: 'custom-class custom-loading'
+    }).then(a => {
+      a.present().then(() => {
+        console.log('presented');
+        if (!this.loading) {
+          a.dismiss().then(() => console.log('abort presenting'));
+          this.loading = false;
+        }
+      });
+      this.loading = false;
+    });
   }
   
   onDidViewEnter() {
@@ -33,6 +55,7 @@ export class BannerPage implements OnInit {
 
   async doRefresh(event) {
     this.loading = true;
+    this.present();
     this.getAllBanners();
     setTimeout(() => {
       event.target.complete();
