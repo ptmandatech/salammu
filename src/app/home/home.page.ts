@@ -327,7 +327,6 @@ export class HomePage implements OnInit {
   getAllVideos() {
     this.api.get('videos').then(res => {
       this.listVideos = res;
-      console.log(res)
     }, error => {
       this.loading = false;
     })

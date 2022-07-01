@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActionSheetController, LoadingController, ModalController } from '@ionic/angular';
+import { ActionSheetController, LoadingController, ModalController, ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { ImageUploaderPage } from 'src/app/image-uploader/image-uploader.page';
@@ -17,6 +17,8 @@ export class DetailArtikelPage implements OnInit {
   loading:boolean;
   id:any;
   serverImg:any;
+  @ViewChild('content', { static: false }) content: any;
+
   constructor(
     public api: ApiService,
     public router:Router,
@@ -24,6 +26,7 @@ export class DetailArtikelPage implements OnInit {
     public actionSheetController:ActionSheetController,
     public modalController: ModalController,
     public routes:ActivatedRoute,
+    private toastController: ToastController,
     private loadingController: LoadingController,
   ) { }
 
@@ -39,6 +42,42 @@ export class DetailArtikelPage implements OnInit {
     this.api.get('articles/find/'+this.id).then(res => {
       this.articles = res;
     })
+  }
+
+  scrollIdx = 0;
+  autoRead:boolean;
+  readContent() {
+    this.toastController
+    .create({
+      message: this.autoRead ? 'Mode baca dinonaktifkan.':'Mode baca diaktifkan.',
+      duration: 1000,
+      color: this.autoRead ? 'danger':'primary',
+    })
+    .then((toastEl) => {
+      toastEl.present();
+    });
+    this.autoRead == true ? this.autoRead = false:this.autoRead = true;
+    if(this.autoRead) {
+      this.scrollToBottom();
+    } else {
+      this.content.scrollToTop();
+    }
+  }
+
+  scrollToBottom() {
+    this.content.scrollToBottom(200000);
+    setTimeout(() => {
+      if (this.autoRead) {
+        this.scrollToBottom();
+      }
+    }, 200000);
+  }
+
+  scrolling(e)
+  {
+    if(!this.autoRead) {
+      this.content.scrollToTop(e.detail.scrollTop);
+    }
   }
 
 }

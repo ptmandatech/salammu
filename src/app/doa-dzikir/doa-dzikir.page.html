@@ -4,7 +4,7 @@
     <ion-title>Doa dan Dzikir</ion-title>
   </ion-toolbar>
   <ion-toolbar color="primary">
-    <ion-searchbar mode="ios" showCancelButton="never" showCancelButton="never" placeholder="Cari Doa dan Dzikir"></ion-searchbar>
+    <ion-searchbar mode="ios" showCancelButton="never" [(ngModel)]="searchTerm" (ionChange)="searchChanged($event)"  placeholder="Cari Doa dan Dzikir"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
@@ -14,19 +14,19 @@
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
 
-        <ion-card *ngFor="let n of [1,2,3,4,5]" routerLink="/detail-doa-dzikir" class="rounded-15">
+        <ion-card *ngFor="let n of listDoaDzikir" [routerLink]="['/detail-doa-dzikir', n.id]" class="rounded-15">
           <div style="text-align: center;" >
-            <img src="../../assets/imgs/no-product.png" />
+            <img src="{{n.image == undefined || n.image == '' ? '../../assets/imgs/no-product.png':(serverImg+n.image)}}" />
           </div>
           <ion-card-header>
-            <ion-card-subtitle>Oleh : Admin Salammu</ion-card-subtitle>
-            <ion-card-title>Judul Doa dan Dzikir</ion-card-title>
+            <ion-card-subtitle>Oleh : {{n.user_name}}</ion-card-subtitle>
+            <ion-card-title>{{n.title}}</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            summary    
+            {{n.summary}}    
           </ion-card-content>
           <div class="ion-padding">
-            <small> 28 Juli 2022</small>
+            <small> {{n.created_at | date:'dd MMMM yyyy'}}</small>
           </div>
         </ion-card>
 

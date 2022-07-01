@@ -14,14 +14,14 @@
       <ion-col size-md="6">
 
         <div padding>
-          <h2>Judul Pediamu</h2>
-          <p>Oleh : Admin Salammu</p>
+          <h2>{{pediamuData.title}}</h2>
+          <p>Oleh : {{pediamuData.user_name}}</p>
         </div>
 
-        <img src="../../../assets/imgs/no-product.png" style="width: 100%">
+        <img src="{{pediamuData.image == undefined || pediamuData.image == '' ? '../../../assets/imgs/no-product.png':(serverImg+pediamuData.image)}}" style="width: 100%">
 
         <div class="ion-padding">
-          <p>Disini isi pediamu</p>
+          <p [innerHTML]="pediamuData.descriptions"></p>
         </div>
         
       </ion-col>

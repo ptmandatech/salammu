@@ -5,8 +5,8 @@
   </ion-toolbar>
   <ion-toolbar color="primary">
     <ion-segment scrollable="true">
-      <ion-button class="btn-filter" *ngFor="let m of ['Semua', 'Rekomendasi', 'Pakaian', 'furniture', 'Buku', 'Makanan', 'Minuman']" color="{{m==selectedCat ? 'light':'primary'}}" (click)=selectCat(m)>
-      {{m}}
+      <ion-button class="btn-filter" *ngFor="let m of allCategories" color="{{m.id==selectedCat ? 'light':'primary'}}" (click)=selectCat(m)>
+      {{m.name}}
       </ion-button>
     </ion-segment>
   </ion-toolbar>

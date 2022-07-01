@@ -14,14 +14,14 @@
       <ion-col size-md="6">
 
         <div padding>
-          <h2>Judul Doa dan Dzikir</h2>
-          <p>Oleh : Admin Salammu</p>
+          <h2>{{doaDzikirData.title}}</h2>
+          <p>Oleh : {{doaDzikirData.user_name}}</p>
         </div>
 
-        <img src="../../../assets/imgs/no-product.png" style="width: 100%">
+        <img src="{{doaDzikirData.image == undefined || doaDzikirData.image == '' ? '../../../assets/imgs/no-product.png':(serverImg+doaDzikirData.image)}}" style="width: 100%">
 
         <div class="ion-padding">
-          <p>Disini isi Doa dan Dzikir</p>
+          <p [innerHTML]="doaDzikirData.descriptions"></p>
         </div>
         
       </ion-col>

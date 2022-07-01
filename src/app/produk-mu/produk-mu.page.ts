@@ -28,6 +28,11 @@ export class ProdukMUPage implements OnInit {
     this.serverImg = this.common.photoBaseUrl+'products/';
     this.listProducts = [];
     this.listProductsTemp = [];
+    this.allCategories = [{
+      id: 'semua',
+      name: 'Semua'
+    }];
+    this.getCategories();
     this.getAllProducts();
   }
 
@@ -35,6 +40,11 @@ export class ProdukMUPage implements OnInit {
     this.loading = true;
     this.listProducts = [];
     this.listProductsTemp = [];
+    this.allCategories = [{
+      id: 'semua',
+      name: 'Semua'
+    }];
+    this.getCategories();
     this.getAllProducts();
     setTimeout(() => {
       event.target.complete();
@@ -47,6 +57,20 @@ export class ProdukMUPage implements OnInit {
     }, error => {
       this.loading = false;
     })
+  }
+
+  allCategories:any = [
+    {
+      id: 'semua',
+      name: 'Semua'
+    }
+  ];
+  getCategories() {
+    this.api.get('categories').then(res=>{
+      this.allCategories = [...this.allCategories, ...res];
+      console.log(this.allCategories)
+    }, err => {
+    });
   }
 
   parseImage(res) {
@@ -72,6 +96,16 @@ export class ProdukMUPage implements OnInit {
 
   initializeItems(): void {
     this.listProducts = this.listProductsTemp;
+    if(this.selectedCat != 'semua') {
+      this.listProducts = this.listProducts.filter(product => {
+        if (product.category && this.selectedCat) {
+          if (product.category.toLowerCase().indexOf(this.selectedCat.toLowerCase()) > -1) {
+            return true;
+          }
+          return false;
+        }
+      });
+    }
   }
 
   searchTerm: string = '';
@@ -86,25 +120,55 @@ export class ProdukMUPage implements OnInit {
     }
 
     this.listProducts = this.listProducts.filter(product => {
-      if (product.name && searchTerm) {
-        if (product.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
-          return true;
+      if(this.selectedCat != 'semua') {
+        if (product.category && this.selectedCat) {
+          if (product.category.toLowerCase().indexOf(this.selectedCat.toLowerCase()) > -1) {
+            if (product.name && searchTerm) {
+              if (product.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
+                return true;
+              }
+              return false;
+            }
+            return true;
+          }
+          return false;
         }
-        return false;
+      } else {
+        if (product.name && searchTerm) {
+          if (product.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
+            return true;
+          }
+          return false;
+        }
+
       }
     });
   }
 
   // Pilihan Kategori 
-  selectedCat:any;
+  selectedCat:any = 'semua';
   selectCat(cat)
   {
-  		if(this.selectedCat!=cat)
+  		if(this.selectedCat != cat.id)
   		{
-  			this.selectedCat=cat;
+  			this.selectedCat = cat.id;
   		}else{
   			this.selectedCat=null;
   		} 
+      if(this.selectedCat == 'semua') {
+        this.listProducts = [];
+        this.initializeItems();
+      } else {
+        this.initializeItems();
+        this.listProducts = this.listProducts.filter(product => {
+          if (product.category && this.selectedCat) {
+            if (product.category.toLowerCase().indexOf(this.selectedCat.toLowerCase()) > -1) {
+              return true;
+            }
+            return false;
+          }
+        });
+      }
   }
 
 }

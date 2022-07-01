@@ -46,7 +46,6 @@ export class PediamuPage implements OnInit {
     this.api.get('pediamu').then(res => {
       this.listPediamu = res;
       this.listPediamuTemp = res;
-      console.log(res)
     }, error => {
       this.loading = false;
     })

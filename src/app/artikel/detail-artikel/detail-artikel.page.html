@@ -3,12 +3,12 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title color="primary">Baca Artikel</ion-title>
+    <ion-title>Baca Artikel</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <!-- <ion-content #content [scrollEvents]="true" (ionScroll)="scrolling($event)"> -->
   <ion-grid class="ion-no-padding">
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
@@ -28,5 +28,10 @@
     </ion-row>
   </ion-grid>
 
+  <!-- <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="readContent()">
+    <ion-fab-button>
+      <ion-icon name="{{autoRead ? 'close-circle-outline':'chevron-down-circle-outline'}}"></ion-icon>
+    </ion-fab-button>
+  </ion-fab> -->
     
 </ion-content>

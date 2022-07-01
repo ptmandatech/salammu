@@ -14,7 +14,7 @@
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
 
-        <ion-card *ngFor="let n of listPediamu" routerLink="/detail-pediamu" class="rounded-15">
+        <ion-card *ngFor="let n of listPediamu" [routerLink]="['/detail-pediamu', n.id]" class="rounded-15">
           <div style="text-align: center;" >
             <img src="{{n.image == undefined || n.image == '' ? '../../assets/imgs/no-product.png':(serverImg+n.image)}}" />
           </div>

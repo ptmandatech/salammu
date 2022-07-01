@@ -42,6 +42,13 @@ export class DetailProdukPage implements OnInit {
     this.getDetailProduct();
   }
 
+  slideOpts = {
+    initialSlide: 1,
+    speed: 400,
+    spaceBetween: 20,
+    autoplay: true
+  };
+
   onSwiper(swiper) {
     console.log(swiper);
   }
@@ -84,7 +91,6 @@ export class DetailProdukPage implements OnInit {
 }
 
   async openViewer(url) {
-    console.log(url)
     const modal = await this.modalController.create({
       component: ViewerModalComponent,
       componentProps: {

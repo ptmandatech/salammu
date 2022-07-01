@@ -112,7 +112,7 @@ const routes: Routes = [
     loadChildren: () => import('./pediamu/pediamu.module').then( m => m.PediamuPageModule)
   },
   {
-    path: 'detail-pediamu',
+    path: 'detail-pediamu/:id',
     loadChildren: () => import('./pediamu/detail-pediamu/detail-pediamu.module').then( m => m.DetailPediamuPageModule)
   },
   {
@@ -120,7 +120,7 @@ const routes: Routes = [
     loadChildren: () => import('./doa-dzikir/doa-dzikir.module').then( m => m.DoaDzikirPageModule)
   },
   {
-    path: 'detail-doa-dzikir',
+    path: 'detail-doa-dzikir/:id',
     loadChildren: () => import('./doa-dzikir/detail-doa-dzikir/detail-doa-dzikir.module').then( m => m.DetailDoaDzikirPageModule)
   },
 

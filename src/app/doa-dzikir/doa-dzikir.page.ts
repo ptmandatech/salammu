@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { LoadingController, ModalController } from '@ionic/angular';
+import { ApiService } from '../services/api.service';
+import { CommonService } from '../services/common.service';
 
 @Component({
   selector: 'app-doa-dzikir',
@@ -7,9 +11,81 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DoaDzikirPage implements OnInit {
 
-  constructor() { }
+  
+  listDoaDzikir:any = [];
+  listDoaDzikirTemp:any = [];
+  serverImg: any;
+  loading:boolean;
+  constructor(
+    public api: ApiService,
+    public common: CommonService,
+    public router:Router,
+    public modalController: ModalController,
+    private loadingController: LoadingController,
+  ) { }
 
   ngOnInit() {
+    this.loading = true;
+    this.serverImg = this.common.photoBaseUrl+'doadzikir/';
+    this.listDoaDzikir = [];
+    this.listDoaDzikirTemp = [];
+    this.getAllDoaDzikir();
+  }
+
+  async doRefresh(event) {
+    this.loading = true;
+    this.listDoaDzikir = [];
+    this.listDoaDzikirTemp = [];
+    this.getAllDoaDzikir();
+    setTimeout(() => {
+      event.target.complete();
+    }, 2000);
+  }
+
+  getAllDoaDzikir() {
+    this.api.get('Doadzikir').then(res => {
+      this.listDoaDzikir = res;
+      this.listDoaDzikirTemp = res;
+    }, error => {
+      this.loading = false;
+    })
+  }
+
+  initializeItems(): void {
+    this.listDoaDzikir = this.listDoaDzikirTemp;
+  }
+
+  searchTerm: string = '';
+  searchChanged(evt) {
+
+    this.initializeItems();
+
+    const searchTerm = evt.srcElement.value;
+
+    if (!searchTerm) {
+      return;
+    }
+
+    this.listDoaDzikir = this.listDoaDzikir.filter(doaDzikir => {
+      if (doaDzikir.title && searchTerm) {
+        if (doaDzikir.title.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
+          return true;
+        }
+        if (doaDzikir.user_name && searchTerm) {
+          if (doaDzikir.user_name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
+            return true;
+          }
+          if (doaDzikir.summary && searchTerm) {
+            if (doaDzikir.summary.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
+              return true;
+            }
+            return false;
+          }
+          return false;
+        }
+        return false;
+      }
+    });
   }
 
 }
