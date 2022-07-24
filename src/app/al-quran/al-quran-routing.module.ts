@@ -15,7 +15,11 @@ const routes: Routes = [
   {
     path: 'tafsir-surat/:id',
     loadChildren: () => import('./tafsir-surat/tafsir-surat.module').then( m => m.TafsirSuratPageModule)
+  },  {
+    path: 'ayat-tersimpan',
+    loadChildren: () => import('./ayat-tersimpan/ayat-tersimpan.module').then( m => m.AyatTersimpanPageModule)
   }
+
 
 
 ];

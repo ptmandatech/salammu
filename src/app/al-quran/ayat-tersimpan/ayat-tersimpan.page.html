@@ -1,0 +1,25 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title>Ayat Tersimpan</ion-title>
+    <ion-buttons slot="start">
+      <ion-button fill="clear" routerLink="/al-quran">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="card-ayat-tersimpan ion-margin" *ngFor="let n of [1,2,3]">
+    <ion-item lines="none" class="bg-none" (click)="actionAyat()">
+      <ion-label>
+        <h3>QS Surat Al Fatihah</h3>
+        <p>Ayat 2</p>
+        <ion-note>Juz 1</ion-note>
+      </ion-label>
+      <ion-note slot="end" color="primary">17 juni 2022 </ion-note>
+    </ion-item>
+  </div>
+
+</ion-content>
