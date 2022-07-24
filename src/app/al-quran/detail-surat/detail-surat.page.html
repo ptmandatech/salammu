@@ -1,6 +1,6 @@
 <ion-header class="ion-no-border">
   <ion-toolbar color="primary">
-    <ion-title>Detail Surat</ion-title>
+    <ion-title>Baca Al-Quran</ion-title>
     <ion-buttons slot="start">
       <ion-button fill="clear" routerLink="/al-quran">
         <ion-icon name="arrow-back-outline"></ion-icon>
@@ -10,57 +10,53 @@
 </ion-header>
 
 <ion-content>
+  
   <ion-grid class="ion-no-padding" *ngIf="detailSurat != undefined">
     <ion-row class="ion-justify-content-center">
-      <ion-button *ngIf="detailSurat.surat_sebelumnya != false" [routerLink]="['/al-quran/detail-surat', detailSurat.surat_sebelumnya.nomor]" style="position: sticky; margin-top: 85px;" fill="clear"><ion-icon name="arrow-back-circle-outline"></ion-icon></ion-button>
+
       <ion-col size-md="6">
-        <ion-list class="ion-padding" lines="none">
-          <ion-item lines="none" class="list-custom">
-            <ion-label>
-              <h2>{{detailSurat.nama_latin}} - {{detailSurat.nama}}</h2>
-              <ion-text color="medium" class="ion-text-wrap">
-                Jumlah Ayat: {{detailSurat.jumlah_ayat}} / Arti: {{detailSurat.arti}}
-              </ion-text>
-
-              <!-- Button -->
-              <ion-grid>
-                <ion-row>
-                  <ion-col>
-                    <ion-button [routerLink]="['/al-quran/tafsir-surat', detailSurat.nomor]" color="primary" expand="block"><ion-icon name="document-text-outline"></ion-icon> Lihat Tafsir</ion-button>
-                  </ion-col>
-                  <ion-col>
-                    <ion-button color="secondary" (click)="modalSurat(detailSurat)" expand="block"><ion-icon name="play-outline"></ion-icon> Putar Audio</ion-button>
-                  </ion-col>
-                </ion-row>
-              </ion-grid>
-
-            </ion-label>
-          </ion-item>
-        </ion-list>
+        <ion-card class="bg-card">
+          <ion-card-content>
+              <ion-item lines="none" class="bg-none">
+                <ion-label>
+                  <ion-text color="light">
+                    <h2>QS {{detailSurat.nama_latin}}</h2>
+                  <p>{{detailSurat.jumlah_ayat}} Ayat - Arti: {{detailSurat.arti}}</p>
+                  </ion-text>
+                </ion-label>
+              </ion-item>
+              <div style="text-align: center;">
+                <img src="../../../assets/imgs/bismillah.svg" width="250">
+              </div>
+              <ion-button color="light" fill="outline" [routerLink]="['/al-quran/tafsir-surat', detailSurat.nomor]" expand="block"><ion-icon name="document-text-outline"></ion-icon> Lihat Tafsir</ion-button>
+              <ion-button color="light" fill="clear" (click)="modalSurat(detailSurat)" expand="block"><ion-icon name="play-outline"></ion-icon> Putar Audio</ion-button>
+          </ion-card-content>
+        </ion-card>       
       </ion-col>
-      <ion-button *ngIf="detailSurat.surat_selanjutnya != false" [routerLink]="['/al-quran/detail-surat', detailSurat.surat_selanjutnya.nomor]" style="position: sticky; margin-top: 85px;" fill="clear"><ion-icon name="arrow-forward-circle-outline"></ion-icon></ion-button>
     </ion-row>
   </ion-grid>
 
   <div *ngIf="detailSurat != undefined">
-    <ion-card *ngFor="let s of detailSurat.ayat" class="card-surat ion-padding">
-        <ion-item lines="none">
-          <ion-label>
-            <h3 class="ion-text-wrap">{{s.surah}}:{{s.nomor}}</h3>
-          </ion-label>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-text slot="end"><h3>{{s.ar}}</h3></ion-text>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-label>
-            <div class="ion-text-wrap" [innerHTML]="s.tr"></div><br>
-            <p class="ion-text-wrap">
-              {{s.idn}}
-            </p>
-          </ion-label>
-        </ion-item>
-    </ion-card>
+
+    <ion-list lines="none">
+      <ion-item *ngFor="let s of detailSurat.ayat; let i = index;" [ngClass]="(i % 2 == 0) ? 'color-genap' : 'color-ganjil'" (click)="actionAyat()">
+        <div class="container" slot="start" >
+          <img class="center-bg"src="../../assets/imgs/number.svg">
+          <span class="center">{{s.nomor}}</span>
+        </div>
+        <ion-label>
+          <div style="text-align: right">
+            <ion-note class="ion-text-wrap" style="font-size: 2em;">{{s.ar}}</ion-note>
+          </div>
+          <ion-text color="primary">
+            <p class="ion-text-wrap ion-text-start" [innerHTML]="s.tr">{{s.tr}}</p>
+          </ion-text>
+          <ion-text color="medium">
+            <p class="ion-text-wrap ion-text-start">{{s.idn}}</p>
+          </ion-text>
+        </ion-label>
+      </ion-item>
+    </ion-list>
   </div>
 
   <div *ngIf="detailSurat == undefined">
@@ -115,3 +111,21 @@
   </div>
 
 </ion-content>
+
+<ion-footer>
+  <ion-grid>
+    <ion-row class="ion-align-items-center">
+      <ion-col class="ion-text-start">
+        <ion-button class="fs-10" *ngIf="detailSurat.surat_sebelumnya != false" [routerLink]="['/al-quran/detail-surat', detailSurat.surat_sebelumnya.nomor]" fill="clear"><ion-icon name="chevron-back-outline"></ion-icon>Sebelumnya</ion-button>
+      </ion-col>
+      <ion-col class="ion-text-center">
+        <ion-text color="primary" class="fs-10">
+          QS {{detailSurat.nama_latin}}
+        </ion-text>
+      </ion-col>
+      <ion-col class="ion-text-end">
+        <ion-button class="fs-10" *ngIf="detailSurat.surat_selanjutnya != false" [routerLink]="['/al-quran/detail-surat', detailSurat.surat_selanjutnya.nomor]" fill="clear">Selanjutnya <ion-icon name="chevron-forward-outline"></ion-icon></ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-footer>

@@ -51,3 +51,25 @@
     border-bottom-right-radius: 20px;
     border: solid 1px #40A083;
   }
+
+
+  .color-genap {
+    --background: #40a0830d;
+  }
+
+  .color-ganjil {
+    --background: #FFFFFF;
+  }
+
+  .bg-card {
+    background-image: url('../../../assets/imgs/Banner\ 2.svg');
+    border-radius: 10px;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+
+  .bg-none {
+    --background : none !important;
+  }

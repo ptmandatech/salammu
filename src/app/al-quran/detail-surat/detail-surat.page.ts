@@ -89,4 +89,38 @@ export class DetailSuratPage implements OnInit {
     return await modal.present();
   }
 
+  //bookmark
+  async actionAyat() {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Nama Surat-Juz-ayat',
+      cssClass: 'my-custom-class',
+      buttons: [{
+        text: 'Tandai Terakhir Dibaca',
+        icon: 'book-outline',
+        data: 10,
+        handler: () => {
+          console.log('Penanda clicked');
+        }
+      }, {
+        text: 'Simpan Ayat',
+        icon: 'bookmark-outline',
+        data: 'Data value',
+        handler: () => {
+          console.log('Simpan clicked');
+        }
+      }, {
+        text: 'Batalkan',
+        icon: 'close',
+        role: 'cancel',
+        handler: () => {
+          console.log('Cancel clicked');
+        }
+      }]
+    });
+    await actionSheet.present();
+
+    const { role, data } = await actionSheet.onDidDismiss();
+    console.log('onDidDismiss resolved with role and data', role, data);
+  }
+
 }

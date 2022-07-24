@@ -51,3 +51,25 @@
     border-bottom-right-radius: 20px;
     border: solid 1px #40A083;
   }
+
+
+  .bg-card {
+    background-image: url('../../../assets/imgs/bg-quran.svg');
+    border-radius: 10px;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+
+  .bg-none {
+    --background : none !important;
+  }
+
+  .color-genap {
+    --background: #40a0830d;
+  }
+
+  .color-ganjil {
+    --background: #FFFFFF;
+  }

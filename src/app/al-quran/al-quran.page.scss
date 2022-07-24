@@ -1,7 +1,12 @@
-.fixed-top {
-  position: sticky;
-  top: 10px;
-  left: 0;
-  z-index: 999;
-  background: #fff;
+.bg-card {
+  background-image: url('../../assets/imgs/Banner\ 2.svg');
+  border-radius: 10px;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.bg-none {
+  --background : none !important;
 }

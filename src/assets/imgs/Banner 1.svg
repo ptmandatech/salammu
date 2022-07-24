@@ -1,0 +1,22 @@
+<svg width="345" height="100" viewBox="0 0 345 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_512_446)">
+<rect width="345" height="100" fill="url(#paint0_linear_512_446)"/>
+<ellipse cx="270.5" cy="50" rx="97.5" ry="87" fill="white" fill-opacity="0.15"/>
+<ellipse cx="270.5" cy="50" rx="68.5" ry="61" fill="white" fill-opacity="0.15"/>
+<path d="M212 64.2048L235.422 0L281.454 18.5379L329.652 12.0499L335.878 24.0552L314.797 90.776L275.533 94.5025L297.368 106.812L294.434 112L265.4 95.6294L230.831 100.36L230.021 94.4579L256.104 90.8904L218.226 76.2101L212 64.2048Z" fill="#1C737A"/>
+<path d="M329.653 12.0499L308.572 78.7735L261.188 83.2699L212.001 64.2048L235.424 0L281.456 18.5379L329.653 12.0499Z" fill="#E7FCB6"/>
+<path d="M329.653 12.0513L308.572 78.7748L261.188 83.2712L260.992 83.1959L281.539 18.5281L329.653 12.0513Z" fill="#B9D180"/>
+<path d="M266.428 75.9417L303.448 72.4439L319.952 20.1997L283.075 25.1619L266.428 75.9417ZM301.196 69.6657L270.681 72.5499L285.33 27.8676L315.691 23.7812L301.196 69.6657Z" fill="#FFCD2D"/>
+<path d="M257.476 74.553L275.695 23.5333L239.402 8.91724L220.663 60.2828L257.476 74.553ZM271.923 25.2264L255.696 70.6675L224.466 58.5645L241.148 12.8335L271.923 25.2264Z" fill="#FFCD2D"/>
+<rect width="345" height="100" fill="#40A083" fill-opacity="0.5"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_512_446" x1="0" y1="50" x2="340.5" y2="50" gradientUnits="userSpaceOnUse">
+<stop stop-color="#40A083"/>
+<stop offset="1" stop-color="#6AD1B2"/>
+</linearGradient>
+<clipPath id="clip0_512_446">
+<rect width="345" height="100" fill="white"/>
+</clipPath>
+</defs>
+</svg>
