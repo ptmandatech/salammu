@@ -554,8 +554,8 @@ export class HomePage implements OnInit {
       component: SemuaMenuPage,
       mode: "md",
       cssClass: 'modal-class',
-      initialBreakpoint: 0.5,
-      breakpoints: [0, 0.5, 1]
+      initialBreakpoint: 0.6,
+      breakpoints: [0, 0.6, 1]
     });
     return await modal.present();
   }

@@ -123,6 +123,10 @@ const routes: Routes = [
     path: 'detail-doa-dzikir/:id',
     loadChildren: () => import('./doa-dzikir/detail-doa-dzikir/detail-doa-dzikir.module').then( m => m.DetailDoaDzikirPageModule)
   },
+  {
+    path: 'ustadmu',
+    loadChildren: () => import('./ustadmu/ustadmu.module').then( m => m.UstadmuPageModule)
+  },
 
 
 

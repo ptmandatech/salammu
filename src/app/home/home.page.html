@@ -138,12 +138,9 @@
                   <img src="./assets/icon/tentangmu.svg"/>
                   <p class="fs-10" style="margin-top: -1px;">PediaMU</p>
                 </ion-col>
-                <ion-col size="3" class="ion-text-center mb-16" >
-                  <img src="./assets/icon/tanya-ustad.svg"/>
-                  <p class="fs-10" style="margin-top: -1px;">Tanya Ustadz</p>
-                  <ion-chip color="danger" style="margin-top: -140px;">
-                    <ion-label class="fs-10">Segera</ion-label>
-                  </ion-chip>
+                <ion-col size="3" class="ion-text-center mb-16" routerLink="/al-quran">
+                  <img src="./assets/icon/al-quran.svg"/>
+                  <p class="fs-10" style="margin-top: -1px;">Al-Quran</p>
                 </ion-col>
                 <ion-col size="3" class="ion-text-center mb-16" (click)="allMenu()">
                   <img src="./assets/icon/wrapper.svg"/>
@@ -209,23 +206,19 @@
               </ion-label>
             </ion-chip>
           </ion-item>
-
-          <ion-card class="rounded-15" style="border-left: #40A083 solid 3px;" *ngFor="let n of listArticles" [routerLink]="['/detail-artikel', n.id]">
-            <ion-item lines="none" detail >
+          <ion-item detail *ngFor="let n of listArticles" [routerLink]="['/detail-artikel', n.id]">
               <ion-thumbnail slot="start">
-                <img src="{{n.image == undefined || n.image == '' ? '../../assets/imgs/no-product.png':(serverImgArticles+n.image)}}">
+                <img class="rounded-15" src="{{n.image == undefined || n.image == '' ? '../../assets/imgs/no-product.png':(serverImgArticles+n.image)}}">
               </ion-thumbnail>
               <ion-label>
                 <ion-text color="primary">
-                  <h3>{{n.title}}</h3>
+                  <h3 class="ion-text-wrap">{{n.title}}</h3>
                 </ion-text>
-                <p>{{n.summary}}</p>
                 <ion-text color="medium">
                   <small class="fs-10">{{n.created_at | date:'dd MMMM yyyy'}}</small>
                 </ion-text>
               </ion-label>
-            </ion-item>
-          </ion-card>
+          </ion-item>
           <!-- End Artikel section -->
 
           <!-- Video Section -->
@@ -241,16 +234,14 @@
             </ion-chip>
           </ion-item>
 
-
           <ion-slides [options]="sliderOption" class="ion-padding">
             <ion-slide *ngFor="let n of listVideos" [routerLink]="['/video/detail-video', n.id]">
               <ion-card class="rounded-15">
-                <img src="{{n.image == undefined ? '../../assets/imgs/no-product.png':(serverImgVideos+n.image)}}">
-                <ion-card-content style="height: 80px;">
+                <img src="{{n.image == undefined ? '../../assets/imgs/no-product.png':(serverImgVideos+n.image)}}" class="object-bg" style="height: 100px;">
+                <ion-card-content>
                   <ion-card-title style="font-size: 12px">
                   <b class="ion-text-wrap">{{n.title}}</b>
                   </ion-card-title>
-                  <div style="position: absolute; height: 40px; bottom: 0; left:0; right:0;  background-image: linear-gradient(to top, rgba(255,255,255,1), rgba(255,0,0,0));"></div>
                 </ion-card-content>
               </ion-card>
             </ion-slide>
