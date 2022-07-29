@@ -36,6 +36,9 @@
                   <ion-col size="8" class="ion-padding">
                     <ion-label>
                       <h3 class="ion-text-wrap">{{n.title}}</h3>
+                      <ion-text color="medium">
+                        <small class="fs-10">{{n.created_at | date:'dd MMMM yyyy'}}</small>
+                      </ion-text>
                     </ion-label>
                   </ion-col>
                 </ion-row>

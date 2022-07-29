@@ -12,16 +12,6 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-toolbar color="primary">
-    <ion-segment mode="md" [(ngModel)]="defaultSegment">
-      <ion-segment-button value="surah">
-          Surah
-      </ion-segment-button>
-      <ion-segment-button value="juz">
-          Juz
-      </ion-segment-button>
-    </ion-segment>
-  </ion-toolbar>
   <ion-searchbar mode="ios" showCancelButton="never" [(ngModel)]="searchTerm" (ionChange)="searchChanged($event)" placeholder="Cari Surah"></ion-searchbar>
 </ion-header>
 
@@ -34,9 +24,6 @@
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
 
-        <div [ngSwitch]="defaultSegment">
-          <!-- Segment surah-->
-          <div *ngSwitchCase="'surah'" >
 
             <ion-card class="bg-card" *ngIf="terakhirDibaca" (click)="lanjutBacaSurat(terakhirDibaca)">
               <ion-card-content>
@@ -52,7 +39,7 @@
                     <ion-label>
                       <ion-text color="light">
                         <h2>QS {{terakhirDibaca.nama_latin}}</h2>
-                      <p>Ayat {{terakhirDibaca.terakhirDibaca == null ? 1:terakhirDibaca.terakhirDibaca.nomor}}</p>
+                        <span>Ayat {{terakhirDibaca.terakhirDibaca == null ? 1:terakhirDibaca.terakhirDibaca.nomor}}</span>
                       </ion-text>
                     </ion-label>
                   </ion-item>
@@ -76,11 +63,7 @@
               </ion-item>
             </ion-list>
 
-          </div>
 
-
-          <!-- Segment juz-->
-          <div *ngSwitchCase="'juz'" >
 
             <ion-card class="bg-card">
               <ion-card-content>
@@ -120,10 +103,7 @@
               </ion-item>
             </ion-list>
 
-          </div>
-
-
-        </div>
+          
 
       </ion-col>
     </ion-row>

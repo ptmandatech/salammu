@@ -127,6 +127,10 @@ const routes: Routes = [
     path: 'ustadmu',
     loadChildren: () => import('./ustadmu/ustadmu.module').then( m => m.UstadmuPageModule)
   },
+  {
+    path: 'detail-ustad',
+    loadChildren: () => import('./ustadmu/detail-ustad/detail-ustad.module').then( m => m.DetailUstadPageModule)
+  },
 
 
 

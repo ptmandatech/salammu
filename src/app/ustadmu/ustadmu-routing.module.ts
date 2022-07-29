@@ -7,6 +7,10 @@ const routes: Routes = [
   {
     path: '',
     component: UstadmuPage
+  },
+  {
+    path: 'detail-ustad',
+    loadChildren: () => import('./detail-ustad/detail-ustad.module').then( m => m.DetailUstadPageModule)
   }
 ];
 

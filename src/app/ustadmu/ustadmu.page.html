@@ -1,9 +1,25 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>ustadmu</ion-title>
+  <ion-toolbar color="primary">
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title>Ustadmu</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-searchbar mode="ios" showCancelButton="never" placeholder="Cari Ustad"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+
+  <ion-list>
+    <ion-item *ngFor="let n of [1,2,3,4,5]" detail routerLink="/detail-ustad">
+      <ion-avatar slot="start">
+        <img src="../../assets/icon/avatar_ustad.svg">
+      </ion-avatar>
+      <ion-label>
+        <h3>Nama Ustad</h3>
+        <p>Kepakaran</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
 
 </ion-content>
