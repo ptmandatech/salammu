@@ -28,7 +28,7 @@
                   </ion-text>
                 </ion-label>
               </ion-item>
-              <ion-button color="light" [routerLink]="['/al-quran/detail-surat', tafsirSurat.nomor]" expand="block" fill="outline"><ion-icon name="document-text-outline"></ion-icon> Lihat Surat</ion-button>
+              <ion-button color="light" (click)="bacaSurat(tafsirSurat)" expand="block" fill="outline"><ion-icon name="document-text-outline"></ion-icon> Lihat Surat</ion-button>
           </ion-card-content>
         </ion-card>
       </ion-col>
@@ -108,9 +108,9 @@
 
 <ion-footer>
   <ion-grid>
-    <ion-row class="ion-align-items-center">
+    <ion-row class="ion-align-items-center" *ngIf="!loading">
       <ion-col class="ion-text-start">
-        <ion-button class="fs-10" *ngIf="tafsirSurat.surat_sebelumnya != false" [routerLink]="['/al-quran/tafsir-surat', tafsirSurat.surat_sebelumnya.nomor]" fill="clear"><ion-icon name="chevron-back-outline"></ion-icon>Sebelumnya</ion-button>
+        <ion-button class="fs-10" *ngIf="tafsirSurat.surat_sebelumnya != false" (click)="bacaTafsir(tafsirSurat.surat_sebelumnya)" fill="clear"><ion-icon name="chevron-back-outline"></ion-icon>Sebelumnya</ion-button>
       </ion-col>
       <ion-col class="ion-text-center">
         <ion-text color="primary" class="fs-10">
@@ -118,7 +118,7 @@
         </ion-text>
       </ion-col>
       <ion-col class="ion-text-end">
-        <ion-button class="fs-10" *ngIf="tafsirSurat.surat_selanjutnya != false" [routerLink]="['/al-quran/tafsir-surat', tafsirSurat.surat_selanjutnya.nomor]" fill="clear">Selanjutnya <ion-icon name="chevron-forward-outline"></ion-icon></ion-button>
+        <ion-button class="fs-10" *ngIf="tafsirSurat.surat_selanjutnya != false" (click)="bacaTafsir(tafsirSurat.surat_selanjutnya)" fill="clear">Selanjutnya <ion-icon name="chevron-forward-outline"></ion-icon></ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>

@@ -30,6 +30,7 @@
               </div>
               <ion-button color="light" fill="outline" [routerLink]="['/al-quran/tafsir-surat', detailSurat.nomor]" expand="block"><ion-icon name="document-text-outline"></ion-icon> Lihat Tafsir</ion-button>
               <ion-button color="light" fill="clear" (click)="modalSurat(detailSurat)" expand="block"><ion-icon name="play-outline"></ion-icon> Putar Audio</ion-button>
+              <ion-button color="light" fill="outline" *ngIf="terakhirDibaca.terakhirDibaca" (click)="scrollTo(terakhirDibaca.terakhirDibaca.nomor)" expand="block"><ion-icon name="book-outline"></ion-icon> Terakhir Dibaca</ion-button>
           </ion-card-content>
         </ion-card>       
       </ion-col>
@@ -39,10 +40,10 @@
   <div *ngIf="detailSurat != undefined">
 
     <ion-list lines="none">
-      <ion-item *ngFor="let s of detailSurat.ayat; let i = index;" [ngClass]="(i % 2 == 0) ? 'color-genap' : 'color-ganjil'" (click)="actionAyat()">
+      <ion-item *ngFor="let s of detailSurat.ayat; let i = index;" [ngClass]="(i % 2 == 0) ? 'color-genap' : 'color-ganjil'" (click)="actionAyat(s)">
         <div class="container" slot="start" >
           <img class="center-bg"src="../../assets/imgs/number.svg">
-          <span class="center">{{s.nomor}}</span>
+          <span class="center" id="{{s.nomor}}">{{s.nomor}}</span>
         </div>
         <ion-label>
           <div style="text-align: right">
@@ -116,7 +117,7 @@
   <ion-grid>
     <ion-row class="ion-align-items-center">
       <ion-col class="ion-text-start">
-        <ion-button class="fs-10" *ngIf="detailSurat.surat_sebelumnya != false" [routerLink]="['/al-quran/detail-surat', detailSurat.surat_sebelumnya.nomor]" fill="clear"><ion-icon name="chevron-back-outline"></ion-icon>Sebelumnya</ion-button>
+        <ion-button class="fs-10" *ngIf="detailSurat.surat_sebelumnya != false" (click)="bacaSurat(detailSurat.surat_sebelumnya)" fill="clear"><ion-icon name="chevron-back-outline"></ion-icon>Sebelumnya</ion-button>
       </ion-col>
       <ion-col class="ion-text-center">
         <ion-text color="primary" class="fs-10">
@@ -124,7 +125,7 @@
         </ion-text>
       </ion-col>
       <ion-col class="ion-text-end">
-        <ion-button class="fs-10" *ngIf="detailSurat.surat_selanjutnya != false" [routerLink]="['/al-quran/detail-surat', detailSurat.surat_selanjutnya.nomor]" fill="clear">Selanjutnya <ion-icon name="chevron-forward-outline"></ion-icon></ion-button>
+        <ion-button class="fs-10" *ngIf="detailSurat.surat_selanjutnya != false" (click)="bacaSurat(detailSurat.surat_selanjutnya)" fill="clear">Selanjutnya <ion-icon name="chevron-forward-outline"></ion-icon></ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>

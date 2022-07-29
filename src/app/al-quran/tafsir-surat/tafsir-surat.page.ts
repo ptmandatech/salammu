@@ -25,52 +25,79 @@ export class TafsirSuratPage implements OnInit {
   ngOnInit() {
     this.present();
     this.id = this.routes.snapshot.paramMap.get('id');
-    this.tafsirSurat = JSON.parse(localStorage.getItem('tafsirSurat-'+this.id));
-    if(this.tafsirSurat == null) {
+    let dt = JSON.parse(localStorage.getItem('tafsirSurat-'+this.id));
+    this.tafsirSurat = dt == null ? {}:dt;
+    if(!this.tafsirSurat || !this.tafsirSurat.nama_latin) {
       this.getTafsirSurat();
     }
     this.cekLogin();
   }
 
+  loaderCounter = 0;
   async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 10000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
+    this.loaderCounter = this.loaderCounter + 1;
+    if(this.loaderCounter == 1){
+      this.loading = true;
+      return await this.loadingController.create({
+        spinner: 'crescent',
+        duration: 10000,
+        message: 'Tunggu Sebentar...',
+        cssClass: 'custom-class custom-loading'
+      }).then(a => {
+        a.present().then(() => {
+          console.log('presented');
+          if (!this.loading) {
+            this.loading = false;
+            this.loaderCounter = 0;
+            a.dismiss().then(() => console.log('abort presenting'));
+          }
+        });
+        this.loading = false;
       });
-      this.loading = false;
-    });
+    }
+  }
+
+  async dismiss() {
+    this.loaderCounter = 0;
+    this.loading = false;
+    await this.loadingController.dismiss();
   }
 
   cekLogin()
   {    
     this.api.me().then(async res=>{
       this.userData = res;
-      await this.loadingController.dismiss();
     }, async error => {
       this.loading = false;
       localStorage.removeItem('userSalammu');
       localStorage.removeItem('salammuToken');
       this.userData = undefined;
-      await this.loadingController.dismiss();
     })
   }
 
-  tafsirSurat:any;
-  getTafsirSurat() {
-    this.api.getSurat('tafsir/'+this.id).then(res => {
+  tafsirSurat:any = {};
+  async getTafsirSurat() {
+    this.present();
+    await this.api.getSurat('tafsir/'+this.id).then(res => {
       this.tafsirSurat = res;
       localStorage.setItem('tafsirSurat-'+this.id, JSON.stringify(this.tafsirSurat));
+      let dt = JSON.parse(localStorage.getItem('tafsirSurat-'+this.id));
+      this.tafsirSurat = dt == null ? {}:dt;
+      this.getTafsirSurat();
+      this.dismiss();
+    }, err => {
+      this.dismiss();
     })
+  }
+  
+  bacaSurat(n) {
+    localStorage.setItem('terakhirDibaca', JSON.stringify(n));
+    this.router.navigate(['/al-quran/detail-surat', n.nomor]);
+  }
+
+  bacaTafsir(n) {
+    this.present();
+    this.router.navigate(['/al-quran/tafsir-surat', n.nomor]);
   }
 
 }

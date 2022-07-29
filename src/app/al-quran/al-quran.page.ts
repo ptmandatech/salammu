@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NavigationExtras, Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { AppComponent } from '../app.component';
 import { ApiService } from '../services/api.service';
@@ -13,21 +14,28 @@ export class AlQuranPage implements OnInit {
   defaultSegment:any='surah';
   userData:any;
   loading:boolean;
+  terakhirDibaca:any;
   constructor(
     private api: ApiService,
     private loadingController: LoadingController,
     private appComponent: AppComponent,
+    private router: Router
   ) { }
 
   async ngOnInit() {
     this.present();
     this.loading = true;
     this.surat = JSON.parse(localStorage.getItem('suratAlQuran'));
+    this.terakhirDibaca = JSON.parse(localStorage.getItem('terakhirDibaca'));
     this.suratTemp = this.surat;
     if(this.surat == null) {
       this.getSurat();
     }
     this.cekLogin();
+  }
+
+  ionViewDidEnter() {
+    this.ngOnInit();
   }
 
   async present() {
@@ -66,8 +74,7 @@ export class AlQuranPage implements OnInit {
   async doRefresh(event) {
     if(this.appComponent.networkStatus.connected == true) {
       this.loading = true;
-      this.getSurat();
-      this.cekLogin();
+      this.ngOnInit();
       setTimeout(() => {
         event.target.complete();
       }, 2000);
@@ -113,6 +120,20 @@ export class AlQuranPage implements OnInit {
         return false;
       }
     });
+  }
+
+  bacaSurat(n) {
+    console.log(n)
+    if(this.terakhirDibaca.nomor == n.nomor) {
+      this.lanjutBacaSurat(n);
+    } else {
+      localStorage.setItem('terakhirDibaca', JSON.stringify(n));
+      this.router.navigate(['/al-quran/detail-surat', n.nomor]);
+    }
+  }
+
+  lanjutBacaSurat(n) {
+    this.router.navigate(['/al-quran/detail-surat', n.nomor]);
   }
 
 }

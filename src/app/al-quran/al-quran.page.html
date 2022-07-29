@@ -26,6 +26,9 @@
 </ion-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
 
   <ion-grid class="ion-no-padding">
     <ion-row class="ion-justify-content-center">
@@ -35,7 +38,7 @@
           <!-- Segment surah-->
           <div *ngSwitchCase="'surah'" >
 
-            <ion-card class="bg-card">
+            <ion-card class="bg-card" *ngIf="terakhirDibaca" (click)="lanjutBacaSurat(terakhirDibaca)">
               <ion-card-content>
                   <ion-item lines="none" class="bg-none">
                     <ion-icon name="book-outline" color="light" slot="start"></ion-icon>
@@ -48,8 +51,8 @@
                   <ion-item lines="none" class="bg-none">
                     <ion-label>
                       <ion-text color="light">
-                        <h2>QS AlFatihah</h2>
-                      <p>Ayat 2 (Juz 1)</p>
+                        <h2>QS {{terakhirDibaca.nama_latin}}</h2>
+                      <p>Ayat {{terakhirDibaca.terakhirDibaca == null ? 1:terakhirDibaca.terakhirDibaca.nomor}}</p>
                       </ion-text>
                     </ion-label>
                   </ion-item>
@@ -57,7 +60,7 @@
             </ion-card>
 
             <ion-list>
-              <ion-item *ngFor="let n of surat" [routerLink]="['/al-quran/detail-surat', n.nomor]">
+              <ion-item *ngFor="let n of surat" (click)="bacaSurat(n)">
                 <div class="container" slot="start" >
                   <img class="center-bg"src="../../assets/imgs/number.svg">
                   <span class="center">{{n.nomor}}</span>

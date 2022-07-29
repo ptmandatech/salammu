@@ -218,6 +218,13 @@ export class HomePage implements OnInit {
             this.prayTime = await this.api.getToday(this.city);
             this.timesToday = await this.prayTime.timings;
 
+            if(this.timesToday['Firstthird']) {
+              delete this.timesToday['Firstthird'];
+              delete this.timesToday['Lastthird'];
+            }
+            if(this.timesToday['Sunrise']) {
+              delete this.timesToday['Sunrise'];
+            }
             this.parseTime(this.timesToday);
           }
         } else {
@@ -239,6 +246,13 @@ export class HomePage implements OnInit {
           this.prayTime = await this.api.getToday(this.city);
           this.timesToday = await this.prayTime.timings;
 
+          if(this.timesToday['Firstthird']) {
+            delete this.timesToday['Firstthird'];
+            delete this.timesToday['Lastthird'];
+          }
+          if(this.timesToday['Sunrise']) {
+            delete this.timesToday['Sunrise'];
+          }
           this.parseTime(this.timesToday);
         }
       }, async error => {
@@ -252,6 +266,13 @@ export class HomePage implements OnInit {
           this.prayTime = await this.api.getToday(this.city);
           this.timesToday = await this.prayTime.timings;
 
+          if(this.timesToday['Firstthird']) {
+            delete this.timesToday['Firstthird'];
+            delete this.timesToday['Lastthird'];
+          }
+          if(this.timesToday['Sunrise']) {
+            delete this.timesToday['Sunrise'];
+          }
           this.parseTime(this.timesToday);
         }
       })
@@ -269,7 +290,14 @@ export class HomePage implements OnInit {
       this.timesToday = undefined;
       this.prayTime = await this.api.getToday(this.city);
       this.timesToday = await this.prayTime.timings;
-
+      
+      if(this.timesToday['Firstthird']) {
+        delete this.timesToday['Firstthird'];
+        delete this.timesToday['Lastthird'];
+      }
+      if(this.timesToday['Sunrise']) {
+        delete this.timesToday['Sunrise'];
+      }
       this.parseTime(this.timesToday);
     }
   }
@@ -336,7 +364,7 @@ export class HomePage implements OnInit {
 
   listArticles:any = [];
   getAllArticles() {
-    this.api.get('articles').then(res => {
+    this.api.get('articles?limit=5').then(res => {
       this.listArticles = res;
     }, error => {
       this.loading = false;
@@ -345,7 +373,7 @@ export class HomePage implements OnInit {
 
   listVideos:any = [];
   getAllVideos() {
-    this.api.get('videos').then(res => {
+    this.api.get('videos?limit=5').then(res => {
       this.listVideos = res;
     }, error => {
       this.loading = false;
