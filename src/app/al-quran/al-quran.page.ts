@@ -124,8 +124,13 @@ export class AlQuranPage implements OnInit {
 
   bacaSurat(n) {
     console.log(n)
-    if(this.terakhirDibaca.nomor == n.nomor) {
-      this.lanjutBacaSurat(n);
+    if(this.terakhirDibaca) {
+      if(this.terakhirDibaca.nomor == n.nomor) {
+        this.lanjutBacaSurat(n);
+      } else {
+        localStorage.setItem('terakhirDibaca', JSON.stringify(n));
+        this.router.navigate(['/al-quran/detail-surat', n.nomor]);
+      }
     } else {
       localStorage.setItem('terakhirDibaca', JSON.stringify(n));
       this.router.navigate(['/al-quran/detail-surat', n.nomor]);

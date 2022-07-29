@@ -94,6 +94,7 @@ export class AyatTersimpanPage implements OnInit {
         data: 10,
         handler: () => {
           console.log('Lihat clicked');
+          this.present();
           this.getDetailSurat(n);
         }
       }, {

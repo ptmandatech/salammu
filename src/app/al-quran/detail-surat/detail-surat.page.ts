@@ -40,7 +40,7 @@ export class DetailSuratPage implements OnInit {
       if(this.detailSurat && this.terakhirDibaca.terakhirDibaca) {
         this.scrollTo(this.terakhirDibaca.terakhirDibaca.nomor);
       }
-    }, 3000);
+    }, 2500);
     this.cekLogin();
   }
 
