@@ -130,7 +130,7 @@ const routes: Routes = [
   {
     path: 'detail-ustad',
     loadChildren: () => import('./ustadmu/detail-ustad/detail-ustad.module').then( m => m.DetailUstadPageModule)
-  },
+  }
 
 
 

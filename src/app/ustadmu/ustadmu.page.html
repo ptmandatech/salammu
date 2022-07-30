@@ -2,6 +2,11 @@
   <ion-toolbar color="primary">
     <ion-back-button slot="start"></ion-back-button>
     <ion-title>Ustadmu</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="filter()">
+        <ion-icon slot="icon-only" name="options-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
   <ion-toolbar color="primary">
     <ion-searchbar mode="ios" showCancelButton="never" placeholder="Cari Ustad"></ion-searchbar>

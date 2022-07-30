@@ -11,6 +11,10 @@ const routes: Routes = [
   {
     path: 'detail-ustad',
     loadChildren: () => import('./detail-ustad/detail-ustad.module').then( m => m.DetailUstadPageModule)
+  },
+  {
+    path: 'filter-ustad',
+    loadChildren: () => import('./filter-ustad/filter-ustad.module').then( m => m.FilterUstadPageModule)
   }
 ];
 
