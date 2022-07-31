@@ -12,7 +12,10 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-searchbar mode="ios" showCancelButton="never" [(ngModel)]="searchTerm" (ionChange)="searchChanged($event)" placeholder="Cari Surah"></ion-searchbar>
+  <ion-toolbar>
+    <ion-searchbar style="margin-top: 14px;" mode="ios" showCancelButton="never" [(ngModel)]="searchTerm" (ionChange)="searchChanged($event)" placeholder="Cari Surah"></ion-searchbar>
+  </ion-toolbar>
+  
 </ion-header>
 
 <ion-content>
