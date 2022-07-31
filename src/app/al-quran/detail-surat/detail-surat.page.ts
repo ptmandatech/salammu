@@ -34,10 +34,10 @@ export class DetailSuratPage implements OnInit {
     if(!this.detailSurat || !this.detailSurat.nama_latin) {
       this.getDetailSurat();
     }
-    this.terakhirDibaca = JSON.parse(localStorage.getItem('terakhirDibaca'));
-    console.log(this.detailSurat)
+    let td = JSON.parse(localStorage.getItem('terakhirDibaca'));
+    this.terakhirDibaca = td == null ? {}:td;
     setTimeout(() => {
-      if(this.detailSurat && this.terakhirDibaca.terakhirDibaca) {
+      if(this.detailSurat && this.terakhirDibaca.terakhirDibaca && this.terakhirDibaca.nomor == this.detailSurat.nomor) {
         this.scrollTo(this.terakhirDibaca.terakhirDibaca.nomor);
       }
     }, 2500);
@@ -195,7 +195,6 @@ export class DetailSuratPage implements OnInit {
   }
 
   bacaSurat(n) {
-    localStorage.setItem('terakhirDibaca', JSON.stringify(n));
     this.router.navigate(['/al-quran/detail-surat', n.nomor]);
   }
 

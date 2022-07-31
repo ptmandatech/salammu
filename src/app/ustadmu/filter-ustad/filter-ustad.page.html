@@ -1,7 +1,7 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-item lines="full">
-        <ion-icon color="primary" slot="end" name="close-circle-outline" (click)="dismiss()"></ion-icon>
+        <ion-icon color="primary" slot="end" name="close-circle-outline" (click)="dismiss('close')"></ion-icon>
         <ion-label>
           <ion-text color="primary">
             <h2>Filter Ustad</h2>
@@ -14,47 +14,47 @@
 <ion-content class="ion-padding">
   <p>Kategori</p>
 
-  <ion-chip color="dark" outline="true" *ngFor="let n of [1,2,3]">
-    <ion-label color="dark">Keilmuan</ion-label>
-  </ion-chip>
-  <ion-chip color="primary" outline="true">
-    <ion-label color="primary">Al Quran Hadits</ion-label>
+  <ion-chip outline="true" *ngFor="let n of allSciences" color="{{filterData.science == n.id ? 'primary':'dark'}}" (click)="selectCat(n)">
+    <ion-label color="{{filterData.science == n.id ? 'primary':'dark'}}">{{n.name}}</ion-label>
   </ion-chip>
 
   <p>Kota Asal</p>
 
   <ion-text color="medium">Provinsi</ion-text>
   <ion-item lines="none" class="input">
-    <ion-select mode="md" placeholder="Pilih Provinsi">
-      <ion-select-option *ngFor="let n of [1,2,3,4]" value="{{n}}">Yogyakarta</ion-select-option>
+    <ion-select mode="md" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" interface="popover" placeholder="Pilih Provinsi" [(ngModel)]="filterData.prov_id" (ngModelChange)="getKab()">
+      <ion-select-option *ngFor="let n of allProvinsi" value="{{n.prov_id}}">{{n.prov_nama}}</ion-select-option>
     </ion-select>
-    <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
+    <ion-icon *ngIf="!loading && allProvinsi.length > 0" name="chevron-down-outline" slot="end"></ion-icon>
+    <ion-spinner *ngIf="loading" slot="end" name="crescent"></ion-spinner>
   </ion-item>
 
   <ion-text color="medium">Kabupaten</ion-text>
   <ion-item lines="none" class="input">
-    <ion-select mode="md" placeholder="Pilih Kabupaten">
-      <ion-select-option *ngFor="let n of [1,2,3,4]" value="{{n}}">Sleman</ion-select-option>
+    <ion-select mode="md" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" interface="popover" placeholder="Pilih Kabupaten" [disabled]="!filterData.prov_id" [(ngModel)]="filterData.kab_id" (ngModelChange)="getKec()">
+      <ion-select-option *ngFor="let n of allKab" value="{{n.kab_id}}">{{n.kab_nama}}</ion-select-option>
     </ion-select>
-    <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
+    <ion-icon *ngIf="!loading && allKab.length > 0" name="chevron-down-outline" slot="end"></ion-icon>
+    <ion-spinner *ngIf="loading" slot="end" name="crescent"></ion-spinner>
   </ion-item>
 
   <ion-text color="medium">Kecamatan</ion-text>
   <ion-item lines="none" class="input">
-    <ion-select mode="md" placeholder="Pilih Kabupaten">
-      <ion-select-option *ngFor="let n of [1,2,3,4]" value="{{n}}">Depok</ion-select-option>
+    <ion-select mode="md" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" interface="popover" placeholder="Pilih Kecamatan" [disabled]="!filterData.prov_id && !filterData.kab_id" [(ngModel)]="filterData.kec_id">
+      <ion-select-option *ngFor="let n of allKec" value="{{n.kec_id}}">{{n.kec_nama}}</ion-select-option>
     </ion-select>
-    <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
+    <ion-icon *ngIf="!loading && allKec.length > 0" name="chevron-down-outline" slot="end"></ion-icon>
+    <ion-spinner *ngIf="loading" slot="end" name="crescent"></ion-spinner>
   </ion-item>
 
   <ion-row class="ion-text-center">
-    <ion-col size="4">
+    <ion-col size="4" (click)="filterData = {}">
       <ion-button fill="clear" color="medium">
         <ion-icon slot="end" name="reload-outline"></ion-icon>
         Reset
       </ion-button>
     </ion-col>
-    <ion-col size="8">
+    <ion-col size="8" (click)="dismiss('ok')">
       <ion-button color="primary" expand="block">
         Terapkan Filter
       </ion-button>

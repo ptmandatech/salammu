@@ -9,20 +9,23 @@
     </ion-buttons>
   </ion-toolbar>
   <ion-toolbar>
-    <ion-searchbar style="margin-top: 14px" mode="ios" showCancelButton="never" placeholder="Cari Ustad"></ion-searchbar>
+    <ion-searchbar style="margin-top: 14px" mode="ios" showCancelButton="never" [(ngModel)]="searchTerm" (ionChange)="searchChanged($event)" placeholder="Cari Ustad"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
 
   <ion-list>
-    <ion-item *ngFor="let n of [1,2,3,4,5]" detail routerLink="/detail-ustad">
+    <ion-item *ngFor="let n of listUstadmu" detail (click)="detail(n)">
       <ion-avatar slot="start">
-        <img src="../../assets/icon/avatar_ustad.svg">
+        <img src="{{n.image == undefined || n.image == '' ? '../../assets/icon/avatar_ustad.svg':(serverImg+n.image)}}">
       </ion-avatar>
       <ion-label>
-        <h3>Nama Ustad</h3>
-        <p>Kepakaran</p>
+        <h3>{{n.name}}</h3>
+        <p>{{n.science_name}}</p>
       </ion-label>
     </ion-item>
   </ion-list>

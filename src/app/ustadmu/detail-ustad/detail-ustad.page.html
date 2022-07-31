@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-back-button slot="start"></ion-back-button>
-    <ion-title>Nama Ustadz</ion-title>
+    <ion-title>{{detailUstad.name}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -12,7 +12,7 @@
       <ion-col class="ion-text-center">
         <img src="../../../assets/icon/avatar_ustad.svg" class="img-profil">
         <ion-label>
-          <h2>Nama Ustadz</h2>
+          <h2>{{detailUstad.name}}</h2>
           <p>Kepakaran</p>
         </ion-label>
       </ion-col>
@@ -20,7 +20,7 @@
   </div>
 
   <ion-row class="ion-padding">
-    <ion-col class="ion-text-center">
+    <ion-col class="ion-text-center" (click)="aksi('tanya')">
       <div class="card-action">
         <ion-icon name="chatbubble-ellipses-outline" color="medium" style="font-size: 40px;"></ion-icon>
         <ion-text color="danger">
@@ -31,7 +31,7 @@
         </ion-text>
       </div>
     </ion-col>
-    <ion-col class="ion-text-center">
+    <ion-col class="ion-text-center" (click)="aksi('wa')">
       <div class="card-action"> 
         <ion-icon name="logo-whatsapp" color="medium" style="font-size: 40px;"></ion-icon>
         <ion-text color="primary">
@@ -45,7 +45,7 @@
     <p>Profil Ustadz</p>
     <ion-text color="medium">
       <p>
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+        {{detailUstad.biodata}}
       </p>
     </ion-text>
   </div>

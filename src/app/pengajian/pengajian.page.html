@@ -35,7 +35,7 @@
           <div *ngSwitchCase="'list'" >
             <ion-list class="ion-padding">
               <ion-item lines="none" detail class="list-custom" *ngFor="let n of listPengajian" (click)="modalPeta(n)">
-                <ion-label>
+                <ion-label class="ion-text-wrap">
                   <h3>{{n.name}}</h3>
                   <ion-text color="medium" class="ion-text-start">
                     <p>Lokasi: {{n.location}}</p>
