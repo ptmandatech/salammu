@@ -89,7 +89,6 @@ export class ProdukMUPage implements OnInit {
   getCategories() {
     this.api.get('categories').then(res=>{
       this.allCategories = [...this.allCategories, ...res];
-      console.log(this.allCategories)
     }, err => {
     });
   }

@@ -66,6 +66,7 @@ export class KhutbahPage implements OnInit {
     this.api.get('khutbah').then(res => {
       this.listKhutbah = res;
       this.listKhutbahTemp = res;
+      this.loading = false;
     }, error => {
       this.loading = false;
     })

@@ -28,7 +28,7 @@
       <ion-col size-md="6">
 
 
-            <ion-card class="bg-card" *ngIf="terakhirDibaca" (click)="lanjutBacaSurat(terakhirDibaca)">
+            <ion-card class="bg-card" *ngIf="!loading && terakhirDibaca" (click)="lanjutBacaSurat(terakhirDibaca)">
               <ion-card-content>
                   <ion-item lines="none" class="bg-none">
                     <ion-icon name="book-outline" color="light" slot="start"></ion-icon>
@@ -68,7 +68,7 @@
 
 
 
-            <ion-card class="bg-card">
+            <!-- <ion-card class="bg-card">
               <ion-card-content>
                   <ion-item lines="none" class="bg-none">
                     <ion-icon name="book-outline" color="light" slot="start"></ion-icon>
@@ -104,7 +104,7 @@
                   </ion-text>
                 </ion-label>
               </ion-item>
-            </ion-list>
+            </ion-list> -->
 
           
 

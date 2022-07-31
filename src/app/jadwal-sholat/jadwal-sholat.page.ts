@@ -60,6 +60,13 @@ export class JadwalSholatPage implements OnInit {
     this.prayTime = await this.api.getThisMonth(this.month,this.year, this.city);
   }
 
+  async doRefresh(event) {
+    this.ngOnInit();
+    setTimeout(() => {
+      event.target.complete();
+    }, 2000);
+  }
+
   async present() {
     this.loading = true;
     return await this.loadingController.create({

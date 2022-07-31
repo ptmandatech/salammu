@@ -89,8 +89,9 @@ export class AlQuranPage implements OnInit {
   surat:any = [];
   suratTemp:any = [];
   getSurat() {
+    this.surat = [];
+    this.suratTemp = [];
     this.api.getSurat('surat').then(res => {
-      console.log(res)
       this.surat = res;
       this.suratTemp = res;
       localStorage.setItem('suratAlQuran', JSON.stringify(this.surat));
@@ -123,7 +124,6 @@ export class AlQuranPage implements OnInit {
   }
 
   bacaSurat(n) {
-    console.log(n)
     if(this.terakhirDibaca) {
       if(this.terakhirDibaca.nomor == n.nomor) {
         this.lanjutBacaSurat(n);

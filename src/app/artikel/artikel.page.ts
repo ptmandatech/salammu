@@ -65,6 +65,7 @@ export class ArtikelPage implements OnInit {
     this.api.get('articles').then(res => {
       this.listArticles = res;
       this.listArticlesTemp = res;
+      this.loading = false;
     }, error => {
       this.loading = false;
     })

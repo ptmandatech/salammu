@@ -85,6 +85,13 @@ export class PengajianPage implements OnInit {
     this.prayTime = await this.api.getThisMonth(this.month,this.year, this.city);
   }
 
+  async doRefresh(event) {
+    this.ngOnInit();
+    setTimeout(() => {
+      event.target.complete();
+    }, 2000);
+  }
+
   async present() {
     this.loading = true;
     return await this.loadingController.create({
@@ -331,6 +338,8 @@ export class PengajianPage implements OnInit {
   dataPengajian:any = {};
   pengajian:any = [];
   getPengajian() {
+    this.dataPengajian = {};
+    this.pengajian = [];
     this.api.get('pengajian?all=ok').then(res => {
       this.pengajian = res;
     }, error => {
