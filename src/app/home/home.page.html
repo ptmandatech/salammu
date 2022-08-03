@@ -237,7 +237,7 @@
           <ion-slides [options]="sliderOption" class="ion-padding">
             <ion-slide *ngFor="let n of listVideos" [routerLink]="['/video/detail-video', n.id]">
               <ion-card class="rounded-15">
-                <img src="{{n.image == undefined ? '../../assets/imgs/no-product.png':(serverImgVideos+n.image)}}" class="object-bg" style="height: 100px;">
+                <img src="{{n.image == undefined || n.image == '' ? '../../assets/imgs/no-product.png':(serverImgVideos+n.image)}}" class="object-bg" style="height: 100px;">
                 <ion-card-content>
                   <ion-card-title style="font-size: 12px">
                   <b class="ion-text-wrap">{{n.title}}</b>

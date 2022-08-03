@@ -31,7 +31,7 @@
               <ion-grid>
                 <ion-row class="ion-align-items-center">
                   <ion-col size="4">
-                    <img src="{{n.image == undefined ? './assets/imgs/video.jpg':(serverImg+n.image)}}" class="rounded-15 object-bg" style="height: 75px;">
+                    <img src="{{n.image == undefined || n.image == '' ? '../assets/imgs/no-image.png':(serverImg+n.image)}}" class="rounded-15 object-bg" style="height: 75px;">
                   </ion-col>
                   <ion-col size="8" class="ion-padding">
                     <ion-label>
