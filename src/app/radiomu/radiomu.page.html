@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title>RadioMU</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-grid class="ion-no-padding">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-md="6">
+       
+        <div class="pins">
+          <ion-card *ngFor="let n of [1,2,3,4]" class="rounded-15" routerLink="/radiomu/detail-radio">
+            <img src="./assets/imgs/no-product.png" class="object-bg" style="height: 150px;">
+            <ion-card-content>
+              <ion-label>
+                <ion-text color="medium">
+                  <h2>Radiomu</h2>
+                </ion-text>
+              </ion-label>
+            </ion-card-content>
+          </ion-card>
+        </div>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

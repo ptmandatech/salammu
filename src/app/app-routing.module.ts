@@ -138,6 +138,14 @@ const routes: Routes = [
   {
     path: 'tanya-ustad',
     loadChildren: () => import('./tanya-ustad/tanya-ustad.module').then( m => m.TanyaUstadPageModule)
+  },
+  {
+    path: 'radiomu',
+    loadChildren: () => import('./radiomu/radiomu.module').then( m => m.RadiomuPageModule)
+  },
+  {
+    path: 'tvmu',
+    loadChildren: () => import('./tvmu/tvmu.module').then( m => m.TvmuPageModule)
   }
 
 
