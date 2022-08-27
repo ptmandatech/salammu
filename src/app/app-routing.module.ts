@@ -134,6 +134,10 @@ const routes: Routes = [
   {
     path: 'khutbah',
     loadChildren: () => import('./khutbah/khutbah.module').then( m => m.KhutbahPageModule)
+  },
+  {
+    path: 'tanya-ustad',
+    loadChildren: () => import('./tanya-ustad/tanya-ustad.module').then( m => m.TanyaUstadPageModule)
   }
 
 

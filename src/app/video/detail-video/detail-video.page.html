@@ -21,17 +21,14 @@
         </div>
         <p class="ion-text-wrap" *ngIf="urlSafe == undefined"><ion-skeleton-text animated style="height: 400px"></ion-skeleton-text></p>
 
-        <ion-item lines="none">
-          <ion-label>
-            <h2 class="ion-text-wrap">
-              {{videoData.title}}
-            </h2>
-            <p class="ion-text-wrap">
-              {{videoData.descriptions}}
-            </p>
-          </ion-label>
-        </ion-item>
-
+        <div padding>
+          <h3 class="ion-text-wrap">
+            {{videoData.title}}
+          </h3>
+          <ion-text color="medium">
+            <p>{{videoData.descriptions}}</p>
+          </ion-text>
+        </div>
 
       </ion-col>
     </ion-row>

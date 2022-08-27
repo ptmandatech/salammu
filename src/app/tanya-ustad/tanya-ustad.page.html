@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title>Tanya Ustad</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-segment mode="md" [(ngModel)]="defaultSegment">
+      <ion-segment-button value="list">
+        <ion-label>
+          List
+        </ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="chat">
+        <ion-label>
+          Chat <ion-badge color="danger" mode="ios">3</ion-badge>
+        </ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar style="margin-top: 14px" mode="ios" showCancelButton="never" placeholder="Cari Ustad atau pakar"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div [ngSwitch]="defaultSegment">
+
+    <!-- Segment List -->
+    <div *ngSwitchCase="'list'" >
+      <ion-list>
+        <ion-item *ngFor="let n of [1,2,3,4,5,6,7,8,9]" detail>
+          <ion-avatar slot="start">
+            <img src="../../assets/icon/avatar_ustad.svg">
+          </ion-avatar>
+          <ion-label>
+            <h3>Nama Ustad</h3>
+            <p>Pakar</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+
+    <!-- Segment Chat -->
+    <div *ngSwitchCase="'chat'" >
+      <ion-list>
+        <ion-item *ngFor="let n of [1,2,3,4,5,6,7,8,9]" routerLink="/tanya-ustad/chatting">
+          <ion-avatar slot="start">
+            <img src="../../assets/icon/avatar_ustad.svg">
+          </ion-avatar>
+          <ion-label>
+            <h3>Nama Ustad</h3>
+            <p>Oh pak Ustad, apakah masalah saya bisa diselesaikan ?</p>
+          </ion-label>
+          <div slot="end">
+            <ion-badge color="danger" mode="ios">1</ion-badge>
+          </div>
+        </ion-item>
+      </ion-list>
+    </div>
+
+  </div>
+
+  
+
+</ion-content>

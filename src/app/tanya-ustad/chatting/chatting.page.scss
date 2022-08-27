@@ -1,0 +1,61 @@
+ion-content {
+    --background : #EDEDED
+}
+
+.message {
+    padding: 8px;
+    margin-bottom: 8px;
+    white-space: pre-wrap;
+  }
+   
+  .my-message {
+    background: var(--ion-color-primary);
+    color: #fff;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
+   
+  .other-message {
+    background: #ffffff;
+    color: #000;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+   
+  .time {
+    color: #ffffff;
+    font-size: 8px;
+    margin-top: 8px;
+    font-family: "Poppins-Regular";
+  }
+
+  .time-other {
+    color: #000;
+    font-size: 8px;
+    margin-top: 8px;
+    font-family: "Poppins-Regular";
+  }
+   
+  .message-input {
+    width: 100%;
+    border: 1px solid var(--ion-color-primary);
+    border-radius: 20px;
+    background: #fff;
+    resize: none;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+   
+  h2 {
+      font-size: 14px;
+  }
+
+  p {
+      font-size: 15px;
+  }
+
+  b {
+    font-size: 12px;
+  }

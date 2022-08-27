@@ -14,8 +14,11 @@
       <ion-col size-md="6">
 
         <div padding>
+          <ion-badge mode="ios">Artikel</ion-badge>
           <h2>{{articles.title}}</h2>
-          <p>Oleh : {{articles.user_name}}</p>
+          <ion-text color="medium">
+            <p>Oleh : {{articles.user_name}}</p>
+          </ion-text>
         </div>
 
         <img src="{{articles.image == undefined || articles.image == '' ? '../../../assets/imgs/no-product.png':(serverImg+articles.image)}}" style="width: 100%">

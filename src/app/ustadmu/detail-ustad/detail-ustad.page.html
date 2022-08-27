@@ -13,21 +13,18 @@
         <img src="../../../assets/icon/avatar_ustad.svg" class="img-profil">
         <ion-label>
           <h2>{{detailUstad.name}}</h2>
-          <p>Kepakaran</p>
+          <p>{{detailUstad.science_name}}</p>
         </ion-label>
       </ion-col>
     </ion-row>
   </div>
 
   <ion-row class="ion-padding">
-    <ion-col class="ion-text-center" (click)="aksi('tanya')">
-      <div class="card-action">
+    <ion-col class="ion-text-center">
+      <div class="card-action" routerLink="/tanya-ustad/chatting">
         <ion-icon name="chatbubble-ellipses-outline" color="medium" style="font-size: 40px;"></ion-icon>
         <ion-text color="danger">
           <p>Tanya Ustadz</p>
-          <ion-chip color="danger" style="margin-top: -160px;">
-            <ion-label class="fs-10">Segera</ion-label>
-          </ion-chip>
         </ion-text>
       </div>
     </ion-col>

@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-item lines="none">
+      <ion-avatar slot="start">
+        <img src="../../assets/icon/avatar_ustad.svg">
+      </ion-avatar>
+      <ion-label>
+          <h2>Nama Ustad</h2>
+      </ion-label>
+    </ion-item>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+
+    <ion-grid class="ion-padding">
+        <ion-row *ngFor="let message of messages">
+     
+          <ion-col size="9" *ngIf="message.user !== currentUser" class="message other-message">
+            <span style="font-size: 15px;">{{ message.msg }}</span>
+            <div class="time-other" style="text-align: right;">{{ message.createdAt | date:'short' }}</div>
+          </ion-col>
+     
+          <ion-col offset="3" size="9" *ngIf="message.user === currentUser" class="message my-message">
+            <span style="font-size: 15px;">{{ message.msg }}</span>
+            <div class="time" style="text-align: right;">{{ message.createdAt | date:'short' }}</div>
+          </ion-col>
+     
+        </ion-row>
+      </ion-grid>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+        <ion-row no-padding align-items-center>
+          <ion-col size="2">
+            <ion-button fill="clear" (click)="lampiran()">
+              <ion-icon slot="icon-only" name="camera"></ion-icon>
+            </ion-button>
+          </ion-col>
+          <ion-col size="8">
+            <ion-textarea style="--padding-bottom: 0 !important;" autosize placeholder="Tulis Pertanyaan" maxRows="6" [(ngModel)]="newMsg"></ion-textarea>   
+          </ion-col>
+          <ion-col size="2">
+            <ion-button color="primary" fill="clear" [disabled]="newMsg === ''" (click)="sendMessage()">
+              <ion-icon name="send"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+  </ion-toolbar>
+</ion-footer>

@@ -14,8 +14,11 @@
       <ion-col size-md="6">
 
         <div padding>
+          <ion-badge mode="ios">Khutbah</ion-badge>
           <h2>{{detailKhutbah.title}}</h2>
-          <p>Oleh : {{detailKhutbah.user_name}}</p>
+          <ion-text color="medium">
+            <p>Oleh : {{detailKhutbah.user_name}}</p>
+          </ion-text>
         </div>
 
         <img src="{{detailKhutbah.image == undefined || detailKhutbah.image == '' ? '../../../assets/imgs/no-product.png':(serverImg+detailKhutbah.image)}}" style="width: 100%">
