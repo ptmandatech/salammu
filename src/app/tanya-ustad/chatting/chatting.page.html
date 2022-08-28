@@ -6,7 +6,7 @@
         <img src="../../assets/icon/avatar_ustad.svg">
       </ion-avatar>
       <ion-label>
-          <h2>Nama Ustad</h2>
+          <h2>{{roomData == null ? data.ustadz_name:roomData.ustadz_name}}</h2>
       </ion-label>
     </ion-item>
   </ion-toolbar>
@@ -16,16 +16,16 @@
 
 
     <ion-grid class="ion-padding">
-        <ion-row *ngFor="let message of messages">
+        <ion-row *ngFor="let message of listChats">
      
-          <ion-col size="9" *ngIf="message.user !== currentUser" class="message other-message">
-            <span style="font-size: 15px;">{{ message.msg }}</span>
-            <div class="time-other" style="text-align: right;">{{ message.createdAt | date:'short' }}</div>
+          <ion-col size="9" *ngIf="message.created_by !== userData.id" class="message other-message">
+            <span style="font-size: 15px;">{{ message.messages }}</span>
+            <div class="time-other" style="text-align: right;">{{ message.created_at | date:'short' }}</div>
           </ion-col>
      
-          <ion-col offset="3" size="9" *ngIf="message.user === currentUser" class="message my-message">
-            <span style="font-size: 15px;">{{ message.msg }}</span>
-            <div class="time" style="text-align: right;">{{ message.createdAt | date:'short' }}</div>
+          <ion-col offset="3" size="9" *ngIf="message.created_by === userData.id" class="message my-message">
+            <span style="font-size: 15px;">{{ message.messages }}</span>
+            <div class="time" style="text-align: right;">{{ message.created_at | date:'short' }}</div>
           </ion-col>
      
         </ion-row>

@@ -5,20 +5,20 @@
   </ion-toolbar>
   <ion-toolbar color="primary">
     <ion-segment mode="md" [(ngModel)]="defaultSegment">
-      <ion-segment-button value="list">
+      <ion-segment-button value="list" (click)="ngOnInit()">
         <ion-label>
           List
         </ion-label>
       </ion-segment-button>
-      <ion-segment-button value="chat">
+      <ion-segment-button value="chat" (click)="ngOnInit()">
         <ion-label>
-          Chat <ion-badge color="danger" mode="ios">3</ion-badge>
+          Chat <ion-badge *ngIf="unreadTotal > 0" color="danger" mode="ios">{{unreadTotal}}</ion-badge>
         </ion-label>
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
   <ion-toolbar>
-    <ion-searchbar style="margin-top: 14px" mode="ios" showCancelButton="never" placeholder="Cari Ustad atau pakar"></ion-searchbar>
+    <ion-searchbar style="margin-top: 14px" mode="ios" showCancelButton="never" showCancelButton="never" [(ngModel)]="searchTerm" (ionChange)="searchChanged($event)" placeholder="{{defaultSegment == 'list' ? 'Cari Ustad':'Cari Chat'}}"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
@@ -29,13 +29,13 @@
     <!-- Segment List -->
     <div *ngSwitchCase="'list'" >
       <ion-list>
-        <ion-item *ngFor="let n of [1,2,3,4,5,6,7,8,9]" detail>
+        <ion-item *ngFor="let n of listUstadz" detail (click)="newMessage(n, 'new')">
           <ion-avatar slot="start">
             <img src="../../assets/icon/avatar_ustad.svg">
           </ion-avatar>
           <ion-label>
-            <h3>Nama Ustad</h3>
-            <p>Pakar</p>
+            <h3>{{n.name}}</h3>
+            <p>{{n.science_name}}</p>
           </ion-label>
         </ion-item>
       </ion-list>
@@ -44,15 +44,15 @@
     <!-- Segment Chat -->
     <div *ngSwitchCase="'chat'" >
       <ion-list>
-        <ion-item *ngFor="let n of [1,2,3,4,5,6,7,8,9]" routerLink="/tanya-ustad/chatting">
+        <ion-item *ngFor="let n of listRoomChats" (click)="newMessage(n, 'old')">
           <ion-avatar slot="start">
             <img src="../../assets/icon/avatar_ustad.svg">
           </ion-avatar>
           <ion-label>
-            <h3>Nama Ustad</h3>
-            <p>Oh pak Ustad, apakah masalah saya bisa diselesaikan ?</p>
+            <h3>{{n.ustadz_name}}</h3>
+            <p>{{n.lastMessages}}</p>
           </ion-label>
-          <div slot="end">
+          <div slot="end" *ngIf="n.user_already_read == '0'">
             <ion-badge color="danger" mode="ios">1</ion-badge>
           </div>
         </ion-item>
