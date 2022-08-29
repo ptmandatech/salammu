@@ -9,7 +9,7 @@ const routes: Routes = [
     component: RadiomuPage
   },
   {
-    path: 'detail-radio',
+    path: 'detail-radio/:id',
     loadChildren: () => import('./detail-radio/detail-radio.module').then( m => m.DetailRadioPageModule)
   }
 ];

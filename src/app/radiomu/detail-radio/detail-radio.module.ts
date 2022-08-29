@@ -6,7 +6,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { DetailRadioPageRoutingModule } from './detail-radio-routing.module';
 
-import { DetailRadioPage } from './detail-radio.page';
+import { DetailRadioPage, SafePipe } from './detail-radio.page';
 
 @NgModule({
   imports: [
@@ -15,6 +15,6 @@ import { DetailRadioPage } from './detail-radio.page';
     IonicModule,
     DetailRadioPageRoutingModule
   ],
-  declarations: [DetailRadioPage]
+  declarations: [DetailRadioPage, SafePipe]
 })
 export class DetailRadioPageModule {}
