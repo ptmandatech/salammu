@@ -62,7 +62,7 @@ export class ArtikelPage implements OnInit {
   }
 
   getAllArticles() {
-    this.api.get('articles').then(res => {
+    this.api.get('articles?all=ok').then(res => {
       this.listArticles = res;
       this.listArticlesTemp = res;
       this.loading = false;

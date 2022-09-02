@@ -63,7 +63,7 @@ export class KhutbahPage implements OnInit {
   }
 
   getAllKhutbah() {
-    this.api.get('khutbah').then(res => {
+    this.api.get('khutbah?all=ok').then(res => {
       this.listKhutbah = res;
       this.listKhutbahTemp = res;
       this.loading = false;

@@ -64,7 +64,7 @@ export class DoaDzikirPage implements OnInit {
   }
 
   getAllDoaDzikir() {
-    this.api.get('Doadzikir').then(res => {
+    this.api.get('Doadzikir?all=ok').then(res => {
       this.listDoaDzikir = res;
       this.listDoaDzikirTemp = res;
     }, error => {
