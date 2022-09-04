@@ -4,6 +4,14 @@ import { LoadingController, ModalController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 import { ForgotPasswordPage } from '../forgot-password/forgot-password.page';
 import { RegisterPage } from '../register/register.page';
+import {
+  ActionPerformed,
+  PushNotificationSchema,
+  PushNotifications,
+  Token,
+} from '@capacitor/push-notifications';
+import { SweetAlert } from 'sweetalert/typings/core';
+const swal: SweetAlert = require('sweetalert');
 
 @Component({
   selector: 'app-login',
@@ -104,6 +112,7 @@ export class LoginPage implements OnInit {
   redirect(user)
   {
     if(user.is_active == 1) {
+      this.cekToken(user, user.email);
       var that = this;
       setTimeout(function () {
         that.dismiss();
@@ -150,6 +159,82 @@ export class LoginPage implements OnInit {
       this.router.navigate(['/profil']);
     })
     return await modal.present();
+  }
+
+  cekToken(user, email) {
+    PushNotifications.register();
+
+    // On success, we should be able to receive notifications
+    PushNotifications.addListener('registration',
+      (token: Token) => {
+        this.saveToken(user, token.value);
+      }
+    );
+
+    // Some issue with our setup and push will not work
+    PushNotifications.addListener('registrationError',
+      (error: any) => {
+        swal({
+          title: "Error on registration",
+          text: JSON.stringify(error),
+          icon: "error",
+          timer: 3000,
+        });
+      }
+    );
+
+    // Show us the notification payload if the app is open on our device
+    PushNotifications.addListener('pushNotificationReceived',
+      (notification: PushNotificationSchema) => {
+        const data = notification.data;
+        swal({
+          title: notification.title,
+          text: notification.body,
+          icon: "info",
+          buttons: ['Tutup', 'Buka'],
+          dangerMode: false,
+        })
+        .then((open) => {
+          if (open) {
+            // if(data.id_surat != undefined) {
+            //   this.lihatSurat(data);
+            // }
+          } else {
+            console.log('Confirm Batal: blah');
+          }
+        });
+      }
+    );
+
+    // Method called when tapping on a notification
+    PushNotifications.addListener('pushNotificationActionPerformed',
+      (notification: ActionPerformed) => {
+        const notif = notification.notification;
+        const data = notification.notification.data;
+        swal({
+          title: notif.title,
+          text: notif.body,
+          icon: "info",
+          buttons: ['Tutup', 'Buka'],
+          dangerMode: false,
+        })
+        .then((open) => {
+          if (open) {
+            // if(data.id_surat != undefined) {
+            //   this.lihatSurat(data);
+            // }
+          } else {
+            console.log('Confirm Batal: blah');
+          }
+        });
+      }
+    );
+  }
+
+  saveToken(user, token) {
+    this.api.put('users/'+user.id, { tokenFCM: token }).then(res => {
+      console.log(res)
+    })
   }
 
 }

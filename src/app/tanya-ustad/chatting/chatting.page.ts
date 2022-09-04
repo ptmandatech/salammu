@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ActionSheetController, IonContent, LoadingController, ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-chatting',
@@ -22,20 +23,20 @@ export class ChattingPage implements OnInit {
     public api: ApiService,
     private route: ActivatedRoute,
     private toastController: ToastController,
+    private http: HttpClient,
     private loadingController: LoadingController,
     public actionSheetController: ActionSheetController
   ) { 
     this.route.queryParams.subscribe((data: any) => {
       if (data && data.data) {
         this.data = JSON.parse(data.data);
-        this.checkRoom();
       }
     });
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.present();
-    this.cekLogin();
+    await this.cekLogin();
   }
 
   async present() {
@@ -61,6 +62,7 @@ export class ChattingPage implements OnInit {
   {    
     this.api.me().then(res=>{
       this.userData = res;
+      this.checkRoom();
       this.loadingController.dismiss();
     }, error => {
       this.loadingController.dismiss();
@@ -74,12 +76,18 @@ export class ChattingPage implements OnInit {
   }
 
   roomExist:boolean;
+  isUstad:boolean = false;
   checkResult(res) {
     if(res == 'not_exist') {
       this.roomExist = false;
     } else {
       this.roomExist = true;
       this.roomData = res;
+      if(this.roomData.ustadz_id == this.userData.id) {
+        this.isUstad = true;
+      } else {
+        this.isUstad = false;
+      }
       this.getChats();
     }
 
@@ -121,6 +129,7 @@ export class ChattingPage implements OnInit {
   
       this.api.post('chattings/chats', dt).then(res => {
         console.log(res)
+        this.sendNotif();
         this.getChats();
       });
     } else {
@@ -149,5 +158,32 @@ export class ChattingPage implements OnInit {
     await actionSheet.present();
   }
 
+  //notifikasi
+  url_notif = 'https://fcm.googleapis.com/fcm/send';
+
+  sendNotif() {
+    let data = {
+      "notification" : {
+        "title":"E-Office - Disposisi Surat",
+        "body":"Disposisi surat ditambahkan, cek sekarang!",
+        "sound":"default",
+        "icon":"app-logo"
+      },
+      "data": {
+        "room_id":this.roomData.id,
+      },
+      "to": this.isUstad ? this.roomData.tokenUser : this.roomData.tokenUstad,
+      "priority":"high",
+      "restricted_package_name":""
+    };
+
+    let headers: HttpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `key=AAAAG0kJgqs:APA91bHeYFmnOQgHTvtUE1Xm0uaLmIvaIuCg1EozVdGltZKm46Kd_aocWQPN37-reVz5-nSjoDY1aMGlA-VXs9bPZCgtLBgy-k77wsyuUsHhH0g3lmfX-n69bT-r95xeBF3hqBlYZ-FS`
+    });
+
+    this.http.post(this.url_notif, data, { headers }).subscribe( res => {
+    });
+  }
 
 }

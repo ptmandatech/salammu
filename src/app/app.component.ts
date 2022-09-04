@@ -1,7 +1,7 @@
 import { Component, NgZone, ViewChild } from '@angular/core';
 import { App, URLOpenListenerEvent } from '@capacitor/app';
 import { Router } from '@angular/router';
-import { AlertController, IonRouterOutlet, NavController, Platform, ToastController } from '@ionic/angular';
+import { AlertController, IonRouterOutlet, LoadingController, NavController, Platform, ToastController } from '@ionic/angular';
 import { Diagnostic } from '@awesome-cordova-plugins/diagnostic/ngx';
 import { Keyboard } from '@capacitor/keyboard';
 import { Toast } from '@awesome-cordova-plugins/toast/ngx';
@@ -11,6 +11,13 @@ import { Network } from '@capacitor/network';
 import { Location } from "@angular/common";
 import { SplashScreen } from '@awesome-cordova-plugins/splash-screen/ngx';
 import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
+import {
+  ActionPerformed,
+  PushNotificationSchema,
+  PushNotifications,
+  Token,
+} from '@capacitor/push-notifications';
+import { ApiService } from './services/api.service';
 
 @Component({
   selector: 'app-root',
@@ -22,12 +29,16 @@ export class AppComponent {
   @ViewChild(IonRouterOutlet, {static: false}) routerOutlet: IonRouterOutlet;
   private lastBackTime: number = 0;
   private intervalExitApp: number = 2000;
+  userData: any;
+
   constructor(
     private router: Router, 
     private diagnostic: Diagnostic,
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
+    private api: ApiService,
+    private loadingController: LoadingController,
     private zone: NgZone,
     private alertController: AlertController,
     private navController: NavController,
@@ -57,6 +68,7 @@ export class AppComponent {
       this.checkPermission();
       this.cekKoneksi();
       this.backButtonEvent();
+      this.cekLogin();
       Keyboard.addListener('keyboardWillShow', info => {
         console.log('keyboard will show with height:', info.keyboardHeight);
       });
@@ -109,6 +121,20 @@ export class AppComponent {
       }
       console.log("backButton.subscribeWithPriority");
     });
+  }
+
+  cekLogin()
+  {
+    this.api.me().then(async res=>{
+      this.userData = res;
+      await this.loadingController.dismiss();
+      this.cekToken(this.userData.email);
+    }, async error => {
+      localStorage.removeItem('userSalammu');
+      localStorage.removeItem('salammuToken');
+      this.userData = undefined;
+      await this.loadingController.dismiss();
+    })
   }
 
   private createToastExitApp() {
@@ -176,5 +202,81 @@ export class AppComponent {
           }
         }).catch(e => console.error(e));
     }
+  }
+
+  cekToken(email) {
+    PushNotifications.register();
+
+    // On success, we should be able to receive notifications
+    PushNotifications.addListener('registration',
+      (token: Token) => {
+        this.saveToken(token.value);
+      }
+    );
+
+    // Some issue with our setup and push will not work
+    PushNotifications.addListener('registrationError',
+      (error: any) => {
+        swal({
+          title: "Error on registration",
+          text: JSON.stringify(error),
+          icon: "error",
+          timer: 3000,
+        });
+      }
+    );
+
+    // Show us the notification payload if the app is open on our device
+    PushNotifications.addListener('pushNotificationReceived',
+      (notification: PushNotificationSchema) => {
+        const data = notification.data;
+        swal({
+          title: notification.title,
+          text: notification.body,
+          icon: "info",
+          buttons: ['Tutup', 'Buka'],
+          dangerMode: false,
+        })
+        .then((open) => {
+          if (open) {
+            // if(data.id_surat != undefined) {
+            //   this.lihatSurat(data);
+            // }
+          } else {
+            console.log('Confirm Batal: blah');
+          }
+        });
+      }
+    );
+
+    // Method called when tapping on a notification
+    PushNotifications.addListener('pushNotificationActionPerformed',
+      (notification: ActionPerformed) => {
+        const notif = notification.notification;
+        const data = notification.notification.data;
+        swal({
+          title: notif.title,
+          text: notif.body,
+          icon: "info",
+          buttons: ['Tutup', 'Buka'],
+          dangerMode: false,
+        })
+        .then((open) => {
+          if (open) {
+            // if(data.id_surat != undefined) {
+            //   this.lihatSurat(data);
+            // }
+          } else {
+            console.log('Confirm Batal: blah');
+          }
+        });
+      }
+    );
+  }
+
+  saveToken(token) {
+    this.api.put('users/'+this.userData.id, { tokenFCM: token }).then(res => {
+      console.log(res)
+    })
   }
 }

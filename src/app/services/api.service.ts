@@ -74,7 +74,7 @@ export class ApiService {
 
   async getToday(city) {
     let date = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
-    let data = await this.common.getTimes('timingsByCity?city='+ city + '&country=Indonesia' + '&method=1');
+    let data = await this.common.getTimes('timingsByCity?city='+ city + '&country=Indonesia' + '&method=4');
     return data;
   }
 
@@ -87,7 +87,7 @@ export class ApiService {
     if(month == 0) {
       month = 12
     }
-    let data = await this.common.getTimes('calendarByCity?city='+ city + '&country=Indonesia' + '&method=1' + '&month='+month+'&year='+year);
+    let data = await this.common.getTimes('calendarByCity?city='+ city + '&country=Indonesia' + '&method=4' + '&month='+month+'&year='+year);
     return data;
   }
 

@@ -39,6 +39,19 @@
           </ion-label>
         </ion-item>
       </ion-list>
+      
+      <ion-grid class="ion-no-padding">
+        <ion-row class="ion-justify-content-center">
+          <ion-col size-md="6">
+            <div class="item-centered" *ngIf="!loading && listUstadz.length == 0">
+              <img src="./assets/icon/pencarian.svg">
+              <ion-label>
+                <p>Ustad tidak ditemukan</p>
+              </ion-label>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </div>
 
     <!-- Segment Chat -->
@@ -47,7 +60,7 @@
         <ion-item *ngFor="let n of listRoomChats" (click)="newMessage(n, 'old')">
           <ion-avatar slot="start">
             <img src="../../assets/icon/avatar_ustad.svg">
-          </ion-avatar>
+          </ion-avatar> 
           <ion-label>
             <h3>{{n.ustadz_name}}</h3>
             <p>{{n.lastMessages}}</p>
@@ -57,6 +70,19 @@
           </div>
         </ion-item>
       </ion-list>
+      
+      <ion-grid class="ion-no-padding">
+        <ion-row class="ion-justify-content-center">
+          <ion-col size-md="6">
+            <div class="item-centered" *ngIf="!loading && listRoomChats.length == 0">
+              <img src="./assets/icon/pencarian.svg">
+              <ion-label>
+                <p>Belum ada pesan.</p>
+              </ion-label>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </div>
 
   </div>
