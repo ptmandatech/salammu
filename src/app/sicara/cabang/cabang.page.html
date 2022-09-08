@@ -1,22 +1,21 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-back-button slot="start"></ion-back-button>
-    <ion-title>List Cabang</ion-title>
-  </ion-toolbar>
-  <ion-toolbar color="primary">
-    <ion-searchbar mode="ios" showCancelButton="never" placeholder="Cari nama cabang"></ion-searchbar>
+    <ion-title>Informasi Cabang</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
 
-  <ion-item detail *ngFor="let n of ['PCM Adiwerna', 'PCM Tembok Lor', 'PCM Banjaran']" [routerLink]="['/sicara/ranting']">
-    <ion-thumbnail slot="start">
-      <img src="./assets/icon/cabang.svg">
-    </ion-thumbnail>
+  <h3>Nama Cabang</h3>
+  <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+
+
+
+  <ion-item lines="none">
+    <ion-icon slot="start" name="location-outline"></ion-icon>
     <ion-label>
-      <h3>{{n}}</h3>
+      <p>Alamat</p>
     </ion-label>
   </ion-item>
-
 </ion-content>

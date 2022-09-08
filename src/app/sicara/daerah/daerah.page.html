@@ -1,22 +1,37 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-back-button slot="start"></ion-back-button>
-    <ion-title>Pilih Daerah</ion-title>
+    <ion-title>Nama Daerah</ion-title>
+    <!-- Nama Wilayah ambil dari data wilayah yang dipilih -->
   </ion-toolbar>
-  <ion-toolbar color="primary">
-    <ion-searchbar mode="ios" showCancelButton="never" placeholder="Cari nama daerah"></ion-searchbar>
+  <ion-toolbar>
+    <ion-searchbar style="margin-top: 14px" mode="ios" showCancelButton="never" placeholder="Cari nama daerah"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
-  <ion-item detail *ngFor="let n of ['PDM LOKHSUMAWE', 'PDM SEMARANG', 'PDM TEGAL']" [routerLink]="['/sicara/cabang']">
-    <ion-thumbnail slot="start">
-      <img src="./assets/icon/daerah.svg">
-    </ion-thumbnail>
-    <ion-label>
-      <h3>{{n}}</h3>
-    </ion-label>
-  </ion-item>
+  <ion-accordion-group>
+    <ion-accordion *ngFor="let n of [1,2,3,4,5,6]" value="{{n}}">
+      <ion-item slot="header" color="light">
+        <ion-label>
+          <h3>Nama Cabang</h3>
+          <p>Jumlah Ranting</p>
+        </ion-label>
+      </ion-item>
+      <div class="ion-padding" slot="content">
+        <ion-item detail [routerLink]="['/sicara/cabang']" color="medium">
+          <ion-label>
+            <p>Informasi Cabang</p>
+          </ion-label>
+        </ion-item>
+        <ion-item *ngFor="let n of [1,2,3,4,5,6]" detail [routerLink]="['/sicara/ranting']">
+          <ion-label>
+            <p>Nama Ranting</p>
+          </ion-label>
+        </ion-item>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
 
 </ion-content>
