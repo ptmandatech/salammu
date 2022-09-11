@@ -4,7 +4,7 @@
     <ion-title>Wilayah & Daerah</ion-title>
   </ion-toolbar>
   <ion-toolbar>
-    <ion-searchbar style="margin-top: 14px" mode="ios" showCancelButton="never" placeholder="Cari Nama Wilayah atau Daerah"></ion-searchbar>
+    <ion-searchbar style="margin-top: 14px" mode="ios" showCancelButton="never" [(ngModel)]="searchTerm" (ionChange)="searchChanged($event)" placeholder="Cari Nama Wilayah"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
@@ -18,19 +18,25 @@
       <h3>{{n}}</h3>
     </ion-label>
   </ion-item> -->
+  <div class="item-centered" *ngIf="!loading && listWilayah.length == 0">
+    <img src="./assets/icon/pencarian.svg">
+    <ion-label>
+      <p>Data tidak ditemukan</p>
+    </ion-label>
+  </div>
 
   <ion-accordion-group>
-    <ion-accordion *ngFor="let n of [1,2,3,4,5,6]" value="{{n}}">
+    <ion-accordion *ngFor="let n of listWilayah" (click)="getChildDaerah(n)" value="{{n.id}}">
       <ion-item slot="header" color="light">
         <ion-label>
-          <h3>Nama Wilayah</h3>
-          <p>Jumlah Daerah</p>
+          <h3>{{n.nama}}</h3>
+          <p>{{n.jumlah_pdm}}</p>
         </ion-label>
       </ion-item>
       <div class="ion-padding" slot="content">
-        <ion-item *ngFor="let n of [1,2,3,4,5,6]" detail [routerLink]="['/sicara/daerah']">
+        <ion-item *ngFor="let d of listDaerah" detail [routerLink]="['/sicara/daerah/', d.id]">
           <ion-label>
-            <p>Nama Daerah</p>
+            <p>{{d.nama}}</p>
           </ion-label>
         </ion-item>
       </div>

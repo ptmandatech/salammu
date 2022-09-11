@@ -9,15 +9,15 @@ const routes: Routes = [
     component: SicaraPage
   },
   {
-    path: 'daerah',
+    path: 'daerah/:id',
     loadChildren: () => import('./daerah/daerah.module').then( m => m.DaerahPageModule)
   },
   {
-    path: 'cabang',
+    path: 'cabang/:id',
     loadChildren: () => import('./cabang/cabang.module').then( m => m.CabangPageModule)
   },
   {
-    path: 'ranting',
+    path: 'ranting/:id',
     loadChildren: () => import('./ranting/ranting.module').then( m => m.RantingPageModule)
   }
 ];

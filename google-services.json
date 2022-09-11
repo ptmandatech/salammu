@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "538081656013",
+    "project_id": "salammu",
+    "storage_bucket": "salammu.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:538081656013:android:f252bb0299cdd9fa343d84",
+        "android_client_info": {
+          "package_name": "com.salammu.id"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "538081656013-uhks16ua2go17gaen7ravmdpi69r4lfq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA84zLP8_cE0pUcwqvItsrlzxDQrWgNDqQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "538081656013-uhks16ua2go17gaen7ravmdpi69r4lfq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

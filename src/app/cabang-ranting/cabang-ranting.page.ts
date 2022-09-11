@@ -63,12 +63,29 @@ export class CabangRantingPage implements OnInit {
     }, 2000);
   }
 
-  getAllCr() {
-    this.api.get('cr').then(res => {
-      this.parseData(res);
-    }, error => {
-      this.loading = false;
-    })
+  async getAllCr() {
+    try {
+      await this.api.get('sicara/getAllPCM').then(res=>{ 
+        this.listCabang = res;
+        console.log(res)
+        this.loading = false;
+      }, err => {
+        this.loading = false;
+      });
+    } catch {
+
+    }
+    try {
+      await this.api.get('sicara/getAllPRM').then(res=>{
+        this.listRanting = res;
+        console.log(res)
+        this.loading = false;
+      }, err => {
+        this.loading = false;
+      });
+    } catch {
+
+    }
   }
 
   parseData(res) {

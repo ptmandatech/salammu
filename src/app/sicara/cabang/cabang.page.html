@@ -7,15 +7,18 @@
 
 <ion-content class="ion-padding">
 
-  <h3>Nama Cabang</h3>
-  <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-
+  <h3>{{dataCabang.nama}}</h3>
+  <p [innerHTML]="dataCabang.deskripsi"></p>
 
 
   <ion-item lines="none">
     <ion-icon slot="start" name="location-outline"></ion-icon>
     <ion-label>
-      <p>Alamat</p>
+      <p class="ion-text-wrap">{{locationNow == undefined ? '':locationNow.display_name}}</p>
+      <p class="ion-text-wrap" *ngIf="locationNow == undefined"><ion-skeleton-text animated></ion-skeleton-text></p>
     </ion-label>
   </ion-item>
+  
+  <p class="ion-text-wrap" *ngIf="locationNow == undefined"><ion-skeleton-text animated style="height: 400px"></ion-skeleton-text></p>
+  <div id="mapDetail" style="width: auto; height: 300px;"></div>
 </ion-content>
