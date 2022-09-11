@@ -35,3 +35,26 @@
   padding-top: 10px;
   padding-bottom: 10px;
 }
+
+
+.vertical-line {
+  ion-row {
+    border-bottom: 1px solid #eeeeee;
+  }
+  
+}
+
+
+.vert-border {
+  ion-col {
+    border-right: 1px solid #eeeeef;
+  }
+  ion-col:last-child {
+      border-right: none;
+  }
+
+}
+
+.shadow {
+  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.1);
+}

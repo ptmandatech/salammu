@@ -56,11 +56,11 @@
     </ion-button>
   </ion-toolbar>
 
-  <ion-toolbar class="ion-no-padding" color="primary" *ngIf="monthly || weekly">
+  <ion-toolbar class="ion-no-padding shadow" color="light" *ngIf="monthly || weekly">
     <ion-grid class="ion-no-padding">
       <ion-row class="ion-justify-content-center">
         <ion-col size-md="6">
-          <ion-row >
+          <ion-row>
             <ion-col class="ion-text-center" *ngFor="let schedule of ['Tgl', 'Imsak', 'Subuh', 'Dhuhur', 'Ashar', 'Maghrib', 'Isya']">
               <ion-text class="fs-10">
                 {{schedule}}
@@ -145,12 +145,12 @@
         </ion-grid>
 
 
-        <ion-grid *ngIf="monthly" class="ion-no-padding">
+        <ion-grid *ngIf="monthly" class="ion-no-padding vertical-line">
 
-          <ion-row class="ion-align-items-center" *ngFor="let n of timesSelected">
+          <ion-row class="ion-align-items-center vert-border" *ngFor="let n of timesSelected">
             <ion-col class="{{n.date.readable == today ? 'cal-cell bg-gray':'cal-cell cell-monthly'}}">
               <div class="centered">
-                <ion-text class="cal-date fs-10">{{n.date.readable | date:'dd MMM yyyy'}}</ion-text>
+                <ion-text class="cal-date fs-10">{{n.date.readable | date:'dd MMM'}}</ion-text>
               </div>
             </ion-col>
             <ion-col *ngFor="let t of n.timesParsed" class="{{n.date.readable == today ? 'cal-cell bg-gray':'cal-cell'}}">

@@ -84,12 +84,12 @@ ion-segment-button {
 }
 
 .bg-gray {
-  background: #E7E7E7;
+  background: var(--ion-color-primary);
+  color: white;
 }
 
 .cell-monthly {
-	background: var(--ion-color-primary);
-  color: white;
+	background: var(--ion-color-light);
 }
 
 .object-bg {
