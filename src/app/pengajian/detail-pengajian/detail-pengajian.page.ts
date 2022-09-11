@@ -45,8 +45,9 @@ export class DetailPengajianPage implements OnInit {
     private loadingController: LoadingController,
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.present();
+    await this.getAllCr();
     this.id = this.routes.snapshot.paramMap.get('id');
     this.getDetailPengajian();
   }
@@ -70,9 +71,42 @@ export class DetailPengajianPage implements OnInit {
     });
   }
 
+  listCabang:any = [];
+  listRanting:any = [];
+  async getAllCr() {
+    try {
+      await this.api.get('sicara/getAllPCM').then(res=>{ 
+        this.listCabang = res;
+        this.loading = false;
+      }, err => {
+        this.loading = false;
+      });
+    } catch {
+
+    }
+    try {
+      await this.api.get('sicara/getAllPRM').then(res=>{
+        this.listRanting = res;
+        this.loading = false;
+      }, err => {
+        this.loading = false;
+      });
+    } catch {
+
+    }
+  }
+
+  branchSelected:any = {};
+  twigSelected:any = {};
   getDetailPengajian() {
     this.api.get('pengajian/find/'+this.id).then(res => {
       this.pengajianData = res;
+      if(this.pengajianData.branch != null) {
+        this.branchSelected = this.listCabang.find(x => x.id === this.pengajianData.branch);
+      }
+      if(this.pengajianData.twig != null) {
+        this.twigSelected = this.listRanting.find(x => x.id === this.pengajianData.twig);
+      }
       if(this.pengajianData.pin != null) {
         var dt = JSON.parse(this.pengajianData.pin);
         this.getDetailLocation(dt);

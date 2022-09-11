@@ -79,9 +79,9 @@ export class TambahPengajianPage implements OnInit {
     this.twigSelected = event.value;
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.cekLogin();
-    this.getAllCr();
+    await this.getAllCr();
     this.today = new Date();
     this.id = this.routes.snapshot.paramMap.get('id');
     if(this.id != 0) {
@@ -108,30 +108,50 @@ export class TambahPengajianPage implements OnInit {
 
   listCabang:any = [];
   listRanting:any = [];
-  getAllCr() {
-    this.api.get('cr').then(res => {
-      this.parseData(res);
-    }, error => {
-      this.loading = false;
-    })
+  async getAllCr() {
+    // this.api.get('cr').then(res => {
+    //   this.parseData(res);
+    // }, error => {
+    //   this.loading = false;
+    // })
+    try {
+      await this.api.get('sicara/getAllPCM').then(res=>{ 
+        this.listCabang = res;
+        this.loading = false;
+      }, err => {
+        this.loading = false;
+      });
+    } catch {
+
+    }
+    try {
+      await this.api.get('sicara/getAllPRM').then(res=>{
+        this.listRanting = res;
+        this.loading = false;
+      }, err => {
+        this.loading = false;
+      });
+    } catch {
+
+    }
   }
 
-  parseData(res) {
-    for(var i=0; i<res.length; i++) {
-      if(res[i].category == 'cabang') {
-        let idx = this.listCabang.indexOf(res[i]);
-        if(idx == -1) {
-          this.listCabang.push(res[i]);
-        }
-      } else if(res[i].category == 'ranting') {
-        let idx = this.listRanting.indexOf(res[i]);
-        if(idx == -1) {
-          this.listRanting.push(res[i]);
-        }
-      }
-    }
-    this.loading = false;
-  }
+  // parseData(res) {
+  //   for(var i=0; i<res.length; i++) {
+  //     if(res[i].category == 'cabang') {
+  //       let idx = this.listCabang.indexOf(res[i]);
+  //       if(idx == -1) {
+  //         this.listCabang.push(res[i]);
+  //       }
+  //     } else if(res[i].category == 'ranting') {
+  //       let idx = this.listRanting.indexOf(res[i]);
+  //       if(idx == -1) {
+  //         this.listRanting.push(res[i]);
+  //       }
+  //     }
+  //   }
+  //   this.loading = false;
+  // }
 
   locationNow:any;
   async getDetailPengajian() {
