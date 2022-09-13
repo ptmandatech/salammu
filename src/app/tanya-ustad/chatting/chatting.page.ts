@@ -1,8 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ActionSheetController, IonContent, LoadingController, ToastController } from '@ionic/angular';
+import { ActionSheetController, IonContent, LoadingController, ModalController, ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { ImageUploaderPage } from 'src/app/image-uploader/image-uploader.page';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-chatting',
@@ -18,15 +21,19 @@ export class ChattingPage implements OnInit {
   loading:boolean;
   listChats:any = [];
   userData:any;
+  serverImg: any;
 
   constructor(
     public api: ApiService,
     private route: ActivatedRoute,
     private toastController: ToastController,
+    public common: CommonService,
     private http: HttpClient,
+    public modalController: ModalController,
     private loadingController: LoadingController,
     public actionSheetController: ActionSheetController
   ) { 
+    this.serverImg = this.common.photoBaseUrl+'chattings/';
     this.route.queryParams.subscribe((data: any) => {
       if (data && data.data) {
         this.data = JSON.parse(data.data);
@@ -83,6 +90,7 @@ export class ChattingPage implements OnInit {
     } else {
       this.roomExist = true;
       this.roomData = res;
+      console.log(this.roomData)
       if(this.roomData.ustadz_id == this.userData.id) {
         this.isUstad = true;
       } else {
@@ -92,7 +100,7 @@ export class ChattingPage implements OnInit {
     }
 
     if(this.newMsg != '') {
-      this.sendMessage();
+      this.uploadPhoto();
     }
   }
 
@@ -106,31 +114,50 @@ export class ChattingPage implements OnInit {
   getChats() {
     this.api.get('chattings/getChats/'+this.roomData.id).then(res => {
       this.listChats = res;
-  
+      console.log(res)
       setTimeout(() => {
         this.content.scrollToBottom(400);
       }, 1000);
     })
   }
 
-  sendMessage() {
+  imagePath:any;
+  async uploadPhoto()
+  {
+    let id = new Date().getTime().toString() + '' + [Math.floor((Math.random() * 1000))];
+    if(this.image) {
+      await this.api.put('chattings/uploadfoto/'+id,{image: this.image}).then(res=>{
+        this.imagePath = res;
+        console.log(res)
+        this.sendMessage(id);
+      }, error => {
+        console.log(error)
+      });
+    } else {
+      this.sendMessage(id);
+    }
+  }
+
+  sendMessage(id) {
     if(this.roomExist) {
       let dt = {
-        id: new Date().getTime().toString() + '' + [Math.floor((Math.random() * 1000))],
+        id: id,
         created_by: this.userData.id,
         room_id: this.roomData.id,
         messages: this.newMsg,
+        image: this.image == null ? null:this.imagePath,
         ustad_already_read: this.roomData.ustadz_id == this.userData.id ? true:false,
         user_already_read: this.roomData.ustadz_id != this.userData.id ? true:false,
         type: this.image == null ? 'text':'image'
       }
   
-      this.newMsg = '';
-  
       this.api.post('chattings/chats', dt).then(res => {
         console.log(res)
         this.sendNotif();
         this.getChats();
+  
+        this.newMsg = '';
+        this.image = null;
       });
     } else {
       this.createRooms();
@@ -145,17 +172,55 @@ export class ChattingPage implements OnInit {
         text: 'Galeri',
         icon: 'image',
         handler: () => {
-          console.log('Foto');
+          console.log('Album');
+          this.AmbilGallery();
         }
       }, {
         text: 'Camera',
         icon: 'camera',
         handler: () => {
-          console.log('Album');
+          console.log('Foto');
+          this.AmbilFoto();
         }
       }]
     });
     await actionSheet.present();
+  }
+
+  async AmbilFoto() {
+    const image = await Camera.getPhoto({
+      quality: 50,
+      allowEditing: false,
+      resultType: CameraResultType.DataUrl,
+      source: CameraSource.Camera
+    });
+    this.showImageUploader(image.dataUrl);
+  }
+
+  async AmbilGallery() {
+    const image = await Camera.getPhoto({
+      quality: 50,
+      allowEditing: false,
+      resultType: CameraResultType.DataUrl,
+      source: CameraSource.Photos
+    });
+    this.showImageUploader(image.dataUrl);
+  }
+
+  //tampilkan image editor dan uploader
+  async showImageUploader(imageData) {
+    const modal = await this.modalController.create({
+      component: ImageUploaderPage,
+      componentProps: {
+        imageData:imageData,
+        from: 'chat'
+      }
+    });    
+    modal.onDidDismiss().then((data) => {
+      console.log(data)
+      this.image = data.data;
+    });
+    return await modal.present();
   }
 
   //notifikasi
@@ -164,8 +229,8 @@ export class ChattingPage implements OnInit {
   sendNotif() {
     let data = {
       "notification" : {
-        "title":"E-Office - Disposisi Surat",
-        "body":"Disposisi surat ditambahkan, cek sekarang!",
+        "title": this.isUstad ? this.roomData.ustadz_name:this.roomData.user_name,
+        "body":this.newMsg,
         "sound":"default",
         "icon":"app-logo"
       },
@@ -179,7 +244,7 @@ export class ChattingPage implements OnInit {
 
     let headers: HttpHeaders = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `key=AAAAG0kJgqs:APA91bHeYFmnOQgHTvtUE1Xm0uaLmIvaIuCg1EozVdGltZKm46Kd_aocWQPN37-reVz5-nSjoDY1aMGlA-VXs9bPZCgtLBgy-k77wsyuUsHhH0g3lmfX-n69bT-r95xeBF3hqBlYZ-FS`
+      'Authorization': `key=AAAAfUgqfM0:APA91bE2AsdIjPXxbQmvzOqkXfcNoREowKF__oE4P8GJUEcXPYuZb78cMd_S7Os5fnXPskvY6RHDuJs4Af5G-gkSAw0uOZHXnt_BYfczS_zPuDy6k9DomFfI1TWuv-OILopIrqxznJXv`
     });
 
     this.http.post(this.url_notif, data, { headers }).subscribe( res => {

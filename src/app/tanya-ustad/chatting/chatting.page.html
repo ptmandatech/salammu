@@ -19,11 +19,13 @@
         <ion-row *ngFor="let message of listChats">
      
           <ion-col size="9" *ngIf="message.created_by !== userData.id" class="message other-message">
+            <img *ngIf="message.image" src="{{serverImg+message.image}}"/>
             <span style="font-size: 15px;">{{ message.messages }}</span>
             <div class="time-other" style="text-align: right;">{{ message.created_at | date:'short' }}</div>
           </ion-col>
      
           <ion-col offset="3" size="9" *ngIf="message.created_by === userData.id" class="message my-message">
+            <img *ngIf="message.image" src="{{serverImg+message.image}}"/>
             <span style="font-size: 15px;">{{ message.messages }}</span>
             <div class="time" style="text-align: right;">{{ message.created_at | date:'short' }}</div>
           </ion-col>
@@ -34,6 +36,9 @@
 </ion-content>
 
 <ion-footer>
+  <ion-item style="text-align: center;" lines="none" *ngIf="image != undefined">
+    <img src="{{image}}"/>
+  </ion-item>
   <ion-toolbar>
         <ion-row no-padding align-items-center>
           <ion-col size="2">
@@ -45,7 +50,10 @@
             <ion-textarea style="--padding-bottom: 0 !important;" autosize placeholder="Tulis Pertanyaan" maxRows="6" [(ngModel)]="newMsg"></ion-textarea>   
           </ion-col>
           <ion-col size="2">
-            <ion-button color="primary" fill="clear" [disabled]="newMsg === ''" (click)="sendMessage()">
+            <ion-button *ngIf="image != undefined" color="primary" fill="clear" (click)="uploadPhoto()">
+              <ion-icon name="send"></ion-icon>
+            </ion-button>
+            <ion-button *ngIf="image == undefined" color="primary" fill="clear" [disabled]="newMsg === ''" (click)="uploadPhoto()">
               <ion-icon name="send"></ion-icon>
             </ion-button>
           </ion-col>
