@@ -38,9 +38,9 @@
                   <ion-text color="primary">
                     <h2>{{n.name}}</h2>
                   </ion-text>
-                  <ion-text color="medium">
-                    <p class="text-elipsis">{{n.descriptions}}<p>
-                  </ion-text>
+                  <!-- <ion-text color="medium">
+                    <p class="text-elipsis" [innerHTML]="n.descriptions"><p>
+                  </ion-text> -->
                 </ion-label>
                 <h2 style="margin-top: 20px;">Rp.{{n.price | number:'1.0-0'}}</h2>
                 <ion-text color="medium" *ngIf="userData.role == 'superadmin'">

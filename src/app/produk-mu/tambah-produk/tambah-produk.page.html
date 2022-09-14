@@ -47,7 +47,7 @@
           <!-- <ion-item lines="none" class="input">
             <ion-textarea  rows="4" cols="20" [(ngModel)]="productData.descriptions" required #descriptions="ngModel" placeholder="Product descriptions"></ion-textarea>
           </ion-item> -->
-          <quill-editor [(ngModel)]="productData.descriptions" name="descriptions" required [modules]="modules" #descriptions="ngModel" placeholder="Product descriptions">
+          <quill-editor [(ngModel)]="productData.descriptions" name="descriptions" [modules]="modules" #descriptions="ngModel" placeholder="Product descriptions">
             <div quill-editor-toolbar>
               <span class="ql-formats">
                 <select class="ql-align" [title]="'Aligment'">

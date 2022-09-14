@@ -5,6 +5,12 @@ import { ApiService } from 'src/app/services/api.service';
 import { ImageUploaderPage } from '../../image-uploader/image-uploader.page';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { CommonService } from 'src/app/services/common.service';
+import { VideoHandler, ImageHandler, Options } from 'ngx-quill-upload';
+import Quill from 'quill';
+import { HttpClient } from '@angular/common/http';
+
+Quill.register('modules/imageHandler', ImageHandler);
+Quill.register('modules/videoHandler', VideoHandler);
 
 @Component({
   selector: 'app-tambah-produk',
@@ -19,6 +25,7 @@ export class TambahProdukPage implements OnInit {
   serverImg:any;
   imageNow = [];
   isCreated:boolean = true;
+  byPassedHTMLString:any;
   userData:any;
   constructor(
     public api: ApiService,
@@ -74,6 +81,51 @@ export class TambahProdukPage implements OnInit {
       }
     })
   }
+
+  modules = {
+    toolbar: [
+      ['image', 'video']
+    ],
+    imageHandler: {
+      upload: (file) => {
+        return new Promise(async (resolve, reject) => {
+          if (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg') { // File types supported for image
+            if (file.size < 1000000) { // Customize file size as per requirement
+            
+            // Sample API Call
+              let input = new FormData();
+              input.append('file', file);
+              // let image;
+              // this.base64.encodeFile(file)
+              //         .then((base64File: string) => {
+              //   image = base64File;
+              //   console.log(image)
+              // }, (err) => {
+              //   alert('err '+ err);
+              // });
+              return this.api.postCrImg('products/quilluploadfoto/'+this.id, input)
+                .then(result => {
+                  resolve(this.common.serverImgPath+result); // RETURN IMAGE URL from response
+                })
+                .catch(error => {
+                  reject('Upload failed'); 
+                  // Handle error control
+                  console.error('Error:', error);
+                });
+            } else {
+              reject('Size too large');
+            // Handle Image size large logic 
+            }
+          } else {
+            reject('Unsupported type');
+          // Handle Unsupported type logic
+          }
+        });
+      },
+      accepts: ['png', 'jpg', 'jpeg', 'jfif'] // Extensions to allow for images (Optional) | Default - ['jpg', 'jpeg', 'png']
+    } as Options
+  };
+
 
   async pilihFoto() {
     const actionSheet = await this.actionSheetController.create({
