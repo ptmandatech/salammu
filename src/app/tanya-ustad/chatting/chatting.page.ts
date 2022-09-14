@@ -20,7 +20,7 @@ export class ChattingPage implements OnInit {
   roomData:any;
   loading:boolean;
   listChats:any = [];
-  userData:any;
+  userData:any = {};
   serverImg: any;
 
   constructor(
@@ -77,7 +77,9 @@ export class ChattingPage implements OnInit {
   }
 
   checkRoom() {
+    console.log(this.data)
     this.api.post('chattings/checkRooms', this.data).then(res => {
+      console.log(res)
       this.checkResult(res);
     })
   }

@@ -62,7 +62,7 @@
             <img src="../../assets/icon/avatar_ustad.svg">
           </ion-avatar> 
           <ion-label>
-            <h3>{{n.ustadz_name}}</h3>
+            <h3>{{userData.role == 'ustadz' ? n.user_name:n.ustadz_name}}</h3>
             <p>{{n.lastMessages}}</p>
           </ion-label>
           <div slot="end" *ngIf="n.user_already_read == '0'">

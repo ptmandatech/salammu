@@ -79,6 +79,7 @@ export class TanyaUstadPage implements OnInit {
   {    
     this.api.me().then(res=>{
       this.userData = res;
+      console.log(res)
       this.getAvailableRoomChats();
       this.loadingController.dismiss();
     }, error => {
@@ -101,16 +102,36 @@ export class TanyaUstadPage implements OnInit {
     if(this.userData) {
       let dt;
       if(status == 'new') {
-        dt = {
-          ustadz_id: n.id,
-          ustadz_name: n.name,
-          user_id: this.userData.id,
+        if(this.userData.role == 'ustadz') {
+          dt = {
+            ustadz_id: this.userData.id,
+            ustadz_name: this.userData.name,
+            user_id: n.id,
+            user_name: n.name,
+          }
+        } else {
+          dt = {
+            ustadz_id: n.id,
+            ustadz_name: n.name,
+            user_id: this.userData.id,
+            user_name: this.userData.name,
+          }
         }
       } else {
-        dt = {
-          ustadz_id: n.ustadz_id,
-          ustadz_name: n.ustadz_name,
-          user_id: this.userData.id,
+        if(this.userData.role == 'ustadz') {
+          dt = {
+            ustadz_id: this.userData.id,
+            ustadz_name: this.userData.name,
+            user_id: n.user_id,
+            user_name: n.name,
+          }
+        } else {
+          dt = {
+            ustadz_id: n.ustadz_id,
+            ustadz_name: n.ustadz_name,
+            user_id: this.userData.id,
+            user_name: this.userData.name,
+          }
         }
       }
       const param: NavigationExtras = {
@@ -139,6 +160,7 @@ export class TanyaUstadPage implements OnInit {
     this.listRoomChatsTemp = [];
     this.api.get('chattings/getRooms/'+this.userData.id).then(res => {
       this.listRoomChats = res;
+      console.log(res)
       this.listRoomChatsTemp = res;
       this.listRoomChats.forEach(data => {
         if(data.user_already_read == '0') {

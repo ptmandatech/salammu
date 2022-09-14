@@ -6,7 +6,8 @@
         <img src="../../assets/icon/avatar_ustad.svg">
       </ion-avatar>
       <ion-label>
-          <h2>{{roomData == null ? data.ustadz_name:roomData.ustadz_name}}</h2>
+          <h2 *ngIf="userData.role != 'ustadz'">{{roomData == null ? data.ustadz_name:roomData.ustadz_name}}</h2>
+          <h2 *ngIf="userData.role == 'ustadz'">{{roomData == null ? '':roomData.user_name}}</h2>
       </ion-label>
     </ion-item>
   </ion-toolbar>
