@@ -2,12 +2,18 @@
   <ion-toolbar>
     <ion-back-button slot="start"></ion-back-button>
     <ion-item lines="none">
-      <ion-avatar slot="start">
-        <img src="../../assets/icon/avatar_ustad.svg">
+      <ion-avatar slot="start" *ngIf="userData.id == data.ustadz_id">
+        <img src="{{data.user_image == null ? '../../assets/icon/avatar_ustad.svg':serverImgUser+data.user_image}}">
       </ion-avatar>
-      <ion-label>
-          <h2 *ngIf="userData.role != 'ustadz'">{{roomData == null ? data.ustadz_name:roomData.ustadz_name}}</h2>
-          <h2 *ngIf="userData.role == 'ustadz'">{{roomData == null ? '':roomData.user_name}}</h2>
+      <ion-avatar slot="start" *ngIf="userData.id != data.ustadz_id">
+        <img src="{{data.ustadz_image == null ? '../../assets/icon/avatar_ustad.svg':serverImgUser+data.ustadz_image}}">
+      </ion-avatar>
+      <ion-label *ngIf="data.status == 'new'">
+          <h2>{{roomData == null ? data.ustadz_name:roomData.ustadz_name}}</h2>
+      </ion-label>
+      <ion-label *ngIf="data.status == 'old'">
+          <h2 *ngIf="userData.id != data.ustadz_id">{{roomData == null ? data.ustadz_name:roomData.ustadz_name}}</h2>
+          <h2 *ngIf="userData.id == data.ustadz_id">{{roomData == null ? data.ustadz_name:roomData.user_name}}</h2>
       </ion-label>
     </ion-item>
   </ion-toolbar>
@@ -20,13 +26,13 @@
         <ion-row *ngFor="let message of listChats">
      
           <ion-col size="9" *ngIf="message.created_by !== userData.id" class="message other-message">
-            <img *ngIf="message.image" src="{{serverImg+message.image}}"/>
+            <img *ngIf="message.image" src="{{serverImg+message.image}}" (click)="openImg(serverImg+message.image)"/>
             <span style="font-size: 15px;">{{ message.messages }}</span>
             <div class="time-other" style="text-align: right;">{{ message.created_at | date:'short' }}</div>
           </ion-col>
      
           <ion-col offset="3" size="9" *ngIf="message.created_by === userData.id" class="message my-message">
-            <img *ngIf="message.image" src="{{serverImg+message.image}}"/>
+            <img *ngIf="message.image" src="{{serverImg+message.image}}" (click)="openImg(serverImg+message.image)"/>
             <span style="font-size: 15px;">{{ message.messages }}</span>
             <div class="time" style="text-align: right;">{{ message.created_at | date:'short' }}</div>
           </ion-col>

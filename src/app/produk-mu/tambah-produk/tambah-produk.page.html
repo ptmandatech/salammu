@@ -44,9 +44,50 @@
           </ion-item>
 
           <ion-text color="medium">Deskripsi Produk</ion-text>
-          <ion-item lines="none" class="input">
+          <!-- <ion-item lines="none" class="input">
             <ion-textarea  rows="4" cols="20" [(ngModel)]="productData.descriptions" required #descriptions="ngModel" placeholder="Product descriptions"></ion-textarea>
-          </ion-item>
+          </ion-item> -->
+          <quill-editor [(ngModel)]="productData.descriptions" name="descriptions" required [modules]="modules" #descriptions="ngModel" placeholder="Product descriptions">
+            <div quill-editor-toolbar>
+              <span class="ql-formats">
+                <select class="ql-align" [title]="'Aligment'">
+                  <option selected></option>
+                  <option value="center"></option>
+                  <option value="right"></option>
+                  <option value="justify"></option>
+                </select>
+              </span>
+              <span class="ql-formats">
+                <select class="ql-header">
+                  <option value="1">Heading 1</option>
+                  <option value="2">Heading 2</option>
+                  <option value="3">Heading 3</option>
+                  <option value="4">Heading 4</option>
+                  <option value="5">Heading 5</option>
+                  <option value="6">Heading 6</option>
+                  <option selected>Normal</option>
+                </select>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-list" value="ordered"></button>
+                <button class="ql-list" value="bullet"></button>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-bold" [title]="'Bold'"></button>
+                <button class="ql-italic" [title]="'Italic'"></button>
+                <button class="ql-underline" [title]="'Underline'"></button>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-image" [title]="'Image'"></button>
+              </span>
+
+            </div>
+
+            <div class="ql-container" style="border-width: 0;">
+              <div class="ql-editor" [innerHTML]="byPassedHTMLString">
+              </div>
+            </div>
+          </quill-editor>
 
           <ion-text color="medium">Foto Produk</ion-text>
           <ion-row>

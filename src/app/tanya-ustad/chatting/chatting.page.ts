@@ -6,6 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { ImageUploaderPage } from 'src/app/image-uploader/image-uploader.page';
 import { CommonService } from 'src/app/services/common.service';
+import { PhotoViewer } from '@awesome-cordova-plugins/photo-viewer/ngx';
 
 @Component({
   selector: 'app-chatting',
@@ -22,6 +23,7 @@ export class ChattingPage implements OnInit {
   listChats:any = [];
   userData:any = {};
   serverImg: any;
+  serverImgUser: any;
 
   constructor(
     public api: ApiService,
@@ -31,9 +33,11 @@ export class ChattingPage implements OnInit {
     private http: HttpClient,
     public modalController: ModalController,
     private loadingController: LoadingController,
-    public actionSheetController: ActionSheetController
+    public actionSheetController: ActionSheetController,
+    private photoViewer: PhotoViewer
   ) { 
     this.serverImg = this.common.photoBaseUrl+'chattings/';
+    this.serverImgUser = this.common.photoBaseUrl+'users/';
     this.route.queryParams.subscribe((data: any) => {
       if (data && data.data) {
         this.data = JSON.parse(data.data);
@@ -225,13 +229,17 @@ export class ChattingPage implements OnInit {
     return await modal.present();
   }
 
+  openImg(n) {
+    this.photoViewer.show(n);
+  }
+
   //notifikasi
   url_notif = 'https://fcm.googleapis.com/fcm/send';
 
   sendNotif() {
     let data = {
       "notification" : {
-        "title": "SalamMU - " + this.isUstad ? this.roomData.ustadz_name:this.roomData.user_name,
+        "title": "SalamMU - Pesan Baru",
         "body":this.newMsg,
         "sound":"default",
         "icon":"logo"

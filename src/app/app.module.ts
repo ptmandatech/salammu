@@ -30,6 +30,7 @@ import { ModalSuratComponent } from './al-quran/modal-surat/modal-surat.componen
 //firebase
 import { environment } from '../environments/environment';
 import { AngularFireModule } from '@angular/fire';
+import { PhotoViewer } from '@awesome-cordova-plugins/photo-viewer/ngx';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { AngularFireModule } from '@angular/fire';
     Diagnostic,
     Geolocation,
     Toast,
+    PhotoViewer,
     MusicControls,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {provide: LOCALE_ID, useValue: "id-ID" }

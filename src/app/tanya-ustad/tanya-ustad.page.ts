@@ -18,6 +18,7 @@ export class TanyaUstadPage implements OnInit {
   listRoomChatsTemp:any = [];
   listUstadzTemp:any = [];
   serverImg: any;
+  serverImgUser: any;
   loading:boolean;
   userData:any;
   unreadTotal = 0;
@@ -34,6 +35,7 @@ export class TanyaUstadPage implements OnInit {
     this.loading = true;
     this.present();
     this.serverImg = this.common.photoBaseUrl+'pediamu/';
+    this.serverImgUser = this.common.photoBaseUrl+'users/';
     this.listUstadz = [];
     this.listUstadzTemp = [];
     this.getAllUstadz();
@@ -91,6 +93,7 @@ export class TanyaUstadPage implements OnInit {
     this.listUstadz = [];
     this.listUstadzTemp = [];
     this.api.get('ustadzmu').then(res => {
+      console.log(res)
       this.listUstadz = res;
       this.listUstadzTemp = res;
     }, error => {
@@ -99,47 +102,65 @@ export class TanyaUstadPage implements OnInit {
   }
 
   newMessage(n, status) {
+    console.log(n)
     if(this.userData) {
       let dt;
       if(status == 'new') {
-        if(this.userData.role == 'ustadz') {
-          dt = {
-            ustadz_id: this.userData.id,
-            ustadz_name: this.userData.name,
-            user_id: n.id,
-            user_name: n.name,
-          }
-        } else {
-          dt = {
-            ustadz_id: n.id,
-            ustadz_name: n.name,
-            user_id: this.userData.id,
-            user_name: this.userData.name,
-          }
+        dt = {
+          status: status,
+          ustadz_id: n.id,
+          ustadz_name: n.name,
+          ustadz_image: n.user_image,
+          user_id: this.userData.id,
+          user_name: this.userData.name,
+          user_image: this.userData.image,
         }
       } else {
-        if(this.userData.role == 'ustadz') {
-          dt = {
-            ustadz_id: this.userData.id,
-            ustadz_name: this.userData.name,
-            user_id: n.user_id,
-            user_name: n.name,
+        if(this.userData.role != 'superadmin') {
+          if(this.userData.id == n.ustadz_id) {
+            dt = {
+              status: 'old',
+              ustadz_id: this.userData.id,
+              ustadz_name: this.userData.name,
+              ustadz_image: this.userData.image,
+              user_id: n.user_id,
+              user_name: n.name,
+              user_image: n.user_image,
+            }
+          } else {
+            dt = {
+              status: 'old',
+              ustadz_id: n.ustadz_id,
+              ustadz_name: n.ustadz_name,
+              ustadz_image: n.ustadz_image,
+              user_id: this.userData.id,
+              user_name: this.userData.name,
+              user_image: this.userData.image,
+            }
           }
         } else {
-          dt = {
-            ustadz_id: n.ustadz_id,
-            ustadz_name: n.ustadz_name,
-            user_id: this.userData.id,
-            user_name: this.userData.name,
+          n.status = 'old';
+          dt = n;
+        }
+      }
+      if(n.id != this.userData.id){
+        const param: NavigationExtras = {
+          queryParams: {
+            data: JSON.stringify(dt)
           }
         }
+        this.router.navigate(['/tanya-ustad/chatting'], param);
+      } else {
+        this.toastController
+        .create({
+          message: 'Tidak dapat mengirim pesan kepada anda sendiri.',
+          duration: 2000,
+          color: "danger",
+        })
+        .then((toastEl) => {
+          toastEl.present();
+        });
       }
-      const param: NavigationExtras = {
-        queryParams: {
-          data: JSON.stringify(dt)
-        }
-      }
-      this.router.navigate(['/tanya-ustad/chatting'], param);
     } else {
       this.toastController
       .create({
@@ -163,8 +184,14 @@ export class TanyaUstadPage implements OnInit {
       console.log(res)
       this.listRoomChatsTemp = res;
       this.listRoomChats.forEach(data => {
-        if(data.user_already_read == '0') {
-          this.unreadTotal += 1;
+        if(this.userData.role == 'ustadz') {
+          if(data.ustad_already_read == '0') {
+            this.unreadTotal += 1;
+          }
+        } else {
+          if(data.user_already_read == '0') {
+            this.unreadTotal += 1;
+          }
         }
       });
     })
@@ -222,17 +249,32 @@ export class TanyaUstadPage implements OnInit {
       });
     } else {
       this.listRoomChats = this.listRoomChats.filter(rooms => {
-        if (rooms.ustadz_name && searchTerm) {
-          if (rooms.ustadz_name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
-            return true;
-          }
-          if (rooms.lastMessages && searchTerm) {
-            if (rooms.lastMessages.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
+        if(this.userData.role == 'ustadz') {
+          if (rooms.user_name && searchTerm) {
+            if (rooms.user_name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
               return true;
+            }
+            if (rooms.lastMessages && searchTerm) {
+              if (rooms.lastMessages.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
+                return true;
+              }
+              return false;
             }
             return false;
           }
-          return false;
+        } else {
+          if (rooms.ustadz_name && searchTerm) {
+            if (rooms.ustadz_name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
+              return true;
+            }
+            if (rooms.lastMessages && searchTerm) {
+              if (rooms.lastMessages.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
+                return true;
+              }
+              return false;
+            }
+            return false;
+          }
         }
       });
     }

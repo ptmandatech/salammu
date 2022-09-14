@@ -68,9 +68,7 @@
         <ion-item lines='none'>
           <ion-label>
             <h3>Deskripsi</h3>
-            <p class="ion-text-wrap">
-              {{detailProduct.descriptions}}
-            </p>
+            <p class="ion-text-wrap" [innerHTML]="detailProduct.descriptions"></p>
           </ion-label>
         </ion-item>
 

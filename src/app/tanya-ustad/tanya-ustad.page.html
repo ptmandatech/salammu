@@ -31,7 +31,7 @@
       <ion-list>
         <ion-item *ngFor="let n of listUstadz" detail (click)="newMessage(n, 'new')">
           <ion-avatar slot="start">
-            <img src="../../assets/icon/avatar_ustad.svg">
+            <img src="{{n.user_image == null ? '../../assets/icon/avatar_ustad.svg':serverImgUser+n.user_image}}">
           </ion-avatar>
           <ion-label>
             <h3>{{n.name}}</h3>
@@ -58,14 +58,21 @@
     <div *ngSwitchCase="'chat'" >
       <ion-list>
         <ion-item *ngFor="let n of listRoomChats" (click)="newMessage(n, 'old')">
-          <ion-avatar slot="start">
-            <img src="../../assets/icon/avatar_ustad.svg">
+          <ion-avatar slot="start" *ngIf="userData.id == n.ustadz_id">
+            <img src="{{n.user_image == null ? '../../assets/icon/avatar_ustad.svg':serverImgUser+n.user_image}}">
+          </ion-avatar> 
+          <ion-avatar slot="start" *ngIf="userData.id != n.ustadz_id">
+            <img src="{{n.ustadz_image == null ? '../../assets/icon/avatar_ustad.svg':serverImgUser+n.ustadz_image}}">
           </ion-avatar> 
           <ion-label>
-            <h3>{{userData.role == 'ustadz' ? n.user_name:n.ustadz_name}}</h3>
-            <p>{{n.lastMessages}}</p>
+            <h3>{{userData.id == n.ustadz_id ? n.user_name:n.ustadz_name}}</h3>
+            <p *ngIf="n.lastMessages != 'image'">{{n.lastMessages}}</p>
+            <p *ngIf="n.lastMessages == 'image'"><ion-icon name="image-outline"></ion-icon>  Foto</p>
           </ion-label>
-          <div slot="end" *ngIf="n.user_already_read == '0'">
+          <div slot="end" *ngIf="n.user_already_read == '0' && userData.role != 'ustadz'">
+            <ion-badge color="danger" mode="ios">1</ion-badge>
+          </div>
+          <div slot="end" *ngIf="n.ustad_already_read == '0' && userData.id == n.ustadz_id">
             <ion-badge color="danger" mode="ios">1</ion-badge>
           </div>
         </ion-item>
