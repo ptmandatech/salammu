@@ -229,12 +229,15 @@ export class ChattingPage implements OnInit {
   sendNotif() {
     let data = {
       "notification" : {
-        "title": this.isUstad ? this.roomData.ustadz_name:this.roomData.user_name,
+        "title": "SalamMU - " + this.isUstad ? this.roomData.ustadz_name:this.roomData.user_name,
         "body":this.newMsg,
         "sound":"default",
-        "icon":"app-logo"
+        "icon":"logo"
       },
       "data": {
+        "ustadz_id": this.roomData.ustadz_id,
+        "ustadz_name": this.roomData.ustadz_name,
+        "user_id": this.roomData.user_id,
         "room_id":this.roomData.id,
       },
       "to": this.isUstad ? this.roomData.tokenUser : this.roomData.tokenUstad,

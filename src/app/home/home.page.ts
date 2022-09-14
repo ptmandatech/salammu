@@ -217,7 +217,7 @@ export class HomePage implements OnInit {
             this.timesToday = undefined;
             this.prayTime = await this.api.getToday(this.city);
             this.timesToday = await this.prayTime.timings;
-
+ 
             if(this.timesToday['Firstthird']) {
               delete this.timesToday['Firstthird'];
               delete this.timesToday['Lastthird'];

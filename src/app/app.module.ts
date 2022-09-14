@@ -27,6 +27,9 @@ import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 import { IonicSelectableModule } from 'ionic-selectable';
 import { MusicControls } from '@awesome-cordova-plugins/music-controls/ngx';
 import { ModalSuratComponent } from './al-quran/modal-surat/modal-surat.component';
+//firebase
+import { environment } from '../environments/environment';
+import { AngularFireModule } from '@angular/fire';
 
 @NgModule({
   declarations: [
@@ -47,6 +50,7 @@ import { ModalSuratComponent } from './al-quran/modal-surat/modal-surat.componen
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
+    AngularFireModule.initializeApp(environment.firebase),
     ImageUploaderPageModule,
     ImageCropperModule,
     QuillModule.forRoot(),
@@ -55,7 +59,7 @@ import { ModalSuratComponent } from './al-quran/modal-surat/modal-surat.componen
     IonicSelectableModule
   ],
   providers: [
-    StatusBar,
+    StatusBar, 
     InAppBrowser,
     SplashScreen,
     DatePipe,

@@ -82,7 +82,6 @@ export class TanyaUstadPage implements OnInit {
       this.getAvailableRoomChats();
       this.loadingController.dismiss();
     }, error => {
-      console.log(error)
       this.loadingController.dismiss();
     })
   }

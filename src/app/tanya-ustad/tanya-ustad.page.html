@@ -21,7 +21,7 @@
     <ion-searchbar style="margin-top: 14px" mode="ios" showCancelButton="never" showCancelButton="never" [(ngModel)]="searchTerm" (ionChange)="searchChanged($event)" placeholder="{{defaultSegment == 'list' ? 'Cari Ustad':'Cari Chat'}}"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
-
+ 
 <ion-content>
 
   <div [ngSwitch]="defaultSegment">

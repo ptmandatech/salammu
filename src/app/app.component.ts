@@ -1,6 +1,6 @@
 import { Component, NgZone, ViewChild } from '@angular/core';
 import { App, URLOpenListenerEvent } from '@capacitor/app';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { AlertController, IonRouterOutlet, LoadingController, NavController, Platform, ToastController } from '@ionic/angular';
 import { Diagnostic } from '@awesome-cordova-plugins/diagnostic/ngx';
 import { Keyboard } from '@capacitor/keyboard';
@@ -230,6 +230,7 @@ export class AppComponent {
     PushNotifications.addListener('pushNotificationReceived',
       (notification: PushNotificationSchema) => {
         const data = notification.data;
+        this.playAudio();
         swal({
           title: notification.title,
           text: notification.body,
@@ -242,6 +243,17 @@ export class AppComponent {
             // if(data.id_surat != undefined) {
             //   this.lihatSurat(data);
             // }
+            let dt = {
+              ustadz_id: data.ustadz_id,
+              ustadz_name: data.ustadz_name,
+              user_id: data.user_id,
+            }
+            const param: NavigationExtras = {
+              queryParams: {
+                data: JSON.stringify(dt)
+              }
+            }
+            this.router.navigate(['/tanya-ustad/chatting'], param);
           } else {
             console.log('Confirm Batal: blah');
           }
@@ -266,12 +278,30 @@ export class AppComponent {
             // if(data.id_surat != undefined) {
             //   this.lihatSurat(data);
             // }
+            let dt = {
+              ustadz_id: data.ustadz_id,
+              ustadz_name: data.ustadz_name,
+              user_id: data.user_id,
+            }
+            const param: NavigationExtras = {
+              queryParams: {
+                data: JSON.stringify(dt)
+              }
+            }
+            this.router.navigate(['/tanya-ustad/chatting'], param);
           } else {
             console.log('Confirm Batal: blah');
           }
         });
       }
     );
+  }
+
+  playAudio(){
+    let audio = new Audio();
+    audio.src = "../assets/messages.mp3";
+    audio.load();
+    audio.play();
   }
 
   saveToken(token) {
