@@ -27,14 +27,12 @@ ion-content {
   .time {
     color: #ffffff;
     font-size: 8px;
-    margin-top: 8px;
     font-family: "Poppins-Regular";
   }
 
   .time-other {
     color: #000;
     font-size: 8px;
-    margin-top: 8px;
     font-family: "Poppins-Regular";
   }
    
@@ -58,4 +56,20 @@ ion-content {
 
   b {
     font-size: 12px;
+  }
+
+  .balas {
+    --background : var(--ion-color-light);
+    border-left : solid 3px var(--ion-color-primary);
+    p {
+      font-size: 12px;
+    }
+  }
+
+  .img-atch {
+    padding: 16px;
+    background : var(--ion-color-light);
+    img {
+      border-radius: 10px;
+    }
   }

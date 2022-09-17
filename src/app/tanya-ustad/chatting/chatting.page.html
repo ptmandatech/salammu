@@ -40,12 +40,28 @@
         </ion-row>
       </ion-grid>
 
+      
+
 </ion-content>
 
 <ion-footer>
-  <ion-item style="text-align: center;" lines="none" *ngIf="image != undefined">
-    <img src="{{image}}"/>
+
+  <div class="img-atch" lines="none" *ngIf="image != undefined">
+    <img src="{{image}}" class="object-bg" style="height: 150px;"/>
+  </div>
+
+  <ion-item class="balas" lines="none">
+    <ion-label>
+      <ion-text color="primary">
+        <b>Nama Ustad</b>
+      </ion-text>
+      <p>Isi chatting yang akan dibalas oleh ustad kita</p>
+    </ion-label>
+    <ion-button slot="end" fill="clear">
+      <ion-icon name="close-outline"></ion-icon>
+    </ion-button>
   </ion-item>
+
   <ion-toolbar>
         <ion-row no-padding align-items-center>
           <ion-col size="2">
