@@ -66,6 +66,16 @@ ion-content {
     }
   }
 
+  .terbalas {
+    --background : var(--ion-color-secondary);
+    border-left : solid 3px var(--ion-color-light);
+    border-radius: 10px;
+    p {
+      font-size: 12px;
+      color: #ffffff;
+    }
+  }
+
   .img-atch {
     padding: 16px;
     background : var(--ion-color-light);

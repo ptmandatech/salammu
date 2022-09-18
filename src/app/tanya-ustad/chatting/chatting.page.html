@@ -36,6 +36,24 @@
             <span style="font-size: 15px;">{{ message.messages }}</span>
             <div class="time" style="text-align: right;">{{ message.created_at | date:'short' }}</div>
           </ion-col>
+
+          <!-- bubble jika pesan terbalas -->
+          <ion-col offset="3" size="9" class="message my-message">
+            <ion-item class="terbalas" lines="none">
+              <ion-thumbnail slot="start">
+                <img src="../../../assets/imgs/no-image.png">
+              </ion-thumbnail>
+              <ion-label>
+                <ion-text color="light">
+                  <b>Nama Ustad</b>
+                </ion-text>
+                <p>Isi chatting yang dibalas</p>
+              </ion-label>
+            </ion-item>
+            <img *ngIf="message.image" src="{{serverImg+message.image}}" (click)="openImg(serverImg+message.image)"/>
+            <span style="font-size: 15px;">{{ message.messages }}</span>
+            <div class="time" style="text-align: right;">{{ message.created_at | date:'short' }}</div>
+          </ion-col>
      
         </ion-row>
       </ion-grid>
@@ -49,6 +67,9 @@
   </div>
 
   <!-- <ion-item class="balas" lines="none">
+    <ion-thumbnail slot="start">
+      <img src="../../../assets/imgs/no-image.png">
+    </ion-thumbnail>
     <ion-label>
       <ion-text color="primary">
         <b>Nama Ustad</b>
