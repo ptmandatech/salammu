@@ -88,6 +88,48 @@ export class ChattingPage implements OnInit {
     })
   }
 
+  async replayMessage(message) {
+    console.log(message)
+    if(message.created_by == this.userData.id) {
+      const actionSheet = await this.actionSheetController.create({
+        header: 'Pilih',
+        cssClass: 'my-custom-class',
+        buttons: [
+        {
+          text: 'Balas',
+          icon: 'arrow-undo-outline',
+          handler: () => {
+            
+          }
+        },
+        {
+          text: 'Hapus',
+          icon: 'trash-outline',
+          handler: () => {
+            
+          }
+        }
+      ]
+      });
+      await actionSheet.present();
+    } else {
+      const actionSheet = await this.actionSheetController.create({
+        header: 'Pilih',
+        cssClass: 'my-custom-class',
+        buttons: [
+        {
+          text: 'Balas',
+          icon: 'arrow-undo-outline',
+          handler: () => {
+            
+          }
+        }
+      ]
+      });
+      await actionSheet.present();
+    }
+  }
+
   roomExist:boolean;
   isUstad:boolean = false;
   checkResult(res) {

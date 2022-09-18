@@ -10,9 +10,9 @@ export class CommonService {
   httpOption:any;
   serverPrayTimes='https://api.pray.zone/v2/times/';
   serverPrayTimes2='https://api.aladhan.com/v1/';
-  serverUrl='https://api.sunhouse.co.id/salammu/index.php/';
-  serverImgPath='https://api.sunhouse.co.id/salammu/';
-  public photoBaseUrl='https://api.sunhouse.co.id/salammu/photos/';
+  serverUrl='https://api.shdprime.xyz/salammu/index.php/';
+  serverImgPath='https://api.shdprime.xyz/salammu/';
+  public photoBaseUrl='https://api.shdprime.xyz/salammu/photos/';
 
   //server Al Quran
   serverAlQuran = 'https://equran.id/api/';
