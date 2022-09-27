@@ -1,7 +1,7 @@
 <ion-header class="ion-no-border">
   <ion-toolbar color="primary">
     <ion-back-button slot="start"></ion-back-button>
-    <ion-title>Buat Password Baru</ion-title>
+    <ion-title>Buat Kata Sandi Baru</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -16,28 +16,43 @@
 
   <div id="content">
 
-    <ion-text color="medium">
-      <p>Password</p>
-    </ion-text>
-    <ion-item class="input">
-      <ion-input type="{{type}}" [(ngModel)]="user.password" required #password="ngModel" (ngModelChange)="checkMatch()" placeholder="Enter your password"></ion-input>
-      <ion-icon name="{{type == 'password' ? 'eye-outline':'eye-off-outline'}}" (click)="show()" slot="end" color="medium"></ion-icon>
-    </ion-item>
-    <p *ngIf="submited == true && password.invalid" style="color: red;">Password can not be empty</p>
-
-    <ion-text color="medium">
-      <p>Ulangi Password</p>
-    </ion-text>
-    <ion-item class="input">
-      <ion-input type="{{type}}" [(ngModel)]="user.password2" required #password2="ngModel" (ngModelChange)="checkMatch()" placeholder="Re - Enter your password"></ion-input>
-      <ion-icon name="{{type == 'password' ? 'eye-outline':'eye-off-outline'}}" (click)="show()" slot="end" color="medium"></ion-icon>
-    </ion-item>
-    <p *ngIf="match == false" style="color: red;">Confirmation New Password not match!</p>
-    <p *ngIf="submited == true && password2.invalid" style="color: red;">Password can not be empty</p>
-
-    <ion-button color="primary" class="custom-button" [disabled]="loading" (click)="reset()">
-      {{loading ? 'Mohon Tunggu...':'Reset'}}
-    </ion-button>
+    <form [formGroup]="form">
+      <ion-text color="medium">
+        <p>Kata Sandi</p>
+      </ion-text>
+      <ion-item class="input">
+        <ion-input type="{{type}}" formControlName="password" name="password" required placeholder="Masukan Kata Sandi" (ngModelChange)="checkMatch()"></ion-input>
+        <ion-icon name="{{type == 'password' ? 'eye-outline':'eye-off-outline'}}" (click)="show()" slot="end" color="medium"></ion-icon>
+      </ion-item>
+      <div *ngIf="form.controls.password.invalid && (form.controls.password.dirty || form.controls.password.touched)">
+        <div class="error-msg" *ngIf="form.controls.password.errors?.required">
+          Kata Sandi harus diisi!
+        </div>
+        <div class="error-msg" *ngIf="form.controls.password.errors?.minlength || form.controls.password.errors?.pattern">
+          Minimal 6 digit
+        </div>
+      </div>
+  
+      <ion-text color="medium">
+        <p>Ulangi Kata Sandi</p>
+      </ion-text>
+      <ion-item class="input">
+        <ion-input type="{{type}}" formControlName="re_password" name="re_password" required placeholder="Masukan Kata Sandi Ulang" (ngModelChange)="checkMatch()"></ion-input>
+        <ion-icon name="{{type == 'password' ? 'eye-outline':'eye-off-outline'}}" (click)="show()" slot="end" color="medium"></ion-icon>
+      </ion-item>
+      <div *ngIf="form.controls.re_password.invalid && (form.controls.re_password.dirty || form.controls.re_password.touched)">
+        <div class="error-msg" *ngIf="form.controls.re_password.errors?.required">
+          Konfirmasi Kata Sandi harus diisi!
+        </div>
+        <div class="error-msg" *ngIf="form.controls.re_password.errors?.minlength || form.controls.re_password.errors?.pattern">
+          Minimal 6 digit
+        </div>
+      </div>
+  
+      <ion-button color="primary" class="custom-button" [disabled]="loading" (click)="reset()">
+        {{loading ? 'Mohon Tunggu...':'Reset'}}
+      </ion-button>
+    </form>
   </div>
 
 

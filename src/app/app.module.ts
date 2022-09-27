@@ -32,6 +32,14 @@ import { environment } from '../environments/environment';
 import { AngularFireModule } from '@angular/fire';
 import { PhotoViewer } from '@awesome-cordova-plugins/photo-viewer/ngx';
 
+//socket io
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+// const config: SocketIoConfig = { 
+//   url: 'http://localhost:8988', options: {} 
+// };
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,9 +61,12 @@ import { PhotoViewer } from '@awesome-cordova-plugins/photo-viewer/ngx';
     HttpClientModule,
     AngularFireModule.initializeApp(environment.firebase),
     ImageUploaderPageModule,
+    FormsModule,
+    ReactiveFormsModule,
     ImageCropperModule,
     QuillModule.forRoot(),
     NgxIonicImageViewerModule,
+    // SocketIoModule.forRoot(config),
     SwiperModule,
     IonicSelectableModule
   ],

@@ -19,34 +19,45 @@
 
 
   <div id="content">
-
-    <ion-text color="medium">
-      <p>Email</p>
-    </ion-text>
-    <ion-item class="input">
-      <ion-input type="email" [(ngModel)]="user.email" required #email="ngModel" placeholder="Enter your email"></ion-input>
-    </ion-item>
-    <p *ngIf="submited == true && email.invalid" style="color: red;">Username / Email can not be empty</p>
-
-    <ion-text color="medium">
-      <p>Password</p>
-    </ion-text>
-    <ion-item class="input">
-      <ion-input type="{{type}}" [(ngModel)]="user.password" required #password="ngModel" placeholder="Enter your password"></ion-input>
-      <ion-icon name="{{type == 'password' ? 'eye-outline':'eye-off-outline'}}" (click)="show()" slot="end" color="medium"></ion-icon>
-    </ion-item>
-    <p *ngIf="submited == true && password.invalid" style="color: red;">Password can not be empty</p>
-
-    <div style="display: flex;">
-      <ion-button class="ion-text-capitalize" color="primary" fill="clear" size="small" (click)="modalForgot()">Lupa Password</ion-button>
-      <div style="flex-grow: 1;"></div>
-      <ion-button class="ion-text-capitalize" color="primary" fill="clear" size="small" (click)="modalRegister()">Registrasi</ion-button>
-    </div>
-    <p *ngIf="invalid == true" style="color: red; text-align: center;">Invalid email or password</p>
-
-    <ion-button color="primary" class="custom-button" [disabled]="loading" (click)="login(email, password)">
-      {{loading ? 'Mohon Tunggu...':'Masuk'}}
-    </ion-button>
+    <form [formGroup]="form">
+      <ion-text color="medium">
+        <p>Email</p>
+      </ion-text>
+      <ion-item class="input">
+        <ion-input formControlName="email" name="email" required type="email" email="true" placeholder="Masukan Email"></ion-input>
+      </ion-item>
+      
+      <div class="error-msg" *ngIf="form.controls.email.hasError('required') && form.controls.email.touched">
+      Email harus diisi!
+      </div>
+      <div class="error-msg" *ngIf="form.controls.email.errors?.email">
+      Format Email salah!
+      </div>
+      <!-- <p *ngIf="submited == true && email.invalid" style="color: red;">Username / Email can not be empty</p> -->
+  
+      <ion-text color="medium">
+        <p>Kata Sandi</p>
+      </ion-text>
+      <ion-item class="input">
+        <ion-input formControlName="password" name="password" required type="{{type}}" placeholder="Masukan Kata Sandi"></ion-input>
+        <ion-icon name="{{type == 'password' ? 'eye-outline':'eye-off-outline'}}" (click)="show()" slot="end" color="medium"></ion-icon>
+      </ion-item>
+      <div class="error-msg" *ngIf="form.controls.password.hasError('required') && form.controls.password.touched">
+      Kata Sandi harus diisi!
+      </div>
+      <!-- <p *ngIf="submited == true && password.invalid" style="color: red;">Password can not be empty</p> -->
+  
+      <div style="display: flex;">
+        <ion-button class="ion-text-capitalize" color="primary" fill="clear" size="small" (click)="modalForgot()">Lupa Kata Sandi</ion-button>
+        <div style="flex-grow: 1;"></div>
+        <ion-button class="ion-text-capitalize" color="primary" fill="clear" size="small" (click)="modalRegister()">Registrasi</ion-button>
+      </div>
+      <!-- <p *ngIf="invalid == true" style="color: red; text-align: center;">Invalid email or password</p> -->
+  
+      <ion-button color="primary" class="custom-button" [disabled]="loading" (click)="login()">
+        {{loading ? 'Mohon Tunggu...':'Masuk'}}
+      </ion-button>
+    </form>
   </div>
 
 

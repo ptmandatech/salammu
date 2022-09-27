@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController, ModalController } from '@ionic/angular';
+import { LoadingController, ModalController, ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 import { ForgotPasswordPage } from '../forgot-password/forgot-password.page';
 import { RegisterPage } from '../register/register.page';
@@ -11,6 +11,7 @@ import {
   Token,
 } from '@capacitor/push-notifications';
 import { SweetAlert } from 'sweetalert/typings/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 const swal: SweetAlert = require('sweetalert');
 
 @Component({
@@ -20,12 +21,20 @@ const swal: SweetAlert = require('sweetalert');
 })
 export class LoginPage implements OnInit {
 
+  form: FormGroup;
   constructor(
     public api: ApiService,
     public router:Router,
+    private formBuilder: FormBuilder,
     public modalController: ModalController,
+    private toastController: ToastController,
     private loadingController: LoadingController,
-  ) { }
+  ) { 
+    this.form = this.formBuilder.group({
+      email: [null, [Validators.required, Validators.email]],
+      password: [null, [Validators.required]]
+    });
+  }
 
   ngOnInit(): void {
     this.cekLogin();
@@ -63,15 +72,24 @@ export class LoginPage implements OnInit {
   loading:boolean;
   submited:boolean;
   invalid:boolean = false;
-  login(email, password)
+  login()
   {
-    this.submited = true;
-    this.loading=true;
-    this.user.email = this.user.email.toLowerCase();
-    if(this.user.remember == true) {
-      localStorage.setItem('userSalammu', JSON.stringify(this.user));
+    if (!this.form.valid) {
+      this.validateAllFormFields(this.form);
+      var that = this;
+      setTimeout(function () {
+        that.submited = false;
+        that.loading = false;
+      }, 500);
     }
-    if(email.invalid == false && password.invalid == false) {
+    else {
+      this.submited = true;
+      this.loading=true;
+      this.user = this.form.value;
+      this.user.email = this.user.email.toLowerCase();
+      if(this.user.remember == true) {
+        localStorage.setItem('userSalammu', JSON.stringify(this.user));
+      }
       this.api.post('auth/login',this.user).then(res=>{     
         this.loading=false;
         this.submited = false;
@@ -81,22 +99,33 @@ export class LoginPage implements OnInit {
         var that = this;
         this.loading=false;
         this.submited = false;
-        if(err.error.status == 'invalid') {
-          this.invalid = true;
-        } else if(err.error.status == 'not_match') {
-          this.invalid = true;
+        if(err.error.status == 'invalid' || err.error.status == 'not_match') {
+          this.toastController
+          .create({
+            message: 'Email atau Kata Sandi Salah!',
+            duration: 2000,
+            color: "danger",
+          })
+          .then((toastEl) => {
+            toastEl.present();
+          });
         }
         setTimeout(function () {
           that.invalid = false;
         }, 1000);
       })
-    } else {
-      var that = this;
-      setTimeout(function () {
-        that.submited = false;
-        that.loading = false;
-      }, 500);
     }
+  }
+
+  validateAllFormFields(formGroup: FormGroup) {
+    Object.keys(formGroup.controls).forEach(field => {
+      const control = formGroup.get(field);
+      if (control instanceof FormControl) {
+        control.markAsTouched({ onlySelf: true });
+      } else if (control instanceof FormGroup) {
+        this.validateAllFormFields(control);
+      }
+    });
   }
 
   cekLogin()
@@ -143,8 +172,10 @@ export class LoginPage implements OnInit {
     });
 
     modal.onDidDismiss().then(res => {
-      this.dismiss();
-      this.router.navigate(['/profil']);
+      if(!res['data']['dismissed']) {
+        this.dismiss();
+        this.router.navigate(['/profil']);
+      }
     })
     return await modal.present();
   }
@@ -155,8 +186,10 @@ export class LoginPage implements OnInit {
       mode: "md",
     });
     modal.onDidDismiss().then(res => {
-      this.dismiss();
-      this.router.navigate(['/profil']);
+      if(!res['data']['dismissed']) {
+        this.dismiss();
+        this.router.navigate(['/profil']);
+      }
     })
     return await modal.present();
   }

@@ -2,26 +2,17 @@
   <ion-toolbar>
     <ion-back-button slot="start"></ion-back-button>
     <ion-item lines="none">
-      <ion-avatar slot="start" *ngIf="userData.id == data.ustadz_id">
+      <ion-avatar slot="start">
         <img src="{{data.user_image == null ? '../../assets/icon/avatar_ustad.svg':serverImgUser+data.user_image}}">
       </ion-avatar>
-      <ion-avatar slot="start" *ngIf="userData.id != data.ustadz_id">
-        <img src="{{data.ustadz_image == null ? '../../assets/icon/avatar_ustad.svg':serverImgUser+data.ustadz_image}}">
-      </ion-avatar>
-      <ion-label *ngIf="data.status == 'new'">
-          <h2>{{roomData == null ? data.ustadz_name:roomData.ustadz_name}}</h2>
-      </ion-label>
-      <ion-label *ngIf="data.status == 'old'">
-          <h2 *ngIf="userData.id != data.ustadz_id">{{roomData == null ? data.ustadz_name:roomData.ustadz_name}}</h2>
-          <h2 *ngIf="userData.id == data.ustadz_id">{{roomData == null ? data.ustadz_name:roomData.user_name}}</h2>
+      <ion-label>
+          <h2>{{data == null ? '':data.user_name}}</h2>
       </ion-label>
     </ion-item>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
-
     <ion-grid class="ion-padding">
         <ion-row *ngFor="let message of listChats">
      
@@ -39,7 +30,7 @@
 
           <!-- bubble jika pesan terbalas -->
           <ion-col offset="3" size="9" class="message my-message">
-            <ion-item class="terbalas" lines="none">
+            <!-- <ion-item class="terbalas" lines="none">
               <ion-thumbnail slot="start">
                 <img src="../../../assets/imgs/no-image.png">
               </ion-thumbnail>
@@ -49,7 +40,7 @@
                 </ion-text>
                 <p>Isi chatting yang dibalas</p>
               </ion-label>
-            </ion-item>
+            </ion-item> -->
             <img *ngIf="message.image" src="{{serverImg+message.image}}" (click)="openImg(serverImg+message.image)"/>
             <span style="font-size: 15px;">{{ message.messages }}</span>
             <div class="time" style="text-align: right;">{{ message.created_at | date:'short' }}</div>

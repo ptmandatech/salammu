@@ -5,7 +5,7 @@
         <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>Register</ion-title>
+    <ion-title>Registrasi</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -14,51 +14,95 @@
   <ion-grid>
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
+        <form [formGroup]="form">
           <ion-text color="medium">Nama</ion-text>
           <ion-item lines="none" class="input">
-            <ion-input [(ngModel)]="userData.name" required #name="ngModel" placeholder="Enter your name"></ion-input>
+            <ion-input formControlName="name" name="name" required type="text" placeholder="Masukan Nama"></ion-input>
           </ion-item>
+      
+          <div class="error-msg" *ngIf="form.controls.name.hasError('required') && form.controls.name.touched">
+          Nama harus diisi!
+          </div>
 
           <ion-text color="medium">Email</ion-text>
           <ion-item lines="none" class="input">
-            <ion-input [(ngModel)]="userData.email" required #email="ngModel" placeholder="Enter your email" type="email"></ion-input>
+            <ion-input formControlName="email" name="email" required type="email" email="true" placeholder="Masukan Email"></ion-input>
           </ion-item>
+      
+          <div class="error-msg" *ngIf="form.controls.email.hasError('required') && form.controls.email.touched">
+          Email harus diisi!
+          </div>
+          <div class="error-msg" *ngIf="form.controls.email.errors?.email">
+          Format Email salah!
+          </div>
 
           <ion-text color="medium">Nomor Hp</ion-text>
           <ion-item lines="none" class="input">
-            <ion-input [(ngModel)]="userData.phone" required #phone="ngModel" placeholder="Enter your phone ex:(62825623)" type="text"></ion-input>
+            <ion-input formControlName="phone" minlength="10" maxlength="14" pattern="[0-9]*$" name="phone" required type="text" placeholder="Masukan Nomor HP, contoh:(62825623)"></ion-input>
           </ion-item>
+          <div *ngIf="form.controls.phone.invalid && (form.controls.phone.dirty || form.controls.phone.touched)">
+            <div class="error-msg" *ngIf="form.controls.phone.errors?.required">
+              Nomor Hp harus diisi
+            </div>
+            <div class="error-msg" *ngIf="form.controls.phone.errors?.minlength || form.controls.phone.errors?.pattern">
+              Minimal 10 digit
+            </div>
+            <div class="error-msg" *ngIf="form.controls.phone.errors?.maxlength || form.controls.phone.errors?.pattern">
+              Nomor Hp hanya dapat berupa angka & Maksimal 14 angka
+            </div>
+          </div>
 
           <ion-text color="medium">Alamat</ion-text>
           <ion-item lines="none" class="input">
-            <ion-textarea [(ngModel)]="userData.address" required #address="ngModel" placeholder="Enter your address" rows="4" cols="20"></ion-textarea>
+            <ion-textarea formControlName="address" name="address" required type="text" placeholder="Masukan Alamat" rows="4" cols="20"></ion-textarea>
           </ion-item>
-
-          <ion-text color="medium">
-            <p>Password</p>
-          </ion-text>
-          <ion-item class="input">
-            <ion-input type="{{type}}" [(ngModel)]="userData.password" required #password="ngModel" (ngModelChange)="checkMatch()" placeholder="Enter your password"></ion-input>
-            <ion-icon name="{{type == 'password' ? 'eye-outline':'eye-off-outline'}}" (click)="show()" slot="end" color="medium"></ion-icon>
-          </ion-item>
-
-          <ion-text color="medium">
-            <p>Tulis Ulang Password</p>
-          </ion-text>
-          <ion-item class="input">
-            <ion-input type="{{type}}" [(ngModel)]="userData.p2" required #p2="ngModel" (ngModelChange)="checkMatch()" placeholder="Enter your confirmation password"></ion-input>
-            <ion-icon name="{{type == 'password' ? 'eye-outline':'eye-off-outline'}}" (click)="show()" slot="end" color="medium"></ion-icon>
-          </ion-item>
-          <p *ngIf="match == false" style="color: red;">Confirmation Password not match!</p>
-
-          <div style="margin-top: 100px;"></div>
-
-          <div class="footer">
-            <ion-button color="primary" expand="block" (click)="register()" [disabled]="loading || name.invalid || email.invalid || phone.invalid || address.invalid || password.invalid || p2.invalid">
-              {{loading ? 'Mohon Tunggu...':'Simpan'}}
-            </ion-button>
+      
+          <div class="error-msg" *ngIf="form.controls.address.hasError('required') && form.controls.address.touched">
+          Alamat harus diisi!
           </div>
 
+          <ion-text color="medium">
+            <p>Kata Sandi</p>
+          </ion-text>
+          <ion-item class="input">
+            <ion-input type="{{type}}" formControlName="password" name="password" required placeholder="Masukan Kata Sandi" (ionChange)="checkMatch()"></ion-input>
+            <ion-icon name="{{type == 'password' ? 'eye-outline':'eye-off-outline'}}" (click)="show()" slot="end" color="medium"></ion-icon>
+          </ion-item>
+          <div *ngIf="form.controls.password.invalid && (form.controls.password.dirty || form.controls.password.touched)">
+            <div class="error-msg" *ngIf="form.controls.password.errors?.required">
+              Kata Sandi harus diisi!
+            </div>
+            <div class="error-msg" *ngIf="form.controls.password.errors?.minlength || form.controls.password.errors?.pattern">
+              Minimal 6 digit
+            </div>
+          </div>
+
+          <ion-text color="medium">
+            <p>Tulis Ulang Kata Sandi</p>
+          </ion-text>
+          <ion-item class="input">
+            <ion-input type="{{type}}" formControlName="re_password" name="re_password" required placeholder="Masukan Kata Sandi Ulang" (ngModelChange)="checkMatch()"></ion-input>
+            <ion-icon name="{{type == 'password' ? 'eye-outline':'eye-off-outline'}}" (click)="show()" slot="end" color="medium"></ion-icon>
+          </ion-item>
+          <div *ngIf="form.controls.re_password.invalid && (form.controls.re_password.dirty || form.controls.re_password.touched)">
+            <div class="error-msg" *ngIf="form.controls.re_password.errors?.required">
+              Konfirmasi Kata Sandi harus diisi!
+            </div>
+            <div class="error-msg" *ngIf="form.controls.re_password.errors?.minlength || form.controls.re_password.errors?.pattern">
+              Minimal 6 digit
+            </div>
+          </div>
+
+          <!-- <p *ngIf="match == false" style="color: red;">Confirmation Password not match!</p> -->
+
+          <!-- <div style="margin-top: 100px;"></div> -->
+
+          <div class="footer">
+            <ion-button color="primary" expand="block" (click)="register()" [disabled]="loading">
+              {{loading ? 'Mohon Tunggu...':'Registrasi'}}
+            </ion-button>
+          </div>
+        </form>
       </ion-col>
     </ion-row>
   </ion-grid>

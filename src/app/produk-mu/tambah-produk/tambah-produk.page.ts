@@ -26,7 +26,7 @@ export class TambahProdukPage implements OnInit {
   imageNow = [];
   isCreated:boolean = true;
   byPassedHTMLString:any;
-  userData:any;
+  userData:any = {};
   constructor(
     public api: ApiService,
     public router:Router,
@@ -55,6 +55,7 @@ export class TambahProdukPage implements OnInit {
   getCategories() {
     this.api.get('categories').then(res=>{
       this.allCategories = res;
+      this.allCategories = this.allCategories.sort((a:any,b:any) => a.name < b.name ? -1:1)
     }, err => {
     });
   }
@@ -202,19 +203,32 @@ export class TambahProdukPage implements OnInit {
   imgUploaded:any = [];
   async uploadPhoto()
   {
-    if(this.images.length > 0) {
-      for(var i=0; i<this.images.length; i++) {
-        await this.api.put('products/uploadfoto/'+this.productData.id,{image: this.images[i]}).then(res=>{
-          this.imgUploaded.push(res);
-          if(i+1 == this.images.length) {
-            this.addProduct();
-          }
-        }, error => {
-          console.log(error)
-        });
-      }
+    if(this.productData.price <= 0) {
+      this.toastController
+      .create({
+        message: 'Masukkan harga produk!',
+        duration: 2000,
+        color: "danger",
+      })
+      .then((toastEl) => {
+        toastEl.present();
+      });
+      return;
     } else {
-      this.addProduct();
+      if(this.images.length > 0) {
+        for(var i=0; i<this.images.length; i++) {
+          await this.api.put('products/uploadfoto/'+this.productData.id,{image: this.images[i]}).then(res=>{
+            this.imgUploaded.push(res);
+            if(i+1 == this.images.length) {
+              this.addProduct();
+            }
+          }, error => {
+            console.log(error)
+          });
+        }
+      } else {
+        this.addProduct();
+      }
     }
   }
 
@@ -236,6 +250,8 @@ export class TambahProdukPage implements OnInit {
           this.loading = false;
           this.router.navigate(['/my-product']);
         }
+      }, err => {
+        this.loading = false;
       })
     } else {
       if(this.images.length > 0) {
@@ -260,6 +276,8 @@ export class TambahProdukPage implements OnInit {
           this.loading = false;
           this.router.navigate(['/my-product']);
         }
+      }, err => {
+        this.loading = false;
       })
     }
   }

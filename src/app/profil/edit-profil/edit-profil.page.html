@@ -10,48 +10,73 @@
   <ion-grid class="ion-no-padding">
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
+        <ion-row>
+          <ion-col class="ion-text-center">
+            <img *ngIf="userData.image != undefined && uploadImg == false" src="{{(serverImg+userData.image)}}" class="img-profil">
+            <img *ngIf="userData.image == null && uploadImg == false" src="{{userData.image == null ? './assets/imgs/blank-profil.png':(serverImg+userData.image)}}" class="img-profil">
+            <img *ngIf="image != undefined && uploadImg == true" src="{{image == undefined ? './assets/imgs/blank-profil.png':image}}" class="img-profil">
+            <br>
+            <ion-button fill="clear" (click)="pilihFoto()">
+              Ganti foto
+            </ion-button>
+          </ion-col>
+        </ion-row>
 
-            <ion-row>
-              <ion-col class="ion-text-center">
-                <img *ngIf="userData.image != undefined && uploadImg == false" src="{{(serverImg+userData.image)}}" class="img-profil">
-                <img *ngIf="userData.image == null && uploadImg == false" src="{{userData.image == null ? './assets/imgs/blank-profil.png':(serverImg+userData.image)}}" class="img-profil">
-                <img *ngIf="image != undefined && uploadImg == true" src="{{image == undefined ? './assets/imgs/blank-profil.png':image}}" class="img-profil">
-                <br>
-                <ion-button fill="clear" (click)="pilihFoto()">
-                  Ganti foto
-                </ion-button>
-              </ion-col>
-            </ion-row>
+        <form [formGroup]="form">
+          <ion-text color="medium">Nama</ion-text>
+          <ion-item lines="none" class="input">
+            <ion-input formControlName="name" name="name" required type="text" placeholder="Masukan Nama"></ion-input>
+          </ion-item>
+      
+          <div class="error-msg" *ngIf="form.controls.name.hasError('required') && form.controls.name.touched">
+          Nama harus diisi!
+          </div>
 
-            <ion-text color="medium">Nama</ion-text>
-            <ion-item lines="none" class="input">
-              <ion-input [(ngModel)]="userData.name" required #name="ngModel" placeholder="Enter your name"></ion-input>
-            </ion-item>
+          <ion-text color="medium">Email</ion-text>
+          <ion-item lines="none" class="input">
+            <ion-input formControlName="email" name="email" required type="email" email="true" placeholder="Masukan Email"></ion-input>
+          </ion-item>
+      
+          <div class="error-msg" *ngIf="form.controls.email.hasError('required') && form.controls.email.touched">
+          Email harus diisi!
+          </div>
+          <div class="error-msg" *ngIf="form.controls.email.errors?.email">
+          Format Email salah!
+          </div>
 
-            <ion-text color="medium">Email</ion-text>
-            <ion-item lines="none" class="input">
-              <ion-input input="text" [(ngModel)]="userData.email" required #email="ngModel" placeholder="Enter your email"></ion-input>
-            </ion-item>
+          <ion-text color="medium">Nomor HP</ion-text>
+          <ion-item lines="none" class="input">
+            <ion-input formControlName="phone" minlength="10" maxlength="14" pattern="[0-9]*$" name="phone" required type="text" placeholder="Masukan Nomor HP, contoh:(62825623)"></ion-input>
+          </ion-item>
+          <div *ngIf="form.controls.phone.invalid && (form.controls.phone.dirty || form.controls.phone.touched)">
+            <div class="error-msg" *ngIf="form.controls.phone.errors?.required">
+              Nomor Hp harus diisi
+            </div>
+            <div class="error-msg" *ngIf="form.controls.phone.errors?.minlength || form.controls.phone.errors?.pattern">
+              Minimal 10 digit
+            </div>
+            <div class="error-msg" *ngIf="form.controls.phone.errors?.maxlength || form.controls.phone.errors?.pattern">
+              Nomor Hp hanya dapat berupa angka & Maksimal 14 angka
+            </div>
+          </div>
 
-            <ion-text color="medium">Nomor HP</ion-text>
-            <ion-item lines="none" class="input">
-              <ion-input input="text" [(ngModel)]="userData.phone" required #phone="ngModel" placeholder="Enter your phone"></ion-input>
-            </ion-item>
+          <ion-text color="medium">Alamat</ion-text>
+          <ion-item lines="none" class="input">
+            <ion-textarea formControlName="address" name="address" required type="text" placeholder="Masukan Alamat" rows="4" cols="20"></ion-textarea>
+          </ion-item>
+      
+          <div class="error-msg" *ngIf="form.controls.address.hasError('required') && form.controls.address.touched">
+          Alamat harus diisi!
+          </div>
 
-            <ion-text color="medium">Alamat</ion-text>
-            <ion-item lines="none" class="input">
-              <ion-textarea rows="4" [(ngModel)]="userData.address" required #address="ngModel" placeholder="Enter your address" cols="20"></ion-textarea>
-            </ion-item>
-
-            <div style="margin-top: 100px;"></div>
+          <div style="margin-top: 100px;"></div>
 
           <div class="footer">
-            <ion-button color="primary" expand="block" [disabled]="loading || name.invalid || email.invalid || phone.invalid" (click)="uploadPhoto()">
+            <ion-button color="primary" expand="block" [disabled]="loading" (click)="uploadPhoto()">
               {{loading ? 'Mohon tunggu...':'Simpan'}}
             </ion-button>
           </div>
-
-
+        </form>
       </ion-col>
     </ion-row>
   </ion-grid>

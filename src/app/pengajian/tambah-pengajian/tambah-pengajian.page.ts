@@ -27,6 +27,7 @@ import { Diagnostic } from '@awesome-cordova-plugins/diagnostic/ngx';
 import Geocoder from 'ol-geocoder';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 useGeographic();
 
 @Component({
@@ -46,6 +47,7 @@ export class TambahPengajianPage implements OnInit {
   loading:boolean;
   userData:any;
   today:any;
+  form: FormGroup;
   constructor(
     public http:HttpClient,
     public api: ApiService,
@@ -55,12 +57,27 @@ export class TambahPengajianPage implements OnInit {
     public routes:ActivatedRoute,
     public modalController: ModalController,
     private diagnostic: Diagnostic,
+    private formBuilder: FormBuilder,
     private platform: Platform,
     private loadingController: LoadingController,
     public alertController: AlertController,
     private toastController: ToastController,
     private datePipe: DatePipe,
   ) {
+    this.form = this.formBuilder.group({
+      id: [null],
+      name: [null, [Validators.required]],
+      speaker: [null, [Validators.required]],
+      descriptions: [null, [Validators.required]],
+      organizer: [null, [Validators.required]],
+      branch: [null],
+      twig: [null],
+      organizer_name: [null],
+      url_livestream: [null],
+      location: [null, [Validators.required]],
+      verified: [null],
+      created_by: [null],
+    });
   }
 
   branchSelected:any;
@@ -171,6 +188,22 @@ export class TambahPengajianPage implements OnInit {
         this.twigSelected = this.listRanting.find(x => x.id === this.pengajianData.twig);
       }
       this.dateValue = this.datePipe.transform(new Date(this.pengajianData.datetime), 'MMM dd yyyy HH:mm');
+      if(this.pengajianData != null) {
+        this.form.patchValue({
+          id: this.pengajianData.id,
+          name: this.pengajianData.name,
+          speaker: this.pengajianData.speaker,
+          descriptions: this.pengajianData.descriptions,
+          organizer: this.pengajianData.organizer,
+          branch: this.pengajianData.branch,
+          twig: this.pengajianData.twig,
+          organizer_name: this.pengajianData.organizer_name,
+          url_livestream: this.pengajianData.url_livestream,
+          location: this.pengajianData.location,
+          verified: this.pengajianData.verified,
+          created_by: this.pengajianData.created_by,
+        });
+      }
     })
   }
 
@@ -179,50 +212,113 @@ export class TambahPengajianPage implements OnInit {
   }
 
   save() {
-    if(this.branchSelected != undefined) this.pengajianData.branch = this.branchSelected.id;
-    if(this.twigSelected != undefined) this.pengajianData.twig = this.twigSelected.id;
+    if (!this.form.valid) {
+      this.validateAllFormFields(this.form);
+    }
+    else {
+      if(this.form.get('url_livestream').value) {
+        if(this.isValidUrl(this.form.get('url_livestream').value)) { 
+        } else {
+          this.toastController
+          .create({
+            message: 'Masukkan url dengan format yang benar, contoh https://example.com',
+            duration: 2000,
+            color: "danger",
+          })
+          .then((toastEl) => {
+            toastEl.present();
+          });
+          return;
+        }
+      }
+      
+      if(!this.dateValue) {
+        this.toastController
+          .create({
+            message: 'Pilih Tanggal dan Jam Pengajian!',
+            duration: 2000,
+            color: "danger",
+          })
+          .then((toastEl) => {
+            toastEl.present();
+          });
+          return;
+      }
 
-    if(new Date(this.dateValue) > this.today) {
-      this.pengajianData.status = 'soon';
-    } else {
-      this.pengajianData.status = 'done';
+      this.pengajianData.name = this.form.get('name').value;
+      this.pengajianData.speaker = this.form.get('speaker').value;
+      this.pengajianData.descriptions = this.form.get('descriptions').value;
+      this.pengajianData.organizer = this.form.get('organizer').value;
+      this.pengajianData.url_livestream = this.form.get('url_livestream').value;
+      this.pengajianData.location = this.form.get('location').value;
+
+      if(this.branchSelected != undefined) this.pengajianData.branch = this.branchSelected.id;
+      if(this.twigSelected != undefined) this.pengajianData.twig = this.twigSelected.id;
+  
+      if(new Date(this.dateValue) > this.today) {
+        this.pengajianData.status = 'soon';
+      } else {
+        this.pengajianData.status = 'done';
+      }
+      this.pengajianData.datetime = new Date(this.dateValue);
+      if(this.isCreated == true) {
+        this.pengajianData.id = new Date().getTime().toString() + '' + [Math.floor((Math.random() * 1000))];
+        this.pengajianData.verified = false;
+        this.api.post('pengajian', this.pengajianData).then(res => {
+          if(res) {
+            this.toastController
+            .create({
+              message: 'Berhasil menambahkan data.',
+              duration: 2000,
+              color: "primary",
+            })
+            .then((toastEl) => {
+              toastEl.present();
+            });
+            this.loading = false;
+            this.router.navigate(['/my-pengajian']);
+          }
+        })
+      } else {
+        this.api.put('pengajian/'+this.id, this.pengajianData).then(res => {
+          if(res) {
+            this.toastController
+            .create({
+              message: 'Berhasil memperbarui data.',
+              duration: 2000,
+              color: "primary",
+            })
+            .then((toastEl) => {
+              toastEl.present();
+            });
+            this.loading = false;
+            this.router.navigate(['/my-pengajian']);
+          }
+        })
+      }
     }
-    this.pengajianData.datetime = new Date(this.dateValue);
-    if(this.isCreated == true) {
-      this.pengajianData.id = new Date().getTime().toString() + '' + [Math.floor((Math.random() * 1000))];
-      this.pengajianData.verified = false;
-      this.api.post('pengajian', this.pengajianData).then(res => {
-        if(res) {
-          this.toastController
-          .create({
-            message: 'Berhasil menambahkan data.',
-            duration: 2000,
-            color: "primary",
-          })
-          .then((toastEl) => {
-            toastEl.present();
-          });
-          this.loading = false;
-          this.router.navigate(['/my-pengajian']);
-        }
-      })
-    } else {
-      this.api.put('pengajian/'+this.id, this.pengajianData).then(res => {
-        if(res) {
-          this.toastController
-          .create({
-            message: 'Berhasil memperbarui data.',
-            duration: 2000,
-            color: "primary",
-          })
-          .then((toastEl) => {
-            toastEl.present();
-          });
-          this.loading = false;
-          this.router.navigate(['/my-pengajian']);
-        }
-      })
+  }
+
+  urlRegEx = "(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?";
+  isValidUrl(urlString: string): boolean {
+    try {
+      let pattern = new RegExp(this.urlRegEx);
+      let valid = pattern.test(urlString);
+      return valid;
+    } catch (TypeError) {
+      return false;
     }
+  }
+
+  validateAllFormFields(formGroup: FormGroup) {
+    Object.keys(formGroup.controls).forEach(field => {
+      const control = formGroup.get(field);
+      if (control instanceof FormControl) {
+        control.markAsTouched({ onlySelf: true });
+      } else if (control instanceof FormGroup) {
+        this.validateAllFormFields(control);
+      }
+    });
   }
 
   done() {

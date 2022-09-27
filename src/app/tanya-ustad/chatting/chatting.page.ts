@@ -7,6 +7,8 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { ImageUploaderPage } from 'src/app/image-uploader/image-uploader.page';
 import { CommonService } from 'src/app/services/common.service';
 import { PhotoViewer } from '@awesome-cordova-plugins/photo-viewer/ngx';
+// import { Socket } from 'ngx-socket-io';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-chatting',
@@ -34,6 +36,7 @@ export class ChattingPage implements OnInit {
     public modalController: ModalController,
     private loadingController: LoadingController,
     public actionSheetController: ActionSheetController,
+    // private socket: Socket,
     private photoViewer: PhotoViewer
   ) { 
     this.serverImg = this.common.photoBaseUrl+'chattings/';
@@ -46,6 +49,7 @@ export class ChattingPage implements OnInit {
   }
 
   async ngOnInit() {
+    // this.socket.connect();
     this.present();
     await this.cekLogin();
   }
@@ -202,8 +206,7 @@ export class ChattingPage implements OnInit {
       this.api.post('chattings/chats', dt).then(res => {
         console.log(res)
         this.sendNotif();
-        this.getChats();
-  
+        // this.getChats();
         this.newMsg = '';
         this.image = null;
       });

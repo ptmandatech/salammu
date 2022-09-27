@@ -28,124 +28,147 @@
             </ion-chip>
           </div>
 
-          <ion-text color="medium">Nama Pengajian</ion-text>
-          <ion-item lines="none" class="input">
-            <ion-input [(ngModel)]="pengajianData.name" required #name="ngModel" placeholder="Pengajian name"></ion-input>
-          </ion-item>
-
-          <ion-text color="medium">Nama Pembicara</ion-text>
-          <ion-item lines="none" class="input">
-            <ion-input [(ngModel)]="pengajianData.speaker" placeholder="Nama Pembicara"></ion-input>
-          </ion-item>
-
-          <ion-text color="medium">Deskripsi pengajian</ion-text>
-          <ion-item lines="none" class="input">
-            <ion-textarea [(ngModel)]="pengajianData.descriptions" required #descriptions="ngModel" placeholder="Pengajian descriptions" rows="4" cols="20"></ion-textarea>
-          </ion-item>
-
-          <ion-text color="medium">Penyelenggara</ion-text>
-          <ion-item lines="none" class="input">
-            <ion-select [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" [(ngModel)]="pengajianData.organizer" interface="popover" placeholder="Pilih Penyelenggara">
-              <ion-select-option *ngFor="let n of ['cabang', 'ranting', 'lainnya']" value="{{n}}">{{n}}</ion-select-option>
-            </ion-select>
-            <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
-          </ion-item>
-          <div *ngIf="pengajianData.organizer == 'cabang'">
-            <ion-text color="medium">Nama Cabang Penyelenggara</ion-text>
-            <ion-item  lines="none" class="input">
-              <ionic-selectable
-                placeholder="Pilih Cabang"
-                [(ngModel)]="branchSelected"
-                [items]="listCabang"
-                itemValueField="id"
-                itemTextField="nama"
-                [canSearch]="true"
-                (onChange)="pilihCabang($event)">
-                <ng-template ionicSelectableCloseButtonTemplate>
-                  <ion-icon name="close-circle" style="font-size: 24px;"></ion-icon>
-                </ng-template>
-              </ionic-selectable>
-            </ion-item>
-          </div>
-          <div *ngIf="pengajianData.organizer == 'ranting'">
-            <ion-text color="medium">Nama Ranting Penyelenggara</ion-text>
-            <ion-item  lines="none" class="input">
-              <ionic-selectable
-                placeholder="Pilih Cabang"
-                [(ngModel)]="twigSelected"
-                [items]="listRanting"
-                itemValueField="id"
-                itemTextField="nama"
-                [canSearch]="true"
-                (onChange)="pilihRanting($event)">
-                <ng-template ionicSelectableCloseButtonTemplate>
-                  <ion-icon name="close-circle" style="font-size: 24px;"></ion-icon>
-                </ng-template>
-              </ionic-selectable>
-            </ion-item>
-          </div>
-          <div *ngIf="pengajianData.organizer == 'lainnya'">
-            <ion-text color="medium">Nama Penyelenggara</ion-text>
+          <form [formGroup]="form">
+            <ion-text color="medium">Nama Pengajian</ion-text>
             <ion-item lines="none" class="input">
-              <ion-input [(ngModel)]="pengajianData.organizer_name" placeholder="Nama Penyelenggara"></ion-input>
+              <ion-input formControlName="name" type="text" maxlength="255" name="name" required type="text" placeholder="Nama Pengajian"></ion-input>
             </ion-item>
-          </div>
-
-          <ion-text color="medium">Tanggal dan Jam Pengajian</ion-text>
-            <ion-item lines="none" class="input" button="true" id="open-date-input">
-              <ion-label>Tanggal:Jam</ion-label>
-              <ion-text slot="end">{{ dateValue }}</ion-text>
-              <ion-popover trigger="open-date-input" show-backdrop="false">
-                <ng-template>
-                  <ion-datetime
-                    #popoverDatetime
-                    presentation="time-date"
-                    (ionChange)="dateValue = formatDate(popoverDatetime.value)"
-                  ></ion-datetime>
-                </ng-template>
-              </ion-popover>
+	  
+            <div class="error-msg" *ngIf="form.controls.name.hasError('required') && form.controls.name.touched">
+              Nama Pengajian harus diisi!
+            </div>
+  
+            <ion-text color="medium">Nama Pembicara</ion-text>
+            <ion-item lines="none" class="input">
+              <ion-input formControlName="speaker" name="speaker" required type="text" placeholder="Nama Pembicara"></ion-input>
             </ion-item>
+	  
+            <div class="error-msg" *ngIf="form.controls.speaker.hasError('required') && form.controls.speaker.touched">
+              Nama Pembicara harus diisi!
+            </div>
+  
+            <ion-text color="medium">Deskripsi pengajian</ion-text>
+            <ion-item lines="none" class="input">
+              <ion-textarea formControlName="descriptions" name="descriptions" required type="text" placeholder="Deskripsi Pengajian" rows="4" cols="20"></ion-textarea>
+            </ion-item>
+	  
+            <div class="error-msg" *ngIf="form.controls.descriptions.hasError('required') && form.controls.descriptions.touched">
+              Deskripsi harus diisi!
+            </div>
+  
+            <ion-text color="medium">Penyelenggara</ion-text>
+            <ion-item lines="none" class="input">
+              <ion-select [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" formControlName="organizer" name="organizer" required type="text" interface="popover" placeholder="Pilih Penyelenggara">
+                <ion-select-option *ngFor="let n of ['cabang', 'ranting', 'lainnya']" value="{{n}}">{{n}}</ion-select-option>
+              </ion-select>
+              <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
+            </ion-item>
+	  
+            <div class="error-msg" *ngIf="form.controls.organizer.hasError('required') && form.controls.organizer.touched">
+              Penyelenggara harus diisi!
+            </div>
 
-          <ion-text color="medium">Link Live Streaming</ion-text>
-          <ion-item lines="none" class="input">
-            <ion-input [(ngModel)]="pengajianData.url_livestream" placeholder="Input link streaming"></ion-input>
-          </ion-item>
+            <div *ngIf="form.controls.organizer.value?.trim() == 'cabang'">
+              <ion-text color="medium">Nama Cabang Penyelenggara</ion-text>
+              <ion-item  lines="none" class="input">
+                <ionic-selectable
+                  placeholder="Pilih Cabang"
+                  [(ngModel)]="branchSelected"
+                  [items]="listCabang"
+                  [ngModelOptions]="{standalone: true}"
+                  itemValueField="id"
+                  itemTextField="nama"
+                  [canSearch]="true"
+                  (onChange)="pilihCabang($event)">
+                  <ng-template ionicSelectableCloseButtonTemplate>
+                    <ion-icon name="close-circle" style="font-size: 24px;"></ion-icon>
+                  </ng-template>
+                </ionic-selectable>
+              </ion-item>
+            </div>
 
-          <ion-text color="medium">Lokasi Lengkap</ion-text>
-          <ion-item lines="none" class="input">
-            <ion-textarea [(ngModel)]="pengajianData.location" required #location="ngModel" placeholder="Pengajian location" rows="4" cols="20"></ion-textarea>
-          </ion-item>
+            <div *ngIf="form.controls.organizer.value?.trim() == 'ranting'">
+              <ion-text color="medium">Nama Ranting Penyelenggara</ion-text>
+              <ion-item  lines="none" class="input">
+                <ionic-selectable
+                  placeholder="Pilih Cabang"
+                  [(ngModel)]="twigSelected"
+                  [items]="listRanting"
+                  itemValueField="id"
+                  [ngModelOptions]="{standalone: true}"
+                  itemTextField="nama"
+                  [canSearch]="true"
+                  (onChange)="pilihRanting($event)">
+                  <ng-template ionicSelectableCloseButtonTemplate>
+                    <ion-icon name="close-circle" style="font-size: 24px;"></ion-icon>
+                  </ng-template>
+                </ionic-selectable>
+              </ion-item>
+            </div>
 
-          <ion-text color="medium">Pin Lokasi (Terisi otomatis)</ion-text>
-          <ion-item lines="none" class="input">
-            <ion-label>
-              <ion-text color="primary">
-                <p class="ion-text-wrap">{{detailLocSelected == undefined ? '':detailLocSelected.display_name}}</p>
-              </ion-text>
-            </ion-label>
-          </ion-item>
-          <div id="map" style="width: auto; height: 300px;"></div>
-          <div id="info">&nbsp;</div>
-          <div id="geolocation"></div>
-
-          <div style="margin-top: 100px;"></div>
-
-          <div class="footer">
-            <ion-grid>
-              <ion-row>
-                <ion-col>
-                  <ion-button color="primary" expand="block" [disabled]="loading" (click)="save()">
-                    {{loading ? 'Mohon tunggu...':'Simpan'}}
-                  </ion-button>
-                </ion-col>
-                <ion-col *ngIf="pengajianData.verified == 0 && userData.role == 'superadmin'">
-                  <ion-button color="secondary" expand="block" [disabled]="loading" (click)="verifikasi()">
-                    {{loading ? 'Mohon tunggu...':'Verifikasi'}}
-                  </ion-button>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </div>
+            <div *ngIf="form.controls.organizer.value?.trim() == 'lainnya'">
+              <ion-text color="medium">Nama Penyelenggara</ion-text>
+              <ion-item lines="none" class="input">
+                <ion-input formControlName="organizer_name" name="organizer_name" required type="text" placeholder="Nama Penyelenggara"></ion-input>
+              </ion-item>
+            </div>
+  
+            <ion-text color="medium">Tanggal dan Jam Pengajian</ion-text>
+              <ion-item lines="none" class="input" button="true" id="open-date-input">
+                <ion-label>Tanggal:Jam</ion-label>
+                <ion-text slot="end">{{ dateValue }}</ion-text>
+                <ion-popover trigger="open-date-input" show-backdrop="false">
+                  <ng-template>
+                    <ion-datetime
+                      #popoverDatetime
+                      presentation="time-date"
+                      (ionChange)="dateValue = formatDate(popoverDatetime.value)"
+                    ></ion-datetime>
+                  </ng-template>
+                </ion-popover>
+              </ion-item>
+  
+            <ion-text color="medium">Link Live Streaming</ion-text>
+            <ion-item lines="none" class="input">
+              <ion-input formControlName="url_livestream" name="url_livestream" type="text" placeholder="Masukan url/link streaming"></ion-input>
+            </ion-item>
+  
+            <ion-text color="medium">Alamat Lengkap</ion-text>
+            <ion-item lines="none" class="input">
+              <ion-textarea formControlName="location" name="location" required type="text" rows="4" cols="20"></ion-textarea>
+            </ion-item>
+  
+            <ion-text color="medium">Pin Lokasi (Terisi otomatis)</ion-text>
+            <ion-item lines="none" class="input">
+              <ion-label>
+                <ion-text color="primary">
+                  <p class="ion-text-wrap">{{detailLocSelected == undefined ? '':detailLocSelected.display_name}}</p>
+                </ion-text>
+              </ion-label>
+            </ion-item>
+            <div id="map" style="width: auto; height: 300px;"></div>
+            <div id="info">&nbsp;</div>
+            <div id="geolocation"></div>
+  
+            <div style="margin-top: 100px;"></div>
+  
+            <div class="footer">
+              <ion-grid>
+                <ion-row>
+                  <ion-col>
+                    <ion-button color="primary" expand="block" [disabled]="loading" (click)="save()">
+                      {{loading ? 'Mohon tunggu...':'Simpan'}}
+                    </ion-button>
+                  </ion-col>
+                  <ion-col *ngIf="pengajianData.verified == 0 && userData.role == 'superadmin'">
+                    <ion-button color="secondary" expand="block" [disabled]="loading" (click)="verifikasi()">
+                      {{loading ? 'Mohon tunggu...':'Verifikasi'}}
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </div>
+          </form>
 
 
         </div>

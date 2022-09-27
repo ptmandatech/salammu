@@ -37,6 +37,10 @@ export class ProdukMUPage implements OnInit {
     this.getAllProducts();
   }
 
+  ionViewWillEnter() {
+    this.ngOnInit();
+  }
+
   async present() {
     this.loading = true;
     return await this.loadingController.create({

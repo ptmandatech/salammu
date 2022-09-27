@@ -27,17 +27,17 @@
 
           <ion-text color="medium">Nama Produk</ion-text>
           <ion-item lines="none" class="input">
-            <ion-input [(ngModel)]="productData.name" required #name="ngModel" placeholder="Product name"></ion-input>
+            <ion-input [(ngModel)]="productData.name" required #name="ngModel" placeholder="Nama Produk"></ion-input>
           </ion-item>
 
           <ion-text color="medium">Harga</ion-text>
           <ion-item lines="none" class="input">
-            <ion-input type="number" [(ngModel)]="productData.price" required #price="ngModel" placeholder="Product price"></ion-input>
+            <ion-input type="number" min="1" [(ngModel)]="productData.price" required #price="ngModel" placeholder="Harga"></ion-input>
           </ion-item>
 
           <ion-text color="medium">Pilih Kategori</ion-text>
           <ion-item lines="none" class="input">
-              <ion-select mode="ios" [(ngModel)]="productData.category" required #category="ngModel" placeholder="Select Category" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" interface="popover">
+              <ion-select mode="ios" [(ngModel)]="productData.category" required #category="ngModel" placeholder="Pilih Kategori" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" interface="popover">
                 <ion-select-option *ngFor="let n of allCategories" value="{{n.id}}">{{n.name}}</ion-select-option>
               </ion-select>
               <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
@@ -47,7 +47,7 @@
           <!-- <ion-item lines="none" class="input">
             <ion-textarea  rows="4" cols="20" [(ngModel)]="productData.descriptions" required #descriptions="ngModel" placeholder="Product descriptions"></ion-textarea>
           </ion-item> -->
-          <quill-editor [(ngModel)]="productData.descriptions" name="descriptions" [modules]="modules" #descriptions="ngModel" placeholder="Product descriptions">
+          <quill-editor [(ngModel)]="productData.descriptions" name="descriptions" [modules]="modules" #descriptions="ngModel" placeholder="Deskripsi Produk">
             <div quill-editor-toolbar>
               <span class="ql-formats">
                 <select class="ql-align" [title]="'Aligment'">
