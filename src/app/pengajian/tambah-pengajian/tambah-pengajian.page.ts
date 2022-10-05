@@ -97,6 +97,7 @@ export class TambahPengajianPage implements OnInit {
   }
 
   async ngOnInit() {
+    this.present();
     this.cekLogin();
     await this.getAllCr();
     this.today = new Date();
@@ -107,6 +108,25 @@ export class TambahPengajianPage implements OnInit {
     } else {
       this.generateMap(undefined);
     }
+  }
+  
+  async present() {
+    this.loading = true;
+    return await this.loadingController.create({
+      spinner: 'crescent',
+      duration: 10000,
+      message: 'Tunggu Sebentar...',
+      cssClass: 'custom-class custom-loading'
+    }).then(a => {
+      a.present().then(() => {
+        console.log('presented');
+        if (!this.loading) {
+          a.dismiss().then(() => console.log('abort presenting'));
+          this.loading = false;
+        }
+      });
+      this.loading = false;
+    });
   }
 
   cekLogin()

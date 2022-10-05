@@ -38,6 +38,7 @@ export class ModalJadwalComponent implements OnInit {
     tt = title.splice(1, 1);
     t = times.splice(4, 1);
     tt = title.splice(4, 1);
+    
     for(var i=0; i<times.length-1; i++) {
       this.data = {};
       if(title[i] == 'Asr') {
@@ -49,7 +50,9 @@ export class ModalJadwalComponent implements OnInit {
       } else if(title[i] == 'Sunset') {
         title[i] = 'Maghrib';
       } 
-      this.data.title = title[i]; 
+      
+      if(title[i] != "Firstthird" && title[i] != "Lastthird") {
+        this.data.title = title[i]; 
       this.data.time = times[i];
       if(this.data.title == 'Imsak') {
         this.tempTimes1.push(this.data);
@@ -58,6 +61,7 @@ export class ModalJadwalComponent implements OnInit {
       }
 
       this.listTimes = this.tempTimes1.concat(this.tempTimes2);
+      }
     }
     
   }

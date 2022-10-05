@@ -39,6 +39,7 @@ export class TambahProdukPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.present();
     this.getCategories();
     this.cekLogin();
     this.id = this.routes.snapshot.paramMap.get('id');
@@ -49,6 +50,25 @@ export class TambahProdukPage implements OnInit {
     } else {
       this.productData.id = new Date().getTime().toString() + '' + [Math.floor((Math.random() * 1000))];
     }
+  }
+  
+  async present() {
+    this.loading = true;
+    return await this.loadingController.create({
+      spinner: 'crescent',
+      duration: 10000,
+      message: 'Tunggu Sebentar...',
+      cssClass: 'custom-class custom-loading'
+    }).then(a => {
+      a.present().then(() => {
+        console.log('presented');
+        if (!this.loading) {
+          a.dismiss().then(() => console.log('abort presenting'));
+          this.loading = false;
+        }
+      });
+      this.loading = false;
+    });
   }
 
   allCategories:any = [];

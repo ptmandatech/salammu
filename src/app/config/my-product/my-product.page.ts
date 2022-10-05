@@ -30,10 +30,10 @@ export class MyProductPage implements OnInit {
     this.serverImg = this.common.photoBaseUrl+'products/';
     this.listProducts = [];
     this.listProductsTemp = [];
-    this.cekLogin();
+    // this.cekLogin();
   }
 
-  onDidViewEnter() {
+  ionViewWillEnter() {
     this.loading = true;
     this.listProducts = [];
     this.listProductsTemp = [];
