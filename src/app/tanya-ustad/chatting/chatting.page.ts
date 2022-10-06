@@ -148,7 +148,11 @@ export class ChattingPage implements OnInit {
       } else {
         this.isUstad = false;
       }
+      
       this.getChats();
+      // setInterval(() => {
+      //   this.getChats();
+      // }, 1000)
     }
 
     if(this.newMsg != '') {
@@ -164,6 +168,7 @@ export class ChattingPage implements OnInit {
   }
 
   getChats() {
+    // this.listChats = [];
     this.api.get('chattings/getChats/'+this.roomData.id).then(res => {
       this.listChats = res;
       console.log(res)
@@ -206,7 +211,7 @@ export class ChattingPage implements OnInit {
       this.api.post('chattings/chats', dt).then(res => {
         console.log(res)
         this.sendNotif();
-        // this.getChats();
+        this.getChats();
         this.newMsg = '';
         this.image = null;
       });
@@ -295,7 +300,7 @@ export class ChattingPage implements OnInit {
         "user_id": this.roomData.user_id,
         "room_id":this.roomData.id,
       },
-      "to": this.isUstad ? this.roomData.tokenUser : this.roomData.tokenUstad,
+      "to": this.isUstad ? this.roomData.tokenUser : this.roomData.tokenUstad == null ? '':'',
       "priority":"high",
       "restricted_package_name":""
     };

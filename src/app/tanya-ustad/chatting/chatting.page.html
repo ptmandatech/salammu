@@ -3,10 +3,12 @@
     <ion-back-button slot="start"></ion-back-button>
     <ion-item lines="none">
       <ion-avatar slot="start">
-        <img src="{{data.user_image == null ? '../../assets/icon/avatar_ustad.svg':serverImgUser+data.user_image}}">
+        <img *ngIf="userData.role != 'superadmin'" src="{{data.ustadz_image == null ? '../../assets/icon/avatar_ustad.svg':serverImgUser+data.ustadz_image}}">
+        <img *ngIf="userData.role == 'superadmin'" src="{{data.user_image == null ? '../../assets/icon/avatar_ustad.svg':serverImgUser+data.user_image}}">
       </ion-avatar>
       <ion-label>
-          <h2>{{data == null ? '':data.user_name}}</h2>
+          <h2 *ngIf="userData.role != 'superadmin'">{{data == null ? '':data.ustadz_name}}</h2>
+          <h2 *ngIf="userData.role == 'superadmin'">{{data == null ? '':data.user_name}}</h2>
       </ion-label>
     </ion-item>
   </ion-toolbar>
@@ -29,8 +31,8 @@
           </ion-col>
 
           <!-- bubble jika pesan terbalas -->
-          <ion-col offset="3" size="9" class="message my-message">
-            <!-- <ion-item class="terbalas" lines="none">
+          <!-- <ion-col offset="3" size="9" class="message my-message">
+            <ion-item class="terbalas" lines="none">
               <ion-thumbnail slot="start">
                 <img src="../../../assets/imgs/no-image.png">
               </ion-thumbnail>
@@ -40,11 +42,11 @@
                 </ion-text>
                 <p>Isi chatting yang dibalas</p>
               </ion-label>
-            </ion-item> -->
+            </ion-item>
             <img *ngIf="message.image" src="{{serverImg+message.image}}" (click)="openImg(serverImg+message.image)"/>
             <span style="font-size: 15px;">{{ message.messages }}</span>
             <div class="time" style="text-align: right;">{{ message.created_at | date:'short' }}</div>
-          </ion-col>
+          </ion-col> -->
      
         </ion-row>
       </ion-grid>
