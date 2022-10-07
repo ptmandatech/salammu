@@ -77,9 +77,9 @@
                   <ion-text>
                     {{selected | date:'dd, MMM y'}}
                   </ion-text>
-                  <ion-text color="medium">
+                  <!-- <ion-text color="medium">
                     <p class="fs-10 ion-no-padding" *ngIf="prayTime != undefined"> {{prayTime[dateToday-1].date.hijri.day}} {{prayTime[dateToday-1].date.hijri.month.en}} {{prayTime[dateToday-1].date.hijri.year}}</p>
-                  </ion-text>
+                  </ion-text> -->
                 </ion-label>
               </ion-title>
               <ion-title class="date-title" *ngIf="selected == undefined"><ion-skeleton-text animated></ion-skeleton-text></ion-title>

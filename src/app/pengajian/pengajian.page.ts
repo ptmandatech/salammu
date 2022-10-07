@@ -458,6 +458,19 @@ export class PengajianPage implements OnInit {
         }))
       })
     });
+
+    var wmsSource = new TileWMS({
+      url: 'https://ahocevar.com/geoserver/wms',
+      params: {'LAYERS': 'ne:ne', 'TILED': true},
+      serverType: 'geoserver',
+      crossOrigin: 'anonymous',
+    });
+    
+    var view = new View({
+      center: [0, 0],
+      zoom: 1,
+    });
+
     this.mapPengajian.on('moveend',()=>{
       var center=(this.mapPengajian.getView().getCenter());
       this.longitude=center[0];
@@ -495,7 +508,39 @@ export class PengajianPage implements OnInit {
     //Listen when an address is chosen
     geocoder.on('addresschosen', function (evt) {
       that.mapPengajian.getView().setCenter([evt.place.lon, evt.place.lat]);
-      that.mapPengajian.getView().setZoom(11);
+      that.mapPengajian.getView().setZoom(18);
+      
+      that.mapPengajian.removeLayer(that.vectorLayer);
+      // document.getElementById('info').innerHTML = '';
+      var viewResolution = /** @type {number} */ (view.getResolution());
+      var url = wmsSource.getFeatureInfoUrl(
+        evt.place,
+        viewResolution,
+        'EPSG:3857',
+        {'INFO_FORMAT': 'text/html'}
+      );
+      // if (url) {
+      //   fetch(url)
+      //     .then(function (response) {
+      //       return response.text();
+      //     })
+      //     .then(function (html) {
+      //       document.getElementById('info').innerHTML = html;
+      //     });
+      // }
+
+      features = [];
+      features.push(coloredSvgMarker([evt.place.lon, evt.place.lat], "Lokasi Terpilih", '0', "red"));
+
+      that.vectorSource = new VectorSource({
+        features: features
+      });
+
+      that.vectorLayer = new VectorLayer({
+        source: that.vectorSource
+      });
+
+      that.mapPengajian.addLayer(that.vectorLayer);
     });
 
     function coloredSvgMarker(lonLat, name, id, color) {

@@ -58,6 +58,9 @@ export class JadwalSholatPage implements OnInit {
     this.today = this.datePipe.transform(new Date(date), 'dd MMM yyyy');
     this.year = date.getFullYear();
     this.prayTime = await this.api.getThisMonth(this.month,this.year, this.city);
+
+    // let dateHijri = new Date(this.prayTime[this.dateToday-1].date['readable'])
+    // this.getHijri(dateHijri);
   }
 
   async doRefresh(event) {
@@ -273,6 +276,9 @@ export class JadwalSholatPage implements OnInit {
         this.prayTime = undefined;
         this.prayTime = await this.api.getThisMonth(this.month,this.year, this.city);
         this.timesSelected = await this.prayTime;
+
+        // let dateHijri = new Date(this.prayTime[this.dateToday-1].date['readable'])
+        // this.getHijri(dateHijri);
       } else if(from == 'weekly') {
         let date = new Date(this.timesSelected[this.timesSelected.length-1].date.gregorian);
         let start = this.datePipe.transform(new Date(date).setDate(date.getDate() + 1), 'yyyy-MM-dd');
@@ -283,6 +289,9 @@ export class JadwalSholatPage implements OnInit {
         this.firstDateHeader = this.timesSelected[0].date.gregorian;
         this.lastDateHeader = this.timesSelected[this.timesSelected.length-1].date.gregorian;
         this.parseTime(this.timesSelected, 'weekly')
+
+        // let dateHijri = new Date(this.prayTime[this.dateToday-1].date['readable'])
+        // this.getHijri(dateHijri);
       } else if(from == 'monthly') {
         // let date = new Date(this.timesSelected[this.timesSelected.length-1].date.gregorian);
         // let month = this.datePipe.transform(new Date(date).setDate(date.getMonth() + 1), 'yyyy-MM');
@@ -292,6 +301,9 @@ export class JadwalSholatPage implements OnInit {
         this.parseTime(this.timesSelected, 'monthly');
         this.firstDateHeader = this.timesSelected[0].date.readable;
         this.lastDateHeader = this.timesSelected[this.timesSelected.length-1].date.readable;
+
+        // let dateHijri = new Date(this.prayTime[this.dateToday-1].date['readable'])
+        // this.getHijri(dateHijri);
       }
   }
 
@@ -311,6 +323,9 @@ export class JadwalSholatPage implements OnInit {
         this.prayTime = undefined;
         this.prayTime = await this.api.getThisMonth(this.month,this.year, this.city);
         this.timesSelected = await this.prayTime;
+        
+        // let dateHijri = new Date(this.prayTime[this.dateToday-1].date['readable'])
+        // this.getHijri(dateHijri);
       } else if(from == 'weekly') {
         let date = new Date(this.timesSelected[0].date.gregorian);
         let start = this.datePipe.transform(new Date(date).setDate(date.getDate() - 7), 'yyyy-MM-dd');
@@ -321,6 +336,9 @@ export class JadwalSholatPage implements OnInit {
         this.firstDateHeader = this.timesSelected[0].date.gregorian;
         this.lastDateHeader = this.timesSelected[this.timesSelected.length-1].date.gregorian;
         this.parseTime(this.timesSelected, 'weekly')
+        
+        // let dateHijri = new Date(this.prayTime[this.dateToday-1].date['readable'])
+        // this.getHijri(dateHijri);
       } else if(from == 'monthly') {
         // let date = new Date(this.timesSelected[0].date.gregorian);
         // let month = this.datePipe.transform(new Date(date).setDate(date.getMonth() - 1), 'yyyy-MM');
@@ -330,12 +348,30 @@ export class JadwalSholatPage implements OnInit {
         this.firstDateHeader = this.timesSelected[0].date.readable;
         this.lastDateHeader = this.timesSelected[this.timesSelected.length-1].date.readable;
         this.parseTime(this.timesSelected, 'monthly');
+        
+        // let dateHijri = new Date(this.prayTime[this.dateToday-1].date['readable'])
+        // this.getHijri(dateHijri);
       }
+  }
+
+  dateHijri:any = {};
+  async getHijri(dateNow) {
+    let tahun = this.datePipe.transform(dateNow, 'yyyy');
+    let bulan = this.datePipe.transform(dateNow, 'MM');
+    let tanggal = this.datePipe.transform(dateNow, 'dd');
+    
+    let data = {
+      url: 'https://service.unisayogya.ac.id/kalender/api/masehi2hijriah/muhammadiyah/'+tahun+'/'+bulan+'/'+tanggal
+    };
+
+    await this.api.post('dashboard/hijri', data).then(res => {
+      this.dateHijri = res;
+    })
   }
 
   //pilih cell
   cellSelected:any={};
-  selectCell(m,n)
+  async selectCell(m,n)
   {
      var date=this.cal[m][n];
      if(date != 0) {
@@ -343,6 +379,9 @@ export class JadwalSholatPage implements OnInit {
       this.cellSelected[m+n]=true;
       this.selected=new Date(date.tahun,date.bulan-1,date.tanggal);
       this.dateToday = date.tanggal;
+        
+      // let dateHijri = new Date(this.selected)
+      // await this.getHijri(dateHijri);
       this.presentModal(this.selected);
      }
   }
@@ -357,6 +396,7 @@ export class JadwalSholatPage implements OnInit {
       breakpoints: [0, 0.5, 1],
       componentProps: {
         data:selected,
+        dateHijri:this.dateHijri,
         times: this.prayTime[time-1] 
       }
     });

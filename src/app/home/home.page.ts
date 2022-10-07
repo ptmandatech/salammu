@@ -69,6 +69,7 @@ export class HomePage implements OnInit {
     this.present();
     this.dateNow = new Date();
     await this.checkPermission();
+    // this.getHijri(this.dateNow);
     this.cekLogin();
     this.serverImg = this.common.photoBaseUrl+'products/';
     this.serverImgBanner = this.common.photoBaseUrl+'banners/';
@@ -102,6 +103,21 @@ export class HomePage implements OnInit {
       });
       this.loading = false;
     });
+  }
+
+  dateHijri:any = {};
+  getHijri(dateNow) {
+    let tahun = this.datePipe.transform(dateNow, 'yyyy');
+    let bulan = this.datePipe.transform(dateNow, 'MM');
+    let tanggal = this.datePipe.transform(dateNow, 'dd');
+    
+    let data = {
+      url: 'https://service.unisayogya.ac.id/kalender/api/masehi2hijriah/muhammadiyah/'+tahun+'/'+bulan+'/'+tanggal
+    };
+
+    this.api.post('dashboard/hijri', data).then(res => {
+      this.dateHijri = res;
+    })
   }
 
   async checkPermission() {
@@ -345,6 +361,9 @@ export class HomePage implements OnInit {
       this.timesToday = undefined;
       await this.checkPermission();
       this.cekLogin();
+      this.dateNow = new Date();
+      console.log(this.dateNow)
+      this.getHijri(this.dateNow);
       this.serverImg = this.common.photoBaseUrl+'products/';
       this.serverImgBanner = this.common.photoBaseUrl+'banners/';
       this.getAllProducts();

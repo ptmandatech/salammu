@@ -12,6 +12,7 @@ export class ModalJadwalComponent implements OnInit {
 
   dateSelected:any;
   times:any;
+  dateHijri:any = {};
   constructor(
     private calendar:CalendarService,
     public modalController: ModalController,
@@ -22,6 +23,8 @@ export class ModalJadwalComponent implements OnInit {
   ngOnInit() {
     this.dateSelected = this.navParams.get('data');
     this.times = this.navParams.get('times');
+    this.dateHijri = this.navParams.get('dateHijri');
+    // console.log(this.dateHijri)
     this.parseTime(this.times)
   }
 

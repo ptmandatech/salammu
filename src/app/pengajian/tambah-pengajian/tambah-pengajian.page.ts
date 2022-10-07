@@ -207,7 +207,10 @@ export class TambahPengajianPage implements OnInit {
       if(this.pengajianData.twig != null) {
         this.twigSelected = this.listRanting.find(x => x.id === this.pengajianData.twig);
       }
-      this.dateValue = this.datePipe.transform(new Date(this.pengajianData.datetime), 'MMM dd yyyy HH:mm');
+      
+      if(this.pengajianData.datetime) {
+        this.dateValue = this.datePipe.transform(new Date(this.pengajianData.datetime), 'MMM dd yyyy HH:mm');
+      }
       if(this.pengajianData != null) {
         this.form.patchValue({
           id: this.pengajianData.id,
@@ -566,7 +569,47 @@ export class TambahPengajianPage implements OnInit {
     //Listen when an address is chosen
     geocoder.on('addresschosen', function (evt) {
       that.map.getView().setCenter([evt.place.lon, evt.place.lat]);
-      that.map.getView().setZoom(11);
+      that.map.getView().setZoom(18);
+      var dt = {
+        lat: evt.place.lat,
+        long: evt.place.lon
+      }
+      this.longitude = evt.place.lon;
+      this.latitude = evt.place.lat;
+      that.getDetailLocation(dt);
+      that.pengajianData.pin = JSON.stringify(dt);
+      
+      that.map.removeLayer(that.vectorLayer);
+      document.getElementById('info').innerHTML = '';
+      var viewResolution = /** @type {number} */ (view.getResolution());
+      var url = wmsSource.getFeatureInfoUrl(
+        evt.place,
+        viewResolution,
+        'EPSG:3857',
+        {'INFO_FORMAT': 'text/html'}
+      );
+      if (url) {
+        fetch(url)
+          .then(function (response) {
+            return response.text();
+          })
+          .then(function (html) {
+            document.getElementById('info').innerHTML = html;
+          });
+      }
+
+      features = [];
+      features.push(coloredSvgMarker([evt.place.lon,evt.place.lat], "Lokasi Terpilih", "red"));
+
+      that.vectorSource = new VectorSource({
+        features: features
+      });
+
+      that.vectorLayer = new VectorLayer({
+        source: that.vectorSource
+      });
+
+      that.map.addLayer(that.vectorLayer);
     });
 
     function coloredSvgMarker(lonLat,name, color) {

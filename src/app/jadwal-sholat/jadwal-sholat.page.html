@@ -23,6 +23,9 @@
         <ion-text *ngIf="prayTime != undefined">
           <p class="fs-10 ion-no-padding" *ngIf="prayTime[dateToday-1].date != undefined"> {{prayTime[dateToday-1].date.hijri.day}} {{prayTime[dateToday-1].date.hijri.month.en}} {{prayTime[dateToday-1].date.hijri.year}}</p>
         </ion-text>
+        <!-- <ion-text>
+          <p class="fs-10 ion-no-padding"> {{dateHijri.tanggal}} {{dateHijri.namabulan}} {{dateHijri.tahun}}</p>
+        </ion-text> -->
       </ion-label>
     </ion-title>
     <!-- <ion-title class="date-title" *ngIf="selected != undefined">{{selected | date:'dd, MMM y'}}</ion-title>
