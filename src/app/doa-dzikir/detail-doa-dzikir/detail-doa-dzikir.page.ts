@@ -44,7 +44,7 @@ export class DetailDoaDzikirPage implements OnInit {
     this.api.me().then(res=>{
       this.userData = res;
     }, error => {
-      console.log(error);
+      // console.log(error);
     })
   }
 

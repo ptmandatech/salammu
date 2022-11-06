@@ -1,0 +1,34 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-item lines="none" class="ion-padding">
+        <ion-icon color="primary" slot="end" name="close-circle-outline" (click)="dismiss(null)"></ion-icon>
+        <ion-label>
+          <ion-text color="primary">
+            <h2>Pilih Lokasimu</h2>
+          </ion-text>
+          <p class="fs-10 ion-text-wrap" style="margin-top: -1px;">Waktu shalat akan menyesuaikan lokasi yang kamu pilih.</p>
+        </ion-label>
+    </ion-item>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-item lines="full">
+      <ion-searchbar mode="ios" showCancelButton="never" [(ngModel)]="searchTerm" (ionChange)="searchChanged($event)" placeholder="Cari Lokasi"></ion-searchbar>
+    </ion-item>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-grid>
+    <ion-row>
+      <ion-col class="ion-text-center mb-16">
+        <ion-list>
+          <ion-item *ngFor="let n of allCity" (click)="dismiss(n)">
+            <ion-label>
+              <h2>{{n.kab_nama}}</h2>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

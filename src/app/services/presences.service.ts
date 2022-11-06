@@ -6,8 +6,8 @@ import { Injectable } from '@angular/core';
 })
 export class PresencesService {
 
-  serverUrl='https://api.sunhouse.co.id/lms/index.php/';
-  public photoBaseUrl='https://api.sunhouse.co.id/lms/photos/';
+  serverUrl='https://api.shdprime.xyz/salammu/index.php/';
+  public photoBaseUrl='https://api.shdprime.xyz/salammu/photos/';
   httpOption:any;
   constructor(
     public http:HttpClient

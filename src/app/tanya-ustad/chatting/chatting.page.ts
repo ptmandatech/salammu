@@ -9,7 +9,13 @@ import { CommonService } from 'src/app/services/common.service';
 import { PhotoViewer } from '@awesome-cordova-plugins/photo-viewer/ngx';
 // import { Socket } from 'ngx-socket-io';
 import { map } from 'rxjs/operators';
+import { ActionsSubject, select, Store } from '@ngrx/store';
+import { AppState } from '../../store/app.state';
 
+import * as chatActions from '../../store/actions/chat/chat.actions';
+import * as chatSelectors from '../../store/selectors/chat/chat.selectors';
+import { Observable } from 'rxjs';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-chatting',
   templateUrl: './chatting.page.html',
@@ -26,16 +32,24 @@ export class ChattingPage implements OnInit {
   userData:any = {};
   serverImg: any;
   serverImgUser: any;
+  public roomId: number = 123;
+  public socket: any;
+  public formGroup: FormGroup;
+  public messages$: Observable<any>;
+  public messagesList: any = [];
 
   constructor(
     public api: ApiService,
     private route: ActivatedRoute,
     private toastController: ToastController,
     public common: CommonService,
+    private fb: FormBuilder,
     private http: HttpClient,
     public modalController: ModalController,
     private loadingController: LoadingController,
     public actionSheetController: ActionSheetController,
+    private store: Store<AppState>,
+    private actionsSubject$: ActionsSubject,
     // private socket: Socket,
     private photoViewer: PhotoViewer
   ) { 
@@ -46,10 +60,10 @@ export class ChattingPage implements OnInit {
         this.data = JSON.parse(data.data);
       }
     });
+    this.messages$ = this.store.pipe(select(chatSelectors.selectMessages))
   }
 
   async ngOnInit() {
-    // this.socket.connect();
     this.present();
     await this.cekLogin();
   }
@@ -148,8 +162,23 @@ export class ChattingPage implements OnInit {
       } else {
         this.isUstad = false;
       }
+
+      this.startWs()
+  
+      // load chat messages by room_id
+      this.store.dispatch(chatActions.loadMessages({roomId: this.roomData.id}));
+  
+      this.actionsSubject$.subscribe((state: any) => {
+        switch (state.type) {
+          case '[Chat] Load Messages Success':
+            this.messagesList = state.data;
+            break;
+          default:
+            // pass
+        }
+      })
       
-      this.getChats();
+      // this.getChats();
       // setInterval(() => {
       //   this.getChats();
       // }, 1000)
@@ -207,6 +236,12 @@ export class ChattingPage implements OnInit {
         user_already_read: this.roomData.ustadz_id != this.userData.id ? true:false,
         type: this.image == null ? 'text':'image'
       }
+
+      // send to ws
+      this.socket.send(JSON.stringify(dt));
+  
+      // send to server
+      this.store.dispatch(chatActions.sendMessage({data: dt}));
   
       this.api.post('chattings/chats', dt).then(res => {
         console.log(res)
@@ -312,6 +347,41 @@ export class ChattingPage implements OnInit {
 
     this.http.post(this.url_notif, data, { headers }).subscribe( res => {
     });
+  }
+
+  /**
+   * Start webscoket
+   */
+  private startWs() {
+    this.socket = new WebSocket('wss://api.sunhouse.co.id');
+
+    // when ws open we send subscriber for listening new message
+    this.socket.onopen = () => {
+      console.log('ws open')
+
+      this.socket.send(JSON.stringify({
+        room: this.roomData.id,
+        command: 'subscribe',
+      }));
+    }
+
+    this.socket.onclose = () => {
+      console.log('ws close')
+    }
+
+    // listening new message
+    this.socket.onmessage = (event: any) => {
+      const data = JSON.parse(event.data)
+
+      this.messagesList = [
+        ...this.messagesList,
+        data.message
+      ]
+    }
+
+    if (this.socket.readyState == WebSocket.OPEN) {
+      this.socket.onopen(null);
+    }
   }
 
 }

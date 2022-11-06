@@ -37,9 +37,9 @@ export class ProdukMUPage implements OnInit {
     this.getAllProducts();
   }
 
-  ionViewWillEnter() {
-    this.ngOnInit();
-  }
+  // ionViewWillEnter() {
+  //   this.ngOnInit();
+  // }
 
   async present() {
     this.loading = true;

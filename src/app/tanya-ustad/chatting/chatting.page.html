@@ -16,7 +16,7 @@
 
 <ion-content>
     <ion-grid class="ion-padding">
-        <ion-row *ngFor="let message of listChats">
+        <ion-row *ngFor="let message of messagesList">
      
           <ion-col size="9" *ngIf="message.created_by !== userData.id" class="message other-message">
             <img *ngIf="message.image" src="{{serverImg+message.image}}" (click)="openImg(serverImg+message.image)"/>

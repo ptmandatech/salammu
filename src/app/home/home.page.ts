@@ -10,6 +10,8 @@ import { Geolocation, Geoposition, PositionError } from '@awesome-cordova-plugin
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AppComponent } from '../app.component';
 import { SemuaMenuPage } from './semua-menu/semua-menu.page';
+import { SettingLokasiPage } from './setting-lokasi/setting-lokasi.page';
+import { PilihLokasiPage } from './pilih-lokasi/pilih-lokasi.page';
 
 @Component({
   selector: 'app-home',
@@ -82,12 +84,7 @@ export class HomePage implements OnInit {
     this.getAllVideos();
   }
 
-  ionViewWillEnter() {
-    // this.checkPermission();
-  }
-
   async present() {
-    this.loading = true;
     return await this.loadingController.create({
       spinner: 'crescent',
       duration: 10000,
@@ -98,10 +95,10 @@ export class HomePage implements OnInit {
         console.log('presented');
         if (!this.loading) {
           a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
+          // this.loading = false;
         }
       });
-      this.loading = false;
+      // this.loading = false;
     });
   }
 
@@ -123,7 +120,7 @@ export class HomePage implements OnInit {
   async checkPermission() {
     if (this.platform.is('android')) {
       let successCallback = (isAvailable) => { console.log('Is available? ' + isAvailable); };
-      let errorCallback = (e) => console.error(e);
+      let errorCallback = async (e) => { console.error(e); await this.checkLocation()};
 
       this.diagnostic.isLocationAvailable().then(successCallback).catch(errorCallback);
 
@@ -186,9 +183,10 @@ export class HomePage implements OnInit {
   options:any;
   currentPos:any;
   checkLocation() {
+    this.listTimes = [];
     return new Promise((resolve, reject) => {
     this.options = {
-      maximumAge: 3000,
+      maximumAge: 3600,
       enableHighAccuracy: true
     };
 
@@ -216,15 +214,16 @@ export class HomePage implements OnInit {
       })
     };
 
-    await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
-      this.locationNow = res;
+    await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
+      this.checkCity(res);
       if(this.locationNow == undefined) {
-        await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
-          this.checkCity(res);
+        await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
+          this.locationNow = res;
         })
       } else {
         if(this.locationNow.address.state_district != undefined) {
           this.city = this.locationNow.address.state_district.replace('Kota ', '');
+          localStorage.setItem('selectedCity', this.city);
           if(this.city != undefined) {
             this.listTimes = [];
             this.tempTimes1 = [];
@@ -253,6 +252,7 @@ export class HomePage implements OnInit {
       await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(async res => {
         this.locationNow = res;
         this.city = this.locationNow.city.replace('Kota ', '');
+        localStorage.setItem('selectedCity', this.city);
         if(this.city != undefined) {
           this.listTimes = [];
           this.tempTimes1 = [];
@@ -272,25 +272,26 @@ export class HomePage implements OnInit {
           this.parseTime(this.timesToday);
         }
       }, async error => {
-        this.city = 'Yogyakarta';
-        if(this.city != undefined) {
-          this.listTimes = [];
-          this.tempTimes1 = [];
-          this.tempTimes2 = [];
-          this.prayTime = undefined;
-          this.timesToday = undefined;
-          this.prayTime = await this.api.getToday(this.city);
-          this.timesToday = await this.prayTime.timings;
+        this.openSettingLokasi();
+        // this.city = 'Yogyakarta';
+        // if(this.city != undefined) {
+        //   this.listTimes = [];
+        //   this.tempTimes1 = [];
+        //   this.tempTimes2 = [];
+        //   this.prayTime = undefined;
+        //   this.timesToday = undefined;
+        //   this.prayTime = await this.api.getToday(this.city);
+        //   this.timesToday = await this.prayTime.timings;
 
-          if(this.timesToday['Firstthird']) {
-            delete this.timesToday['Firstthird'];
-            delete this.timesToday['Lastthird'];
-          }
-          if(this.timesToday['Sunrise']) {
-            delete this.timesToday['Sunrise'];
-          }
-          this.parseTime(this.timesToday);
-        }
+        //   if(this.timesToday['Firstthird']) {
+        //     delete this.timesToday['Firstthird'];
+        //     delete this.timesToday['Lastthird'];
+        //   }
+        //   if(this.timesToday['Sunrise']) {
+        //     delete this.timesToday['Sunrise'];
+        //   }
+        //   this.parseTime(this.timesToday);
+        // }
       })
     });
   }
@@ -298,6 +299,7 @@ export class HomePage implements OnInit {
   async checkCity(res) {
     this.locationNow = res.features[0].properties;
     this.city = res.features[0].properties.address.city;
+    localStorage.setItem('selectedCity', this.city);
     if(this.city != undefined) {
       this.listTimes = [];
       this.tempTimes1 = [];
@@ -362,7 +364,6 @@ export class HomePage implements OnInit {
       await this.checkPermission();
       this.cekLogin();
       this.dateNow = new Date();
-      console.log(this.dateNow)
       this.getHijri(this.dateNow);
       this.serverImg = this.common.photoBaseUrl+'products/';
       this.serverImgBanner = this.common.photoBaseUrl+'banners/';
@@ -386,7 +387,6 @@ export class HomePage implements OnInit {
     this.api.get('articles?limit=5').then(res => {
       this.listArticles = res;
     }, error => {
-      this.loading = false;
     })
   }
 
@@ -394,6 +394,7 @@ export class HomePage implements OnInit {
   getAllVideos() {
     this.api.get('videos?limit=5').then(res => {
       this.listVideos = res;
+      this.loading = false;
     }, error => {
       this.loading = false;
     })
@@ -402,7 +403,6 @@ export class HomePage implements OnInit {
   getAllBanners() {
     this.api.get('banners').then(res => {
       this.listBanners = res;
-      this.loading = false;
     })
   }
 
@@ -532,7 +532,6 @@ export class HomePage implements OnInit {
     setInterval(async ()=> {
       let date = new Date();
       this.nextTimeTimer = await this.timeCalc(date, this.nextTime.time);
-      console.log(this.nextTimeTimer)
     },3000);
   }
 
@@ -592,7 +591,6 @@ export class HomePage implements OnInit {
         }
       }
     }
-    this.loading = false;
   }
 
   //Modal Semua Menu
@@ -603,6 +601,64 @@ export class HomePage implements OnInit {
       cssClass: 'modal-class',
       initialBreakpoint: 0.6,
       breakpoints: [0, 0.6, 1]
+    });
+    return await modal.present();
+  }
+
+  //Modal Setting Lokasi
+  async openSettingLokasi() {
+    const modal = await this.modalController.create({
+      component: SettingLokasiPage,
+      mode: "md",
+      cssClass: 'modal-class',
+      initialBreakpoint: 0.3,
+      breakpoints: [0, 0.3, 1]
+    });
+
+    modal.onDidDismiss().then(async (result) => {
+      if(result['data'] == 'lokasisekarang') {
+        this.present();
+        await this.checkPermission();
+      } else {
+        this.openLocations();
+      }
+    });
+    return await modal.present();
+  }
+
+  //Modal Pilih Lokasi
+  async openLocations() {
+    const modal = await this.modalController.create({
+      component: PilihLokasiPage,
+      mode: "md",
+      cssClass: 'modal-class',
+      initialBreakpoint: 0.8,
+      breakpoints: [0, 0.8, 1]
+    });
+
+    modal.onDidDismiss().then(async (result) => {
+      if(result['data']) {
+        this.city = result['data']['kab_nama'];
+        localStorage.setItem('selectedCity', this.city);
+        if(this.city != undefined) {
+          this.listTimes = [];
+          this.tempTimes1 = [];
+          this.tempTimes2 = [];
+          this.prayTime = undefined;
+          this.timesToday = undefined;
+          this.prayTime = await this.api.getToday(this.city);
+          this.timesToday = await this.prayTime.timings;
+
+          if(this.timesToday['Firstthird']) {
+            delete this.timesToday['Firstthird'];
+            delete this.timesToday['Lastthird'];
+          }
+          if(this.timesToday['Sunrise']) {
+            delete this.timesToday['Sunrise'];
+          }
+          this.parseTime(this.timesToday);
+        }
+      }
     });
     return await modal.present();
   }

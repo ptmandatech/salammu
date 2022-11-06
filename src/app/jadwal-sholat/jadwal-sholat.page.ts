@@ -171,7 +171,12 @@ export class JadwalSholatPage implements OnInit {
       this.getDetailLocation(location);
       resolve(pos);
    }, (err: PositionError) => {
-     reject(err.message);
+      reject(err.message);
+      let city = localStorage.getItem('selectedCity');
+      if(city) {
+        this.city = city;
+        this.getCal();
+      }
     });
    });
   }
@@ -184,20 +189,25 @@ export class JadwalSholatPage implements OnInit {
       })
     };
 
-    await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
-      this.locationNow = res;
-      if(this.locationNow.address.state_district != undefined) {
-        this.city = this.locationNow.address.state_district.replace('Kota ', '');
-        this.getCal();
-        this.dailyShow();
-      } else {
-        await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
-          this.checkCity(res);
-        })
-      }
-      if(this.locationNow == undefined) {
-        await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
-          this.checkCity(res);
+    let city = localStorage.getItem('selectedCity');
+    if(city) {
+      this.city = city;
+      this.getCal();
+      return;
+    }
+
+    await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
+      this.checkCity(res);
+      if(!res) {
+        await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
+          this.locationNow = res;
+          if(this.locationNow.address.state_district != undefined) {
+            this.city = this.locationNow.address.state_district.replace('Kota ', '');
+            this.getCal();
+            this.dailyShow();
+          }
+        }, err => {
+          this.getCityFromLocal();
         })
       }
     }, async error => {
@@ -206,8 +216,19 @@ export class JadwalSholatPage implements OnInit {
         this.city = this.locationNow.city.replace('Kota ', '');
         this.getCal();
         this.dailyShow();
+      }, err => {
+        this.getCityFromLocal();
       })
     });
+  }
+
+  getCityFromLocal() {
+    let city = localStorage.getItem('selectedCity');
+    console.log(city)
+    if(city) {
+      this.city = city;
+      this.getCal();
+    }
   }
 
   checkCity(res) {

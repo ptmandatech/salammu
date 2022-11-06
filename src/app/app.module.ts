@@ -40,6 +40,10 @@ import { OneSignal } from '@awesome-cordova-plugins/onesignal/ngx';
 // const config: SocketIoConfig = { 
 //   url: 'http://localhost:8988', options: {} 
 // };
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { AppReducers } from './store/app.reducer';
+import { AppEffects } from './store/app.effetcts';
 
 @NgModule({
   declarations: [
@@ -69,7 +73,10 @@ import { OneSignal } from '@awesome-cordova-plugins/onesignal/ngx';
     NgxIonicImageViewerModule,
     // SocketIoModule.forRoot(config),
     SwiperModule,
-    IonicSelectableModule
+    IonicSelectableModule,
+    StoreModule.forRoot(AppReducers, {}),
+    EffectsModule.forRoot(AppEffects),
+    StoreModule.forRoot({}, {}),
   ],
   providers: [
     StatusBar, 
