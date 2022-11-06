@@ -193,9 +193,11 @@ export class JadwalSholatPage implements OnInit {
     if(city) {
       this.city = city;
       this.getCal();
+      this.dailyShow();
       return;
     }
 
+    console.log('masuk sini')
     await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
       this.checkCity(res);
       if(!res) {
