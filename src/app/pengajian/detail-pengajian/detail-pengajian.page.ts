@@ -64,7 +64,6 @@ export class DetailPengajianPage implements OnInit {
         console.log('presented');
         if (!this.loading) {
           a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
         }
       });
       this.loading = false;
@@ -250,6 +249,7 @@ export class DetailPengajianPage implements OnInit {
     setTimeout(() => {
       this.mapDetail.setTarget(document.getElementById('mapDetail'));
     }, 1000);
+    this.loading = false;
   }
 
   openMap() {

@@ -235,7 +235,7 @@ export class JadwalSholatPage implements OnInit {
 
   checkCity(res) {
     this.locationNow = res.features[0].properties;
-    this.city = res.features[0].properties.address.city;
+    this.city = res.features[0].properties.address.city == null ? res.features[0].properties.address.town:res.features[0].properties.address.city;
     this.getCal();
     this.dailyShow();
   }

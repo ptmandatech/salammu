@@ -96,11 +96,13 @@ export class TambahPengajianPage implements OnInit {
     this.twigSelected = event.value;
   }
 
+  minDate:any;
   async ngOnInit() {
     this.present();
     this.cekLogin();
     await this.getAllCr();
     this.today = new Date();
+    this.minDate = new Date().toISOString();
     this.id = this.routes.snapshot.paramMap.get('id');
     if(this.id != 0) {
       this.isCreated = false;
@@ -278,7 +280,7 @@ export class TambahPengajianPage implements OnInit {
       if(this.branchSelected != undefined) this.pengajianData.branch = this.branchSelected.id;
       if(this.twigSelected != undefined) this.pengajianData.twig = this.twigSelected.id;
   
-      if(new Date(this.dateValue) > this.today) {
+      if(new Date(this.dateValue) >= this.today) {
         this.pengajianData.status = 'soon';
       } else {
         this.pengajianData.status = 'done';
@@ -649,22 +651,19 @@ export class TambahPengajianPage implements OnInit {
       })
     };
 
-    await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
-      this.detailLocSelected = res;
-      if(this.detailLocSelected == undefined || this.detailLocSelected.address.state_district == undefined) {
-        await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
-          this.detailLocSelected = res;
-          this.city = this.detailLocSelected.features[0].properties.address.state;
-        })
-      } else {
-        this.city = this.detailLocSelected.address.state_district.replace('Kota ', '');
-      }
+    await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
+      this.checkDetailPin(res);
     }, async error => {
       await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
         this.detailLocSelected = res;
         this.city = this.detailLocSelected.city.replace('Kota ', '');
       })
     });
+  }
+
+  checkDetailPin(res) {
+    this.detailLocSelected = res.features[0].properties;
+    this.city = res.features[0].properties.address.city == null ? res.features[0].properties.address.town:res.features[0].properties.address.city;
   }
 
 }

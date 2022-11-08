@@ -69,6 +69,7 @@ export class HomePage implements OnInit {
   async ngOnInit() {
     this.loading = true;
     this.present();
+    this.listTimes = [];
     this.dateNow = new Date();
     await this.checkPermission();
     // this.getHijri(this.dateNow);
@@ -95,10 +96,10 @@ export class HomePage implements OnInit {
         console.log('presented');
         if (!this.loading) {
           a.dismiss().then(() => console.log('abort presenting'));
-          // this.loading = false;
+          this.loading = false;
         }
       });
-      // this.loading = false;
+      this.loading = false;
     });
   }
 
@@ -216,37 +217,10 @@ export class HomePage implements OnInit {
 
     await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
       this.checkCity(res);
-      if(this.locationNow == undefined) {
+      if(res == undefined) {
         await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
           this.locationNow = res;
         })
-      } else {
-        if(this.locationNow.address.state_district != undefined) {
-          this.city = this.locationNow.address.state_district.replace('Kota ', '');
-          localStorage.setItem('selectedCity', this.city);
-          if(this.city != undefined) {
-            this.listTimes = [];
-            this.tempTimes1 = [];
-            this.tempTimes2 = [];
-            this.prayTime = undefined;
-            this.timesToday = undefined;
-            this.prayTime = await this.api.getToday(this.city);
-            this.timesToday = await this.prayTime.timings;
- 
-            if(this.timesToday['Firstthird']) {
-              delete this.timesToday['Firstthird'];
-              delete this.timesToday['Lastthird'];
-            }
-            if(this.timesToday['Sunrise']) {
-              delete this.timesToday['Sunrise'];
-            }
-            this.parseTime(this.timesToday);
-          }
-        } else {
-          await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
-            this.checkCity(res);
-          })
-        }
       }
     }, async error => {
       await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(async res => {
@@ -298,7 +272,7 @@ export class HomePage implements OnInit {
 
   async checkCity(res) {
     this.locationNow = res.features[0].properties;
-    this.city = res.features[0].properties.address.city;
+    this.city = res.features[0].properties.address.city == null ? res.features[0].properties.address.town:res.features[0].properties.address.city;
     localStorage.setItem('selectedCity', this.city);
     if(this.city != undefined) {
       this.listTimes = [];
@@ -451,12 +425,18 @@ export class HomePage implements OnInit {
         this.data.title = title[i];
         this.data.time = times[i];
         this.data.title_color = 'medium';
-        this.data.time_color = 'dark';
+        this.data.time_color = 'dark'; 
       }
       if(this.data.title == 'Imsak') {
-        this.tempTimes1.push(this.data);
+        let idx = this.tempTimes1.indexOf(this.data);
+        if(idx == -1) {
+          this.tempTimes1.push(this.data);
+        }
       } else {
-        this.tempTimes2.push(this.data);
+        let idx = this.tempTimes2.indexOf(this.data);
+        if(idx == -1) {
+          this.tempTimes2.push(this.data);
+        }
       }
 
       this.listTimes = this.tempTimes1.concat(this.tempTimes2);
@@ -619,7 +599,7 @@ export class HomePage implements OnInit {
       if(result['data'] == 'lokasisekarang') {
         this.present();
         await this.checkPermission();
-      } else {
+      } else if(result['data'] == 'cari') {
         this.openLocations();
       }
     });

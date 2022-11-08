@@ -73,7 +73,7 @@
             </ion-text>
           </ion-label>
         </ion-item>
-        <p class="ion-text-wrap" *ngIf="locationNow == undefined"><ion-skeleton-text animated style="height: 400px"></ion-skeleton-text></p>
+        <p class="ion-text-wrap" *ngIf="locationNow == undefined && loading"><ion-skeleton-text animated style="height: 400px"></ion-skeleton-text></p>
         <div id="mapDetail" style="width: auto; height: 300px;"></div>
 
       </ion-col>

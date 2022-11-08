@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { LoadingController, ModalController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
@@ -9,12 +9,15 @@ import { ApiService } from 'src/app/services/api.service';
 })
 export class PilihLokasiPage implements OnInit {
 
+  loading:boolean;
   constructor(
+    private loadingController: LoadingController,
     public modalController: ModalController,
     private api: ApiService
   ) { }
 
   ngOnInit() {
+    this.present();
     this.getAllCity();
   }
 
@@ -26,6 +29,24 @@ export class PilihLokasiPage implements OnInit {
       this.allCityTemp = res;
     }, error => {
     })
+  }
+
+  async present() {
+    return await this.loadingController.create({
+      spinner: 'crescent',
+      duration: 10000,
+      message: 'Tunggu Sebentar...',
+      cssClass: 'custom-class custom-loading'
+    }).then(a => {
+      a.present().then(() => {
+        console.log('presented');
+        if (!this.loading) {
+          a.dismiss().then(() => console.log('abort presenting'));
+          this.loading = false;
+        }
+      });
+      this.loading = false;
+    });
   }
 
   initializeItems(): void {

@@ -102,12 +102,7 @@ export class PengajianPage implements OnInit {
     }).then(a => {
       a.present().then(() => {
         console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
       });
-      this.loading = false;
     });
   }
 
@@ -246,7 +241,6 @@ export class PengajianPage implements OnInit {
 
   getCityFromLocal() {
     let city = localStorage.getItem('selectedCity');
-    console.log(city)
     if(city) {
       this.city = city;
       this.getCal();
@@ -255,7 +249,7 @@ export class PengajianPage implements OnInit {
 
   checkCity(res) {
     this.locationNow = res.features[0].properties;
-    this.city = res.features[0].properties.address.city;
+    this.city = res.features[0].properties.address.city == null ? res.features[0].properties.address.town:res.features[0].properties.address.city;
     this.getCal();
   }
 
@@ -300,13 +294,13 @@ export class PengajianPage implements OnInit {
     {
       for(var j=0; j<this.cal[this.week[i]].length;j++)
       {
-        if(this.cal[this.week[i]][j] != 0) {
-          let tahun = this.cal[this.week[i]][j].tahun;
-          let bulan = this.cal[this.week[i]][j].bulan;
-          let tanggal = this.cal[this.week[i]][j].tanggal;
-          let datetime = this.datePipe.transform(new Date(tahun, bulan-1, tanggal), 'yyyy-MM-dd');
-          await this.parseDataPengajian(datetime, this.cal[this.week[i]][j].tanggal);
-        }
+        // if(this.cal[this.week[i]][j] != 0) {
+        //   let tahun = this.cal[this.week[i]][j].tahun;
+        //   let bulan = this.cal[this.week[i]][j].bulan;
+        //   let tanggal = this.cal[this.week[i]][j].tanggal;
+        //   let datetime = this.datePipe.transform(new Date(tahun, bulan-1, tanggal), 'yyyy-MM-dd');
+        //   await this.parseDataPengajian(datetime, tanggal, bulan, tahun);
+        // }
 
         if(this.cal[this.week[i]][j].tanggal == this.dateToday) {
           this.m = i.toString();
@@ -363,25 +357,43 @@ export class PengajianPage implements OnInit {
     this.pengajian = [];
     this.api.get('pengajian?all=ok').then(res => {
       this.pengajian = res;
+      this.parsePengajianAwal();
     }, error => {
       this.loading = false;
     })
   }
 
-  parseDataPengajian(datetime, date) {
+  parsePengajianAwal() {
     for(var i=0; i<this.pengajian.length; i++) {
-      let dt = this.datePipe.transform(new Date(this.pengajian[i].datetime), 'yyyy-MM-dd');
-      if(dt == datetime) {
-        if(this.dataPengajian[date] == undefined) {
-          this.dataPengajian[date] = [];
-        }
-        let idx = this.dataPengajian[date].indexOf(this.pengajian[i]);
-        if(idx == -1) {
-          this.dataPengajian[date].push(this.pengajian[i]);
-        }
+      let tahun = this.datePipe.transform(new Date(this.pengajian[i].datetime), 'yyyy');
+      let bulan = this.datePipe.transform(new Date(this.pengajian[i].datetime), 'MM');
+      let tanggal = this.datePipe.transform(new Date(this.pengajian[i].datetime), 'dd');
+
+      if(this.dataPengajian[Number(tanggal)+'_'+Number(bulan)+'_'+tahun] == undefined) {
+        this.dataPengajian[Number(tanggal)+'_'+Number(bulan)+'_'+tahun] = [];
+      }
+
+      let idx = this.dataPengajian[Number(tanggal)+'_'+Number(bulan)+'_'+tahun].indexOf(this.pengajian[i]);
+      if(idx == -1) {
+        this.dataPengajian[Number(tanggal)+'_'+Number(bulan)+'_'+tahun].push(this.pengajian[i]);
       }
     }
   }
+
+  // parseDataPengajian(datetime, tanggal, bulan, tahun) {
+  //   for(var i=0; i<this.pengajian.length; i++) {
+  //     let dt = this.datePipe.transform(new Date(this.pengajian[i].datetime), 'yyyy-MM-dd');
+  //     if(dt == datetime) {
+  //       if(this.dataPengajian[tanggal+'_'+bulan+'_'+tahun] == undefined) {
+  //         this.dataPengajian[tanggal+'_'+bulan+'_'+tahun] = [];
+  //       }
+  //       let idx = this.dataPengajian[tanggal+'_'+bulan+'_'+tahun].indexOf(this.pengajian[i]);
+  //       if(idx == -1) {
+  //         this.dataPengajian[tanggal+'_'+bulan+'_'+tahun].push(this.pengajian[i]);
+  //       }
+  //     }
+  //   }
+  // }
 
   //Modal Kalender
   async modalKelander(selected) {
