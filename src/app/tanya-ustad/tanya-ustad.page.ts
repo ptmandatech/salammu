@@ -68,10 +68,6 @@ export class TanyaUstadPage implements OnInit {
     }).then(a => {
       a.present().then(() => {
         console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
       });
       this.loading = false;
     });
@@ -96,8 +92,10 @@ export class TanyaUstadPage implements OnInit {
       console.log(res)
       this.listUstadz = res;
       this.listUstadzTemp = res;
+      this.loadingController.dismiss();
     }, error => {
       this.loading = false;
+      this.loadingController.dismiss();
     })
   }
 

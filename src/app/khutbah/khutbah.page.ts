@@ -53,10 +53,6 @@ export class KhutbahPage implements OnInit {
     }).then(a => {
       a.present().then(() => {
         console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
       });
       this.loading = false;
     });
@@ -67,8 +63,10 @@ export class KhutbahPage implements OnInit {
       this.listKhutbah = res;
       this.listKhutbahTemp = res;
       this.loading = false;
+      this.loadingController.dismiss();
     }, error => {
       this.loading = false;
+      this.loadingController.dismiss();
     })
   }
 

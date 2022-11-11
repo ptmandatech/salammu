@@ -54,10 +54,6 @@ export class PediamuPage implements OnInit {
     }).then(a => {
       a.present().then(() => {
         console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
       });
       this.loading = false;
     });
@@ -67,8 +63,10 @@ export class PediamuPage implements OnInit {
     this.api.get('pediamu?all=ok').then(res => {
       this.listPediamu = res;
       this.listPediamuTemp = res;
+      this.loadingController.dismiss();
     }, error => {
       this.loading = false;
+      this.loadingController.dismiss();
     })
   }
 

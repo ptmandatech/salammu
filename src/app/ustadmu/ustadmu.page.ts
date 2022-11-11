@@ -75,10 +75,6 @@ export class UstadmuPage implements OnInit {
     }).then(a => {
       a.present().then(() => {
         console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
       });
       this.loading = false;
     });
@@ -88,8 +84,10 @@ export class UstadmuPage implements OnInit {
     this.api.get('ustadzmu').then(res => {
       this.listUstadmu = res;
       this.listUstadmuTemp = res;
+      this.loadingController.dismiss();
     }, error => {
       this.loading = false;
+      this.loadingController.dismiss();
     })
   }
 

@@ -51,10 +51,6 @@ export class ProdukMUPage implements OnInit {
     }).then(a => {
       a.present().then(() => {
         console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
       });
       this.loading = false;
     });
@@ -81,6 +77,7 @@ export class ProdukMUPage implements OnInit {
       this.parseImage(res);
     }, error => {
       this.loading = false;
+      this.loadingController.dismiss();
     })
   }
 
@@ -116,6 +113,7 @@ export class ProdukMUPage implements OnInit {
       }
     }
     this.loading = false;
+    this.loadingController.dismiss();
   }
 
   initializeItems(): void {

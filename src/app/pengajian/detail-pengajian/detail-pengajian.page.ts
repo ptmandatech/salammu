@@ -62,9 +62,6 @@ export class DetailPengajianPage implements OnInit {
     }).then(a => {
       a.present().then(() => {
         console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-        }
       });
       this.loading = false;
     });
@@ -111,6 +108,9 @@ export class DetailPengajianPage implements OnInit {
         this.getDetailLocation(dt);
         this.generateMap(dt);
       }
+      this.loadingController.dismiss();
+    }, er => {
+      this.loadingController.dismiss();
     })
   }
 
@@ -124,21 +124,29 @@ export class DetailPengajianPage implements OnInit {
       })
     };
 
-    await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
-      this.locationNow = res;
-      this.city = this.locationNow.address.state_district.replace('Kota ', '');
-      if(this.locationNow == undefined) {
-        await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
-          this.locationNow = res;
-          this.city = this.locationNow.city.replace('Kota ', '');
-        })
-      }
+    await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
+      this.checkCity(res);
+      // if(this.locationNow == undefined) {
+      //   await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
+      //     this.locationNow = res;
+      //     this.city = this.locationNow.address.state_district.replace('Kota ', '');
+      //   })
+      // }
     }, async error => {
-      await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
-        this.locationNow = res;
-        this.city = this.locationNow.city.replace('Kota ', '');
+      await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
+        this.checkCity(res);
       })
     });
+
+    let city = localStorage.getItem('selectedCity');
+    if(city) {
+      this.city = city;
+    }
+  }
+
+  checkCity(res) {
+    this.locationNow = res.features[0].properties;
+    this.city = res.features[0].properties.address.city == null ? res.features[0].properties.address.town:res.features[0].properties.address.city;
   }
 
   longitude:any;

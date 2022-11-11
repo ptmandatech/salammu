@@ -57,10 +57,6 @@ export class UserManagementsPage implements OnInit {
     }).then(a => {
       a.present().then(() => {
         console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
       });
       this.loading = false;
     });
@@ -84,8 +80,10 @@ export class UserManagementsPage implements OnInit {
       this.listUsers = res;
       this.listUsersTemp = res;
       this.loading = false;
+      this.loadingController.dismiss();
     }, error => {
       this.loading = false;
+      this.loadingController.dismiss();
     })
   }
 

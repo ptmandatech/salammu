@@ -52,10 +52,6 @@ export class VideoPage implements OnInit {
     }).then(a => {
       a.present().then(() => {
         console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
       });
       this.loading = false;
     });
@@ -66,8 +62,10 @@ export class VideoPage implements OnInit {
       this.listVideos = res;
       this.listVideosTemp = res;
       this.loading = false;
+      this.loadingController.dismiss();
     }, error => {
       this.loading = false;
+      this.loadingController.dismiss();
     })
   }
 

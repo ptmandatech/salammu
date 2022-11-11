@@ -42,10 +42,6 @@ export class ArtikelPage implements OnInit {
     }).then(a => {
       a.present().then(() => {
         console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
       });
       this.loading = false;
     });
@@ -66,8 +62,10 @@ export class ArtikelPage implements OnInit {
       this.listArticles = res;
       this.listArticlesTemp = res;
       this.loading = false;
+      this.loadingController.dismiss();
     }, error => {
       this.loading = false;
+      this.loadingController.dismiss();
     })
   }
 

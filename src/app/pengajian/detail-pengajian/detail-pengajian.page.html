@@ -58,7 +58,7 @@
             <p class="ion-text-wrap">{{pengajianData.location}}</p>
           </ion-label>
         </ion-item>
-        <ion-item>
+        <ion-item *ngif="pengajianData.url_livestream">
           <ion-icon slot="start" color="primary" name="link-outline"></ion-icon>
           <ion-label>
             <p class="ion-text-wrap"><a href="{{pengajianData.url_livestream}}">Buka Link Live Streaming</a></p>

@@ -38,10 +38,6 @@ export class CabangRantingPage implements OnInit {
     }).then(a => {
       a.present().then(() => {
         console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
       });
       this.loading = false;
     });
@@ -69,8 +65,10 @@ export class CabangRantingPage implements OnInit {
         this.listCabang = res;
         console.log(res)
         this.loading = false;
+        this.loadingController.dismiss();
       }, err => {
         this.loading = false;
+        this.loadingController.dismiss();
       });
     } catch {
 
