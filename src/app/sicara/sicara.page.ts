@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { LoadingController } from '@ionic/angular';
 import { ApiService } from '../services/api.service';
 import { CommonService } from '../services/common.service';
 
@@ -17,10 +18,12 @@ export class SicaraPage implements OnInit {
   constructor(
     public api: ApiService,
     public common: CommonService,
+    private loadingController: LoadingController,
     public router:Router,
   ) { }
 
   ngOnInit() {
+    this.present();
     this.loading = true;
     this.getAllWilayah();
   }
@@ -30,8 +33,10 @@ export class SicaraPage implements OnInit {
       this.listWilayah = res;
       this.listWilayahTemp = res;
       this.loading = false;
+      this.loadingController.dismiss();
     }, error => {
       this.loading = false;
+      this.loadingController.dismiss();
     })
   }
 
@@ -61,12 +66,29 @@ export class SicaraPage implements OnInit {
   }
 
   getChildDaerah(n) {
+    this.present();
     this.api.get('sicara/getPDM/'+n.id).then(res => {
       this.listDaerah = res;
       this.loading = false;
+      this.loadingController.dismiss();
     }, error => {
+      this.loadingController.dismiss();
       this.loading = false;
     })
+  }
+
+  async present() {
+    return await this.loadingController.create({
+      spinner: 'crescent',
+      duration: 10000,
+      message: 'Tunggu Sebentar...',
+      cssClass: 'custom-class custom-loading'
+    }).then(a => {
+      a.present().then(() => {
+        console.log('presented');
+      });
+      this.loading = false;
+    });
   }
 
 }

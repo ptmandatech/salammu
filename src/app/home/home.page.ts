@@ -202,6 +202,7 @@ export class HomePage implements OnInit {
       resolve(pos);
    }, (err: PositionError) => {
      console.log(err)
+     this.openSettingLokasi();
      reject(err.message);
     });
    });
