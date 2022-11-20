@@ -48,7 +48,7 @@
               </ion-card-content>
             </ion-card>
 
-            <ion-list>
+            <ion-list *ngIf="!loading">
               <ion-item *ngFor="let n of surat" (click)="lanjutBacaSurat(n)">
                 <div class="container" slot="start" >
                   <img class="center-bg"src="../../assets/imgs/number.svg">
@@ -59,6 +59,23 @@
                   <ion-text color="medium">
                     <p>
                       {{n.tempat_turun}} - {{n.jumlah_ayat}} Ayat
+                    </p>
+                  </ion-text>
+                </ion-label>
+              </ion-item>
+            </ion-list>
+
+            <ion-list *ngIf="loading">
+              <ion-item *ngFor="let n of [1,2,3,4,5,6,7,8,9,10]">
+                <div class="container" slot="start" >
+                  <ion-skeleton-text animated></ion-skeleton-text>
+                  <span class="center"><ion-skeleton-text animated></ion-skeleton-text></span>
+                </div>
+                <ion-label>
+                  <h2><ion-skeleton-text animated></ion-skeleton-text></h2>
+                  <ion-text color="medium">
+                    <p>
+                      <ion-skeleton-text animated></ion-skeleton-text> - <ion-skeleton-text animated></ion-skeleton-text>
                     </p>
                   </ion-text>
                 </ion-label>

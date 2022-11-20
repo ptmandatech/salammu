@@ -23,8 +23,7 @@ export class AlQuranPage implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.present();
-    this.loading = true;
+    // this.present();
     this.surat = JSON.parse(localStorage.getItem('suratAlQuran'));
     this.terakhirDibaca = JSON.parse(localStorage.getItem('terakhirDibaca'));
     this.suratTemp = this.surat;
@@ -89,6 +88,7 @@ export class AlQuranPage implements OnInit {
   surat:any = [];
   suratTemp:any = [];
   getSurat() {
+    this.loading = true;
     this.surat = [];
     this.suratTemp = [];
     this.api.getSurat('surat').then(res => {

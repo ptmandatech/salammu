@@ -16,7 +16,9 @@ import { Geolocation, Geoposition, PositionError } from '@awesome-cordova-plugin
     IonicModule,
     PengajianPageRoutingModule
   ],
-  declarations: [PengajianPage],
+  declarations: [
+    PengajianPage
+  ],
   providers: [Geolocation]
 })
 export class PengajianPageModule {}

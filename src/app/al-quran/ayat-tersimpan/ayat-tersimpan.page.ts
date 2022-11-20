@@ -25,7 +25,7 @@ export class AyatTersimpanPage implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.present();
+    // this.present();
     this.loading = true;
     let dt = JSON.parse(localStorage.getItem('ayatTersimpan'));
     this.ayatTersimpan = dt == null ? []:dt;

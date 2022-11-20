@@ -46,13 +46,7 @@ export class TafsirSuratPage implements OnInit {
       }).then(a => {
         a.present().then(() => {
           console.log('presented');
-          if (!this.loading) {
-            this.loading = false;
-            this.loaderCounter = 0;
-            a.dismiss().then(() => console.log('abort presenting'));
-          }
         });
-        this.loading = false;
       });
     }
   }
@@ -67,23 +61,23 @@ export class TafsirSuratPage implements OnInit {
   {    
     this.api.me().then(async res=>{
       this.userData = res;
+      this.dismiss();
     }, async error => {
       this.loading = false;
       localStorage.removeItem('userSalammu');
       localStorage.removeItem('salammuToken');
       this.userData = undefined;
+      this.dismiss();
     })
   }
 
   tafsirSurat:any = {};
   async getTafsirSurat() {
-    this.present();
     await this.api.getSurat('tafsir/'+this.id).then(res => {
       this.tafsirSurat = res;
       localStorage.setItem('tafsirSurat-'+this.id, JSON.stringify(this.tafsirSurat));
       let dt = JSON.parse(localStorage.getItem('tafsirSurat-'+this.id));
       this.tafsirSurat = dt == null ? {}:dt;
-      this.getTafsirSurat();
       this.dismiss();
     }, err => {
       this.dismiss();
