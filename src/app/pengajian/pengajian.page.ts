@@ -207,32 +207,27 @@ export class PengajianPage implements OnInit {
         'Content-Type':  'application/json',
       })
     };
-    this.api.get('lokasi/detailLokasi?lat='+dt.lat+'&long='+dt.long).then(async res => {
-      if(res) {
-        this.checkCityFromApi(res);
-      } else {
-        await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
-          this.checkCity(res);
-          if(!res) {
-            await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
-              this.locationNow = res;
-              if(this.locationNow.address.state_district != undefined) {
-                this.city = this.locationNow.address.state_district.replace('Kota ', '');
-                this.getCal();
-              }
-            }, err => {
-              this.getCityFromLocal();
-            })
+
+    await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
+      this.checkCity(res);
+      if(!res) {
+        await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
+          this.locationNow = res;
+          if(this.locationNow.address.state_district != undefined) {
+            this.city = this.locationNow.address.state_district.replace('Kota ', '');
+            this.getCal();
           }
-        }, async error => {
-          await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
-            this.checkCity(res);
-          }, err => {
-            this.getCityFromLocal();
-          })
-        });
+        }, err => {
+          this.getCityFromLocal();
+        })
       }
-    })
+    }, async error => {
+      await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
+        this.checkCity(res);
+      }, err => {
+        this.getCityFromLocal();
+      })
+    });
 
     let city = localStorage.getItem('selectedCity');
     if(city) {
@@ -247,12 +242,6 @@ export class PengajianPage implements OnInit {
       this.city = city;
       this.getCal();
     }
-  }
-  
-  async checkCityFromApi(res) {
-    this.locationNow = res;
-    this.city = res.city == null ? res.locality:res.city;
-    this.getCal();
   }
 
   checkCity(res) {

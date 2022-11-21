@@ -120,17 +120,12 @@ export class HomePage implements OnInit {
 
   async checkPermission() {
     if (this.platform.is('android')) {
-      let successCallback = (isAvailable) => {
-        console.log('Is available? ' + isAvailable); 
-      };
-      let errorCallback = async (e) => { 
-        console.error(e); 
-        await this.checkLocation();
-      };
+      // let successCallback = (isAvailable) => { console.log('Is available? ' + isAvailable); };
+      // let errorCallback = async (e) => { console.error(e); await this.checkLocation()};
 
-      this.diagnostic.isLocationAvailable().then(successCallback).catch(errorCallback);
+      // this.diagnostic.isLocationAvailable().then(successCallback).catch(errorCallback);
 
-      this.diagnostic.isGpsLocationAvailable().then(successCallback, errorCallback);
+      // this.diagnostic.isGpsLocationAvailable().then(successCallback, errorCallback);
 
       this.diagnostic.getLocationMode()
         .then(async (state) => {
@@ -206,6 +201,7 @@ export class HomePage implements OnInit {
       await this.getDetailLocation(location);
       resolve(pos);
    }, (err: PositionError) => {
+     console.log(err)
      this.openSettingLokasi();
      reject(err.message);
     });
@@ -220,72 +216,59 @@ export class HomePage implements OnInit {
       })
     };
 
-    this.api.get('lokasi/detailLokasi?lat='+dt.lat+'&long='+dt.long).then(async res => {
-      if(res) {
-        this.checkCityFromApi(res);
-      } else {
-        await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
-          this.checkCity(res);
-        }, async error => {
-          await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(async res => {
-            this.locationNow = res;
-            this.city = this.locationNow.city.replace('Kota ', '');
-            localStorage.setItem('selectedCity', this.city);
-            if(this.city != undefined) {
-              this.listTimes = [];
-              this.tempTimes1 = [];
-              this.tempTimes2 = [];
-              this.prayTime = undefined;
-              this.timesToday = undefined;
-              this.prayTime = await this.api.getToday(this.city);
-              this.timesToday = await this.prayTime.timings;
-    
-              if(this.timesToday['Firstthird']) {
-                delete this.timesToday['Firstthird'];
-                delete this.timesToday['Lastthird'];
-              }
-              if(this.timesToday['Sunrise']) {
-                delete this.timesToday['Sunrise'];
-              }
-              this.parseTime(this.timesToday);
-            }
-            this.loading = false;
-          }, async error => {
-            this.openSettingLokasi();
-          })
-        });
-      }
-    })
-  }
-  
-  async checkCityFromApi(res) {
-    this.locationNow = res;
-    this.city = res.city == null ? res.locality:res.city;
-    localStorage.setItem('selectedCity', this.city);
-    if(this.city != undefined) {
-      this.listTimes = [];
-      this.tempTimes1 = [];
-      this.tempTimes2 = [];
-      this.prayTime = undefined;
-      this.timesToday = undefined;
-      this.prayTime = await this.api.getToday(this.city);
-      this.timesToday = await this.prayTime.timings;
-      
-      if(this.timesToday['Firstthird']) {
-        delete this.timesToday['Firstthird'];
-        delete this.timesToday['Lastthird'];
-      }
-      if(this.timesToday['Sunrise']) {
-        delete this.timesToday['Sunrise'];
-      }
-      this.parseTime(this.timesToday);
-    }
-    this.loading = false;
+    await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
+      this.checkCity(res);
+    }, async error => {
+      await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(async res => {
+        this.locationNow = res;
+        this.city = this.locationNow.city.replace('Kota ', '');
+        localStorage.setItem('selectedCity', this.city);
+        if(this.city != undefined) {
+          this.listTimes = [];
+          this.tempTimes1 = [];
+          this.tempTimes2 = [];
+          this.prayTime = undefined;
+          this.timesToday = undefined;
+          this.prayTime = await this.api.getToday(this.city);
+          this.timesToday = await this.prayTime.timings;
+
+          if(this.timesToday['Firstthird']) {
+            delete this.timesToday['Firstthird'];
+            delete this.timesToday['Lastthird'];
+          }
+          if(this.timesToday['Sunrise']) {
+            delete this.timesToday['Sunrise'];
+          }
+          this.parseTime(this.timesToday);
+        }
+      }, async error => {
+        this.openSettingLokasi();
+        // this.city = 'Yogyakarta';
+        // if(this.city != undefined) {
+        //   this.listTimes = [];
+        //   this.tempTimes1 = [];
+        //   this.tempTimes2 = [];
+        //   this.prayTime = undefined;
+        //   this.timesToday = undefined;
+        //   this.prayTime = await this.api.getToday(this.city);
+        //   this.timesToday = await this.prayTime.timings;
+
+        //   if(this.timesToday['Firstthird']) {
+        //     delete this.timesToday['Firstthird'];
+        //     delete this.timesToday['Lastthird'];
+        //   }
+        //   if(this.timesToday['Sunrise']) {
+        //     delete this.timesToday['Sunrise'];
+        //   }
+        //   this.parseTime(this.timesToday);
+        // }
+      })
+    });
   }
 
   async checkCity(res) {
     this.locationNow = res.features[0].properties;
-    this.city = res.features[0].properties.address.city == null ? res.features[0].properties.address.town:res.features[0].properties.address.city;
+    this.city = res.features[0].properties.address.city == null ? res.features[0].properties.address.town == null ? res.features[0].properties.address.municipality:res.features[0].properties.address.town:res.features[0].properties.address.city;
     localStorage.setItem('selectedCity', this.city);
     if(this.city != undefined) {
       this.listTimes = [];
@@ -304,8 +287,9 @@ export class HomePage implements OnInit {
         delete this.timesToday['Sunrise'];
       }
       this.parseTime(this.timesToday);
+    } else {
+      this.openSettingLokasi();
     }
-    this.loading = false;
   }
 
   // async loginStatus() {
