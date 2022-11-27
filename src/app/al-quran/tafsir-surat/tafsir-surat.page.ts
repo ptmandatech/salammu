@@ -73,7 +73,7 @@ export class TafsirSuratPage implements OnInit {
 
   tafsirSurat:any = {};
   async getTafsirSurat() {
-    await this.api.getSurat('tafsir/'+this.id).then(res => {
+    await this.api.get('quran/tafsir/'+this.id).then(res => {
       this.tafsirSurat = res;
       localStorage.setItem('tafsirSurat-'+this.id, JSON.stringify(this.tafsirSurat));
       let dt = JSON.parse(localStorage.getItem('tafsirSurat-'+this.id));

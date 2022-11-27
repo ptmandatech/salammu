@@ -217,7 +217,7 @@ export class HomePage implements OnInit {
     };
 
     await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
-      this.checkCity(res);
+    this.checkCity(res);
     }, async error => {
       await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(async res => {
         this.locationNow = res;
@@ -242,6 +242,7 @@ export class HomePage implements OnInit {
           this.parseTime(this.timesToday);
         }
       }, async error => {
+        console.log(error)
         this.openSettingLokasi();
         // this.city = 'Yogyakarta';
         // if(this.city != undefined) {
@@ -269,6 +270,9 @@ export class HomePage implements OnInit {
   async checkCity(res) {
     this.locationNow = res.features[0].properties;
     this.city = res.features[0].properties.address.city == null ? res.features[0].properties.address.town == null ? res.features[0].properties.address.municipality:res.features[0].properties.address.town:res.features[0].properties.address.city;
+    if(!this.city) {
+      this.city = res.features[0].properties.address.city == null ? res.features[0].properties.address.county:res.features[0].properties.address.city;
+    }
     localStorage.setItem('selectedCity', this.city);
     if(this.city != undefined) {
       this.listTimes = [];

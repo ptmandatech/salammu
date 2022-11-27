@@ -91,7 +91,7 @@ export class AlQuranPage implements OnInit {
     this.loading = true;
     this.surat = [];
     this.suratTemp = [];
-    this.api.getSurat('surat').then(res => {
+    this.api.get('quran/surat').then(res => {
       this.surat = res;
       this.suratTemp = res;
       localStorage.setItem('suratAlQuran', JSON.stringify(this.surat));

@@ -37,6 +37,13 @@ export class DaerahPage implements OnInit {
     this.getDaerah();
   }
 
+  async doRefresh(event) {
+    this.ngOnInit();
+    setTimeout(() => {
+      event.target.complete();
+    }, 2000);
+  }
+
   async present() {
     this.loading = true;
     return await this.loadingController.create({
@@ -77,6 +84,30 @@ export class DaerahPage implements OnInit {
     this.api.get('sicara/getPCM/'+this.dataDaerah.id).then(res => {
       this.listCabang = res;
       this.listCabangTemp = res;
+      if(this.listCabang.length == 0) {
+        this.present();
+        this.syncCabang();
+      }
+      this.loading = false;
+    }, error => {
+      this.loading = false;
+    })
+  }
+
+  syncCabang() {
+    this.api.get('sicara/syncPCMManualByID/'+this.dataDaerah.id).then(res => {
+      this.getAfterManualSync();
+      this.loading = false;
+    }, error => {
+      console.log(error)
+      this.loading = false;
+    })
+  }
+
+  getAfterManualSync() {
+    this.api.get('sicara/getPCM/'+this.dataDaerah.id).then(res => {
+      this.listCabang = res;
+      this.listCabangTemp = res;
       this.loading = false;
     }, error => {
       this.loading = false;
@@ -111,7 +142,21 @@ export class DaerahPage implements OnInit {
   getChildRanting(n) {
     this.api.get('sicara/getPRM/'+n.id).then(res => {
       this.listRanting = res;
+      if(this.listRanting.length == 0) {
+        this.present();
+        this.syncRanting(n.id);
+      }
     }, error => {
+      this.loading = false;
+    })
+  }
+
+  syncRanting(id) {
+    this.api.get('sicara/syncPRMManualByID/'+id).then(res => {
+      this.listRanting = res;
+      this.loading = false;
+    }, error => {
+      console.log(error)
       this.loading = false;
     })
   }

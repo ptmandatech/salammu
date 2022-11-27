@@ -92,6 +92,7 @@ export class CabangPage implements OnInit {
         this.getDetailLocation(dt);
         this.generateMap(dt);
       }
+      this.loading = false;
     });
   }
 
@@ -107,12 +108,6 @@ export class CabangPage implements OnInit {
 
     await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
       this.checkCity(res);
-      if(res == undefined) {
-        await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
-          this.locationNow = res;
-          this.city = this.locationNow.city.replace('Kota ', '');
-        })
-      }
     }, async error => {
       await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
         this.locationNow = res;

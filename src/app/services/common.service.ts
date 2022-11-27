@@ -56,6 +56,16 @@ export class CommonService {
     };
   }
 
+  httpOption3:any;
+  getToken3()
+  {
+    this.httpOption3 = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json'
+      })
+    };
+  }
+
   generateOption(bearer)
   {
     this.httpOption = {
@@ -125,8 +135,9 @@ export class CommonService {
 
   //Al Quran
   async getSurat(url) {
+    this.getToken3();
     this.data = undefined;
-    this.data = await this.http.get(this.serverAlQuran+url).toPromise();
+    this.data = await this.http.get(this.serverAlQuran+url, this.httpOption3).toPromise();
     return this.data;
   }
 

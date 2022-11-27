@@ -31,7 +31,7 @@ export class DetailSuratPage implements OnInit {
     this.id = this.routes.snapshot.paramMap.get('id');
     let dt = JSON.parse(localStorage.getItem('detailSurat-'+this.id));
     this.detailSurat = dt == null ? {}:dt;
-    if(!this.detailSurat || !this.detailSurat.nama_latin) {
+    if(this.detailSurat.nama_latin == undefined) {
       this.getDetailSurat();
     }
     let td = JSON.parse(localStorage.getItem('terakhirDibaca'));
@@ -102,7 +102,7 @@ export class DetailSuratPage implements OnInit {
   detailSurat:any = {};
   async getDetailSurat() {
     this.present();
-    await this.api.getSurat('surat/'+this.id).then(res => {
+    await this.api.get('quran/detailSurat/'+this.id).then(res => {
       this.detailSurat = res;
       localStorage.setItem('detailSurat-'+this.id, JSON.stringify(this.detailSurat));
       let dt = JSON.parse(localStorage.getItem('detailSurat-'+this.id));

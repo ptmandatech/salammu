@@ -10,8 +10,11 @@
 </ion-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
 
-  <div class="item-centered" *ngIf="!loading && listCabang.length == 0">
+  <div class="item-centered-sicara" *ngIf="!loading && listCabang.length == 0">
     <img src="./assets/icon/pencarian.svg">
     <ion-label>
       <p>Data tidak ditemukan</p>

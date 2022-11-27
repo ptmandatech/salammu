@@ -8,17 +8,20 @@
 <ion-content class="ion-padding">
 
   <h3>{{dataCabang.nama}}</h3>
+  <p *ngIf="dataCabang.deskripsi == null || dataCabang.deskripsi == ''"><i>Belum ada deskripsi.</i></p>
   <p [innerHTML]="dataCabang.deskripsi"></p>
 
 
-  <ion-item lines="none">
+  <ion-item lines="none" *ngIf="dataCabang.pin != null">
     <ion-icon slot="start" name="location-outline"></ion-icon>
     <ion-label>
-      <p class="ion-text-wrap">{{locationNow == undefined ? '':locationNow.display_name}}</p>
-      <p class="ion-text-wrap" *ngIf="locationNow == undefined"><ion-skeleton-text animated></ion-skeleton-text></p>
+      <p class="ion-text-wrap" *ngIf="!loading">{{locationNow == undefined ? '':locationNow.display_name}}</p>
+      <p class="ion-text-wrap" *ngIf="locationNow == undefined && !loading"><ion-skeleton-text animated></ion-skeleton-text></p>
     </ion-label>
   </ion-item>
   
-  <p class="ion-text-wrap" *ngIf="locationNow == undefined"><ion-skeleton-text animated style="height: 400px"></ion-skeleton-text></p>
-  <div id="mapDetail" style="width: auto; height: 300px;"></div>
+  <div *ngIf="dataCabang.pin != null">
+    <p class="ion-text-wrap" *ngIf="locationNow == undefined"><ion-skeleton-text animated style="height: 400px"></ion-skeleton-text></p>
+    <div id="mapDetail" *ngIf="!loading" style="width: auto; height: 300px;"></div>
+  </div>
 </ion-content>
