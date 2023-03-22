@@ -41,7 +41,7 @@ export class TafsirSuratPage implements OnInit {
       return await this.loadingController.create({
         spinner: 'crescent',
         duration: 10000,
-        message: 'Tunggu Sebentar...',
+        message: 'Sedang menyiapkan data...',
         cssClass: 'custom-class custom-loading'
       }).then(a => {
         a.present().then(() => {
@@ -85,6 +85,7 @@ export class TafsirSuratPage implements OnInit {
   }
   
   bacaSurat(n) {
+    this.present();
     localStorage.setItem('terakhirDibaca', JSON.stringify(n));
     this.router.navigate(['/al-quran/detail-surat', n.nomor]);
   }

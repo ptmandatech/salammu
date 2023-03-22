@@ -96,7 +96,7 @@ export class PengajianPage implements OnInit {
     this.loading = true;
     return await this.loadingController.create({
       spinner: 'crescent',
-      duration: 10000,
+      duration: 5000,
       message: 'Tunggu Sebentar...',
       cssClass: 'custom-class custom-loading'
     }).then(a => {
@@ -375,6 +375,7 @@ export class PengajianPage implements OnInit {
         this.dataPengajian[Number(tanggal)+'_'+Number(bulan)+'_'+tahun].push(this.pengajian[i]);
       }
     }
+    this.loadingController.dismiss();
   }
 
   // parseDataPengajian(datetime, tanggal, bulan, tahun) {

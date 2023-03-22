@@ -199,29 +199,42 @@ export class AppComponent {
      
       this.diagnostic.getLocationMode()
         .then(async (state) => { 
-          if (state == this.diagnostic.locationMode.LOCATION_OFF) {
-            const confirm = await this.alertController.create({
-              header: 'SalamMU',
-              message: 'Lokasi belum diaktifkan di perangkat ini. Pergi ke pengaturan untuk mengaktifkan lokasi.',
-              buttons: [
-                {
-                  text: 'Pengaturan',
-                  handler: () => {
-                    this.diagnostic.switchToLocationSettings();
+          let city = localStorage.getItem('selectedCity');
+          if(!city) {
+            if (state == this.diagnostic.locationMode.LOCATION_OFF) {
+              const confirm = await this.alertController.create({
+                header: 'SalamMU',
+                message: 'Lokasi belum diaktifkan di perangkat ini. Pergi ke pengaturan untuk mengaktifkan lokasi.',
+                buttons: [
+                  {
+                    text: 'Pengaturan',
+                    handler: () => {
+                      this.diagnostic.switchToLocationSettings();
+                    }
                   }
-                }
-              ]
-            });
-            await confirm.present();
-          } else {
-            console.log('ok');
+                ]
+              });
+              await confirm.present();
+            } else {
+              console.log('ok');
+            }
           }
         }).catch(e => console.error(e));
     }
   }
 
-  cekToken(email) {
+  async cekToken(email) {
     PushNotifications.register();
+    await PushNotifications.createChannel({
+      id: 'salammu_channel_fcm',
+      name: 'SalamMU FCM',
+      sound: 'mixkit.wav',
+      vibration: true,
+      importance: 4,
+      visibility: 1
+    }).then(async res => {
+      console.log('Channel created!');
+    });
 
     // On success, we should be able to receive notifications
     PushNotifications.addListener('registration',
@@ -246,7 +259,7 @@ export class AppComponent {
     PushNotifications.addListener('pushNotificationReceived',
       (notification: PushNotificationSchema) => {
         const data = notification.data;
-        this.playAudio();
+        // this.playAudio();
         swal({
           title: notification.title,
           text: notification.body,

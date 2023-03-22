@@ -138,7 +138,7 @@ export class LoginPage implements OnInit {
   }
 
   nonaktif:boolean = false;
-  redirect(user)
+  async redirect(user)
   {
     if(user.is_active == 1) {
       this.cekToken(user, user.email);
@@ -155,6 +155,16 @@ export class LoginPage implements OnInit {
       }, 1000);
     }
     this.loadingController.dismiss();
+    await PushNotifications.createChannel({
+      id: 'salammu_channel_fcm',
+      name: 'SalamMU FCM',
+      sound: 'mixkit.wav',
+      vibration: true,
+      importance: 4,
+      visibility: 1
+    }).then(async res => {
+      console.log('Channel created!');
+    });
   }
 
   async dismiss() {

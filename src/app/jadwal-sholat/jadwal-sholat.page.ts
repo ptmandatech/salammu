@@ -62,7 +62,7 @@ export class JadwalSholatPage implements OnInit {
     // let dateHijri = new Date(this.prayTime[this.dateToday-1].date['readable'])
     // this.getHijri(dateHijri);
   }
-
+  
   async doRefresh(event) {
     this.ngOnInit();
     setTimeout(() => {
@@ -467,6 +467,7 @@ export class JadwalSholatPage implements OnInit {
     this.timesSelected = await this.prayTime;
     this.firstDateHeader = this.timesSelected[0].date.readable;
     this.lastDateHeader = this.timesSelected[this.timesSelected.length-1].date.readable;
+    
     this.parseTime(this.timesSelected, 'monthly')
 
   }
@@ -483,6 +484,12 @@ export class JadwalSholatPage implements OnInit {
       this.tempTimes1[i] = [];
       this.tempTimes2[i] = [];
       if(from != 'weekly') {
+
+        if(timesSelected[i].timings['Firstthird']) {
+          delete timesSelected[i].timings['Firstthird'];
+          delete timesSelected[i].timings['Lastthird'];
+        }
+        
         this.times = Object.values(timesSelected[i].timings);
         this.title = Object.keys(timesSelected[i].timings);
       } else {
@@ -518,6 +525,21 @@ export class JadwalSholatPage implements OnInit {
         this.timesSelected[i].timesParsed = this.tempTimes1[i].concat(this.tempTimes2[i]);
       }
     }
+    if(from != 'weekly') {
+      this.present();
+      setTimeout(() => {
+        this.scrollTo('selected');
+      }, 1500);
+    }
+  }
+  
+  scrollTo(e:string) {
+    setTimeout(() => {
+       const element = document.getElementById(e);
+       if (element != null) {
+          element.scrollIntoView({ behavior: 'smooth' });
+       }
+    }, 500);
   }
 
 

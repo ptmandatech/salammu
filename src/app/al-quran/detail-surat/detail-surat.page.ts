@@ -56,7 +56,7 @@ export class DetailSuratPage implements OnInit {
       return await this.loadingController.create({
         spinner: 'crescent',
         duration: 10000,
-        message: 'Tunggu Sebentar...',
+        message: 'Sedang menyiapkan data...',
         cssClass: 'custom-class custom-loading'
       }).then(a => {
         a.present().then(() => {
@@ -101,7 +101,6 @@ export class DetailSuratPage implements OnInit {
 
   detailSurat:any = {};
   async getDetailSurat() {
-    this.present();
     await this.api.get('quran/detailSurat/'+this.id).then(res => {
       this.detailSurat = res;
       localStorage.setItem('detailSurat-'+this.id, JSON.stringify(this.detailSurat));
@@ -195,6 +194,7 @@ export class DetailSuratPage implements OnInit {
   }
 
   bacaSurat(n) {
+    this.present();
     this.router.navigate(['/al-quran/detail-surat', n.nomor]);
   }
 

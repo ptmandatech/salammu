@@ -23,6 +23,8 @@ export class ModalJadwalComponent implements OnInit {
   ngOnInit() {
     this.dateSelected = this.navParams.get('data');
     this.times = this.navParams.get('times');
+    console.log(this.times);
+    
     this.dateHijri = this.navParams.get('dateHijri');
     // console.log(this.dateHijri)
     this.parseTime(this.times)

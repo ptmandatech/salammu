@@ -85,7 +85,8 @@ export class DaerahPage implements OnInit {
       this.listCabang = res;
       this.listCabangTemp = res;
       if(this.listCabang.length == 0) {
-        this.present();
+        // this.present();
+        this.loading = true;
         this.syncCabang();
       }
       this.loading = false;
@@ -95,6 +96,7 @@ export class DaerahPage implements OnInit {
   }
 
   syncCabang() {
+    this.listCabang = [];
     this.api.get('sicara/syncPCMManualByID/'+this.dataDaerah.id).then(res => {
       this.getAfterManualSync();
       this.loading = false;
@@ -139,11 +141,14 @@ export class DaerahPage implements OnInit {
     });
   }
 
-  getChildRanting(n) {
+  getChildRanting(n,idx) {
+    this.listRanting = [];
     this.api.get('sicara/getPRM/'+n.id).then(res => {
       this.listRanting = res;
+      this.listCabang[idx].jumlah_prm = this.listRanting.length;
       if(this.listRanting.length == 0) {
-        this.present();
+        // this.present();
+        this.loading = true;
         this.syncRanting(n.id);
       }
     }, error => {

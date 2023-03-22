@@ -22,11 +22,11 @@
   </div>
 
   <ion-accordion-group>
-    <ion-accordion *ngFor="let n of listCabang" (click)="getChildRanting(n)" value="{{n.id}}">
+    <ion-accordion *ngFor="let n of listCabang; let idx=index" value="{{n.id}}">
       <ion-item slot="header" color="light">
         <ion-label>
           <h3>{{n.nama}}</h3>
-          <p>{{n.jumlah_prm}}</p>
+          <p>{{n.listPRM.length}} Ranting</p>
         </ion-label>
       </ion-item>
 
@@ -36,7 +36,15 @@
             <p>Informasi Cabang</p>
           </ion-label>
         </ion-item>
-        <ion-item *ngFor="let c of listRanting" detail [routerLink]="['/sicara/ranting/', c.id]">
+        <ion-item class="fill-0" lines="none" *ngIf="loading">
+          <ion-label>
+            <ion-text color="light">
+              <h1><ion-skeleton-text animated></ion-skeleton-text></h1>
+              <p><ion-skeleton-text animated></ion-skeleton-text></p>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+        <ion-item *ngFor="let c of n.listPRM" detail [routerLink]="['/sicara/ranting/', c.id]">
           <ion-label>
             <p>{{c.nama}}</p>
           </ion-label>

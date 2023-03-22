@@ -17,6 +17,10 @@ const routes: Routes = [
   {
     path: 'pilih-lokasi',
     loadChildren: () => import('./pilih-lokasi/pilih-lokasi.module').then( m => m.PilihLokasiPageModule)
+  },
+  {
+    path: 'detail-jadwal-sholat',
+    loadChildren: () => import('./detail-jadwal-sholat/detail-jadwal-sholat.module').then( m => m.DetailJadwalSholatPageModule)
   }
 
 ];

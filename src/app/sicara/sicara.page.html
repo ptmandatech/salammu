@@ -18,7 +18,7 @@
       <h3>{{n}}</h3>
     </ion-label>
   </ion-item> -->
-  <div class="item-centered" *ngIf="!loading && listWilayah.length == 0">
+  <div class="item-centered-sicara" *ngIf="!loading && listWilayah.length == 0">
     <img src="./assets/icon/pencarian.svg">
     <ion-label>
       <p>Data tidak ditemukan</p>
@@ -26,15 +26,15 @@
   </div>
 
   <ion-accordion-group>
-    <ion-accordion *ngFor="let n of listWilayah" (click)="getChildDaerah(n)" value="{{n.id}}">
+    <ion-accordion *ngFor="let n of listWilayah" value="{{n.id}}">
       <ion-item slot="header" color="light">
         <ion-label>
           <h3>{{n.nama}}</h3>
-          <p>{{n.jumlah_pdm}}</p>
+          <p>{{n.listPDM.length}} Daerah</p>
         </ion-label>
       </ion-item>
       <div class="ion-padding" slot="content">
-        <ion-item *ngFor="let d of listDaerah" detail [routerLink]="['/sicara/daerah/', d.id]">
+        <ion-item *ngFor="let d of n.listPDM" detail [routerLink]="['/sicara/daerah/', d.id]">
           <ion-label>
             <p>{{d.nama}}</p>
           </ion-label>

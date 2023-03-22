@@ -12,6 +12,8 @@ import { AppComponent } from '../app.component';
 import { SemuaMenuPage } from './semua-menu/semua-menu.page';
 import { SettingLokasiPage } from './setting-lokasi/setting-lokasi.page';
 import { PilihLokasiPage } from './pilih-lokasi/pilih-lokasi.page';
+import { DetailJadwalSholatPage } from './detail-jadwal-sholat/detail-jadwal-sholat.page';
+import { LocalNotifications, LocalNotificationSchedule } from "@capacitor/local-notifications"; 
 
 @Component({
   selector: 'app-home',
@@ -64,7 +66,7 @@ export class HomePage implements OnInit {
     private appComponent: AppComponent,
   ) {}
 
-  prayTime:any;
+  prayTime:any = {};
   timesToday:any;
   async ngOnInit() {
     this.loading = true;
@@ -129,24 +131,27 @@ export class HomePage implements OnInit {
 
       this.diagnostic.getLocationMode()
         .then(async (state) => {
-          if (state == this.diagnostic.locationMode.LOCATION_OFF) {
-            const confirm = await this.alertController.create({
-              header: 'SalamMU',
-              message: 'Lokasi belum diaktifkan di perangkat ini. Pergi ke pengaturan untuk mengaktifkan lokasi.',
-              buttons: [
-                {
-                  text: 'Pengaturan',
-                  handler: async () => {
-                    this.diagnostic.switchToLocationSettings();
-                    await this.checkLocation();
+          let city = localStorage.getItem('selectedCity');
+          if(!city) {
+            if (state == this.diagnostic.locationMode.LOCATION_OFF) {
+              const confirm = await this.alertController.create({
+                header: 'SalamMU',
+                message: 'Lokasi belum diaktifkan di perangkat ini. Pergi ke pengaturan untuk mengaktifkan lokasi.',
+                buttons: [
+                  {
+                    text: 'Pengaturan',
+                    handler: async () => {
+                      this.diagnostic.switchToLocationSettings();
+                      await this.checkLocation();
+                    }
                   }
-                }
-              ]
-            });
-            await confirm.present();
-          } else {
-            console.log('ok');
-            await this.checkLocation();
+                ]
+              });
+              await confirm.present();
+            } else {
+              console.log('ok');
+              await this.checkLocation();
+            }
           }
         }).catch(async e => {
           await this.getCurrentLocations();
@@ -221,7 +226,9 @@ export class HomePage implements OnInit {
     }, async error => {
       await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(async res => {
         this.locationNow = res;
-        this.city = this.locationNow.city.replace('Kota ', '');
+        if(!this.city) {
+          this.city = this.locationNow.city.replace('Kota ', '');
+        }
         localStorage.setItem('selectedCity', this.city);
         if(this.city != undefined) {
           this.listTimes = [];
@@ -269,7 +276,9 @@ export class HomePage implements OnInit {
 
   async checkCity(res) {
     this.locationNow = res.features[0].properties;
-    this.city = res.features[0].properties.address.city == null ? res.features[0].properties.address.town == null ? res.features[0].properties.address.municipality:res.features[0].properties.address.town:res.features[0].properties.address.city;
+    if(!this.city) {
+      this.city = res.features[0].properties.address.city == null ? res.features[0].properties.address.town == null ? res.features[0].properties.address.municipality:res.features[0].properties.address.town:res.features[0].properties.address.city;
+    }
     if(!this.city) {
       this.city = res.features[0].properties.address.city == null ? res.features[0].properties.address.county:res.features[0].properties.address.city;
     }
@@ -429,6 +438,7 @@ export class HomePage implements OnInit {
         this.data.title_color = 'medium';
         this.data.time_color = 'dark'; 
       }
+      this.data.alarm = 'on';
       if(this.data.title == 'Imsak') {
         let idx = this.tempTimes1.indexOf(this.data);
         if(idx == -1) {
@@ -439,6 +449,31 @@ export class HomePage implements OnInit {
         if(idx == -1) {
           this.tempTimes2.push(this.data);
         }
+      }
+
+      if(this.data.alarm = 'on') {
+        // console.log('masuk sini buat set schedule alarm ', this.data);
+        // var hours = this.data.time.split(":")[0];
+        // var minutes = this.data.time.split(":")[1];
+        // console.log(hours);
+        // console.log(minutes);
+        
+        
+        // const date = new Date();
+        // date.setHours(hours);
+        // date.setMinutes(minutes);
+        
+        // let randomId = Math.floor(Math.random() * 10000) + 1;
+        // const notifs = await LocalNotifications.schedule({notifications: [{
+        //   title: this.data.title,
+        //   body: 'SalamMU - '+this.data.time,
+        //   id: randomId,
+        //   schedule: {
+        //     at : date,
+        //     allowWhileIdle: true
+        //   },
+        // }]})
+        // console.log('scheduled notifications', notifs);
       }
 
       this.listTimes = this.tempTimes1.concat(this.tempTimes2);
@@ -606,6 +641,30 @@ export class HomePage implements OnInit {
       }
     });
     return await modal.present();
+  }
+
+  //detail jadwal sholat
+  async detailJadwal() {
+    if(this.prayTime && this.listTimes && this.nextTimeTimer && this.nextTime) {
+      const modal = await this.modalController.create({
+        component: DetailJadwalSholatPage,
+        componentProps: {
+          prayTime: this.prayTime,
+          listTimes: this.listTimes,
+          nextTimeTimer: this.nextTimeTimer,
+          nextTime: this.nextTime
+        },
+        mode: "md",
+        cssClass: 'modal-class',
+        initialBreakpoint: 0.99,
+        breakpoints: [0, 0.99, 1]
+      });
+  
+      modal.onDidDismiss().then(async (result) => {
+        console.log(result);
+      });
+      return await modal.present();
+    }
   }
 
   //Modal Pilih Lokasi

@@ -6,6 +6,12 @@
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 0
+    },
+    "PushNotifications": {
+      "smallIcon": "ic_stat_ic_notification",
+      "iconColor": "#31B2E6",
+      "sound": "mixkit.wav",
+      "presentationOptions": ["badge", "sound", "alert"]
     }
   }
 }

@@ -80,7 +80,7 @@ export class SicaraPage implements OnInit {
   async present() {
     return await this.loadingController.create({
       spinner: 'crescent',
-      duration: 10000,
+      duration: 3000,
       message: 'Tunggu Sebentar...',
       cssClass: 'custom-class custom-loading'
     }).then(a => {

@@ -1,0 +1,94 @@
+<ion-content [fullscreen]="true">
+  <ion-grid class="ion-no-padding">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-md="6">
+        <img src="./assets/imgs/bg-hero.svg" style="position: absolute;" width="100%">
+        <ion-grid class="ion-padding">
+          <ion-row class="ion-text-center">
+            <ion-col size-md="6">
+              <ion-button readonly fill="clear" color="light">
+                <ion-icon slot="icon-only" name="location-outline"></ion-icon>
+                <span *ngIf="city">{{city == undefined ? '':city}}</span>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+          <ion-row class="ion-text-center">
+            <ion-col size-md="6">
+              <ion-item class="fill-0" lines="none" *ngIf="nextTimeTimer != undefined">
+                <ion-label style="text-align: center;">
+                  <ion-text color="light">
+                    <h1>{{nextTime.title == undefined ? '':nextTime.title}}</h1>
+                    <p>{{nextTimeTimer == undefined ? '':nextTimeTimer + ' lagi'}}</p>
+                  </ion-text>
+                </ion-label>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <div class="ion-padding" style="margin-top: 10%;">
+          <div class="info-jadwal">
+            <ion-row>
+              <ion-col class="ion-text-center">
+                <ion-label *ngIf="prayTime != undefined">
+                  <ion-text>
+                    {{prayTime.date.readable | date: 'EEEE, dd MMMM yyyy' }}
+                  </ion-text>
+                  <ion-text color="medium">
+                    <p>
+                      {{prayTime.date.hijri.day}} {{prayTime.date.hijri.month.en}} {{prayTime.date.hijri.year}}
+                    </p>
+                  </ion-text>
+                </ion-label>
+                <ion-label *ngIf="prayTime == undefined">
+                  <ion-skeleton-text animated></ion-skeleton-text>
+                </ion-label>
+              </ion-col>
+            </ion-row>
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col class="ion-padding">
+        <ion-item lines="none" *ngFor="let n of listTimes; let idx=index">
+          <ion-label>
+            <ion-text>{{n.title}}</ion-text>
+          </ion-label>
+          <ion-text slot="end" color="primary">
+            {{n.time}}
+            <!-- <ion-button style="margin-bottom: 15px;" fill="clear" *ngIf="n.alarm == 'disabled'" (click)="n.alarm = 'on'">
+              <ion-icon name="notifications-outline"></ion-icon>
+            </ion-button> -->
+
+            <ion-button style="margin-bottom: 15px;" fill="clear" *ngIf="n.alarm == 'on'" (click)="setStatus(idx, 'off')">
+              <ion-icon name="volume-medium-outline"></ion-icon>
+            </ion-button>
+
+            <ion-button style="margin-bottom: 15px;" fill="clear" *ngIf="n.alarm == 'off'" (click)="setStatus(idx, 'block')">
+              <ion-icon color="medium" name="volume-mute-outline"></ion-icon>
+            </ion-button>
+
+            <ion-button style="margin-bottom: 15px;" fill="clear" *ngIf="n.alarm == 'block'" (click)="setStatus(idx, 'on')">
+              <ion-icon color="danger" name="ban-outline"></ion-icon>
+            </ion-button>
+          </ion-text>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-row>
+    <ion-col class="ion-text-center">
+      <ion-label>
+        <ion-text color="medium">
+          <p>
+            SalamMU @{{year}}
+          </p>
+        </ion-text>
+      </ion-label>
+    </ion-col>
+  </ion-row>
+</ion-footer>
