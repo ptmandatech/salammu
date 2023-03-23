@@ -18,7 +18,7 @@ import {
   Token,
 } from '@capacitor/push-notifications';
 import { ApiService } from './services/api.service';
-import { OneSignal, OSNotificationPayload } from '@awesome-cordova-plugins/onesignal/ngx';
+// import { OneSignal, OSNotificationPayload } from '@awesome-cordova-plugins/onesignal/ngx';
 
 @Component({
   selector: 'app-root',
@@ -45,7 +45,7 @@ export class AppComponent {
     private navController: NavController,
     private toastController: ToastController,
     private location: Location,
-    public oneSignal: OneSignal,
+    // public oneSignal: OneSignal,
     private toast: Toast
   ) {
     this.initializeApp();
@@ -66,12 +66,12 @@ export class AppComponent {
       // this.splashScreen.hide();
       this.statusBar.overlaysWebView(false);
       this.statusBar.backgroundColorByHexString('#349075');
-      this.oneSignal.startInit('fed7ec4e-71d4-4282-8c05-e36f8926a631', '538081656013')
+      // this.oneSignal.startInit('fed7ec4e-71d4-4282-8c05-e36f8926a631', '538081656013')
 
-      this.oneSignal.inFocusDisplaying(this.oneSignal.OSInFocusDisplayOption.Notification);
-      this.oneSignal.handleNotificationReceived().subscribe(data => this.onPushReceived(data.payload));
-      this.oneSignal.handleNotificationOpened().subscribe(data => this.onPushOpened(data.notification.payload));
-      this.oneSignal.endInit();
+      // this.oneSignal.inFocusDisplaying(this.oneSignal.OSInFocusDisplayOption.Notification);
+      // this.oneSignal.handleNotificationReceived().subscribe(data => this.onPushReceived(data.payload));
+      // this.oneSignal.handleNotificationOpened().subscribe(data => this.onPushOpened(data.notification.payload));
+      // this.oneSignal.endInit();
 
       this.checkPermission();
       this.cekKoneksi();
@@ -107,13 +107,13 @@ export class AppComponent {
     });
   }
   
-  private onPushReceived(payload: OSNotificationPayload) {
-    // alert('Push recevied:' + payload.body);
-  }
+  // private onPushReceived(payload: OSNotificationPayload) {
+  //   alert('Push recevied:' + payload.body);
+  // }
 
-  private onPushOpened(payload: OSNotificationPayload) {
-    // alert('Push opened: ' + payload.body);
-  }
+  // private onPushOpened(payload: OSNotificationPayload) {
+  //   alert('Push opened: ' + payload.body);
+  // }
 
   private backButtonEvent() {
     this.platform.backButton.subscribeWithPriority(10, () => {

@@ -35,7 +35,6 @@ import { PhotoViewer } from '@awesome-cordova-plugins/photo-viewer/ngx';
 //socket io
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { OneSignal } from '@awesome-cordova-plugins/onesignal/ngx';
 
 // const config: SocketIoConfig = { 
 //   url: 'http://localhost:8988', options: {} 
@@ -87,7 +86,6 @@ import { AppEffects } from './store/app.effetcts';
     Geolocation,
     Toast,
     PhotoViewer,
-    OneSignal,
     MusicControls,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {provide: LOCALE_ID, useValue: "id-ID" }
