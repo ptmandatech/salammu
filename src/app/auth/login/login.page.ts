@@ -155,16 +155,6 @@ export class LoginPage implements OnInit {
       }, 1000);
     }
     this.loadingController.dismiss();
-    await PushNotifications.createChannel({
-      id: 'salammu_channel_fcm',
-      name: 'SalamMU FCM',
-      sound: 'mixkit.wav',
-      vibration: true,
-      importance: 4,
-      visibility: 1
-    }).then(async res => {
-      console.log('Channel created!');
-    });
   }
 
   async dismiss() {
@@ -204,8 +194,35 @@ export class LoginPage implements OnInit {
     return await modal.present();
   }
 
-  cekToken(user, email) {
-    PushNotifications.register();
+  async cekToken(user, email) {
+    let permStatus = await PushNotifications.checkPermissions();
+  
+    if (permStatus.receive === 'prompt') {
+      permStatus = await PushNotifications.requestPermissions();
+    }
+  
+    if (permStatus.receive !== 'granted') {
+      throw new Error('User denied permissions!');
+    }
+
+    await PushNotifications.register();
+    await PushNotifications.createChannel({
+      id: 'salammu_channel_fcm',
+      name: 'SalamMU FCM',
+      sound: 'mixkit.wav',
+      vibration: true,
+      importance: 4,
+      visibility: 1
+    }).then(async res => {
+      const toast = await this.toastController.create({
+        message: 'Channel created!',
+        duration: 1500,
+        position: 'bottom',
+        mode: 'ios'
+      });
+  
+      await toast.present();
+    });
 
     // On success, we should be able to receive notifications
     PushNotifications.addListener('registration',

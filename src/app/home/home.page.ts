@@ -131,27 +131,24 @@ export class HomePage implements OnInit {
 
       this.diagnostic.getLocationMode()
         .then(async (state) => {
-          let city = localStorage.getItem('selectedCity');
-          if(!city) {
-            if (state == this.diagnostic.locationMode.LOCATION_OFF) {
-              const confirm = await this.alertController.create({
-                header: 'SalamMU',
-                message: 'Lokasi belum diaktifkan di perangkat ini. Pergi ke pengaturan untuk mengaktifkan lokasi.',
-                buttons: [
-                  {
-                    text: 'Pengaturan',
-                    handler: async () => {
-                      this.diagnostic.switchToLocationSettings();
-                      await this.checkLocation();
-                    }
+          if (state == this.diagnostic.locationMode.LOCATION_OFF) {
+            const confirm = await this.alertController.create({
+              header: 'SalamMU',
+              message: 'Lokasi belum diaktifkan di perangkat ini. Pergi ke pengaturan untuk mengaktifkan lokasi.',
+              buttons: [
+                {
+                  text: 'Pengaturan',
+                  handler: async () => {
+                    this.diagnostic.switchToLocationSettings();
+                    await this.checkLocation();
                   }
-                ]
-              });
-              await confirm.present();
-            } else {
-              console.log('ok');
-              await this.checkLocation();
-            }
+                }
+              ]
+            });
+            await confirm.present();
+          } else {
+            console.log('ok');
+            await this.checkLocation();
           }
         }).catch(async e => {
           await this.getCurrentLocations();
@@ -168,7 +165,13 @@ export class HomePage implements OnInit {
         lat: resp.coords.latitude,
         long: resp.coords.longitude
       };
-      await this.getDetailLocation(location);
+      let city = localStorage.getItem('selectedCity');
+      if(city == null) {
+        await this.getDetailLocation(location);
+      } else {
+        this.city = city;
+        this.setTimeFromLocalCitySaved();
+      }
     }).catch((error) => {
       console.log('Error getting location', error);
     });
@@ -203,7 +206,13 @@ export class HomePage implements OnInit {
         long: pos.coords.longitude,
         time: new Date(),
       };
-      await this.getDetailLocation(location);
+      let city = localStorage.getItem('selectedCity');
+      if(city == null) {
+        await this.getDetailLocation(location);
+      } else {
+        this.city = city;
+        this.setTimeFromLocalCitySaved();
+      }
       resolve(pos);
    }, (err: PositionError) => {
      console.log(err)
@@ -211,6 +220,29 @@ export class HomePage implements OnInit {
      reject(err.message);
     });
    });
+  }
+
+  async setTimeFromLocalCitySaved() {
+    if(this.city != undefined) {
+      this.listTimes = [];
+      this.tempTimes1 = [];
+      this.tempTimes2 = [];
+      this.prayTime = undefined;
+      this.timesToday = undefined;
+      this.prayTime = await this.api.getToday(this.city);
+      this.timesToday = await this.prayTime.timings;
+
+      if(this.timesToday['Firstthird']) {
+        delete this.timesToday['Firstthird'];
+        delete this.timesToday['Lastthird'];
+      }
+      if(this.timesToday['Sunrise']) {
+        delete this.timesToday['Sunrise'];
+      }
+      this.parseTime(this.timesToday);
+    } else {
+      this.openSettingLokasi();
+    }
   }
 
   httpOption:any;
@@ -226,9 +258,7 @@ export class HomePage implements OnInit {
     }, async error => {
       await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(async res => {
         this.locationNow = res;
-        if(!this.city) {
-          this.city = this.locationNow.city.replace('Kota ', '');
-        }
+        this.city = this.locationNow.city.replace('Kota ', '');
         localStorage.setItem('selectedCity', this.city);
         if(this.city != undefined) {
           this.listTimes = [];
@@ -276,9 +306,7 @@ export class HomePage implements OnInit {
 
   async checkCity(res) {
     this.locationNow = res.features[0].properties;
-    if(!this.city) {
-      this.city = res.features[0].properties.address.city == null ? res.features[0].properties.address.town == null ? res.features[0].properties.address.municipality:res.features[0].properties.address.town:res.features[0].properties.address.city;
-    }
+    this.city = res.features[0].properties.address.city == null ? res.features[0].properties.address.town == null ? res.features[0].properties.address.municipality:res.features[0].properties.address.town:res.features[0].properties.address.city;
     if(!this.city) {
       this.city = res.features[0].properties.address.city == null ? res.features[0].properties.address.county:res.features[0].properties.address.city;
     }
@@ -396,6 +424,7 @@ export class HomePage implements OnInit {
   tempTimes2:any = [];
   data:any = {};
   async parseTime(timesToday) {
+    this.listTimes = [];
     let times = Object.values(timesToday);
     let title = Object.keys(timesToday);
     let t = [];

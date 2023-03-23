@@ -17,6 +17,7 @@ export class PilihLokasiPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.loading = true;
     this.present();
     this.getAllCity();
   }
@@ -27,14 +28,16 @@ export class PilihLokasiPage implements OnInit {
     this.api.get('sicara/getAllCity/').then(res => {
       this.allCity = res;
       this.allCityTemp = res;
+      this.loading = false;
     }, error => {
+      this.loading = false;
     })
   }
 
   async present() {
     return await this.loadingController.create({
       spinner: 'crescent',
-      duration: 10000,
+      duration: 2000,
       message: 'Tunggu Sebentar...',
       cssClass: 'custom-class custom-loading'
     }).then(a => {

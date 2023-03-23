@@ -51,13 +51,20 @@ export class JadwalSholatPage implements OnInit {
     this.daily = true;
     this.present();
     this.loading = true;
-    this.checkPermission();
     let date = new Date();
     this.month = Number(this.datePipe.transform(new Date(date), 'MM'));
     this.dateToday = Number(this.datePipe.transform(new Date(date), 'dd'));
     this.today = this.datePipe.transform(new Date(date), 'dd MMM yyyy');
     this.year = date.getFullYear();
     this.prayTime = await this.api.getThisMonth(this.month,this.year, this.city);
+    let city = localStorage.getItem('selectedCity');
+    if(city == null) {
+      this.checkPermission();
+    } else {
+      this.city = city;
+      this.getCal();
+      this.dailyShow();
+    }
 
     // let dateHijri = new Date(this.prayTime[this.dateToday-1].date['readable'])
     // this.getHijri(dateHijri);
@@ -529,7 +536,7 @@ export class JadwalSholatPage implements OnInit {
       this.present();
       setTimeout(() => {
         this.scrollTo('selected');
-      }, 1500);
+      }, 1000);
     }
   }
   

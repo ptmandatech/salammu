@@ -224,7 +224,17 @@ export class AppComponent {
   }
 
   async cekToken(email) {
-    PushNotifications.register();
+    let permStatus = await PushNotifications.checkPermissions();
+  
+    if (permStatus.receive === 'prompt') {
+      permStatus = await PushNotifications.requestPermissions();
+    }
+  
+    if (permStatus.receive !== 'granted') {
+      throw new Error('User denied permissions!');
+    }
+    
+    await PushNotifications.register();
     await PushNotifications.createChannel({
       id: 'salammu_channel_fcm',
       name: 'SalamMU FCM',
@@ -233,7 +243,14 @@ export class AppComponent {
       importance: 4,
       visibility: 1
     }).then(async res => {
-      console.log('Channel created!');
+      const toast = await this.toastController.create({
+        message: 'Channel created!',
+        duration: 1500,
+        position: 'bottom',
+        mode: 'ios'
+      });
+  
+      await toast.present();
     });
 
     // On success, we should be able to receive notifications
@@ -282,7 +299,9 @@ export class AppComponent {
                 data: JSON.stringify(dt)
               }
             }
-            this.router.navigate(['/tanya-ustad/chatting'], param);
+            if(data.ustadz_id){
+              this.router.navigate(['/tanya-ustad/chatting'], param);
+            }
           } else {
             console.log('Confirm Batal: blah');
           }
@@ -317,7 +336,9 @@ export class AppComponent {
                 data: JSON.stringify(dt)
               }
             }
-            this.router.navigate(['/tanya-ustad/chatting'], param);
+            if(data.ustadz_id){
+              this.router.navigate(['/tanya-ustad/chatting'], param);
+            }
           } else {
             console.log('Confirm Batal: blah');
           }
@@ -326,12 +347,12 @@ export class AppComponent {
     );
   }
 
-  playAudio(){
-    let audio = new Audio();
-    audio.src = "../assets/messages.mp3";
-    audio.load();
-    audio.play();
-  }
+  // playAudio(){
+  //   let audio = new Audio();
+  //   audio.src = "../assets/messages.mp3";
+  //   audio.load();
+  //   audio.play();
+  // }
 
   saveToken(token) {
     this.api.put('users/'+this.userData.id, { tokenFCM: token }).then(res => {

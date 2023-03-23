@@ -37,9 +37,9 @@
           <!-- Segment List -->
           <div *ngSwitchCase="'list'" >
             <ion-list class="ion-padding">
-              <ion-item lines="none" detail class="list-custom" *ngFor="let n of listPengajian" (click)="modalPeta(n)">
+              <ion-item lines="none" detail class="list-custom" *ngFor="let n of listPengajian" [disabled]="n.status != 'soon'" (click)="modalPeta(n)">
                 <ion-label class="ion-text-wrap">
-                  <ion-badge mode="ios">Akan Datang</ion-badge>
+                  <ion-badge mode="ios" color="{{n.status == 'soon' ? 'warning':'primary'}}">{{n.status == 'soon' ? 'Akan Datang':'Selesai'}}</ion-badge>
                   <h3>{{n.name}}</h3>
                   <ion-text color="medium" class="ion-text-start">
                     <p>Lokasi: {{n.location}}</p>

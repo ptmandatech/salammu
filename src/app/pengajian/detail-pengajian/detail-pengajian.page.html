@@ -31,13 +31,13 @@
         <ion-item *ngIf="pengajianData.organizer == 'cabang'">
           <ion-icon slot="start" color="primary" name="create-outline"></ion-icon>
           <ion-label>
-            <p class="ion-text-wrap">{{branchSelected.nama == null ? '-':branchSelected.nama}}</p>
+            <p class="ion-text-wrap">{{branchSelected == null ? '-':branchSelected.nama}}</p>
           </ion-label>
         </ion-item>
         <ion-item *ngIf="pengajianData.organizer == 'ranting'">
           <ion-icon slot="start" color="primary" name="create-outline"></ion-icon>
           <ion-label>
-            <p class="ion-text-wrap">{{twigSelected.nama == null ? '-':twigSelected.nama}}</p>
+            <p class="ion-text-wrap">{{twigSelected == null ? '-':twigSelected.nama}}</p>
           </ion-label>
         </ion-item>
         <ion-item>
@@ -58,7 +58,7 @@
             <p class="ion-text-wrap">{{pengajianData.location == null ? '-':pengajianData.location}}</p>
           </ion-label>
         </ion-item>
-        <ion-item *ngif="pengajianData.url_livestream">
+        <ion-item *ngIf="pengajianData.url_livestream">
           <ion-icon slot="start" color="primary" name="link-outline"></ion-icon>
           <ion-label>
             <p class="ion-text-wrap"><a href="{{pengajianData.url_livestream}}">Buka Link Live Streaming</a></p>

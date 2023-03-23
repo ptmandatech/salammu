@@ -41,7 +41,7 @@ export class AlQuranPage implements OnInit {
     this.loading = true;
     return await this.loadingController.create({
       spinner: 'crescent',
-      duration: 10000,
+      duration: 2000,
       message: 'Tunggu Sebentar...',
       cssClass: 'custom-class custom-loading'
     }).then(a => {

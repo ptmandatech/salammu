@@ -16,8 +16,8 @@
         <div padding>
           <ion-badge mode="ios">Khutbah</ion-badge>
           <h2>{{detailKhutbah.title}}</h2>
-          <ion-text color="medium">
-            <p>Oleh : {{detailKhutbah.user_name}}</p>
+          <ion-text color="medium" style="font-size: small;">
+            <p>Oleh : {{detailKhutbah.user_name}} <ion-icon class="dot" name="ellipse"></ion-icon> {{detailKhutbah.created_at | date: 'dd MMMM yyyy HH:mm'}}</p>
           </ion-text>
         </div>
 

@@ -16,8 +16,8 @@
         <div padding>
           <ion-badge mode="ios">Artikel</ion-badge>
           <h2>{{articles.title}}</h2>
-          <ion-text color="medium">
-            <p>Oleh : {{articles.user_name}}</p>
+          <ion-text color="medium" style="font-size: small;">
+            <p>Oleh : {{articles.user_name}} <ion-icon class="dot" name="ellipse"></ion-icon> {{articles.created_at | date: 'dd MMMM yyyy HH:mm'}}</p>
           </ion-text>
         </div>
 

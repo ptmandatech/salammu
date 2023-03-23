@@ -15,7 +15,9 @@
 
         <div padding>
           <h2>{{doaDzikirData.title}}</h2>
-          <p>Oleh : {{doaDzikirData.user_name}}</p>
+          <ion-text color="medium" style="font-size: small;">
+            <p>Oleh : {{doaDzikirData.user_name}} <ion-icon class="dot" name="ellipse"></ion-icon> {{doaDzikirData.created_at | date: 'dd MMMM yyyy HH:mm'}}</p>
+          </ion-text>
         </div>
 
         <img src="{{doaDzikirData.image == undefined || doaDzikirData.image == '' ? '../../../assets/imgs/no-product.png':(serverImg+doaDzikirData.image)}}" style="width: 100%">

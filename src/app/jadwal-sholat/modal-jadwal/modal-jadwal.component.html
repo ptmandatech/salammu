@@ -24,9 +24,9 @@
 <ion-content>
   <ion-item lines="none" *ngFor="let n of listTimes">
     <ion-label>
-      <ion-text>{{n.title}}</ion-text>
+      <ion-text color="{{n.time_color}}">{{n.title}}</ion-text>
     </ion-label>
-    <ion-text slot="end" color="primary">
+    <ion-text slot="end" color="{{n.time_color}}">
       {{n.time}}
     </ion-text>
   </ion-item>
