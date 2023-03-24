@@ -37,7 +37,7 @@ export class ModalKalenderComponent implements OnInit {
     this.loading = true;
     return await this.loadingController.create({
       spinner: 'crescent',
-      duration: 10000,
+      duration: 2000,
       message: 'Tunggu Sebentar...',
       cssClass: 'custom-class custom-loading'
     }).then(a => {
@@ -62,13 +62,11 @@ export class ModalKalenderComponent implements OnInit {
 
   parseData(res, datetime) {
     for(var i=0; i<res.length; i++) {
-      if(res[i].status != 'done') {
-        let dt = this.datePipe.transform(new Date(res[i].datetime), 'yyyy-MM-dd');
-        if(dt == datetime) {
-          let idx = this.listPengajian.indexOf(res[i]);
-          if(idx == -1) {
-            this.listPengajian.push(res[i]);
-          }
+      let dt = this.datePipe.transform(new Date(res[i].datetime), 'yyyy-MM-dd');
+      if(dt == datetime) {
+        let idx = this.listPengajian.indexOf(res[i]);
+        if(idx == -1) {
+          this.listPengajian.push(res[i]);
         }
       }
     }

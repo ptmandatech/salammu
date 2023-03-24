@@ -24,7 +24,6 @@ export class DetailJadwalSholatPage implements OnInit {
   ngOnInit() {
     this.prayTime = this.navParams.get('prayTime');
     this.listTimes = this.navParams.get('listTimes');
-    console.log(this.listTimes);
     
     this.nextTimeTimer = this.navParams.get('nextTimeTimer');
     this.nextTime = this.navParams.get('nextTime');
@@ -60,8 +59,6 @@ export class DetailJadwalSholatPage implements OnInit {
 
   setStatus(idx, status) {
     this.listTimes[idx].alarm = status;
-    console.log(this.listTimes);
-    
   }
 
 }

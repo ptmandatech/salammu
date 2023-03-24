@@ -12,9 +12,9 @@
       <ion-col size-md="6">
 
         <h4>{{pengajianData.name == null ? '-':pengajianData.name}}</h4>
+        <p><ion-badge mode="ios" color="{{pengajianData.status == 'soon' ? 'warning':'primary'}}">{{pengajianData.status == 'soon' ? 'Akan Datang':'Selesai'}}</ion-badge></p>
         <ion-text color="medium">
-          <p>{{pengajianData.descriptions == null ? '-':pengajianData.descriptions}}
-          </p>
+          <p>{{pengajianData.descriptions == null ? '-':pengajianData.descriptions}}</p>
         </ion-text>
         <ion-item>
           <ion-icon slot="start" color="primary" name="happy-outline"></ion-icon>

@@ -2,6 +2,9 @@
   <ion-toolbar>
     <ion-item lines="full" class="ion-padding">
       <ion-label>
+        <p>
+          <ion-badge mode="ios" color="{{dataPengajian.status == 'soon' ? 'warning':'primary'}}">{{dataPengajian.status == 'soon' ? 'Akan Datang':'Selesai'}}</ion-badge>  
+        </p>
         <ion-text class="ion-text-wrap judul">
           {{dataPengajian.name == undefined ? '':dataPengajian.name}}
         </ion-text>

@@ -13,7 +13,6 @@ import { SemuaMenuPage } from './semua-menu/semua-menu.page';
 import { SettingLokasiPage } from './setting-lokasi/setting-lokasi.page';
 import { PilihLokasiPage } from './pilih-lokasi/pilih-lokasi.page';
 import { DetailJadwalSholatPage } from './detail-jadwal-sholat/detail-jadwal-sholat.page';
-import { LocalNotifications, LocalNotificationSchedule } from "@capacitor/local-notifications"; 
 
 @Component({
   selector: 'app-home',
@@ -431,6 +430,7 @@ export class HomePage implements OnInit {
     let tt = [];
     t = times.splice(4, 1);
     tt = title.splice(4, 1);
+    
     for(var i=0; i<times.length-1; i++) {
       this.data = {};
       let dt;

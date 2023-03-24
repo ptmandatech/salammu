@@ -15,7 +15,9 @@
 
         <div padding>
           <h2>{{pediamuData.title}}</h2>
-          <p>Oleh : {{pediamuData.user_name}}</p>
+          <ion-text color="medium" style="font-size: small;">
+            <p>Oleh : {{pediamuData.user_name}} <ion-icon class="dot" name="ellipse"></ion-icon> {{pediamuData.created_at | date: 'dd MMMM yyyy HH:mm'}}</p>
+          </ion-text>
         </div>
 
         <img src="{{pediamuData.image == undefined || pediamuData.image == '' ? '../../../assets/imgs/no-product.png':(serverImg+pediamuData.image)}}" style="width: 100%">
