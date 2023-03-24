@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title>Qibla Finder</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-grid class="ion-no-padding">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-md="6">
+        <div class="item-centered">
+          <img src="../../assets/imgs/compas.png" width="200em" [ngStyle]="{'transform': 'rotate('+(qiblaLocation*-1)+'deg)'}">
+          <p>Lokasi Saat Ini {{city == null ? '':': '+city}}<br>{{!!currentLocation ? "["+currentLocation.coords.latitude+","+currentLocation.coords.longitude+"]" : 'Not Allowed'}}</p>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

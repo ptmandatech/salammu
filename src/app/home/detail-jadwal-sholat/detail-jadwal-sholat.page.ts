@@ -61,4 +61,14 @@ export class DetailJadwalSholatPage implements OnInit {
     this.listTimes[idx].alarm = status;
   }
 
+  showCal:boolean = false;
+  showCalender() {
+    this.showCal = this.showCal == false ? this.showCal = true:this.showCal = false;
+  }
+
+  showHari:boolean = false;
+  showHariSpesial() {
+    this.showHari = this.showHari == false ? this.showHari = true:this.showHari = false;
+  }
+
 }

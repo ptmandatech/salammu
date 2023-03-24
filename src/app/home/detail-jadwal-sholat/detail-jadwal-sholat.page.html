@@ -26,7 +26,7 @@
           </ion-row>
         </ion-grid>
 
-        <div class="ion-padding" style="margin-top: 10%;">
+        <div class="ion-padding" style="margin-top: 10%;" (click)="showCalender()">
           <div class="info-jadwal">
             <ion-row>
               <ion-col class="ion-text-center">
@@ -76,19 +76,33 @@
         </ion-item>
       </ion-col>
     </ion-row>
+    <ion-row *ngIf="showCal" style="border-top: 1px solid #F2F2F2; margin-bottom: 10%;">
+      <ion-col size-md="6">
+        <div class="item-centered-kalender">
+          <iframe id="g2hFrame" title="islamic-calendar" style="width: 90%; height: 312px; border: 1px solid #ddd;" scrolling="no" src="https://www.islamicfinder.org/islamic-calendar/widgetGregorian?type=Gregorian"> </iframe>
+                
+          <ion-label class="ion-text-center" (click)="showHariSpesial()">
+            <ion-text color="primary">
+              <p>Lihat Hari Spesial</p>
+            </ion-text>
+          </ion-label>
+
+          <iframe *ngIf="showHari" style="width: 240px; height: 460px; border: 1px solid #ddd;" scrolling="no" src="https://www.islamicfinder.org/specialislamicdays"> </iframe>
+        </div>
+      </ion-col>
+    </ion-row>
   </ion-grid>
 </ion-content>
 
 <ion-footer class="ion-no-border">
-  <ion-row>
-    <ion-col class="ion-text-center">
-      <ion-label>
-        <ion-text color="medium">
-          <p>
-            SalamMU @{{year}}
-          </p>
-        </ion-text>
-      </ion-label>
-    </ion-col>
-  </ion-row>
+  <ion-item lines="none">
+    <ion-label class="ion-text-center">
+      <ion-text color="primary">
+        <p>Powered By: GKB PCM Gresik</p>
+      </ion-text>
+      <ion-text color="medium">
+        Versi : 1.0.2
+      </ion-text>
+    </ion-label>
+  </ion-item>
 </ion-footer>

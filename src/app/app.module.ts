@@ -43,6 +43,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { AppReducers } from './store/app.reducer';
 import { AppEffects } from './store/app.effetcts';
+import { DeviceOrientation } from '@awesome-cordova-plugins/device-orientation/ngx';
 
 @NgModule({
   declarations: [
@@ -87,6 +88,7 @@ import { AppEffects } from './store/app.effetcts';
     Toast,
     PhotoViewer,
     MusicControls,
+    DeviceOrientation,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {provide: LOCALE_ID, useValue: "id-ID" }
   ],

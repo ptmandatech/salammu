@@ -72,6 +72,11 @@ export class ApiService {
     window.open(url, 'blank')
   }
 
+  async getQiblaDirections(lat, long) {
+    let dt = await this.common.getQiblaDirections(lat, long);
+    return dt;
+  }
+
   async getToday(city) {
     let date = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
     //method sebelumnya 4

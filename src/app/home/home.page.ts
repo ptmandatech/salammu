@@ -89,7 +89,7 @@ export class HomePage implements OnInit {
   async present() {
     return await this.loadingController.create({
       spinner: 'crescent',
-      duration: 10000,
+      duration: 3000,
       message: 'Tunggu Sebentar...',
       cssClass: 'custom-class custom-loading'
     }).then(a => {
@@ -164,6 +164,7 @@ export class HomePage implements OnInit {
         lat: resp.coords.latitude,
         long: resp.coords.longitude
       };
+      localStorage.setItem('currentPos', JSON.stringify(location));
       let city = localStorage.getItem('selectedCity');
       if(city == null) {
         await this.getDetailLocation(location);
@@ -205,6 +206,7 @@ export class HomePage implements OnInit {
         long: pos.coords.longitude,
         time: new Date(),
       };
+      localStorage.setItem('currentPos', JSON.stringify(this.currentPos));
       let city = localStorage.getItem('selectedCity');
       if(city == null) {
         await this.getDetailLocation(location);
@@ -228,17 +230,31 @@ export class HomePage implements OnInit {
       this.tempTimes2 = [];
       this.prayTime = undefined;
       this.timesToday = undefined;
-      this.prayTime = await this.api.getToday(this.city);
-      this.timesToday = await this.prayTime.timings;
-
-      if(this.timesToday['Firstthird']) {
-        delete this.timesToday['Firstthird'];
-        delete this.timesToday['Lastthird'];
+      this.prayTime = await this.api.getToday(this.city).catch(async err => {
+        const toast = await this.toastController.create({
+          message: 'Gagal Mendapatkan informasi Jadwal Sholat, Silahkan refresh berkala.<br /> Error Message: '+err.error.message,
+          duration: 2500,
+          position: 'bottom',
+          color: 'danger',
+          mode: 'ios',
+          cssClass: 'className'
+        });
+    
+        await toast.present();
+        return null;
+      });
+      if(this.prayTime) {
+        this.timesToday = await this.prayTime.timings;
+  
+        if(this.timesToday['Firstthird']) {
+          delete this.timesToday['Firstthird'];
+          delete this.timesToday['Lastthird'];
+        }
+        if(this.timesToday['Sunrise']) {
+          delete this.timesToday['Sunrise'];
+        }
+        this.parseTime(this.timesToday);
       }
-      if(this.timesToday['Sunrise']) {
-        delete this.timesToday['Sunrise'];
-      }
-      this.parseTime(this.timesToday);
     } else {
       this.openSettingLokasi();
     }
@@ -265,17 +281,31 @@ export class HomePage implements OnInit {
           this.tempTimes2 = [];
           this.prayTime = undefined;
           this.timesToday = undefined;
-          this.prayTime = await this.api.getToday(this.city);
-          this.timesToday = await this.prayTime.timings;
-
-          if(this.timesToday['Firstthird']) {
-            delete this.timesToday['Firstthird'];
-            delete this.timesToday['Lastthird'];
+          this.prayTime = await this.api.getToday(this.city).catch(async err => {
+            const toast = await this.toastController.create({
+              message: 'Gagal Mendapatkan informasi Jadwal Sholat, Silahkan refresh berkala.<br /> Error Message: '+err.error.message,
+              duration: 2500,
+              position: 'bottom',
+              color: 'danger',
+              mode: 'ios',
+              cssClass: 'className'
+            });
+        
+            await toast.present();
+            return null;
+          });
+          if(this.prayTime) {
+            this.timesToday = await this.prayTime.timings;
+      
+            if(this.timesToday['Firstthird']) {
+              delete this.timesToday['Firstthird'];
+              delete this.timesToday['Lastthird'];
+            }
+            if(this.timesToday['Sunrise']) {
+              delete this.timesToday['Sunrise'];
+            }
+            this.parseTime(this.timesToday);
           }
-          if(this.timesToday['Sunrise']) {
-            delete this.timesToday['Sunrise'];
-          }
-          this.parseTime(this.timesToday);
         }
       }, async error => {
         console.log(error)
@@ -316,17 +346,31 @@ export class HomePage implements OnInit {
       this.tempTimes2 = [];
       this.prayTime = undefined;
       this.timesToday = undefined;
-      this.prayTime = await this.api.getToday(this.city);
-      this.timesToday = await this.prayTime.timings;
-      
-      if(this.timesToday['Firstthird']) {
-        delete this.timesToday['Firstthird'];
-        delete this.timesToday['Lastthird'];
+      this.prayTime = await this.api.getToday(this.city).catch(async err => {
+        const toast = await this.toastController.create({
+          message: 'Gagal Mendapatkan informasi Jadwal Sholat, Silahkan refresh berkala.<br /> Error Message: '+err.error.message,
+          duration: 2500,
+          position: 'bottom',
+          color: 'danger',
+          mode: 'ios',
+          cssClass: 'className'
+        });
+    
+        await toast.present();
+        return null;
+      });
+      if(this.prayTime) {
+        this.timesToday = await this.prayTime.timings;
+  
+        if(this.timesToday['Firstthird']) {
+          delete this.timesToday['Firstthird'];
+          delete this.timesToday['Lastthird'];
+        }
+        if(this.timesToday['Sunrise']) {
+          delete this.timesToday['Sunrise'];
+        }
+        this.parseTime(this.timesToday);
       }
-      if(this.timesToday['Sunrise']) {
-        delete this.timesToday['Sunrise'];
-      }
-      this.parseTime(this.timesToday);
     } else {
       this.openSettingLokasi();
     }
@@ -362,30 +406,39 @@ export class HomePage implements OnInit {
   }
 
   async doRefresh(event) {
-    if(this.appComponent.networkStatus.connected == true) {
-      this.loading = true;
-      this.listProducts = [];
-      this.listBanners = [];
-      this.listVideos = [];
-      this.listArticles = [];
-      this.listTimes = [];
-      this.tempTimes1 = [];
-      this.tempTimes2 = [];
-      this.prayTime = undefined;
-      this.timesToday = undefined;
-      await this.checkPermission();
-      this.cekLogin();
-      this.dateNow = new Date();
-      this.getHijri(this.dateNow);
-      this.serverImg = this.common.photoBaseUrl+'products/';
-      this.serverImgBanner = this.common.photoBaseUrl+'banners/';
-      this.getAllProducts();
-      this.getAllBanners();
-      this.getAllArticles();
-      this.getAllVideos();
-      setTimeout(() => {
-        event.target.complete();
-      }, 2000);
+    if(this.appComponent.networkStatus){
+      if(this.appComponent.networkStatus.connected == true) {
+        this.loading = true;
+        this.listProducts = [];
+        this.listBanners = [];
+        this.listVideos = [];
+        this.listArticles = [];
+        this.listTimes = [];
+        this.tempTimes1 = [];
+        this.tempTimes2 = [];
+        this.prayTime = undefined;
+        this.timesToday = undefined;
+        this.nextTime = {};
+        this.nextTimeTimer = undefined;
+        await this.checkPermission();
+        this.cekLogin();
+        this.dateNow = new Date();
+        this.getHijri(this.dateNow);
+        this.serverImg = this.common.photoBaseUrl+'products/';
+        this.serverImgBanner = this.common.photoBaseUrl+'banners/';
+        this.getAllProducts();
+        this.getAllBanners();
+        this.getAllArticles();
+        this.getAllVideos();
+        setTimeout(() => {
+          event.target.complete();
+        }, 2000);
+      } else {
+        this.appComponent.cekKoneksi();
+        setTimeout(() => {
+          event.target.complete();
+        }, 2000);
+      }
     } else {
       this.appComponent.cekKoneksi();
       setTimeout(() => {
@@ -430,12 +483,14 @@ export class HomePage implements OnInit {
     let tt = [];
     t = times.splice(4, 1);
     tt = title.splice(4, 1);
-    
+
+    let idxFajr = title.findIndex(e => e == 'Fajr');
+
     for(var i=0; i<times.length-1; i++) {
       this.data = {};
       let dt;
       if(title[i] == 'Imsak') {
-        await this.checkTime('00:01', times[i]).then(res => {
+        await this.checkTime('00:01', times[idxFajr]).then(res => {
           return dt = res;
         });
       } else if(title[i] == 'Isha') {
@@ -578,6 +633,12 @@ export class HomePage implements OnInit {
     setInterval(async ()=> {
       let date = new Date();
       this.nextTimeTimer = await this.timeCalc(date, this.nextTime.time);
+      if(this.nextTimeTimer == "0 Jam, 0 Menit") {
+        this.listTimes = [];
+        this.tempTimes1 = [];
+        this.tempTimes2 = [];
+        this.parseTime(this.timesToday);
+      }
     },3000);
   }
 
@@ -586,13 +647,14 @@ export class HomePage implements OnInit {
     let date2 = d2.getTime();
 
     let msec = date2 - date1;
+    let sec = Math.floor(msec / 1000);
     let mins = Math.floor(msec / 60000);
     let hrs = Math.floor(mins / 60);
     let days = Math.floor(hrs / 24);
 
     mins = mins % 60;
 
-    let tValue1= `${hrs} Jam,  ${mins}  Menit`
+    let tValue1= `${hrs} Jam, ${mins} Menit`
 
     return tValue1;
   }
@@ -716,17 +778,31 @@ export class HomePage implements OnInit {
           this.tempTimes2 = [];
           this.prayTime = undefined;
           this.timesToday = undefined;
-          this.prayTime = await this.api.getToday(this.city);
-          this.timesToday = await this.prayTime.timings;
-
-          if(this.timesToday['Firstthird']) {
-            delete this.timesToday['Firstthird'];
-            delete this.timesToday['Lastthird'];
+          this.prayTime = await this.api.getToday(this.city).catch(async err => {
+            const toast = await this.toastController.create({
+              message: 'Gagal Mendapatkan informasi Jadwal Sholat, Silahkan refresh berkala.<br /> Error Message: '+err.error.message,
+              duration: 2500,
+              position: 'bottom',
+              color: 'danger',
+              mode: 'ios',
+              cssClass: 'className'
+            });
+        
+            await toast.present();
+            return null;
+          });
+          if(this.prayTime) {
+            this.timesToday = await this.prayTime.timings;
+      
+            if(this.timesToday['Firstthird']) {
+              delete this.timesToday['Firstthird'];
+              delete this.timesToday['Lastthird'];
+            }
+            if(this.timesToday['Sunrise']) {
+              delete this.timesToday['Sunrise'];
+            }
+            this.parseTime(this.timesToday);
           }
-          if(this.timesToday['Sunrise']) {
-            delete this.timesToday['Sunrise'];
-          }
-          this.parseTime(this.timesToday);
         }
       }
     });

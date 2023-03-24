@@ -82,6 +82,24 @@ ion-button {
   top: 30%;
 }
 
+.item-centered-kalender {
+  text-align: center;
+
+  position: relative;
+  left: 0;
+  right: 0;
+  top: 5%;
+}
+
+.item-centered-hari {
+  text-align: center;
+
+  position: relative;
+  left: 0;
+  right: 0;
+  top: 15%;
+}
+
 .modal-class {
   --border-radius: 15px 15px 0px 0px;;
 }

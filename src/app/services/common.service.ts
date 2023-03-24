@@ -81,7 +81,7 @@ export class CommonService {
   {
     this.times = undefined;
     this.times = await this.http.get(this.serverPrayTimes2+url).toPromise();
-    return this.times.data;
+    return this.times == null ? null:this.times.data;
   }
 
   weekTimes:any;
@@ -98,6 +98,14 @@ export class CommonService {
     this.getToken();
     this.data = undefined;
     this.data = await this.http.get(this.serverUrl+url, this.httpOption).toPromise();
+    return this.data;
+  }
+
+  async getQiblaDirections(lat, long)
+  {
+    let url = 'https://api.aladhan.com/v1/qibla/';
+    this.data = undefined;
+    this.data = await this.http.get(url+lat+'/'+long).toPromise();
     return this.data;
   }
 

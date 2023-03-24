@@ -146,7 +146,11 @@ const routes: Routes = [
   {
     path: 'tvmu',
     loadChildren: () => import('./tvmu/tvmu.module').then( m => m.TvmuPageModule)
+  },  {
+    path: 'qibla-finder',
+    loadChildren: () => import('./qibla-finder/qibla-finder.module').then( m => m.QiblaFinderPageModule)
   }
+
 
 
 
