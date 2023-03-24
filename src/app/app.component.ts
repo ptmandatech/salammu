@@ -149,6 +149,7 @@ export class AppComponent {
       localStorage.removeItem('userSalammu');
       localStorage.removeItem('salammuToken');
       this.userData = undefined;
+      this.cekToken(this.userData == null ? null:this.userData.email);
       await this.loadingController.dismiss();
     })
   }
@@ -256,7 +257,11 @@ export class AppComponent {
     // On success, we should be able to receive notifications
     PushNotifications.addListener('registration',
       (token: Token) => {
-        this.saveToken(token.value);
+        if(email){
+          this.saveToken(token.value);
+        } else {
+          this.saveTokenGlobal(token.value);
+        }
       }
     );
 
@@ -356,6 +361,16 @@ export class AppComponent {
 
   saveToken(token) {
     this.api.put('users/'+this.userData.id, { tokenFCM: token }).then(res => {
+      console.log(res)
+    })
+  }
+
+  saveTokenGlobal(token) {
+    let dt = {
+      id : new Date().getTime().toString() + '' + [Math.floor((Math.random() * 1000))],
+      token: token
+    }
+    this.api.post('fcm', dt).then(res => {
       console.log(res)
     })
   }
