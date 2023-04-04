@@ -42,7 +42,7 @@ export class AlQuranPage implements OnInit {
     return await this.loadingController.create({
       spinner: 'crescent',
       duration: 2000,
-      message: 'Tunggu Sebentar...',
+      message: 'Menyiapkan data...',
       cssClass: 'custom-class custom-loading'
     }).then(a => {
       a.present().then(() => {
@@ -89,6 +89,7 @@ export class AlQuranPage implements OnInit {
   suratTemp:any = [];
   getSurat() {
     this.loading = true;
+    this.present();
     this.surat = [];
     this.suratTemp = [];
     this.api.get('quran/surat').then(res => {

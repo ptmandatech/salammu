@@ -10,13 +10,16 @@
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
 
+        <div id="loadImg"><div><img src="{{loadingIframe}}" /></div></div>
         <div class="video-container" *ngIf="urlSafe != undefined">
           <iframe
-                [src]="urlSafe"
-                title="YouTube video player"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen>
+            [src]="urlSafe"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            onload="document.getElementById('loadImg').style.display='none';"
+          >
           </iframe>
         </div>
         <p class="ion-text-wrap" *ngIf="urlSafe == undefined"><ion-skeleton-text animated style="height: 400px"></ion-skeleton-text></p>

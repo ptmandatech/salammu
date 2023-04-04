@@ -26,6 +26,7 @@ export class DetailVideoPage implements OnInit {
   loading:boolean;
   serverImg:any;
   userData:any;
+  loadingIframe = 'https://cdn.dribbble.com/users/2973561/screenshots/5757826/media/221d6bfc1960ab98a7585fcc2a4d0181.gif';
   constructor(
     public api: ApiService,
     public common: CommonService,
