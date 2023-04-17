@@ -1,0 +1,75 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title>Peserta Hadir</ion-title>
+    <ion-buttons slot="end" *ngIf="isLoggedIn">
+      <ion-button fill="clear" (click)="openModalInfo($event)">
+        <ion-icon slot="icon-only" name="information-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-grid class="ion-no-padding">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-md="6">
+        <div class="item-centered" *ngIf="!loading && listUsers.length == 0">
+          <img src="./assets/icon/pencarian.svg">
+          <ion-label>
+            <p>Peserta tidak ditemukan</p>
+          </ion-label>
+        </div>
+
+        <ion-list *ngIf="!loading && listUsers.length > 0">
+          <ion-item *ngFor="let n of listUsers">
+            <ion-thumbnail slot="start">
+              <img class="img-profil" src="{{n.image == null ? './assets/imgs/blank-profil.png':(serverImg+n.image)}}">
+            </ion-thumbnail>
+            <ion-label>
+              <h2>{{n.name}}</h2>
+              <ion-text color="medium">
+                <p>
+                  {{n.email}}
+                </p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+
+        <ion-row class="ion-no-padding" *ngIf="loading">
+          <ion-col size="6" *ngFor="let n of [1,2,3,4,5,6,7,8,9,10]">
+            <ion-card class="rounded-15">
+              <ion-card-content>
+                <ion-skeleton-text animated style="height: 60px;"></ion-skeleton-text>
+                <ion-label>
+                  <ion-text color="primary">
+                    <h2><ion-skeleton-text animated></ion-skeleton-text></h2>
+                  </ion-text>
+                  <ion-text color="medium">
+                    <p class="text-elipsis"><ion-skeleton-text animated></ion-skeleton-text><p>
+                  </ion-text>
+                </ion-label>
+                <h2 style="margin-top: 20px;"><ion-skeleton-text animated></ion-skeleton-text></h2>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div style="margin-top: 100px;"></div>
+
+  <ion-fab *ngIf="isLoggedIn" vertical="bottom" horizontal="end" slot="fixed" [routerLink]="['/notulenmu/tambah-peserta/0']">
+    <ion-fab-button>
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>

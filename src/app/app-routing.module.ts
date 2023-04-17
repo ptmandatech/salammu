@@ -149,6 +149,10 @@ const routes: Routes = [
   },  {
     path: 'qibla-finder',
     loadChildren: () => import('./qibla-finder/qibla-finder.module').then( m => m.QiblaFinderPageModule)
+  },
+  {
+    path: 'notulenmu',
+    loadChildren: () => import('./notulenmu/notulenmu.module').then( m => m.NotulenmuPageModule)
   }
 
 

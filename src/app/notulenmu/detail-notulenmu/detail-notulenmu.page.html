@@ -1,0 +1,65 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title>Detail NotulenMU</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear">
+        <ion-icon slot="icon-only" name="download-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-grid class="ion-no-padding" *ngIf="notulenData != undefined">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-md="6">
+
+        <h4>{{notulenData.title == null ? '-':notulenData.title}}</h4>
+        <ion-text color="medium">
+          <p>
+            {{notulenData.created_at | date: 'HH:mm a'}}
+            <ion-icon class="dot" name="ellipse"></ion-icon> 
+            {{notulenData.created_at | date: 'dd/MM/yyyy'}}
+          </p>
+        </ion-text>
+
+        <hr class="lines">
+
+        <ion-item lines="full">
+          <ion-icon slot="start" color="primary" name="location-outline"></ion-icon>
+          <ion-label>
+            <p class="ion-text-wrap">{{notulenData.place == null ? '-':notulenData.place}}</p>
+          </ion-label>
+        </ion-item>
+
+        <ion-item lines="none" class="ion-no-padding">
+          <ion-label>
+            <h2>Peserta Hadir</h2>
+          </ion-label>
+          <ion-note slot="end">12 Peserta Hadir</ion-note>
+        </ion-item>
+
+        <ion-item lines="full" detail class="list-custom">
+          <ion-label class="ion-text-wrap">
+            <ion-text color="primary">
+              <small>12 Hadir</small>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+
+        <hr class="lines">
+
+        <ion-item lines="full" class="ion-no-padding">
+          <ion-label>
+            <h3>Notulen Rapat</h3>
+            <img src="{{serverImg+notulenData.images}}"/>
+            <p class="ion-text-wrap" [innerHTML]="notulenData.notulen"></p>
+          </ion-label>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>

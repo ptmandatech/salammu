@@ -52,6 +52,24 @@
             </div>
           </div>
 
+          <ion-text color="medium">Cabang (opsional)</ion-text>
+          <ngx-autocomplete 
+              [searchKeyword]="'nama'" 
+              [inputId]="'searchCabang'" 
+              [placeholderValue]="'Masukkan Nama Cabang'" 
+              [entries]="listCabang" 
+              (selectedValue)="selectEvent($event)">
+          </ngx-autocomplete>
+
+          <ion-text color="medium">Ranting (opsional)</ion-text>
+          <ngx-autocomplete 
+              [searchKeyword]="'nama'" 
+              [inputId]="'searchRanting'" 
+              [placeholderValue]="'Masukkan Nama Ranting'" 
+              [entries]="listRanting" 
+              (selectedValue)="selectEventRanting($event)">
+          </ngx-autocomplete>
+
           <ion-text color="medium">Alamat</ion-text>
           <ion-item lines="none" class="input">
             <ion-textarea formControlName="address" name="address" required type="text" placeholder="Masukan Alamat" rows="4" cols="20"></ion-textarea>

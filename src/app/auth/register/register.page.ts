@@ -26,12 +26,62 @@ export class RegisterPage implements OnInit {
       name: [null, [Validators.required]],
       phone: [null, [Validators.required, Validators.minLength(10), Validators.maxLength(15), Validators.pattern('^[0-9]*$')]],
       address: [null, [Validators.required]],
+      cabang: [null],
+      ranting: [null],
       password: [null, [Validators.required, Validators.minLength(6)]],
       re_password: [null, [Validators.required, Validators.minLength(6)]]
     });
   }
 
   ngOnInit() {
+    this.getListCabang();
+    this.getListRanting();
+  }
+
+  listCabang:any = [];
+  listCabangTemp:any = [];
+  async getListCabang() {
+    try {
+      await this.api.get('sicara/getAllPCM').then(res=>{ 
+        this.listCabang = res;
+        this.listCabangTemp = res;
+        console.log(res)
+      }, err => {
+        this.loading = false;
+      });
+    } catch {
+
+    }
+  }
+
+  listRanting:any = [];
+  listRantingTemp:any = [];
+  async getListRanting() {
+    try {
+      await this.api.get('sicara/getAllPRM').then(res=>{ 
+        this.listRanting = res;
+        this.listRantingTemp = res;
+        console.log(res)
+      }, err => {
+        this.loading = false;
+      });
+    } catch {
+
+    }
+  }
+
+  selectEvent(event) {
+    console.log(event)
+    this.form.patchValue({
+      cabang: event.id
+    })
+  }
+
+  selectEventRanting(event) {
+    console.log(event)
+    this.form.patchValue({
+      ranting: event.id
+    })
   }
 
   type = 'password';
@@ -127,5 +177,4 @@ export class RegisterPage implements OnInit {
       'dismissed': true
     });
   }
-
 }

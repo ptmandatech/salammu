@@ -1,0 +1,154 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title>{{isCreated ? 'Tambah':'Perbarui'}} Notulen</ion-title>
+    <ion-buttons slot="end" *ngIf="isCreated == false">
+      <ion-button fill="clear" (click)="delete()">
+        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-grid class="ion-no-padding">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-md="6">
+
+        <div class="ion-padding">
+
+          <ion-text color="medium">Judul</ion-text>
+          <ion-item lines="none" class="input">
+            <ion-input [(ngModel)]="notulenData.title" required #title="ngModel" placeholder="Judul"></ion-input>
+          </ion-item>
+
+          <!-- <ion-row>
+            <ion-col>
+              <ion-text color="medium">Tanggal</ion-text>
+              <ion-item lines="none" class="input">
+                <ion-input type="date" [(ngModel)]="notulenData.date" required #date="ngModel" placeholder="Tanggal"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col style="margin-left: 10px;">
+              <ion-text color="medium">Jam</ion-text>
+              <ion-item lines="none" class="input">
+                <ion-input type="time" [(ngModel)]="notulenData.time" required #time="ngModel" placeholder="Jam"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row> -->
+
+          <ion-text color="medium">Tanggal dan Jam</ion-text>
+          <ion-item lines="none" class="input" button="true" id="open-date-input">
+            <ion-label>Tanggal:Jam</ion-label>
+            <ion-text slot="end">{{ dateValue }}</ion-text>
+            <ion-popover trigger="open-date-input" show-backdrop="false">
+              <ng-template>
+                <ion-datetime
+                  min="{{minDate}}"
+                  #popoverDatetime
+                  presentation="time-date"
+                  (ionChange)="dateValue = formatDate(popoverDatetime.value)"
+                ></ion-datetime>
+              </ng-template>
+            </ion-popover>
+          </ion-item>
+
+          <ion-text color="medium">Tempat</ion-text>
+          <ion-item lines="none" class="input">
+            <ion-input type="text" [(ngModel)]="notulenData.place" required #place="ngModel" placeholder="Tempat"></ion-input>
+          </ion-item>
+
+          <ion-text color="medium">Peserta yang hadir</ion-text>
+          <ion-item lines="none" [routerLink]="['/notulenmu/list-hadir/0']" detail class="list-custom">
+            <ion-label class="ion-text-wrap">
+              <ion-text color="primary">
+                <small>12 Hadir</small>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+
+          <ion-text color="medium">Notulen Rapat</ion-text>
+          <quill-editor [(ngModel)]="notulenData.notulen" name="notulen" [modules]="modules" #notulen="ngModel" placeholder="Notulen Rapat">
+            <div quill-editor-toolbar>
+              <span class="ql-formats">
+                <select class="ql-align" [title]="'Aligment'">
+                  <option selected></option>
+                  <option value="center"></option>
+                  <option value="right"></option>
+                  <option value="justify"></option>
+                </select>
+              </span>
+              <span class="ql-formats">
+                <select class="ql-header">
+                  <option value="1">Heading 1</option>
+                  <option value="2">Heading 2</option>
+                  <option value="3">Heading 3</option>
+                  <option value="4">Heading 4</option>
+                  <option value="5">Heading 5</option>
+                  <option value="6">Heading 6</option>
+                  <option selected>Normal</option>
+                </select>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-list" value="ordered"></button>
+                <button class="ql-list" value="bullet"></button>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-bold" [title]="'Bold'"></button>
+                <button class="ql-italic" [title]="'Italic'"></button>
+                <button class="ql-underline" [title]="'Underline'"></button>
+              </span>
+              <span class="ql-formats">
+                <button class="ql-image" [title]="'Image'"></button>
+              </span>
+
+            </div>
+
+            <div class="ql-container" style="border-width: 0;">
+              <div class="ql-editor" [innerHTML]="byPassedHTMLString">
+              </div>
+            </div>
+          </quill-editor>
+
+          <ion-text color="medium">Foto</ion-text>
+          <ion-row>
+            <ion-col size="4" style="margin-right: 5px;" *ngIf="imageNow">
+              <img src="{{serverImg+imageNow}}" style="width: 100%">
+              <ion-button size="small" fill="clear" (click)="removeCImg(idx)" style="position: absolute;top: 0; right: 0;" color="danger" shape="rounded">
+                <ion-icon name="close-outline"></ion-icon>
+              </ion-button>
+            </ion-col>
+            <ion-col size="4" style="margin-right: 5px;" *ngIf="images">
+              <img src="{{images}}" style="width: 100%">
+              <ion-button size="small" fill="clear" style="position: absolute;top: 0; right: 0;" color="danger" shape="rounded">
+                <ion-icon name="close-outline"></ion-icon>
+              </ion-button>
+            </ion-col>
+            <ion-col size="4" style="margin-right: 5px;" (click)="pilihFoto()">
+              <img src="assets/imgs/add_image.png" style="width: 100%">
+            </ion-col>
+          </ion-row>
+
+          <div style="margin-top: 100px;"></div>
+
+          <div class="footer">
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  <ion-button color="primary" expand="block" [disabled]="loading || title.invalid || place.invalid || notulen.invalid" (click)="uploadPhoto()">
+                    {{loading ? 'Mohon tunggu...':'Simpan'}}
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </div>
+
+
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+</ion-content>

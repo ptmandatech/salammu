@@ -206,3 +206,37 @@ ion-select::part(icon) {
   font-size: 13px;
   font-weight: bold;
 }
+
+$separator-size: 10px;
+$separator-border-style: solid;
+$separator-border-color: #F3F4F6;
+
+.separator {
+  border: 0;
+}
+
+.separator--line {
+  border: 0;
+  border-bottom: $separator-size $separator-border-style $separator-border-color;
+
+  width: 0;
+  animation: separator-width 0.5s ease-out forwards;
+}
+
+@keyframes separator-width {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.dot {
+    font-size: 5px;
+    margin-bottom: 2px;
+}
+
+.lines {
+  border-top: 1px solid #D9D9D9;
+}

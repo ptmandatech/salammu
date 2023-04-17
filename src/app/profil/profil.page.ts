@@ -23,10 +23,6 @@ export class ProfilPage implements OnInit {
 
   ngOnInit(): void {
     this.serverImg = this.common.photoBaseUrl+'users/';
-    this.cekLogin();
-  }
-
-  ionViewWillEnter() {
     this.loginStatus();
   }
 

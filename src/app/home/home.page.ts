@@ -71,6 +71,8 @@ export class HomePage implements OnInit {
     this.loading = true;
     this.present();
     this.listTimes = [];
+    this.tempTimes1 = [];
+    this.tempTimes2 = [];
     this.dateNow = new Date();
     await this.checkPermission();
     // this.getHijri(this.dateNow);
@@ -166,6 +168,7 @@ export class HomePage implements OnInit {
       };
       localStorage.setItem('currentPos', JSON.stringify(location));
       let city = localStorage.getItem('selectedCity');
+      console.log(city);
       if(city == null) {
         await this.getDetailLocation(location);
       } else {
@@ -270,6 +273,8 @@ export class HomePage implements OnInit {
 
     await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
     this.checkCity(res);
+    console.log(res);
+    
     }, async error => {
       await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(async res => {
         this.locationNow = res;
@@ -477,6 +482,8 @@ export class HomePage implements OnInit {
   data:any = {};
   async parseTime(timesToday) {
     this.listTimes = [];
+    this.tempTimes1 = [];
+    this.tempTimes2 = [];
     let times = Object.values(timesToday);
     let title = Object.keys(timesToday);
     let t = [];
