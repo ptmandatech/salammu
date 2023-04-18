@@ -54,7 +54,19 @@
         <ion-item lines="full" class="ion-no-padding">
           <ion-label>
             <h3>Notulen Rapat</h3>
-            <img src="{{serverImg+notulenData.images}}"/>
+
+            <ion-grid class="ion-no-padding">
+              <ion-row class="ion-justify-content-center">
+                <ion-col size-md="6" *ngIf="notulenData.images != undefined">
+                  <ion-slides pager="true" #slides [options]="slideOpts" *ngIf="notulenData.images.length > 0">
+                    <ion-slide tappable *ngFor="let n of notulenData.images" (click)="openViewer(serverImg+n)">
+                        <img src="{{serverImg+n}}"/>
+                    </ion-slide>
+                  </ion-slides>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
             <p class="ion-text-wrap" [innerHTML]="notulenData.notulen"></p>
           </ion-label>
         </ion-item>

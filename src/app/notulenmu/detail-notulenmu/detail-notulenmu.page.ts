@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController, IonDatetime, LoadingController, ModalController, ToastController } from '@ionic/angular';
+import { ViewerModalComponent } from 'ngx-ionic-image-viewer';
 import { ApiService } from 'src/app/services/api.service';
 import { CommonService } from 'src/app/services/common.service';
 
@@ -59,8 +60,30 @@ export class DetailNotulenmuPage implements OnInit {
     this.api.get('notulenmu/find/'+this.id).then(res => {
       this.notulenData = res;
       console.log(res);
+      if(this.notulenData.images != '') {
+        this.notulenData.images = JSON.parse(this.notulenData.images);
+      }
       
     })
+  }
+
+  slideOpts = {
+    initialSlide: 1,
+    speed: 400,
+    spaceBetween: 20,
+    autoplay: true
+  };
+  
+  async openViewer(url) {
+    const modal = await this.modalController.create({
+      component: ViewerModalComponent,
+      componentProps: {
+        src: url
+      },
+      cssClass: 'ion-img-viewer'
+    });
+ 
+    return await modal.present();
   }
 
 }

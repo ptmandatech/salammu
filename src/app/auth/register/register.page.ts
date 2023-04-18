@@ -45,7 +45,6 @@ export class RegisterPage implements OnInit {
       await this.api.get('sicara/getAllPCM').then(res=>{ 
         this.listCabang = res;
         this.listCabangTemp = res;
-        console.log(res)
       }, err => {
         this.loading = false;
       });
@@ -61,7 +60,6 @@ export class RegisterPage implements OnInit {
       await this.api.get('sicara/getAllPRM').then(res=>{ 
         this.listRanting = res;
         this.listRantingTemp = res;
-        console.log(res)
       }, err => {
         this.loading = false;
       });
@@ -71,14 +69,12 @@ export class RegisterPage implements OnInit {
   }
 
   selectEvent(event) {
-    console.log(event)
     this.form.patchValue({
       cabang: event.id
     })
   }
 
   selectEventRanting(event) {
-    console.log(event)
     this.form.patchValue({
       ranting: event.id
     })

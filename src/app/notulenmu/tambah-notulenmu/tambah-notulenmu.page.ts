@@ -24,14 +24,15 @@ export class TambahNotulenmuPage implements OnInit {
   loading:boolean;
   id:any;
   serverImg:any;
-  imageNow:any;
   isCreated:boolean = true;
   byPassedHTMLString:any;
   userData:any = {};
   notulenData:any = {};
+  imageNow = [];
   minDate:any;
   @ViewChild(IonDatetime, { static: true }) datetime: IonDatetime;
   dateValue = '';
+  dataLogin:any = {};
   constructor(
     public api: ApiService,
     public router:Router,
@@ -46,6 +47,7 @@ export class TambahNotulenmuPage implements OnInit {
 
   ngOnInit() {
     this.present();
+    this.dataLogin = JSON.parse(localStorage.getItem('salammuToken'));
     this.minDate = new Date().toISOString();
     this.cekLogin();
     this.id = this.routes.snapshot.paramMap.get('id');
@@ -91,16 +93,58 @@ export class TambahNotulenmuPage implements OnInit {
     })
   }
 
+  selectedCR = '';
+  pilihanCR:any = [];
   getDetailNotulen() {
     this.api.get('notulenmu/find/'+this.id).then(res => {
       this.notulenData = res;
       if(this.notulenData.images != '') {
-        this.imageNow = this.notulenData.images;
+        this.imageNow = JSON.parse(this.notulenData.images);
       }
       if(this.notulenData.datetime) {
         this.dateValue = this.datePipe.transform(new Date(this.notulenData.datetime), 'MMM dd yyyy HH:mm');
       }
+      if(this.dataLogin.cabang_nama) {
+        let dt = {
+          id: this.dataLogin.cabang_id,
+          nama: this.dataLogin.cabang_nama,
+          type: 'cabang'
+        }
+        this.pilihanCR.push(dt);
+      }
+      if(this.dataLogin.ranting_nama) {
+        let dt = {
+          id: this.dataLogin.ranting_id,
+          nama: this.dataLogin.ranting_nama,
+          type: 'ranting'
+        }
+        this.pilihanCR.push(dt);
+      }
+
+      if(this.notulenData.cabang && this.notulenData.ranting == null) {
+        this.selectedCR = this.dataLogin.cabang_id;
+        this.selectCR();
+      }
+
+      if(this.notulenData.ranting && this.notulenData.cabang == null) {
+        this.selectedCR = this.dataLogin.ranting_id;
+        this.selectCR();
+      }
     })
+  }
+
+  selectCR() {
+    let idx = this.pilihanCR.findIndex(e => e.id === this.selectedCR);
+    if(idx != -1) {
+      let data = this.pilihanCR[idx];
+      if(data.type == 'cabang') {
+        this.notulenData.cabang = data.id;
+        this.notulenData.ranting = null;
+      } else {
+        this.notulenData.ranting = data.id;
+        this.notulenData.cabang = null;
+      }
+    }
   }
 
   modules = {
@@ -186,7 +230,7 @@ export class TambahNotulenmuPage implements OnInit {
     this.showImageUploader(image.dataUrl, from);
   }
 
-  images:any;
+  images:any = []
   blobImage:any;
   //tampilkan image editor dan uploader
   async showImageUploader(imageData,from) {
@@ -199,7 +243,7 @@ export class TambahNotulenmuPage implements OnInit {
     modal.onDidDismiss().then(async (result) => {
       if(result)
       {
-        this.images = result.data;
+        this.images.push(result.data);
       } else {
         this.loadingController.dismiss();
       } 
@@ -223,17 +267,28 @@ export class TambahNotulenmuPage implements OnInit {
     });
   }
 
+  removeImg(idx) {
+    this.images.splice(idx, 1);
+  }
+
+  removeCImg(idx) {
+    this.imageNow.splice(idx, 1);
+  }
+
+  imgUploaded:any = [];
   async uploadPhoto()
   {
-    if(this.images) {
-      await this.api.put('notulenmu/uploadfoto/'+this.notulenData.id,{image: this.images}).then(res=>{
-        this.notulenData.images = res;
-        console.log(res);
-        
-        this.addNotulen();
-      }, error => {
-        console.log(error)
-      });
+    if(this.images.length > 0) {
+      for(var i=0; i<this.images.length; i++) {
+        await this.api.put('notulenmu/uploadfoto/'+this.notulenData.id,{image: this.images[i]}).then(res=>{
+          this.imgUploaded.push(res);
+          if(i+1 == this.images.length) {
+            this.addNotulen();
+          }
+        }, error => {
+          console.log(error)
+        });
+      }
     } else {
       this.addNotulen();
     }
@@ -242,6 +297,7 @@ export class TambahNotulenmuPage implements OnInit {
   addNotulen() {
     this.notulenData.datetime = new Date(this.dateValue);
     if(this.isCreated == true) {
+      this.notulenData.images = JSON.stringify(this.imgUploaded);
       this.api.post('notulenmu', this.notulenData).then(res => {
         if(res) {
           this.toastController
@@ -260,8 +316,13 @@ export class TambahNotulenmuPage implements OnInit {
         this.loading = false;
       })
     } else {
-      if(this.images) {
-        this.notulenData.images = this.images;
+      if(this.images.length > 0) {
+        this.imgUploaded = this.imgUploaded.concat(this.imageNow);
+        this.notulenData.images = '';
+        this.notulenData.images = JSON.stringify(this.imgUploaded);
+      } else {
+        this.notulenData.images = '';
+        this.notulenData.images = JSON.stringify(this.imageNow);
       }
       this.api.put('notulenmu/'+ this.notulenData.id, this.notulenData).then(res => {
         if(res) {

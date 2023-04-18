@@ -15,13 +15,13 @@
           <ion-item style="font-size: small;" lines="none">
             <ion-label style="font-size: small;">
               <h2 color="medium">Cabang</h2>
-              <p>Mantrijeron</p>
+              <p>{{dataLogin.cabang_nama}}</p>
             </ion-label>
           </ion-item>
           <ion-item style="font-size: small;" lines="none">
             <ion-label style="font-size: small;">
               <h2 color="medium">Ranting</h2>
-              <p>Ranting Jogokaryan</p>
+              <p>{{dataLogin.ranting_nama}}</p>
             </ion-label>
           </ion-item>
         </ion-content>
@@ -34,23 +34,32 @@
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-
   <ion-grid class="ion-no-padding">
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
-        <div class="item-centered" *ngIf="!loading && listNotulenMu.length == 0">
-          <img src="./assets/icon/pencarian.svg">
-          <ion-label>
+
+        <div class="button">
+          <ion-button class="btn-filter" *ngFor="let m of ['Semua', 'Cabang', 'Ranting']" color="{{m != selectedFilter ? 'light':'primary'}}" (click)="selectFilter(m)">
+            {{m}}
+            </ion-button>
+        </div>
+        
+        <ion-searchbar style="margin-top: 14px" mode="ios" showCancelButton="never" [(ngModel)]="searchTerm" (ionChange)="searchChanged($event)" placeholder="Cari Notulen"></ion-searchbar>
+
+      
+        <div class="item-centered-sicara" *ngIf="!loading && listNotulenMu.length == 0">
+          <img src="./assets/imgs/blank-notulenmu.png">
+          <!-- <ion-label>
             <p>Notulen tidak ditemukan</p>
-          </ion-label>
+          </ion-label> -->
         </div>
 
         <ion-list *ngIf="!loading && listNotulenMu.length > 0">
-          <ion-item *ngFor="let n of listNotulenMu" [routerLink]="['/notulenmu/detail-notulenmu', n.id]" routerLinkActive="router-link-active" >
-            <div class="container" slot="start" >
+          <ion-item *ngFor="let n of listNotulenMu">
+            <div class="container" slot="start" [routerLink]="['/notulenmu/detail-notulenmu', n.id]" routerLinkActive="router-link-active" >
               <img class="center-bg"src="../../assets/icon/list-notulenmu.svg">
             </div>
-            <ion-label>
+            <ion-label [routerLink]="['/notulenmu/detail-notulenmu', n.id]" routerLinkActive="router-link-active" >
               <h2>{{n.title}}</h2>
               <ion-text color="medium">
                 <p>
@@ -58,13 +67,36 @@
                 </p>
               </ion-text>
             </ion-label>
-            <ion-note slot="end">
+            <ion-icon slot="end" name="ellipsis-horizontal-outline" (click)="openAction($event, n)"></ion-icon>
+            <!-- <ion-note slot="end">
               {{n.created_at | date: 'HH:mm a'}}
               <ion-icon class="dot" name="ellipse"></ion-icon> 
               {{n.created_at | date: 'dd/MM/yy'}}
-            </ion-note>
+            </ion-note> -->
           </ion-item>
         </ion-list>
+
+        <ion-popover #popoverAction [isOpen]="isOpenAction" (didDismiss)="isOpenAction = false">
+          <ng-template>
+            <ion-content>
+              <ion-item (click)="detailNotulen()" style="font-size: small;" lines="none">
+                <ion-label style="font-size: small;">
+                  <h3 color="medium">Detail</h3>
+                </ion-label>
+              </ion-item>
+              <ion-item (click)="perbaruiNotulen()" style="font-size: small;" lines="none">
+                <ion-label style="font-size: small;">
+                  <h3 color="medium">Perbarui</h3>
+                </ion-label>
+              </ion-item>
+              <ion-item (click)="deleteNotulen()" style="font-size: small;" lines="none">
+                <ion-label style="font-size: small;">
+                  <h3 color="medium">Hapus</h3>
+                </ion-label>
+              </ion-item>
+            </ion-content>
+          </ng-template>
+        </ion-popover>
 
         <ion-row class="ion-no-padding" *ngIf="loading">
           <ion-col size="6" *ngFor="let n of [1,2,3,4,5,6,7,8,9,10]">

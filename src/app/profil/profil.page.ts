@@ -3,7 +3,8 @@ import { Router } from '@angular/router';
 import { LoadingController, ModalController } from '@ionic/angular';
 import { ApiService } from '../services/api.service';
 import { CommonService } from '../services/common.service';
-
+import { SweetAlert } from 'sweetalert/typings/core';
+const swal: SweetAlert = require('sweetalert');
 @Component({
   selector: 'app-profil',
   templateUrl: './profil.page.html',
@@ -54,12 +55,21 @@ export class ProfilPage implements OnInit {
   }
 
   logout() {
-    var conf = confirm('Anda yakin ingin keluar dari akun ini?');
-    if (conf) {
-      localStorage.removeItem('userSalammu');
-      localStorage.removeItem('salammuToken');
-      this.router.navigate(['/home']);
-    }
+    swal({
+      title: "Anda yakin ingin keluar dari akun ini?",
+      icon: "warning",
+      buttons: ['Batal', 'Keluar'],
+      dangerMode: false,
+    })
+    .then((open) => {
+      if (open) {
+        localStorage.removeItem('userSalammu');
+        localStorage.removeItem('salammuToken');
+        this.router.navigate(['/home']);
+      } else {
+        console.log('Confirm Batal: blah');
+      }
+    });
   }
 
 }
