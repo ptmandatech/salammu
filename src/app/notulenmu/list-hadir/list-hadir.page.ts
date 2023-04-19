@@ -96,19 +96,21 @@ export class ListHadirPage implements OnInit {
   }
   
   parseData() {
-    for(var i=0; i<this.notulenData.notulenmu_participants.length; i++) {
-      let p = this.notulenData.notulenmu_participants[i];
-      for(var j=0; j<this.listUsers.length; j++) {
-        let u = this.listUsers[j];
-        if(p.user_id == u.id) {
-          this.listUsers[j].checked = true;
+    if(this.notulenData.notulenmu_participants) {
+      for(var i=0; i<this.notulenData.notulenmu_participants.length; i++) {
+        let p = this.notulenData.notulenmu_participants[i];
+        for(var j=0; j<this.listUsers.length; j++) {
+          let u = this.listUsers[j];
+          if(p.user_id == u.id) {
+            this.listUsers[j].checked = true;
+          }
         }
-      }
-      let idx = this.listUsers.findIndex(v => v.id == p.user_id);
-      if(idx == -1) {
-        p.checked = true;
-        p.name = p.user_name;
-        this.listUsers.push(p);
+        let idx = this.listUsers.findIndex(v => v.id == p.user_id);
+        if(idx == -1) {
+          p.checked = true;
+          p.name = p.user_name;
+          this.listUsers.push(p);
+        }
       }
     }
   }
