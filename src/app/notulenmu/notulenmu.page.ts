@@ -29,17 +29,13 @@ export class NotulenmuPage implements OnInit {
 
   ngOnInit() {
     this.present();
-    this.cekLogin();
     this.dataLogin = JSON.parse(localStorage.getItem('salammuToken'));
+    this.cekLogin();
     this.loading = true;
     this.serverImg = this.common.photoBaseUrl+'notulenmu/';
     this.listNotulenMu = [];
     this.listNotulenMuTemp = [];
     this.getAllNotulenmu();
-  }
-
-  ionViewWillEnter() {
-    this.ngOnInit();
   }
 
   async present() {
@@ -64,9 +60,21 @@ export class NotulenmuPage implements OnInit {
     this.api.me().then(async res=>{
       this.userData = res;
       this.isLoggedIn = true;
+      this.parseChip();
     }, async error => {
       this.isLoggedIn = false;
     })
+  }
+
+  pilihanChip:any = [];
+  parseChip() {
+    if(this.dataLogin.cabang_nama && this.dataLogin.ranting_nama == null) {
+      this.pilihanChip = ['Cabang'];
+    } else if(this.dataLogin.ranting_nama && this.dataLogin.cabang_nama == null) {
+      this.pilihanChip = ['Ranting'];
+    } else if(this.dataLogin.ranting_nama && this.dataLogin.cabang_nama) {
+      this.pilihanChip = ['Semua', 'Cabang', 'Ranting'];
+    }
   }
 
   async doRefresh(event) {
@@ -78,6 +86,14 @@ export class NotulenmuPage implements OnInit {
 
   selectFilter(m) {
     this.selectedFilter = m;
+    this.initializeItems();
+    if(this.selectedFilter != 'Semua') {
+      this.listNotulenMu = this.listNotulenMu.filter(data => {
+        if (data.organization_type.toLowerCase().indexOf(this.selectedFilter.toLowerCase()) > -1) {
+          return true;
+        }
+      });
+    }
   }
 
   getAllNotulenmu() {
@@ -173,6 +189,8 @@ export class NotulenmuPage implements OnInit {
               toastEl.present();
             });
             this.loading = false;
+            this.isOpenAction = false;
+            this.popoverAction.dismiss();
             this.getAllNotulenmu();
           }
         })

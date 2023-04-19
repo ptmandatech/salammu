@@ -2,9 +2,9 @@
   <ion-toolbar color="primary">
     <ion-back-button slot="start"></ion-back-button>
     <ion-title>Peserta Hadir</ion-title>
-    <ion-buttons slot="end" *ngIf="isLoggedIn">
-      <ion-button fill="clear" (click)="openModalInfo($event)">
-        <ion-icon slot="icon-only" name="information-circle-outline"></ion-icon>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="close()">
+        <ion-icon slot="icon-only" name="close-circle-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -18,6 +18,8 @@
   <ion-grid class="ion-no-padding">
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
+        <ion-searchbar style="margin-top: 14px" mode="ios" showCancelButton="never" [(ngModel)]="searchTerm" (ionChange)="searchChanged($event)" placeholder="Cari Peserta"></ion-searchbar>
+
         <div class="item-centered" *ngIf="!loading && listUsers.length == 0">
           <img src="./assets/icon/pencarian.svg">
           <ion-label>
@@ -25,7 +27,7 @@
           </ion-label>
         </div>
 
-        <ion-list *ngIf="!loading && listUsers.length > 0">
+        <ion-list *ngIf="!loading && listUsers.length > 0 && action != 'view'">
           <ion-item *ngFor="let n of listUsers">
             <ion-thumbnail slot="start">
               <img class="img-profil" src="{{n.image == null ? './assets/imgs/blank-profil.png':(serverImg+n.image)}}">
@@ -34,10 +36,28 @@
               <h2>{{n.name}}</h2>
               <ion-text color="medium">
                 <p>
-                  {{n.email}}
+                  {{n.email == null ? '-' : n.email}}
                 </p>
               </ion-text>
             </ion-label>
+            <ion-checkbox *ngIf="action != 'view'" mode="ios" [(ngModel)]="n.checked"></ion-checkbox>
+          </ion-item>
+        </ion-list>
+
+        <ion-list *ngIf="!loading && action == 'view'">
+          <ion-item *ngFor="let n of notulenData.notulenmu_participants">
+            <ion-thumbnail slot="start">
+              <img class="img-profil" src="{{n.user_image == null ? './assets/imgs/blank-profil.png':(serverImg+n.user_image)}}">
+            </ion-thumbnail>
+            <ion-label>
+              <h2>{{n.user_name}}</h2>
+              <ion-text color="medium">
+                <p>
+                  {{n.user_email == null ? '-' : n.user_email}}
+                </p>
+              </ion-text>
+            </ion-label>
+            <ion-checkbox *ngIf="action != 'view'" mode="ios" [(ngModel)]="n.checked"></ion-checkbox>
           </ion-item>
         </ion-list>
 
@@ -60,13 +80,25 @@
           </ion-col>
         </ion-row>
 
+        <div class="footer" *ngIf="action != 'view'">
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <ion-button color="primary" expand="block" (click)="simpanPartisipan()">
+                  {{loading ? 'Mohon tunggu...':'Simpan'}}
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+
       </ion-col>
     </ion-row>
   </ion-grid>
 
   <div style="margin-top: 100px;"></div>
 
-  <ion-fab *ngIf="isLoggedIn" vertical="bottom" horizontal="end" slot="fixed" [routerLink]="['/notulenmu/tambah-peserta/0']">
+  <ion-fab *ngIf="isLoggedIn && action != 'view'" vertical="bottom" horizontal="end" slot="fixed" (click)="tambahPeserta()">
     <ion-fab-button>
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>

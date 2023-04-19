@@ -4,6 +4,7 @@ import { ActionSheetController, IonDatetime, LoadingController, ModalController,
 import { ViewerModalComponent } from 'ngx-ionic-image-viewer';
 import { ApiService } from 'src/app/services/api.service';
 import { CommonService } from 'src/app/services/common.service';
+import { ListHadirPage } from '../list-hadir/list-hadir.page';
 
 @Component({
   selector: 'app-detail-notulenmu',
@@ -46,7 +47,6 @@ export class DetailNotulenmuPage implements OnInit {
       cssClass: 'custom-class custom-loading'
     }).then(a => {
       a.present().then(() => {
-        console.log('presented');
         if (!this.loading) {
           a.dismiss().then(() => console.log('abort presenting'));
           this.loading = false;
@@ -59,12 +59,32 @@ export class DetailNotulenmuPage implements OnInit {
   getDetailNotulen() {
     this.api.get('notulenmu/find/'+this.id).then(res => {
       this.notulenData = res;
-      console.log(res);
       if(this.notulenData.images != '') {
         this.notulenData.images = JSON.parse(this.notulenData.images);
       }
       
     })
+  }
+
+  async openPeserta() { 
+    const modal = await this.modalController.create({
+      component: ListHadirPage,
+      componentProps: {
+        id: this.notulenData.id,
+        action: 'view',
+      },
+      mode: "md",
+      cssClass: 'modal-class',
+      initialBreakpoint: 0.99,
+      breakpoints: [0, 0.99, 1]
+    });
+
+    modal.onDidDismiss().then(async (result) => {
+      // if(result.data) {
+      //   this.listUsers.push(result.data);
+      // }
+    });
+    return await modal.present();
   }
 
   slideOpts = {

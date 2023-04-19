@@ -70,6 +70,7 @@ export class HomePage implements OnInit {
   async ngOnInit() {
     this.loading = true;
     this.present();
+    this.getSurat();
     this.listTimes = [];
     this.tempTimes1 = [];
     this.tempTimes2 = [];
@@ -86,6 +87,20 @@ export class HomePage implements OnInit {
     this.getAllBanners();
     this.getAllArticles();
     this.getAllVideos();
+  }
+
+  surat:any = [];
+  suratTemp:any = [];
+  getSurat() {
+    this.loading = true;
+    this.present();
+    this.surat = [];
+    this.suratTemp = [];
+    this.api.get('quran/surat').then(res => {
+      this.surat = res;
+      this.suratTemp = res;
+      localStorage.setItem('suratAlQuran', JSON.stringify(this.surat));
+    })
   }
 
   async present() {
@@ -148,12 +163,10 @@ export class HomePage implements OnInit {
             });
             await confirm.present();
           } else {
-            console.log('ok');
             await this.checkLocation();
           }
         }).catch(async e => {
           await this.getCurrentLocations();
-          console.log(e)
         });
     } else {
       await this.checkLocation();
@@ -161,23 +174,38 @@ export class HomePage implements OnInit {
   }
 
   async getCurrentLocations() {
-    await this.geolocation.getCurrentPosition().then(async (resp) => {
+    return new Promise((resolve, reject) => {
+    this.options = {
+      maximumAge: 3600,
+      enableHighAccuracy: true
+    };
+
+    this.geolocation.getCurrentPosition(this.options).then(async (pos: Geoposition) => {
+      this.currentPos = pos;
       const location = {
-        lat: resp.coords.latitude,
-        long: resp.coords.longitude
+        lat: pos.coords.latitude,
+        long: pos.coords.longitude,
+        time: new Date(),
       };
       localStorage.setItem('currentPos', JSON.stringify(location));
       let city = localStorage.getItem('selectedCity');
-      console.log(city);
-      if(city == null) {
-        await this.getDetailLocation(location);
+      let currentPos = JSON.parse(localStorage.getItem('currentPos'));
+      if(currentPos == location) {
+        if(city == null) {
+          await this.getDetailLocation(location);
+        } else {
+          this.city = city;
+          this.setTimeFromLocalCitySaved();
+        }
       } else {
-        this.city = city;
-        this.setTimeFromLocalCitySaved();
+        await this.getDetailLocation(location);
       }
-    }).catch((error) => {
-      console.log('Error getting location', error);
+      resolve(pos);
+   }, (err: PositionError) => {
+     this.openSettingLokasi();
+     reject(err.message);
     });
+   });
   }
 
   async loadingCheckLoc() {
@@ -209,17 +237,22 @@ export class HomePage implements OnInit {
         long: pos.coords.longitude,
         time: new Date(),
       };
-      localStorage.setItem('currentPos', JSON.stringify(this.currentPos));
+      localStorage.setItem('currentPos', JSON.stringify(location));
       let city = localStorage.getItem('selectedCity');
-      if(city == null) {
-        await this.getDetailLocation(location);
+      this.address_display_name = localStorage.getItem('address_display_name');
+      let currentPos = JSON.parse(localStorage.getItem('currentPos'));
+      if(currentPos == location) {
+        if(city == null) {
+          await this.getDetailLocation(location);
+        } else {
+          this.city = city;
+          this.setTimeFromLocalCitySaved();
+        }
       } else {
-        this.city = city;
-        this.setTimeFromLocalCitySaved();
+        await this.getDetailLocation(location);
       }
       resolve(pos);
    }, (err: PositionError) => {
-     console.log(err)
      this.openSettingLokasi();
      reject(err.message);
     });
@@ -264,6 +297,7 @@ export class HomePage implements OnInit {
   }
 
   httpOption:any;
+  address_display_name:any;
   async getDetailLocation(dt) {
     this.httpOption = {
       headers: new HttpHeaders({
@@ -273,13 +307,15 @@ export class HomePage implements OnInit {
 
     await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
     this.checkCity(res);
-    console.log(res);
-    
     }, async error => {
       await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(async res => {
         this.locationNow = res;
+        if(res['display_name']) {
+          this.address_display_name = res['display_name'];
+        }
         this.city = this.locationNow.city.replace('Kota ', '');
         localStorage.setItem('selectedCity', this.city);
+        localStorage.setItem('address_display_name', this.address_display_name);
         if(this.city != undefined) {
           this.listTimes = [];
           this.tempTimes1 = [];
@@ -313,7 +349,6 @@ export class HomePage implements OnInit {
           }
         }
       }, async error => {
-        console.log(error)
         this.openSettingLokasi();
         // this.city = 'Yogyakarta';
         // if(this.city != undefined) {
@@ -340,11 +375,15 @@ export class HomePage implements OnInit {
 
   async checkCity(res) {
     this.locationNow = res.features[0].properties;
+    if(this.locationNow['display_name']) {
+      this.address_display_name = this.locationNow['display_name'];
+    }
     this.city = res.features[0].properties.address.city == null ? res.features[0].properties.address.town == null ? res.features[0].properties.address.municipality:res.features[0].properties.address.town:res.features[0].properties.address.city;
     if(!this.city) {
       this.city = res.features[0].properties.address.city == null ? res.features[0].properties.address.county:res.features[0].properties.address.city;
     }
     localStorage.setItem('selectedCity', this.city);
+    localStorage.setItem('address_display_name', this.address_display_name);
     if(this.city != undefined) {
       this.listTimes = [];
       this.tempTimes1 = [];
@@ -396,10 +435,12 @@ export class HomePage implements OnInit {
   //   });
   // }
 
+  isLoggedIn:boolean = false;
   cekLogin()
   {
     this.api.me().then(async res=>{
       this.userData = res;
+      this.isLoggedIn = true;
       await this.loadingController.dismiss();
     }, async error => {
       this.loading = false;
@@ -640,13 +681,15 @@ export class HomePage implements OnInit {
     setInterval(async ()=> {
       let date = new Date();
       this.nextTimeTimer = await this.timeCalc(date, this.nextTime.time);
-      if(this.nextTimeTimer == "0 Jam, 0 Menit") {
+      if(this.nextTimeTimer.includes('-') || this.nextTimeTimer.includes('NaN')) {
         this.listTimes = [];
         this.tempTimes1 = [];
         this.tempTimes2 = [];
+        this.nextTime = {};
+        this.nextTimeTimer = null;
         this.parseTime(this.timesToday);
       }
-    },3000);
+    },1000);
   }
 
   timeCalc(d1, d2){
@@ -655,13 +698,14 @@ export class HomePage implements OnInit {
 
     let msec = date2 - date1;
     let sec = Math.floor(msec / 1000);
+    var seconds = ((msec % 60000) / 1000).toFixed(0);
     let mins = Math.floor(msec / 60000);
     let hrs = Math.floor(mins / 60);
     let days = Math.floor(hrs / 24);
 
     mins = mins % 60;
 
-    let tValue1= `${hrs} Jam, ${mins} Menit`
+    let tValue1= `${hrs} Jam, ${mins} Menit, ${seconds} Detik`
 
     return tValue1;
   }

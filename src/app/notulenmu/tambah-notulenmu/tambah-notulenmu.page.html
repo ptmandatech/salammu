@@ -98,10 +98,10 @@
           </ion-grid>
 
           <ion-text color="medium">Peserta yang hadir</ion-text>
-          <ion-item lines="none" [routerLink]="['/notulenmu/list-hadir/0']" detail class="list-custom">
+          <ion-item lines="none" (click)="openPeserta()" detail class="list-custom">
             <ion-label class="ion-text-wrap">
               <ion-text color="primary">
-                <small>12 Hadir</small>
+                <small>{{notulenData.notulenmu_participants == null ? 0:notulenData.notulenmu_participants.length}} Hadir</small>
               </ion-text>
             </ion-label>
           </ion-item>

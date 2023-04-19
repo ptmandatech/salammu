@@ -10,6 +10,7 @@ import { VideoHandler, ImageHandler, Options } from 'ngx-quill-upload';
 import Quill from 'quill';
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
+import { ListHadirPage } from '../list-hadir/list-hadir.page';
 
 Quill.register('modules/imageHandler', ImageHandler);
 Quill.register('modules/videoHandler', VideoHandler);
@@ -59,7 +60,7 @@ export class TambahNotulenmuPage implements OnInit {
       this.notulenData.id = new Date().getTime().toString() + '' + [Math.floor((Math.random() * 1000))];
     }
   }
-  
+
   async present() {
     this.loading = true;
     return await this.loadingController.create({
@@ -69,7 +70,6 @@ export class TambahNotulenmuPage implements OnInit {
       cssClass: 'custom-class custom-loading'
     }).then(a => {
       a.present().then(() => {
-        console.log('presented');
         if (!this.loading) {
           a.dismiss().then(() => console.log('abort presenting'));
           this.loading = false;
@@ -81,6 +81,23 @@ export class TambahNotulenmuPage implements OnInit {
 
   cekLogin()
   {    
+    if(this.dataLogin.cabang_nama) {
+      let dt = {
+        id: this.dataLogin.cabang_id,
+        nama: this.dataLogin.cabang_nama,
+        type: 'cabang'
+      }
+      this.pilihanCR.push(dt);
+    }
+    if(this.dataLogin.ranting_nama) {
+      let dt = {
+        id: this.dataLogin.ranting_id,
+        nama: this.dataLogin.ranting_nama,
+        type: 'ranting'
+      }
+      this.pilihanCR.push(dt);
+    }
+
     this.api.me().then(async res=>{
       this.userData = res;
       await this.loadingController.dismiss();
@@ -98,35 +115,20 @@ export class TambahNotulenmuPage implements OnInit {
   getDetailNotulen() {
     this.api.get('notulenmu/find/'+this.id).then(res => {
       this.notulenData = res;
+      
       if(this.notulenData.images != '') {
         this.imageNow = JSON.parse(this.notulenData.images);
       }
       if(this.notulenData.datetime) {
         this.dateValue = this.datePipe.transform(new Date(this.notulenData.datetime), 'MMM dd yyyy HH:mm');
       }
-      if(this.dataLogin.cabang_nama) {
-        let dt = {
-          id: this.dataLogin.cabang_id,
-          nama: this.dataLogin.cabang_nama,
-          type: 'cabang'
-        }
-        this.pilihanCR.push(dt);
-      }
-      if(this.dataLogin.ranting_nama) {
-        let dt = {
-          id: this.dataLogin.ranting_id,
-          nama: this.dataLogin.ranting_nama,
-          type: 'ranting'
-        }
-        this.pilihanCR.push(dt);
-      }
 
-      if(this.notulenData.cabang && this.notulenData.ranting == null) {
+      if(this.notulenData.organization_type == 'cabang') {
         this.selectedCR = this.dataLogin.cabang_id;
         this.selectCR();
       }
 
-      if(this.notulenData.ranting && this.notulenData.cabang == null) {
+      if(this.notulenData.organization_type == 'ranting') {
         this.selectedCR = this.dataLogin.ranting_id;
         this.selectCR();
       }
@@ -138,11 +140,11 @@ export class TambahNotulenmuPage implements OnInit {
     if(idx != -1) {
       let data = this.pilihanCR[idx];
       if(data.type == 'cabang') {
-        this.notulenData.cabang = data.id;
-        this.notulenData.ranting = null;
+        this.notulenData.organization_id = data.id;
+        this.notulenData.organization_type = 'cabang';
       } else {
-        this.notulenData.ranting = data.id;
-        this.notulenData.cabang = null;
+        this.notulenData.organization_id = data.id;
+        this.notulenData.organization_type = 'ranting';
       }
     }
   }
@@ -258,7 +260,6 @@ export class TambahNotulenmuPage implements OnInit {
       cssClass: 'custom-class custom-loading'
     }).then(a => {
       a.present().then(() => {
-        console.log('presented');
         var that = this;
         setTimeout(function () {
           that.loadingController.dismiss();
@@ -294,8 +295,30 @@ export class TambahNotulenmuPage implements OnInit {
     }
   }
 
+  async openPeserta() { 
+    const modal = await this.modalController.create({
+      component: ListHadirPage,
+      componentProps: {
+        id: this.notulenData.id,
+        action: 'add',
+      },
+      mode: "md",
+      cssClass: 'modal-class',
+      initialBreakpoint: 0.99,
+      breakpoints: [0, 0.99, 1]
+    });
+
+    modal.onDidDismiss().then(async (result) => {
+      if(result.data) {
+        this.notulenData.notulenmu_participants = result.data;
+      }
+    });
+    return await modal.present();
+  }
+
   addNotulen() {
     this.notulenData.datetime = new Date(this.dateValue);
+    delete this.notulenData.notulenmu_participants;
     if(this.isCreated == true) {
       this.notulenData.images = JSON.stringify(this.imgUploaded);
       this.api.post('notulenmu', this.notulenData).then(res => {

@@ -1,80 +1,27 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-back-button slot="start"></ion-back-button>
-    <ion-title>Peserta Hadir</ion-title>
-    <ion-buttons slot="end" *ngIf="isLoggedIn">
-      <ion-button fill="clear" (click)="openModalInfo($event)">
-        <ion-icon slot="icon-only" name="information-circle-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+    <ion-title>Tambah Peserta Baru</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content></ion-refresher-content>
-  </ion-refresher>
-
   <ion-grid class="ion-no-padding">
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
-        <div class="item-centered" *ngIf="!loading && listUsers.length == 0">
-          <img src="./assets/icon/pencarian.svg">
-          <ion-label>
-            <p>Peserta tidak ditemukan</p>
-          </ion-label>
+
+        <div class="ion-padding">
+          <ion-text color="medium">Nama</ion-text>
+          <ion-item lines="none" class="input">
+            <ion-input [(ngModel)]="userData.name" required #name="ngModel" placeholder="Nama"></ion-input>
+          </ion-item>
         </div>
 
-        <ion-list *ngIf="!loading && listUsers.length > 0">
-          <ion-item *ngFor="let n of listUsers" [routerLink]="['/notulenmu/detail-notulenmu', n.id]" routerLinkActive="router-link-active" >
-            <div class="container" slot="start" >
-              <img class="center-bg"src="../../assets/icon/list-notulenmu.svg">
-            </div>
-            <ion-label>
-              <h2>{{n.title}}</h2>
-              <ion-text color="medium">
-                <p>
-                  {{n.user_name}}
-                </p>
-              </ion-text>
-            </ion-label>
-            <ion-note slot="end">
-              {{n.created_at | date: 'HH:mm a'}}
-              <ion-icon class="dot" name="ellipse"></ion-icon> 
-              {{n.created_at | date: 'dd/MM/yy'}}
-            </ion-note>
-          </ion-item>
-        </ion-list>
-
-        <ion-row class="ion-no-padding" *ngIf="loading">
-          <ion-col size="6" *ngFor="let n of [1,2,3,4,5,6,7,8,9,10]">
-            <ion-card class="rounded-15">
-              <ion-card-content>
-                <ion-skeleton-text animated style="height: 60px;"></ion-skeleton-text>
-                <ion-label>
-                  <ion-text color="primary">
-                    <h2><ion-skeleton-text animated></ion-skeleton-text></h2>
-                  </ion-text>
-                  <ion-text color="medium">
-                    <p class="text-elipsis"><ion-skeleton-text animated></ion-skeleton-text><p>
-                  </ion-text>
-                </ion-label>
-                <h2 style="margin-top: 20px;"><ion-skeleton-text animated></ion-skeleton-text></h2>
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
-        </ion-row>
-
+        <ion-button class="ion-padding" color="primary" expand="block" [disabled]="name.invalid" (click)="simpan()">
+          {{loading ? 'Mohon tunggu...':'Simpan'}}
+        </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
-
-  <div style="margin-top: 100px;"></div>
-
-  <ion-fab *ngIf="isLoggedIn" vertical="bottom" horizontal="end" slot="fixed" [routerLink]="['/notulenmu/tambah-notulenmu/0']">
-    <ion-fab-button>
-      <ion-icon name="add-outline"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
 
 </ion-content>

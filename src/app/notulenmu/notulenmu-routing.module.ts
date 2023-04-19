@@ -13,7 +13,7 @@ const routes: Routes = [
     loadChildren: () => import('./tambah-notulenmu/tambah-notulenmu.module').then( m => m.TambahNotulenmuPageModule)
   },
   {
-    path: 'list-hadir/:id',
+    path: 'list-hadir/:id/:action',
     loadChildren: () => import('./list-hadir/list-hadir.module').then( m => m.ListHadirPageModule)
   },
   {
