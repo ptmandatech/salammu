@@ -70,7 +70,10 @@ export class HomePage implements OnInit {
   async ngOnInit() {
     this.loading = true;
     this.present();
-    this.getSurat();
+    this.surat = JSON.parse(localStorage.getItem('suratAlQuran'));
+    if(this.surat == null) {
+      this.getSurat();
+    }
     this.listTimes = [];
     this.tempTimes1 = [];
     this.tempTimes2 = [];
