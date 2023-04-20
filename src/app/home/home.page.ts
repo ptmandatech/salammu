@@ -177,38 +177,39 @@ export class HomePage implements OnInit {
   }
 
   async getCurrentLocations() {
-    return new Promise((resolve, reject) => {
-    this.options = {
-      maximumAge: 3600,
-      enableHighAccuracy: true
-    };
-
-    this.geolocation.getCurrentPosition(this.options).then(async (pos: Geoposition) => {
-      this.currentPos = pos;
-      const location = {
-        lat: pos.coords.latitude,
-        long: pos.coords.longitude,
-        time: new Date(),
-      };
-      localStorage.setItem('currentPos', JSON.stringify(location));
-      let city = localStorage.getItem('selectedCity');
-      let currentPos = JSON.parse(localStorage.getItem('currentPos'));
-      if(currentPos == location) {
-        if(city == null) {
-          await this.getDetailLocation(location);
-        } else {
-          this.city = city;
-          this.setTimeFromLocalCitySaved();
-        }
-      } else {
-        await this.getDetailLocation(location);
-      }
-      resolve(pos);
-   }, (err: PositionError) => {
-     this.openSettingLokasi();
-     reject(err.message);
-    });
-   });
+    let currentPos = JSON.parse(localStorage.getItem('currentPos'));
+    if(currentPos == location) {
+      return new Promise((resolve, reject) => {
+        this.options = {
+          maximumAge: 3600,
+          enableHighAccuracy: true
+        };
+    
+        this.geolocation.getCurrentPosition(this.options).then(async (pos: Geoposition) => {
+          this.currentPos = pos;
+          const location = {
+            lat: pos.coords.latitude,
+            long: pos.coords.longitude,
+            time: new Date(),
+          };
+        
+          localStorage.setItem('currentPos', JSON.stringify(location));
+          let city = localStorage.getItem('selectedCity');
+          if(city == null) {
+            await this.getDetailLocation(location);
+          } else {
+            this.city = city;
+            this.setTimeFromLocalCitySaved();
+          }
+          resolve(pos);
+      }, (err: PositionError) => {
+        this.openSettingLokasi();
+        reject(err.message);
+      });
+     });
+    } else {
+      await this.getDetailLocation(currentPos);
+    }
   }
 
   async loadingCheckLoc() {
@@ -225,41 +226,42 @@ export class HomePage implements OnInit {
 
   options:any;
   currentPos:any;
-  checkLocation() {
+  async checkLocation() {
     this.listTimes = [];
-    return new Promise((resolve, reject) => {
-    this.options = {
-      maximumAge: 3600,
-      enableHighAccuracy: true
-    };
-
-    this.geolocation.getCurrentPosition(this.options).then(async (pos: Geoposition) => {
-      this.currentPos = pos;
-      const location = {
-        lat: pos.coords.latitude,
-        long: pos.coords.longitude,
-        time: new Date(),
-      };
-      localStorage.setItem('currentPos', JSON.stringify(location));
-      let city = localStorage.getItem('selectedCity');
-      this.address_display_name = localStorage.getItem('address_display_name');
-      let currentPos = JSON.parse(localStorage.getItem('currentPos'));
-      if(currentPos == location) {
-        if(city == null) {
-          await this.getDetailLocation(location);
-        } else {
-          this.city = city;
-          this.setTimeFromLocalCitySaved();
-        }
-      } else {
-        await this.getDetailLocation(location);
-      }
-      resolve(pos);
-   }, (err: PositionError) => {
-     this.openSettingLokasi();
-     reject(err.message);
-    });
-   });
+    let currentPos = JSON.parse(localStorage.getItem('currentPos'));
+    if(currentPos == location) {
+      return new Promise((resolve, reject) => {
+        this.options = {
+          maximumAge: 3600,
+          enableHighAccuracy: true
+        };
+    
+        this.geolocation.getCurrentPosition(this.options).then(async (pos: Geoposition) => {
+          this.currentPos = pos;
+          const location = {
+            lat: pos.coords.latitude,
+            long: pos.coords.longitude,
+            time: new Date(),
+          };
+          
+          localStorage.setItem('currentPos', JSON.stringify(location));
+          let city = localStorage.getItem('selectedCity');
+          this.address_display_name = localStorage.getItem('address_display_name');
+          if(city == null) {
+            await this.getDetailLocation(location);
+          } else {
+            this.city = city;
+            this.setTimeFromLocalCitySaved();
+          }
+          resolve(pos);
+      }, (err: PositionError) => {
+        this.openSettingLokasi();
+        reject(err.message);
+      });
+     });
+    } else {
+      await this.getDetailLocation(currentPos);
+    }
   }
 
   async setTimeFromLocalCitySaved() {
@@ -269,6 +271,7 @@ export class HomePage implements OnInit {
       this.tempTimes2 = [];
       this.prayTime = undefined;
       this.timesToday = undefined;
+      
       this.prayTime = await this.api.getToday(this.city).catch(async err => {
         const toast = await this.toastController.create({
           message: 'Gagal Mendapatkan informasi Jadwal Sholat, Silahkan refresh berkala.<br /> Error Message: '+err.error.message,

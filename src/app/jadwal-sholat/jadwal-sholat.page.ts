@@ -233,7 +233,6 @@ export class JadwalSholatPage implements OnInit {
 
   getCityFromLocal() {
     let city = localStorage.getItem('selectedCity');
-    console.log(city)
     if(city) {
       this.city = city;
       this.getCal();
