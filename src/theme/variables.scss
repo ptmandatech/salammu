@@ -276,3 +276,15 @@ $font-family: "Poppins-Regular";
 p, ion-label, span, ion-text, ion-input, ion-item, input, small, ion-searchbar, ion-badge {
   font-family: "Poppins-Regular";
 }
+
+
+ngx-autocomplete {
+  input {
+    background: white;
+    border: solid; border-width: 1.5px;
+    border-radius: 0.5rem;
+    border-color: rgb(221, 221, 221);
+    margin-bottom: 16px;
+  }
+  
+}
