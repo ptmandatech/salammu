@@ -66,10 +66,12 @@ export class HomePage implements OnInit {
   ) {}
 
   prayTime:any = {};
+  dataLogin:any = {};
   timesToday:any;
   async ngOnInit() {
     this.loading = true;
     this.present();
+    this.dataLogin = JSON.parse(localStorage.getItem('salammuToken'));
     this.surat = JSON.parse(localStorage.getItem('suratAlQuran'));
     if(this.surat == null) {
       this.getSurat();
@@ -442,11 +444,15 @@ export class HomePage implements OnInit {
   // }
 
   isLoggedIn:boolean = false;
+  isVisible:boolean = false;
   cekLogin()
   {
     this.api.me().then(async res=>{
       this.userData = res;
       this.isLoggedIn = true;
+      if(this.dataLogin.cabang || this.dataLogin.ranting) {
+        this.isVisible = true;
+      }
       await this.loadingController.dismiss();
     }, async error => {
       this.loading = false;

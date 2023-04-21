@@ -44,7 +44,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { AppReducers } from './store/app.reducer';
 import { AppEffects } from './store/app.effetcts';
 import { DeviceOrientation } from '@awesome-cordova-plugins/device-orientation/ngx';
-import { NgxAutocompleteModule } from 'ngx-angular-autocomplete' 
+import { NgSelectModule } from '@ng-select/ng-select';
 @NgModule({
   declarations: [
     AppComponent,
@@ -73,7 +73,7 @@ import { NgxAutocompleteModule } from 'ngx-angular-autocomplete'
     NgxIonicImageViewerModule,
     // SocketIoModule.forRoot(config),
     SwiperModule,
-    NgxAutocompleteModule,
+    NgSelectModule,
     IonicSelectableModule,
     StoreModule.forRoot(AppReducers, {}),
     EffectsModule.forRoot(AppEffects),

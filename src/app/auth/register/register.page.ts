@@ -68,15 +68,15 @@ export class RegisterPage implements OnInit {
     }
   }
 
-  selectEvent(event) {
+  selectEvent(val) {
     this.form.patchValue({
-      cabang: event.id
+      cabang: val
     })
   }
 
-  selectEventRanting(event) {
+  selectEventRanting(val) {
     this.form.patchValue({
-      ranting: event.id
+      ranting: val
     })
   }
 

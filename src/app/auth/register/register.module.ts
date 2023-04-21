@@ -7,14 +7,14 @@ import { IonicModule } from '@ionic/angular';
 import { RegisterPageRoutingModule } from './register-routing.module';
 
 import { RegisterPage } from './register.page';
-import { NgxAutocompleteModule } from 'ngx-angular-autocomplete' 
+import {NgSelectModule, NgOption} from '@ng-select/ng-select';
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    NgxAutocompleteModule,
+    NgSelectModule,
     RegisterPageRoutingModule
   ],
   declarations: [RegisterPage]

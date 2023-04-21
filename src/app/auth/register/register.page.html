@@ -53,22 +53,20 @@
           </div>
 
           <ion-text color="medium">Cabang (opsional)</ion-text>
-          <ngx-autocomplete
-              [searchKeyword]="'nama'" 
-              [inputId]="'searchCabang'" 
-              [placeholderValue]="'Masukkan Nama Cabang'" 
-              [entries]="listCabang" 
-              (selectedValue)="selectEvent($event)">
-          </ngx-autocomplete>
+          <div class="selectOptions">
+            <ng-select formControlName="cabang" [searchable]="true" placeholder="Pilih Cabang"
+              (change)="selectEvent($event)">
+              <ng-option *ngFor="let data of listCabang" [value]="data.id">{{data.nama}}</ng-option>
+            </ng-select>
+          </div>
 
           <ion-text color="medium">Ranting (opsional)</ion-text>
-          <ngx-autocomplete 
-              [searchKeyword]="'nama'" 
-              [inputId]="'searchRanting'" 
-              [placeholderValue]="'Masukkan Nama Ranting'" 
-              [entries]="listRanting" 
-              (selectedValue)="selectEventRanting($event)">
-          </ngx-autocomplete>
+          <div class="selectOptions">
+            <ng-select formControlName="ranting" [searchable]="true" placeholder="Pilih Ranting"
+              (change)="selectEventRanting($event)">
+              <ng-option *ngFor="let data of listRanting" [value]="data.id">{{data.nama}}</ng-option>
+            </ng-select>
+          </div>
 
           <ion-text color="medium">Alamat</ion-text>
           <ion-item lines="none" class="input">

@@ -161,18 +161,18 @@
               </ion-row>
             </ion-grid>
 
-            <hr class="separator separator--line" />
+            <hr *ngIf="isVisible" class="separator separator--line" />
 
             <!-- RantingMU -->
-            <ion-item lines="none">
+            <ion-item lines="none" *ngIf="isVisible">
               <ion-label>
                 <h2>Cabang RantingMU</h2>
               </ion-label>
             </ion-item>
 
-            <ion-grid>
+            <ion-grid *ngIf="isVisible">
               <ion-row>
-                <ion-col *ngIf="isLoggedIn" size="3" class="ion-text-center mb-16" routerLink="/notulenmu">
+                <ion-col size="3" class="ion-text-center mb-16" routerLink="/notulenmu">
                   <img src="./assets/icon/notulenmu.svg"/>
                   <p class="fs-10" style="margin-top: -1px;">NotulenMU</p>
                 </ion-col>

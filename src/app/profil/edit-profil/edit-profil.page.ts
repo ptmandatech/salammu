@@ -31,12 +31,16 @@ export class EditProfilPage implements OnInit {
       email: [null, [Validators.required, Validators.email]],
       name: [null, [Validators.required]],
       phone: [null, [Validators.required, Validators.minLength(10), Validators.maxLength(15), Validators.pattern('^[0-9]*$')]],
-      address: [null, [Validators.required]]
+      address: [null, [Validators.required]],
+      cabang: [null],
+      ranting: [null],
     });
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.serverImg = this.common.photoBaseUrl+'users/';
+    await this.getListCabang();
+    await this.getListRanting();
     this.cekLogin();
   }
 
@@ -60,6 +64,48 @@ export class EditProfilPage implements OnInit {
     });
   }
 
+  listCabang:any = [];
+  listCabangTemp:any = [];
+  async getListCabang() {
+    try {
+      await this.api.get('sicara/getAllPCM').then(res=>{ 
+        this.listCabang = res;
+        this.listCabangTemp = res;
+      }, err => {
+        this.loading = false;
+      });
+    } catch {
+
+    }
+  }
+
+  listRanting:any = [];
+  listRantingTemp:any = [];
+  async getListRanting() {
+    try {
+      await this.api.get('sicara/getAllPRM').then(res=>{ 
+        this.listRanting = res;
+        this.listRantingTemp = res;
+      }, err => {
+        this.loading = false;
+      });
+    } catch {
+
+    }
+  }
+
+  selectEvent(val) {
+    this.form.patchValue({
+      cabang: val
+    })
+  }
+
+  selectEventRanting(val) {
+    this.form.patchValue({
+      ranting: val
+    })
+  }
+
   cekLogin()
   {    
     this.api.me().then(res=>{
@@ -68,6 +114,8 @@ export class EditProfilPage implements OnInit {
         name: this.userData.name,
         email: this.userData.email,
         phone: this.userData.phone,
+        cabang: this.userData.cabang,
+        ranting: this.userData.ranting,
         address: this.userData.address
       });
       this.uploadImg = false;
