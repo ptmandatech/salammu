@@ -58,6 +58,7 @@
               (change)="selectEvent($event)">
               <ng-option *ngFor="let data of listCabang" [value]="data.id">{{data.nama}}</ng-option>
             </ng-select>
+            <ion-note style="font-style: italic;" *ngIf="gettingCabang">Mengambil data Cabang...</ion-note>
           </div>
 
           <ion-text color="medium">Ranting (opsional)</ion-text>
@@ -66,6 +67,7 @@
               (change)="selectEventRanting($event)">
               <ng-option *ngFor="let data of listRanting" [value]="data.id">{{data.nama}}</ng-option>
             </ng-select>
+            <ion-note style="font-style: italic;" *ngIf="gettingRanting">Mengambil data Ranting...</ion-note>
           </div>
 
           <ion-text color="medium">Alamat</ion-text>

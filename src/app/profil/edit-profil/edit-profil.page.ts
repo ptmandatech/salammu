@@ -66,13 +66,16 @@ export class EditProfilPage implements OnInit {
 
   listCabang:any = [];
   listCabangTemp:any = [];
+  gettingCabang:boolean = true;
   async getListCabang() {
     try {
       await this.api.get('sicara/getAllPCM').then(res=>{ 
         this.listCabang = res;
         this.listCabangTemp = res;
+        this.gettingCabang = false;
       }, err => {
         this.loading = false;
+        this.gettingCabang = false;
       });
     } catch {
 
@@ -81,13 +84,16 @@ export class EditProfilPage implements OnInit {
 
   listRanting:any = [];
   listRantingTemp:any = [];
+  gettingRanting:boolean = true;
   async getListRanting() {
     try {
       await this.api.get('sicara/getAllPRM').then(res=>{ 
         this.listRanting = res;
         this.listRantingTemp = res;
+        this.gettingRanting = false;
       }, err => {
         this.loading = false;
+        this.gettingRanting = false;
       });
     } catch {
 

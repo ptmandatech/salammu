@@ -180,7 +180,7 @@ export class HomePage implements OnInit {
 
   async getCurrentLocations() {
     let currentPos = JSON.parse(localStorage.getItem('currentPos'));
-    if(currentPos == location) {
+    if(currentPos == null) {
       return new Promise((resolve, reject) => {
         this.options = {
           maximumAge: 3600,
@@ -231,7 +231,7 @@ export class HomePage implements OnInit {
   async checkLocation() {
     this.listTimes = [];
     let currentPos = JSON.parse(localStorage.getItem('currentPos'));
-    if(currentPos == location) {
+    if(currentPos == null) {
       return new Promise((resolve, reject) => {
         this.options = {
           maximumAge: 3600,
@@ -318,9 +318,11 @@ export class HomePage implements OnInit {
     }, async error => {
       await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(async res => {
         this.locationNow = res;
-        if(res['display_name']) {
-          this.address_display_name = res['display_name'];
+        
+        if(res['name'] || res['display_name']) {
+          this.address_display_name = res['name'] == null ? res['display_name']:res['name'];
         }
+      
         this.city = this.locationNow.city.replace('Kota ', '');
         localStorage.setItem('selectedCity', this.city);
         localStorage.setItem('address_display_name', this.address_display_name);
@@ -383,8 +385,9 @@ export class HomePage implements OnInit {
 
   async checkCity(res) {
     this.locationNow = res.features[0].properties;
-    if(this.locationNow['display_name']) {
-      this.address_display_name = this.locationNow['display_name'];
+    
+    if(this.locationNow['name'] || this.locationNow['display_name']) {
+      this.address_display_name = this.locationNow['name'] == null ? this.locationNow['display_name']:this.locationNow['name'];
     }
     this.city = res.features[0].properties.address.city == null ? res.features[0].properties.address.town == null ? res.features[0].properties.address.municipality:res.features[0].properties.address.town:res.features[0].properties.address.city;
     if(!this.city) {
@@ -450,7 +453,7 @@ export class HomePage implements OnInit {
     this.api.me().then(async res=>{
       this.userData = res;
       this.isLoggedIn = true;
-      if(this.dataLogin.cabang || this.dataLogin.ranting) {
+      if(this.dataLogin.cabang_id || this.dataLogin.ranting_id) {
         this.isVisible = true;
       }
       await this.loadingController.dismiss();
