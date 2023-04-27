@@ -63,7 +63,9 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
-      // this.splashScreen.hide();
+      setTimeout(() => {
+        this.splashScreen.hide();
+      }, 2000);
       this.statusBar.overlaysWebView(false);
       this.statusBar.backgroundColorByHexString('#349075');
       // this.oneSignal.startInit('fed7ec4e-71d4-4282-8c05-e36f8926a631', '538081656013')

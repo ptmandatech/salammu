@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    defaultConfig {
+  compileSdk 33
+  defaultConfig {
         applicationId "com.salammu.id"
         minSdkVersion rootProject.ext.minSdkVersion
-      targetSdk 32
-      versionCode 8
+    targetSdk 33
+    versionCode 8
         versionName "1.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
@@ -36,7 +36,8 @@ repositories {
 }
 
 dependencies {
-    implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
+//    implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
+    implementation "androidx.core:core-splashscreen:1.0.0-alpha02"
     implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
     implementation 'androidx.work:work-runtime:2.7.0'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -48,6 +49,7 @@ dependencies {
     implementation project(':capacitor-cordova-android-plugins')
     implementation "com.google.firebase:firebase-iid:21.1.0"
     implementation "com.google.firebase:firebase-messaging:21.1.0"
+
 }
 
 apply from: 'capacitor.build.gradle'
