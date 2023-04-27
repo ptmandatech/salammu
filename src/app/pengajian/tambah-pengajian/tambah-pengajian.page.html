@@ -70,7 +70,7 @@
 
             <div *ngIf="form.controls.organizer.value?.trim() == 'cabang'">
               <ion-text color="medium">Nama Cabang Penyelenggara</ion-text>
-              <ion-item  lines="none" class="input">
+              <!-- <ion-item  lines="none" class="input">
                 <ionic-selectable
                   placeholder="Pilih Cabang"
                   [(ngModel)]="branchSelected"
@@ -84,14 +84,21 @@
                     <ion-icon name="close-circle" style="font-size: 24px;"></ion-icon>
                   </ng-template>
                 </ionic-selectable>
-              </ion-item>
+              </ion-item> -->
+              <div class="selectOptions">
+                <ng-select formControlName="branch" [searchable]="true" placeholder="Pilih Cabang"
+                  (change)="selectEvent($event)">
+                  <ng-option *ngFor="let data of listCabang" [value]="data.id">{{data.nama}}</ng-option>
+                </ng-select>
+                <ion-note style="font-style: italic;" *ngIf="gettingCabang">Mengambil data Cabang...</ion-note>
+              </div>
             </div>
 
             <div *ngIf="form.controls.organizer.value?.trim() == 'ranting'">
               <ion-text color="medium">Nama Ranting Penyelenggara</ion-text>
-              <ion-item  lines="none" class="input">
+              <!-- <ion-item  lines="none" class="input">
                 <ionic-selectable
-                  placeholder="Pilih Cabang"
+                  placeholder="Pilih Ranting"
                   [(ngModel)]="twigSelected"
                   [items]="listRanting"
                   itemValueField="id"
@@ -103,7 +110,14 @@
                     <ion-icon name="close-circle" style="font-size: 24px;"></ion-icon>
                   </ng-template>
                 </ionic-selectable>
-              </ion-item>
+              </ion-item> -->
+              <div class="selectOptions">
+                <ng-select formControlName="twig" [searchable]="true" placeholder="Pilih Ranting"
+                  (change)="selectEventRanting($event)">
+                  <ng-option *ngFor="let data of listRanting" [value]="data.id">{{data.nama}}</ng-option>
+                </ng-select>
+                <ion-note style="font-style: italic;" *ngIf="gettingRanting">Mengambil data Ranting...</ion-note>
+              </div>
             </div>
 
             <div *ngIf="form.controls.organizer.value?.trim() == 'lainnya'">
@@ -136,7 +150,7 @@
   
             <ion-text color="medium">Alamat Lengkap</ion-text>
             <ion-item lines="none" class="input">
-              <ion-textarea formControlName="location" name="location" required type="text" rows="4" cols="20"></ion-textarea>
+              <ion-textarea formControlName="location" name="location" required type="text" placeholder="Masukan Alamat Lengkap" rows="4" cols="20"></ion-textarea>
             </ion-item>
             
             <div *ngIf="detailLocSelected">

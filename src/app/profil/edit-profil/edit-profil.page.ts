@@ -233,6 +233,8 @@ export class EditProfilPage implements OnInit {
     this.userData.email = this.form.get('email').value;
     this.userData.phone = this.form.get('phone').value;
     this.userData.address = this.form.get('address').value;
+    this.userData.cabang = this.form.get('cabang').value;
+    this.userData.ranting = this.form.get('ranting').value;
     
     this.api.put('users/'+this.userData.id, this.userData).then(res=>{
       this.toastController

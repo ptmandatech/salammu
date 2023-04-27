@@ -8,6 +8,7 @@ import { TambahPengajianPageRoutingModule } from './tambah-pengajian-routing.mod
 
 import { TambahPengajianPage } from './tambah-pengajian.page';
 import { IonicSelectableModule } from 'ionic-selectable';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { IonicSelectableModule } from 'ionic-selectable';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
+    NgSelectModule,
     TambahPengajianPageRoutingModule,
     IonicSelectableModule
   ],

@@ -100,7 +100,8 @@ export class TambahPengajianPage implements OnInit {
   async ngOnInit() {
     this.present();
     this.cekLogin();
-    await this.getAllCr();
+    await this.getListCabang();
+    await this.getListRanting();
     this.today = new Date();
     this.minDate = new Date().toISOString();
     this.id = this.routes.snapshot.paramMap.get('id');
@@ -116,7 +117,7 @@ export class TambahPengajianPage implements OnInit {
     this.loading = true;
     return await this.loadingController.create({
       spinner: 'crescent',
-      duration: 10000,
+      duration: 2000,
       message: 'Tunggu Sebentar...',
       cssClass: 'custom-class custom-loading'
     }).then(a => {
@@ -146,33 +147,51 @@ export class TambahPengajianPage implements OnInit {
   }
 
   listCabang:any = [];
-  listRanting:any = [];
-  async getAllCr() {
-    // this.api.get('cr').then(res => {
-    //   this.parseData(res);
-    // }, error => {
-    //   this.loading = false;
-    // })
+  listCabangTemp:any = [];
+  gettingCabang:boolean = true;
+  async getListCabang() {
     try {
       await this.api.get('sicara/getAllPCM').then(res=>{ 
         this.listCabang = res;
-        this.loading = false;
+        this.listCabangTemp = res;
+        this.gettingCabang = false;
       }, err => {
         this.loading = false;
+        this.gettingCabang = false;
       });
     } catch {
 
     }
+  }
+
+  listRanting:any = [];
+  listRantingTemp:any = [];
+  gettingRanting:boolean = true;
+  async getListRanting() {
     try {
-      await this.api.get('sicara/getAllPRM').then(res=>{
+      await this.api.get('sicara/getAllPRM').then(res=>{ 
         this.listRanting = res;
-        this.loading = false;
+        this.listRantingTemp = res;
+        this.gettingRanting = false;
       }, err => {
         this.loading = false;
+        this.gettingRanting = false;
       });
     } catch {
 
     }
+  }
+
+  selectEvent(val) {
+    this.form.patchValue({
+      branch: val
+    })
+  }
+
+  selectEventRanting(val) {
+    this.form.patchValue({
+      twig: val
+    })
   }
 
   // parseData(res) {
@@ -194,6 +213,7 @@ export class TambahPengajianPage implements OnInit {
 
   locationNow:any;
   async getDetailPengajian() {
+    this.present();
     await this.api.get('pengajian/find/'+this.id).then(res => {
       this.pengajianData = res;
       if(this.pengajianData.pin != null) {
@@ -237,6 +257,18 @@ export class TambahPengajianPage implements OnInit {
   }
 
   save() {
+    if(this.form.controls.organizer.value?.trim() == 'cabang') {
+      this.form.patchValue({
+        twig: null
+      })
+      this.pengajianData.twig = null;
+    } else {
+      this.form.patchValue({
+        branch: null
+      })
+      this.pengajianData.branch = null;
+    }
+
     if (!this.form.valid) {
       this.validateAllFormFields(this.form);
     }
@@ -276,9 +308,9 @@ export class TambahPengajianPage implements OnInit {
       this.pengajianData.organizer = this.form.get('organizer').value;
       this.pengajianData.url_livestream = this.form.get('url_livestream').value;
       this.pengajianData.location = this.form.get('location').value;
-
-      if(this.branchSelected != undefined) this.pengajianData.branch = this.branchSelected.id;
-      if(this.twigSelected != undefined) this.pengajianData.twig = this.twigSelected.id;
+      
+      if(this.form.get('branch').value != undefined) this.pengajianData.branch = this.form.get('branch').value;
+      if(this.form.get('twig').value != undefined) this.pengajianData.twig = this.form.get('twig').value;
   
       if(new Date(this.dateValue) >= this.today) {
         this.pengajianData.status = 'soon';

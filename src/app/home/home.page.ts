@@ -71,7 +71,6 @@ export class HomePage implements OnInit {
   async ngOnInit() {
     this.loading = true;
     this.present();
-    this.dataLogin = JSON.parse(localStorage.getItem('salammuToken'));
     this.surat = JSON.parse(localStorage.getItem('suratAlQuran'));
     if(this.surat == null) {
       this.getSurat();
@@ -448,8 +447,9 @@ export class HomePage implements OnInit {
 
   isLoggedIn:boolean = false;
   isVisible:boolean = false;
-  cekLogin()
+  async cekLogin()
   {
+    this.dataLogin = await JSON.parse(localStorage.getItem('salammuToken'));
     this.api.me().then(async res=>{
       this.userData = res;
       this.isLoggedIn = true;
@@ -462,6 +462,8 @@ export class HomePage implements OnInit {
       localStorage.removeItem('userSalammu');
       localStorage.removeItem('salammuToken');
       this.userData = undefined;
+      this.isLoggedIn = false;
+      this.isVisible = false;
       await this.loadingController.dismiss();
     })
   }
