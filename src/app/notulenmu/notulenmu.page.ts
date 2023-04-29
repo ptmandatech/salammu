@@ -35,7 +35,6 @@ export class NotulenmuPage implements OnInit {
     this.serverImg = this.common.photoBaseUrl+'notulenmu/';
     this.listNotulenMu = [];
     this.listNotulenMuTemp = [];
-    this.getAllNotulenmu();
   }
 
   async present() {
@@ -61,6 +60,7 @@ export class NotulenmuPage implements OnInit {
       this.userData = res;
       this.isLoggedIn = true;
       this.parseChip();
+      this.getAllNotulenmu();
     }, async error => {
       this.isLoggedIn = false;
     })
@@ -97,7 +97,7 @@ export class NotulenmuPage implements OnInit {
   }
 
   getAllNotulenmu() {
-    this.api.get('notulenmu?all=ok').then(res => {
+    this.api.get('notulenmu?cabang='+this.dataLogin.cabang_id+'&ranting='+this.dataLogin.ranting_id).then(res => {
       this.listNotulenMu = res;
       this.listNotulenMuTemp = res;
       this.loading = false;
