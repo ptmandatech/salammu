@@ -8,6 +8,7 @@ import { TambahNotulenmuPageRoutingModule } from './tambah-notulenmu-routing.mod
 
 import { TambahNotulenmuPage } from './tambah-notulenmu.page';
 import { QuillModule } from 'ngx-quill';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
   imports: [
@@ -22,6 +23,7 @@ import { QuillModule } from 'ngx-quill';
         ] 
       }
     }),
+    NgSelectModule,
     TambahNotulenmuPageRoutingModule
   ],
   declarations: [TambahNotulenmuPage]

@@ -107,12 +107,38 @@
           </ion-item>
 
           <ion-text color="medium">Cabang dan Ranting</ion-text>
-          <ion-item lines="none" class="input">
+          <ion-item lines="none" class="input" *ngIf="userData.role != 'superadmin'">
               <ion-select mode="ios" [(ngModel)]="selectedCR" (ngModelChange)="selectCR()" required #category="ngModel" placeholder="Pilih Cabang / Ranting" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" interface="popover">
                 <ion-select-option *ngFor="let n of pilihanCR" value="{{n.id}}">{{n.nama}}</ion-select-option>
               </ion-select>
               <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
           </ion-item>
+
+          <!-- IF ADMIN -->
+          <ion-item lines="none" class="input" *ngIf="userData.role == 'superadmin'">
+              <ion-select mode="ios" [(ngModel)]="notulenData.organization_type" required #organization_type="ngModel" placeholder="Pilih Cabang / Ranting" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" interface="popover">
+                <ion-select-option *ngFor="let n of ['cabang', 'ranting']" value="{{n}}">{{n}}</ion-select-option>
+              </ion-select>
+              <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
+          </ion-item>
+
+          <ion-text color="medium" *ngIf="userData.role == 'superadmin' && notulenData.organization_type == 'cabang'">Cabang</ion-text>
+          <div class="selectOptions" *ngIf="userData.role == 'superadmin' && notulenData.organization_type == 'cabang'">
+            <ng-select [(ngModel)]="notulenData.organization_id" required #organization_id="ngModel" [searchable]="true" placeholder="Pilih Cabang">
+              <ng-option *ngFor="let data of listCabang" [value]="data.id">{{data.nama}}</ng-option>
+            </ng-select>
+            <ion-note style="font-style: italic;" *ngIf="gettingCabang">Mengambil data Cabang...</ion-note>
+          </div>
+
+          <ion-text color="medium" *ngIf="userData.role == 'superadmin' && notulenData.organization_type == 'ranting'">Ranting</ion-text>
+          <div class="selectOptions" *ngIf="userData.role == 'superadmin' && notulenData.organization_type == 'ranting'">
+            <ng-select [(ngModel)]="notulenData.organization_id" required #organization_id="ngModel" [searchable]="true" placeholder="Pilih Ranting">
+              <ng-option *ngFor="let data of listRanting" [value]="data.id">{{data.nama}}</ng-option>
+            </ng-select>
+            <ion-note style="font-style: italic;" *ngIf="gettingRanting">Mengambil data Ranting...</ion-note>
+          </div>
+
+          <!-- END IF -->
 
           <ion-text color="medium">Notulen Rapat</ion-text>
           <quill-editor [(ngModel)]="notulenData.notulen" name="notulen" [modules]="modules" #notulen="ngModel" placeholder="Notulen Rapat">

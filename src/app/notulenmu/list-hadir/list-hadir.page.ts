@@ -52,7 +52,7 @@ export class ListHadirPage implements OnInit {
     this.loading = true;
     return await this.loadingController.create({
       spinner: 'crescent',
-      duration: 2000,
+      duration: 500,
       message: 'Tunggu Sebentar...',
       cssClass: 'custom-class custom-loading'
     }).then(a => {
@@ -84,14 +84,25 @@ export class ListHadirPage implements OnInit {
 
   getAllUsers() {
     if(this.dataLogin) {
-      this.api.get('users/getAll?cabang='+this.dataLogin.cabang_id+'&ranting='+this.dataLogin.ranting_id).then(res => {
-        this.listUsers = res;
-        this.listUsersTemp = res;
-        this.parseData();
-      }, error => {
-        this.loading = false;
-        this.loadingController.dismiss();
-      })
+      if(this.dataLogin.role == 'superadmin') {
+        this.api.get('users/getAllAdmin').then(res => {
+          this.listUsers = res;
+          this.listUsersTemp = res;
+          this.parseData();
+        }, error => {
+          this.loading = false;
+          this.loadingController.dismiss();
+        })
+      } else {
+        this.api.get('users/getAll?cabang='+this.dataLogin.cabang_id+'&ranting='+this.dataLogin.ranting_id).then(res => {
+          this.listUsers = res;
+          this.listUsersTemp = res;
+          this.parseData();
+        }, error => {
+          this.loading = false;
+          this.loadingController.dismiss();
+        })
+      }
     }
   }
   

@@ -179,37 +179,40 @@ export class HomePage implements OnInit {
 
   async getCurrentLocations() {
     let currentPos = JSON.parse(localStorage.getItem('currentPos'));
+    let location;
+    await this.geolocation.getCurrentPosition(this.options).then(async (pos: Geoposition) => {
+      this.currentPos = pos;
+      location = {
+        lat: pos.coords.latitude,
+        long: pos.coords.longitude,
+        time: new Date(),
+      };
+    }, (err: PositionError) => {
+      this.openSettingLokasi();
+    });
+
     if(currentPos == null) {
-      return new Promise((resolve, reject) => {
-        this.options = {
-          maximumAge: 3600,
-          enableHighAccuracy: true
-        };
-    
-        this.geolocation.getCurrentPosition(this.options).then(async (pos: Geoposition) => {
-          this.currentPos = pos;
-          const location = {
-            lat: pos.coords.latitude,
-            long: pos.coords.longitude,
-            time: new Date(),
-          };
-        
-          localStorage.setItem('currentPos', JSON.stringify(location));
-          let city = localStorage.getItem('selectedCity');
-          if(city == null) {
-            await this.getDetailLocation(location);
-          } else {
-            this.city = city;
-            this.setTimeFromLocalCitySaved();
-          }
-          resolve(pos);
-      }, (err: PositionError) => {
-        this.openSettingLokasi();
-        reject(err.message);
-      });
-     });
+      localStorage.setItem('currentPos', JSON.stringify(location));
+      let city = localStorage.getItem('selectedCity');
+      if(city == null) {
+        await this.getDetailLocation(location);
+      } else {
+        this.city = city;
+        this.setTimeFromLocalCitySaved();
+      }
     } else {
-      await this.getDetailLocation(currentPos);
+      if(currentPos.lat != location.lat && currentPos.long != location.long) {
+        localStorage.setItem('currentPos', JSON.stringify(location));
+        let city = localStorage.getItem('selectedCity');
+        if(city == null) {
+          await this.getDetailLocation(location);
+        } else {
+          this.city = city;
+          this.setTimeFromLocalCitySaved();
+        }
+      } else {
+        await this.getDetailLocation(currentPos);
+      }
     }
   }
 
@@ -230,38 +233,41 @@ export class HomePage implements OnInit {
   async checkLocation() {
     this.listTimes = [];
     let currentPos = JSON.parse(localStorage.getItem('currentPos'));
+    let location;
+    await this.geolocation.getCurrentPosition(this.options).then(async (pos: Geoposition) => {
+      this.currentPos = pos;
+      location = {
+        lat: pos.coords.latitude,
+        long: pos.coords.longitude,
+        time: new Date(),
+      };
+    }, (err: PositionError) => {
+      this.openSettingLokasi();
+    });
+
     if(currentPos == null) {
-      return new Promise((resolve, reject) => {
-        this.options = {
-          maximumAge: 3600,
-          enableHighAccuracy: true
-        };
-    
-        this.geolocation.getCurrentPosition(this.options).then(async (pos: Geoposition) => {
-          this.currentPos = pos;
-          const location = {
-            lat: pos.coords.latitude,
-            long: pos.coords.longitude,
-            time: new Date(),
-          };
-          
-          localStorage.setItem('currentPos', JSON.stringify(location));
-          let city = localStorage.getItem('selectedCity');
-          this.address_display_name = localStorage.getItem('address_display_name');
-          if(city == null) {
-            await this.getDetailLocation(location);
-          } else {
-            this.city = city;
-            this.setTimeFromLocalCitySaved();
-          }
-          resolve(pos);
-      }, (err: PositionError) => {
-        this.openSettingLokasi();
-        reject(err.message);
-      });
-     });
+      localStorage.setItem('currentPos', JSON.stringify(location));
+      let city = localStorage.getItem('selectedCity');
+      this.address_display_name = localStorage.getItem('address_display_name');
+      if(city == null) {
+        await this.getDetailLocation(location);
+      } else {
+        this.city = city;
+        this.setTimeFromLocalCitySaved();
+      }
     } else {
-      await this.getDetailLocation(currentPos);
+      if(currentPos.lat != location.lat && currentPos.long != location.long) {
+        localStorage.setItem('currentPos', JSON.stringify(location));
+        let city = localStorage.getItem('selectedCity');
+        if(city == null) {
+          await this.getDetailLocation(location);
+        } else {
+          this.city = city;
+          this.setTimeFromLocalCitySaved();
+        }
+      } else {
+        await this.getDetailLocation(currentPos);
+      }
     }
   }
 

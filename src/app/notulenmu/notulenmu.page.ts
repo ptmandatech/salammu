@@ -41,7 +41,7 @@ export class NotulenmuPage implements OnInit {
     this.loading = true;
     return await this.loadingController.create({
       spinner: 'crescent',
-      duration: 2000,
+      duration: 500,
       message: 'Tunggu Sebentar...',
       cssClass: 'custom-class custom-loading'
     }).then(a => {
@@ -68,17 +68,26 @@ export class NotulenmuPage implements OnInit {
 
   pilihanChip:any = [];
   parseChip() {
-    if(this.dataLogin.cabang_nama && this.dataLogin.ranting_nama == null) {
-      this.pilihanChip = ['Cabang'];
-    } else if(this.dataLogin.ranting_nama && this.dataLogin.cabang_nama == null) {
-      this.pilihanChip = ['Ranting'];
-    } else if(this.dataLogin.ranting_nama && this.dataLogin.cabang_nama) {
+    if(this.userData.role != 'superadmin') {
+      if(this.dataLogin.cabang_nama && this.dataLogin.ranting_nama == null) {
+        this.pilihanChip = ['Cabang'];
+      } else if(this.dataLogin.ranting_nama && this.dataLogin.cabang_nama == null) {
+        this.pilihanChip = ['Ranting'];
+      } else if(this.dataLogin.ranting_nama && this.dataLogin.cabang_nama) {
+        this.pilihanChip = ['Semua', 'Cabang', 'Ranting'];
+      }
+    } else {
       this.pilihanChip = ['Semua', 'Cabang', 'Ranting'];
     }
   }
 
   async doRefresh(event) {
-    this.ngOnInit();
+    this.dataLogin = JSON.parse(localStorage.getItem('salammuToken'));
+    this.cekLogin();
+    this.loading = true;
+    this.serverImg = this.common.photoBaseUrl+'notulenmu/';
+    this.listNotulenMu = [];
+    this.listNotulenMuTemp = [];
     setTimeout(() => {
       event.target.complete();
     }, 2000);
@@ -97,14 +106,29 @@ export class NotulenmuPage implements OnInit {
   }
 
   getAllNotulenmu() {
-    this.api.get('notulenmu?cabang='+this.dataLogin.cabang_id+'&ranting='+this.dataLogin.ranting_id).then(res => {
-      this.listNotulenMu = res;
-      this.listNotulenMuTemp = res;
-      this.loading = false;
-    }, error => {
-      this.loading = false;
-      this.loadingController.dismiss();
-    })
+    this.listNotulenMu = [];
+    this.listNotulenMuTemp = [];
+    if(this.dataLogin) {
+      if(this.dataLogin.role == 'superadmin') {
+        this.api.get('notulenmu').then(res => {
+          this.listNotulenMu = res;
+          this.listNotulenMuTemp = res;
+          this.loading = false;
+        }, error => {
+          this.loading = false;
+          this.loadingController.dismiss();
+        })
+      } else {
+        this.api.get('notulenmu?cabang='+this.userData.cabang+'&ranting='+this.userData.ranting).then(res => {
+          this.listNotulenMu = res;
+          this.listNotulenMuTemp = res;
+          this.loading = false;
+        }, error => {
+          this.loading = false;
+          this.loadingController.dismiss();
+        })
+      }
+    }
   }
 
   initializeItems(): void {

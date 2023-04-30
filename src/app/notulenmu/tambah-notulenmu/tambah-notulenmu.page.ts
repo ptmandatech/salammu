@@ -11,6 +11,7 @@ import Quill from 'quill';
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { ListHadirPage } from '../list-hadir/list-hadir.page';
+import { FormControl } from '@angular/forms';
 
 Quill.register('modules/imageHandler', ImageHandler);
 Quill.register('modules/videoHandler', VideoHandler);
@@ -34,6 +35,8 @@ export class TambahNotulenmuPage implements OnInit {
   @ViewChild(IonDatetime, { static: true }) datetime: IonDatetime;
   dateValue = '';
   dataLogin:any = {};
+  myControlCabang = new FormControl();
+  myControlRanting = new FormControl();
   constructor(
     public api: ApiService,
     public router:Router,
@@ -48,6 +51,8 @@ export class TambahNotulenmuPage implements OnInit {
 
   ngOnInit() {
     this.present();
+    this.getListCabang();
+    this.getListRanting();
     this.dataLogin = JSON.parse(localStorage.getItem('salammuToken'));
     this.minDate = new Date().toISOString();
     this.cekLogin();
@@ -146,6 +151,56 @@ export class TambahNotulenmuPage implements OnInit {
         this.notulenData.organization_id = data.id;
         this.notulenData.organization_type = 'ranting';
       }
+    }
+  }
+
+  listCabang:any = [];
+  listCabangTemp:any = [];
+  gettingCabang:boolean = true;
+  async getListCabang() {
+    try {
+      await this.api.get('sicara/getAllPCM').then(res=>{ 
+        this.listCabang = res;
+        this.listCabangTemp = res;
+        this.gettingCabang = false;
+      }, err => {
+        this.gettingCabang = false;
+      });
+    } catch {
+
+    }
+  }
+
+  listRanting:any = [];
+  listRantingTemp:any = [];
+  gettingRanting:boolean = true;
+  async getListRanting() {
+    try {
+      await this.api.get('sicara/getAllPRM').then(res=>{ 
+        this.listRanting = res;
+        this.listRantingTemp = res;
+        this.gettingRanting = false;
+      }, err => {
+        this.gettingRanting = false;
+      });
+    } catch {
+
+    }
+  }
+
+  selectEvent(val:any) {
+    this.selectedCR = val;
+  }
+
+  getTitleCabang(cabangID: string) {
+    if(cabangID) {
+      return this.listCabangTemp.find((data:any) => data.id === cabangID).nama;
+    }
+  }
+
+  getTitleRanting(rantingID: string) {
+    if(rantingID) {
+      return this.listRantingTemp.find((data:any) => data.id === rantingID).nama;
     }
   }
 
