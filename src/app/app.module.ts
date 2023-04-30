@@ -45,6 +45,12 @@ import { AppReducers } from './store/app.reducer';
 import { AppEffects } from './store/app.effetcts';
 import { DeviceOrientation } from '@awesome-cordova-plugins/device-orientation/ngx';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { File } from '@awesome-cordova-plugins/file/ngx';
+import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions/ngx';
+import { Device } from '@awesome-cordova-plugins/device/ngx';
+import { FileTransfer } from '@awesome-cordova-plugins/file-transfer/ngx';
+import { SocialSharing } from '@awesome-cordova-plugins/social-sharing/ngx';
+import { HTTP } from '@awesome-cordova-plugins/http/ngx';
 @NgModule({
   declarations: [
     AppComponent,
@@ -90,6 +96,12 @@ import { NgSelectModule } from '@ng-select/ng-select';
     PhotoViewer,
     MusicControls,
     DeviceOrientation,
+    File,
+    FileTransfer,
+    Device,
+    AndroidPermissions,
+    SocialSharing,
+    HTTP,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {provide: LOCALE_ID, useValue: "id-ID" }
   ],
