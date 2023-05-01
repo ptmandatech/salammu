@@ -38,13 +38,13 @@
           <ion-label>
             <h2>Peserta Hadir</h2>
           </ion-label>
-          <ion-note *ngIf="notulenData.notulenmu_participants" slot="end">{{notulenData.notulenmu_participants.length}} Peserta Hadir</ion-note>
+          <ion-note *ngIf="notulenData.notulenmu_participants" slot="end">{{notulenData.notulenmu_participants == null ? 0:notulenData.notulenmu_participants.length}} Peserta Hadir</ion-note>
         </ion-item>
 
         <ion-item lines="full" detail class="list-custom" (click)="openPeserta()">
           <ion-label class="ion-text-wrap" *ngIf="notulenData.notulenmu_participants">
             <ion-text color="primary">
-              <small>{{notulenData.notulenmu_participants.length}} Hadir</small>
+              <small>{{notulenData.notulenmu_participants == null ? 0:notulenData.notulenmu_participants.length}} Hadir</small>
             </ion-text>
           </ion-label>
         </ion-item>

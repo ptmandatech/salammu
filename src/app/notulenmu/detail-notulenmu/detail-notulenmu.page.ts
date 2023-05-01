@@ -104,7 +104,13 @@ export class DetailNotulenmuPage implements OnInit {
     for(var i=0; i<n.images.length; i++) {
       var image = this.serverImg+n.images[i];
       let dt = [
-        {image: await this.getBase64ImageFromURL(image), fontSize: 12, marginTop: 8, marginBottom: 8}
+        {
+          image: await this.getBase64ImageFromURL(image), 
+          fontSize: 12, 
+          marginTop: 8, 
+          marginBottom: 8,
+          alignment:'center'
+        }
       ]
       lampiran.push(dt);
     }
@@ -115,25 +121,13 @@ export class DetailNotulenmuPage implements OnInit {
     var dd = {
       content: [
           {
-              text:'NOTULEN RAPAT RUTIN',
+              text:n.title,
               fontSize:14,
               bold:true,
               alignment:'center'
           },
           {
-              text:'BIDANG PEMBINAAN CABANG RANTING',
-              fontSize:18,
-              bold:true,
-              alignment:'center',
-          },
-          {
-              text:'LEMBAGA PENGEMBANGAN CABANG/RANTING DAN PEMBINAAN MASJID',
-              fontSize:18,
-              bold:true,
-              alignment:'center',
-          },
-          {
-              text:'PIMPINAN PUSAT MUHAMMADIYAH',
+              text: n.organization_nama,
               fontSize:18,
               bold:true,
               alignment:'center',
