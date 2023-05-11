@@ -38,6 +38,19 @@
 
 .list-custom {
   background: #FFFFFF;
+  --background: #FFFFFF;
+  background-color:#FFFFFF;
+  border: 1px solid #D2D2D2;
+  box-sizing: border-box;
+  border-radius: 15px;
+  margin-bottom: 16px;
+
+}
+
+.list-custom-done {
+  background: #e9e9e9;
+  background-color:#e9e9e9;
+  --background: #e9e9e9;
   border: 1px solid #D2D2D2;
   box-sizing: border-box;
   border-radius: 15px;

@@ -317,11 +317,11 @@ export class HomePage implements OnInit {
         'Content-Type':  'application/json',
       })
     };
-
-    await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
-    this.checkCity(res);
+    
+    await this.api.post('lokasi/openstreetmap', dt).then(async res => {
+      this.checkCity(res);
     }, async error => {
-      await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(async res => {
+      await this.api.post('lokasi/mapquestapi', dt).then(async res => {
         this.locationNow = res;
         
         if(res['name'] || res['display_name']) {
@@ -365,25 +365,6 @@ export class HomePage implements OnInit {
         }
       }, async error => {
         this.openSettingLokasi();
-        // this.city = 'Yogyakarta';
-        // if(this.city != undefined) {
-        //   this.listTimes = [];
-        //   this.tempTimes1 = [];
-        //   this.tempTimes2 = [];
-        //   this.prayTime = undefined;
-        //   this.timesToday = undefined;
-        //   this.prayTime = await this.api.getToday(this.city);
-        //   this.timesToday = await this.prayTime.timings;
-
-        //   if(this.timesToday['Firstthird']) {
-        //     delete this.timesToday['Firstthird'];
-        //     delete this.timesToday['Lastthird'];
-        //   }
-        //   if(this.timesToday['Sunrise']) {
-        //     delete this.timesToday['Sunrise'];
-        //   }
-        //   this.parseTime(this.timesToday);
-        // }
       })
     });
   }

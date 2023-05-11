@@ -683,10 +683,10 @@ export class TambahPengajianPage implements OnInit {
       })
     };
 
-    await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
+    await this.api.post('lokasi/openstreetmap', dt).then(async res => {
       this.checkDetailPin(res);
     }, async error => {
-      await this.http.get('http://open.mapquestapi.com/nominatim/v1/reverse.php?key=10o857kA0hJBvz8kNChk495IHwfEwg1G&format=json&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
+      await this.api.post('lokasi/mapquestapi', dt).then(async res => {
         this.detailLocSelected = res;
         this.city = this.detailLocSelected.city.replace('Kota ', '');
       })
