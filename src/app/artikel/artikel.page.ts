@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { LoadingController, ModalController } from '@ionic/angular';
 import { ApiService } from '../services/api.service';
 import { CommonService } from '../services/common.service';
+import { LoadingService } from '../services/loading.service';
 
 @Component({
   selector: 'app-artikel',
@@ -20,11 +21,11 @@ export class ArtikelPage implements OnInit {
     public common: CommonService,
     public router:Router,
     public modalController: ModalController,
-    private loadingController: LoadingController,
+    private loadingService: LoadingService,
   ) { }
 
   ngOnInit() {
-    this.present();
+    this.loadingService.present();
     this.loading = true;
     this.serverImg = this.common.photoBaseUrl+'articles/';
     this.listArticles = [];
@@ -32,25 +33,11 @@ export class ArtikelPage implements OnInit {
     this.getAllArticles();
   }
 
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 2000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-      });
-      this.loading = false;
-    });
-  }
-
   async doRefresh(event) {
     this.loading = true;
     this.listArticles = [];
     this.listArticlesTemp = [];
+    this.loadingService.present();
     this.getAllArticles();
     setTimeout(() => {
       event.target.complete();
@@ -62,10 +49,10 @@ export class ArtikelPage implements OnInit {
       this.listArticles = res;
       this.listArticlesTemp = res;
       this.loading = false;
-      this.loadingController.dismiss();
+      this.loadingService.dismiss();
     }, error => {
       this.loading = false;
-      this.loadingController.dismiss();
+      this.loadingService.dismiss();
     })
   }
 

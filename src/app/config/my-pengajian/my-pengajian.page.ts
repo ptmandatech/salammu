@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { LoadingController, ModalController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 import { CommonService } from 'src/app/services/common.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-my-pengajian',
@@ -20,12 +21,12 @@ export class MyPengajianPage implements OnInit {
     public common: CommonService,
     public router:Router,
     public modalController: ModalController,
-    private loadingController:LoadingController
+    private loadingService: LoadingService,
   ) { }
 
   ngOnInit() {
     this.loading = true;
-    this.present();
+    this.loadingService.present();
   }
 
   ionViewWillEnter() {
@@ -33,31 +34,12 @@ export class MyPengajianPage implements OnInit {
     this.listPengajianTemp = [];
     this.cekLogin();
   }
-  
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 10000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
-      });
-      this.loading = false;
-    });
-  }
 
   async doRefresh(event) {
     this.loading = true;
     this.listPengajian = [];
     this.listPengajianTemp = [];
-    this.present();
+    this.loadingService.present();
     this.cekLogin();
     setTimeout(() => {
       event.target.complete();
@@ -76,6 +58,7 @@ export class MyPengajianPage implements OnInit {
       this.loading = false;
       this.listPengajian = [];
       this.listPengajianTemp = [];
+      this.loadingService.dismiss();
     })
   }
 
@@ -85,6 +68,7 @@ export class MyPengajianPage implements OnInit {
       this.parseUser(res);
     }, error => {
       this.loading = false;
+      this.loadingService.dismiss();
     })
   }
 
@@ -92,6 +76,7 @@ export class MyPengajianPage implements OnInit {
     for(var i=0; i<res.length; i++) {
       this.users[res[i].id] = res[i];
     }
+    this.loadingService.dismiss();
   }
 
   getAllPengajian() {
@@ -112,6 +97,7 @@ export class MyPengajianPage implements OnInit {
         this.loading = false;
       })
     }
+    this.loadingService.dismiss();
   }
 
   initializeItems(): void {

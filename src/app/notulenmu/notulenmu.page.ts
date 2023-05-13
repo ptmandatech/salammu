@@ -4,6 +4,7 @@ import { LoadingController, ModalController, ToastController } from '@ionic/angu
 import { ApiService } from '../services/api.service';
 import { CommonService } from '../services/common.service';
 import { SweetAlert } from 'sweetalert/typings/core';
+import { LoadingService } from '../services/loading.service';
 const swal: SweetAlert = require('sweetalert');
 @Component({
   selector: 'app-notulenmu',
@@ -24,32 +25,17 @@ export class NotulenmuPage implements OnInit {
     public router:Router,
     public modalController: ModalController,
     private toastController: ToastController,
-    private loadingController: LoadingController,
+    private loadingService: LoadingService,
   ) { }
 
   ngOnInit() {
-    this.present();
+    this.loadingService.present();
     this.dataLogin = JSON.parse(localStorage.getItem('salammuToken'));
     this.cekLogin();
     this.loading = true;
     this.serverImg = this.common.photoBaseUrl+'notulenmu/';
     this.listNotulenMu = [];
     this.listNotulenMuTemp = [];
-  }
-
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 500,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-      });
-      this.loading = false;
-    });
   }
 
   userData:any;
@@ -61,8 +47,10 @@ export class NotulenmuPage implements OnInit {
       this.isLoggedIn = true;
       this.parseChip();
       this.getAllNotulenmu();
+      this.loadingService.dismiss();
     }, async error => {
       this.isLoggedIn = false;
+      this.loadingService.dismiss();
     })
   }
 
@@ -116,7 +104,7 @@ export class NotulenmuPage implements OnInit {
           this.loading = false;
         }, error => {
           this.loading = false;
-          this.loadingController.dismiss();
+          this.loadingService.dismiss();
         })
       } else {
         this.api.get('notulenmu?cabang='+this.userData.cabang+'&ranting='+this.userData.ranting).then(res => {
@@ -125,7 +113,7 @@ export class NotulenmuPage implements OnInit {
           this.loading = false;
         }, error => {
           this.loading = false;
-          this.loadingController.dismiss();
+          this.loadingService.dismiss();
         })
       }
     }

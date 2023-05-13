@@ -8,6 +8,7 @@ import { CommonService } from '../services/common.service';
 import { Geolocation, Geoposition, PositionError } from '@awesome-cordova-plugins/geolocation/ngx';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Diagnostic } from '@awesome-cordova-plugins/diagnostic/ngx';
+import { LoadingService } from '../services/loading.service';
 
 @Component({
   selector: 'app-jadwal-sholat',
@@ -26,6 +27,7 @@ export class JadwalSholatPage implements OnInit {
     public alertController: AlertController,
     private diagnostic: Diagnostic,
     private loadingController: LoadingController,
+    private loadingService: LoadingService,
     private platform: Platform,
   ) { }
 
@@ -49,7 +51,7 @@ export class JadwalSholatPage implements OnInit {
 
   async ngOnInit() {
     this.daily = true;
-    this.present();
+    this.loadingService.present();
     this.loading = true;
     let date = new Date();
     this.month = Number(this.datePipe.transform(new Date(date), 'MM'));
@@ -75,25 +77,6 @@ export class JadwalSholatPage implements OnInit {
     setTimeout(() => {
       event.target.complete();
     }, 2000);
-  }
-
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 10000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
-      });
-      this.loading = false;
-    });
   }
 
   checkPermission() {
@@ -143,6 +126,7 @@ export class JadwalSholatPage implements OnInit {
       };
       this.getDetailLocation(location);
     }).catch((error) => {
+      this.loadingService.dismiss();
       console.log('Error getting location', error);
     });
   }
@@ -177,6 +161,7 @@ export class JadwalSholatPage implements OnInit {
       };
       this.getDetailLocation(location);
       resolve(pos);
+      this.loadingService.dismiss();
    }, (err: PositionError) => {
       reject(err.message);
       let city = localStorage.getItem('selectedCity');
@@ -184,6 +169,7 @@ export class JadwalSholatPage implements OnInit {
         this.city = city;
         this.getCal();
       }
+      this.loadingService.dismiss();
     });
    });
   }
@@ -201,6 +187,7 @@ export class JadwalSholatPage implements OnInit {
       this.city = city;
       this.getCal();
       this.dailyShow();
+      this.loadingService.dismiss();
       return;
     }
 
@@ -215,19 +202,24 @@ export class JadwalSholatPage implements OnInit {
             this.getCal();
             this.dailyShow();
           }
+          this.loadingService.dismiss();
         }, err => {
           this.getCityFromLocal();
         })
       }
+      this.loadingService.dismiss();
     }, async error => {
       await this.api.post('lokasi/mapquestapi', dt).then(async res => {
         this.locationNow = res;
         this.city = this.locationNow.city.replace('Kota ', '');
         this.getCal();
         this.dailyShow();
+        this.loadingService.dismiss();
       }, err => {
+        this.loadingService.dismiss();
         this.getCityFromLocal();
       })
+      this.loadingService.dismiss();
     });
   }
 
@@ -287,6 +279,7 @@ export class JadwalSholatPage implements OnInit {
         }
       }
     }
+    this.loadingService.dismiss();
   }
   
   async next(from)
@@ -440,7 +433,7 @@ export class JadwalSholatPage implements OnInit {
     this.prayTime = await this.api.getThisMonth(this.month,this.year, this.city);
     this.timesSelected = await this.prayTime;
     this.loading = false;
-
+    this.loadingService.dismiss();
   }
 
   async weeklyShow() {
@@ -466,15 +459,20 @@ export class JadwalSholatPage implements OnInit {
     this.weekly =false;
     this.monthly =true;
     let date = new Date();
-    this.today = this.datePipe.transform(new Date(date), 'dd MMM yyyy');
+    this.today = this.datePipe.transform(new Date(date), 'dd/MM/yyyy');
     this.month = Number(this.datePipe.transform(new Date(date), 'MM'));
+    
     this.year = date.getFullYear();
     this.prayTime = await this.api.getThisMonth(this.month,this.year, this.city);
+    for(var i=0; i<this.prayTime.length; i++) {
+      this.prayTime[i].date.readableOke = this.datePipe.transform(new Date(this.prayTime[i].date.readable), 'dd/MM/yyyy');
+    }
     this.timesSelected = await this.prayTime;
+    
     this.firstDateHeader = this.timesSelected[0].date.readable;
     this.lastDateHeader = this.timesSelected[this.timesSelected.length-1].date.readable;
     
-    this.parseTime(this.timesSelected, 'monthly')
+    this.parseTime(this.timesSelected, 'monthly');
 
   }
 
@@ -532,7 +530,7 @@ export class JadwalSholatPage implements OnInit {
       }
     }
     if(from != 'weekly') {
-      this.present();
+      this.loadingService.present();
       setTimeout(() => {
         this.scrollTo('selected');
       }, 1000);
@@ -545,6 +543,7 @@ export class JadwalSholatPage implements OnInit {
        if (element != null) {
           element.scrollIntoView({ behavior: 'smooth' });
        }
+       this.loadingService.dismiss();
     }, 500);
   }
 

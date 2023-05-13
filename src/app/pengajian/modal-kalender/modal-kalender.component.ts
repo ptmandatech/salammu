@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController, ModalController, NavParams } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-modal-kalender',
@@ -21,35 +22,16 @@ export class ModalKalenderComponent implements OnInit {
     public navParams: NavParams,
     public modalController: ModalController,
     private datePipe: DatePipe,
-    private loadingController: LoadingController,
+    private loadingService: LoadingService,
   ) { }
 
   ngOnInit() {
     this.loading = true;
-    this.present();
+    this.loadingService.present();
     this.dateSelected = this.navParams.get('data');
     this.times = this.navParams.get('times');
     let datetime = this.datePipe.transform(new Date(this.dateSelected), 'yyyy-MM-dd');
     this.getPengajian(datetime);
-  }
-
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 2000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
-      });
-      this.loading = false;
-    });
   }
 
   getPengajian(datetime) {
@@ -57,6 +39,7 @@ export class ModalKalenderComponent implements OnInit {
       this.parseData(res, datetime);
     }, error => {
       this.loading = false;
+      this.loadingService.dismiss();
     })
   }
 
@@ -71,6 +54,7 @@ export class ModalKalenderComponent implements OnInit {
       }
     }
     this.loading = false;
+    this.loadingService.dismiss();
   }
 
   detailPengajian(n) {

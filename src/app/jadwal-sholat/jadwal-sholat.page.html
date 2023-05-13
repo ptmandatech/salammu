@@ -153,12 +153,12 @@
         <ion-grid *ngIf="monthly" class="ion-no-padding vertical-line">
 
           <ion-row class="ion-align-items-center vert-border" *ngFor="let n of timesSelected">
-            <ion-col class="{{n.date.readable == today ? 'cal-cell bg-gray':'cal-cell cell-monthly'}}" id="{{n.date.readable == today ? 'selected':''}}">
+            <ion-col class="{{n.date.readableOke == today ? 'cal-cell bg-gray':'cal-cell cell-monthly'}}" id="{{n.date.readableOke == today ? 'selected':''}}">
               <div class="centered">
                 <ion-text class="cal-date fs-10"><b>{{n.date.readable | date:'dd'}}</b> <br> {{n.date.readable | date:'MM/yy'}}</ion-text>
               </div>
             </ion-col>
-            <ion-col *ngFor="let t of n.timesParsed" class="{{n.date.readable == today ? 'cal-cell bg-gray':'cal-cell'}}">
+            <ion-col *ngFor="let t of n.timesParsed" class="{{n.date.readableOke == today ? 'cal-cell bg-gray':'cal-cell'}}">
               <div class="centered">
                 <ion-text class="cal-date fs-10">{{t.time}}</ion-text>
               </div>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController, NavParams } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-modal-peta',
@@ -15,6 +16,7 @@ export class ModalPetaComponent implements OnInit {
     public http:HttpClient, 
     public router: Router,
     public navParams: NavParams,
+    public api: ApiService,
     public modalController: ModalController,
   ) { }
 
@@ -35,17 +37,13 @@ export class ModalPetaComponent implements OnInit {
   locationNow:any;
   city:any;
   async getDetailLocation(dt) {
-    this.httpOption = {
-      headers: new HttpHeaders({
-        'Content-Type':  'application/json',
-      })
-    };
-
-    await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat +'&lon=' + dt.long, this.httpOption).subscribe(async res => {
+    await this.api.post('lokasi/openstreetmap', dt).then(async res => {
       this.checkCity(res);
     }, async error => {
-      await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
-        this.checkCity(res);
+      await this.api.post('lokasi/mapquestapi', dt).then(res => {
+        // this.checkCity(res);
+        this.locationNow = res;
+        this.city = this.locationNow.address.state_district.replace('Kota ', '');
       })
     });
 

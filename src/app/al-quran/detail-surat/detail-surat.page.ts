@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController, IonContent, LoadingController, ModalController, ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 import { ModalSuratComponent } from '../modal-surat/modal-surat.component';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-detail-surat',
@@ -24,10 +25,12 @@ export class DetailSuratPage implements OnInit {
     private loadingController: LoadingController,
     private toastController: ToastController,
     public routes:ActivatedRoute,
+    private loadingService: LoadingService,
   ) { }
 
   ngOnInit() {
-    this.present();
+    // this.present();
+    this.loadingService.present();
     this.id = this.routes.snapshot.paramMap.get('id');
     let dt = JSON.parse(localStorage.getItem('detailSurat-'+this.id));
     this.detailSurat = dt == null ? {}:dt;
@@ -48,36 +51,6 @@ export class DetailSuratPage implements OnInit {
     this.ngOnInit();
   }
 
-  loaderCounter = 0;
-  async present() {
-    this.loaderCounter = this.loaderCounter + 1;
-    if(this.loaderCounter == 1){
-      this.loading = true;
-      return await this.loadingController.create({
-        spinner: 'crescent',
-        duration: 10000,
-        message: 'Sedang menyiapkan data...',
-        cssClass: 'custom-class custom-loading'
-      }).then(a => {
-        a.present().then(() => {
-          console.log('presented');
-          if (!this.loading) {
-            this.loading = false;
-            this.loaderCounter = 0;
-            a.dismiss().then(() => console.log('abort presenting'));
-          }
-        });
-        this.loading = false;
-      });
-    }
-  }
-
-  async dismiss() {
-    this.loaderCounter = 0;
-    this.loading = false;
-    await this.loadingController.dismiss();
-  }
-  
   scrollTo(e:string) {
     setTimeout(() => {
        const element = document.getElementById(e);
@@ -91,11 +64,13 @@ export class DetailSuratPage implements OnInit {
   {    
     this.api.me().then(async res=>{
       this.userData = res;
+      this.loadingService.dismiss();
     }, async error => {
       this.loading = false;
       localStorage.removeItem('userSalammu');
       localStorage.removeItem('salammuToken');
       this.userData = undefined;
+      this.loadingService.dismiss();
     })
   }
 
@@ -106,9 +81,9 @@ export class DetailSuratPage implements OnInit {
       localStorage.setItem('detailSurat-'+this.id, JSON.stringify(this.detailSurat));
       let dt = JSON.parse(localStorage.getItem('detailSurat-'+this.id));
       this.detailSurat = dt == null ? {}:dt;
-      this.dismiss();
+      this.loadingService.dismiss();
     }, err => {
-      this.dismiss();
+      this.loadingService.dismiss();
     })
   }
 
@@ -194,8 +169,9 @@ export class DetailSuratPage implements OnInit {
   }
 
   bacaSurat(n) {
-    this.present();
+    this.loadingService.present();
     this.router.navigate(['/al-quran/detail-surat', n.nomor]);
+    this.loadingService.dismiss();
   }
 
 }

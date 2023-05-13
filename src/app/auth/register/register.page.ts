@@ -74,10 +74,24 @@ export class RegisterPage implements OnInit {
     }
   }
 
-  selectEvent(val) {
+  async selectEvent(val) {
     this.form.patchValue({
       cabang: val
     })
+    this.listRanting = [];
+    this.listRantingTemp = [];
+    this.gettingRanting = true;
+    this.form.patchValue({
+      ranting: null
+    })
+    await this.api.get('sicara/getAllPRM?pcm_id='+val).then(res=>{ 
+      this.listRanting = res;
+      this.listRantingTemp = res;
+      this.gettingRanting = false;
+    }, err => {
+      this.loading = false;
+      this.gettingRanting = false;
+    });
   }
 
   selectEventRanting(val) {

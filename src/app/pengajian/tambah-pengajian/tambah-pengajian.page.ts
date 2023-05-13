@@ -28,6 +28,7 @@ import Geocoder from 'ol-geocoder';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { LoadingService } from 'src/app/services/loading.service';
 useGeographic();
 
 @Component({
@@ -59,7 +60,7 @@ export class TambahPengajianPage implements OnInit {
     private diagnostic: Diagnostic,
     private formBuilder: FormBuilder,
     private platform: Platform,
-    private loadingController: LoadingController,
+    private loadingService: LoadingService,
     public alertController: AlertController,
     private toastController: ToastController,
     private datePipe: DatePipe,
@@ -98,7 +99,7 @@ export class TambahPengajianPage implements OnInit {
 
   minDate:any;
   async ngOnInit() {
-    this.present();
+    this.loadingService.present();
     this.cekLogin();
     await this.getListCabang();
     await this.getListRanting();
@@ -112,37 +113,18 @@ export class TambahPengajianPage implements OnInit {
       this.generateMap(undefined);
     }
   }
-  
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 2000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
-      });
-      this.loading = false;
-    });
-  }
 
   cekLogin()
   {
     this.api.me().then(async res=>{
       this.userData = res;
-      await this.loadingController.dismiss();
+      this.loadingService.dismiss();
     }, async error => {
       this.loading = false;
       localStorage.removeItem('userSalammu');
       localStorage.removeItem('salammuToken');
       this.userData = undefined;
-      await this.loadingController.dismiss();
+      this.loadingService.dismiss();
     })
   }
 
@@ -155,12 +137,14 @@ export class TambahPengajianPage implements OnInit {
         this.listCabang = res;
         this.listCabangTemp = res;
         this.gettingCabang = false;
+        this.loadingService.dismiss();
       }, err => {
         this.loading = false;
+        this.loadingService.dismiss();
         this.gettingCabang = false;
       });
     } catch {
-
+      this.loadingService.dismiss();
     }
   }
 
@@ -173,12 +157,14 @@ export class TambahPengajianPage implements OnInit {
         this.listRanting = res;
         this.listRantingTemp = res;
         this.gettingRanting = false;
+        this.loadingService.dismiss();
       }, err => {
         this.loading = false;
         this.gettingRanting = false;
+        this.loadingService.dismiss();
       });
     } catch {
-
+      this.loadingService.dismiss();
     }
   }
 
@@ -213,7 +199,7 @@ export class TambahPengajianPage implements OnInit {
 
   locationNow:any;
   async getDetailPengajian() {
-    this.present();
+    this.loadingService.present();
     await this.api.get('pengajian/find/'+this.id).then(res => {
       this.pengajianData = res;
       if(this.pengajianData.pin != null) {
@@ -249,6 +235,9 @@ export class TambahPengajianPage implements OnInit {
           created_by: this.pengajianData.created_by,
         });
       }
+      this.loadingService.dismiss();
+    }, err => {
+      this.loadingService.dismiss();
     })
   }
 

@@ -4,6 +4,7 @@ import { LoadingController, ModalController, NavParams, ToastController } from '
 import { ApiService } from '../../services/api.service';
 import { CommonService } from '../../services/common.service';
 import { TambahPesertaPage } from '../tambah-peserta/tambah-peserta.page';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-list-hadir',
@@ -26,12 +27,12 @@ export class ListHadirPage implements OnInit {
     public modalController: ModalController,
     private toastController: ToastController,
     public routes:ActivatedRoute,
-    private loadingController: LoadingController,
+    private loadingService: LoadingService,
     private navParams: NavParams
   ) { }
 
   ngOnInit() {
-    this.present();
+    this.loadingService.present();
     this.id = this.navParams.get('id');
     this.action = this.navParams.get('action');
     this.dataLogin = JSON.parse(localStorage.getItem('salammuToken'));
@@ -48,21 +49,6 @@ export class ListHadirPage implements OnInit {
     this.ngOnInit();
   }
 
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 500,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-      });
-      this.loading = false;
-    });
-  }
-
   userData:any;
   isLoggedIn:boolean = false;
   cekLogin()
@@ -70,8 +56,10 @@ export class ListHadirPage implements OnInit {
     this.api.me().then(async res=>{
       this.userData = res;
       this.isLoggedIn = true;
+      this.loadingService.dismiss();
     }, async error => {
       this.isLoggedIn = false;
+      this.loadingService.dismiss();
     })
   }
 
@@ -91,7 +79,7 @@ export class ListHadirPage implements OnInit {
           this.parseData();
         }, error => {
           this.loading = false;
-          this.loadingController.dismiss();
+          this.loadingService.dismiss();
         })
       } else {
         this.api.get('users/getAll?cabang='+this.dataLogin.cabang_id+'&ranting='+this.dataLogin.ranting_id).then(res => {
@@ -100,7 +88,7 @@ export class ListHadirPage implements OnInit {
           this.parseData();
         }, error => {
           this.loading = false;
-          this.loadingController.dismiss();
+          this.loadingService.dismiss();
         })
       }
     }
@@ -124,6 +112,8 @@ export class ListHadirPage implements OnInit {
         }
       }
     }
+    this.loading = false;
+    this.loadingService.dismiss();
   }
 
   initializeItems(): void {
@@ -166,6 +156,11 @@ export class ListHadirPage implements OnInit {
     this.api.get('notulenmu/find/'+this.id).then(res => {
       this.notulenData = res;
       this.notulenData.notulenmu_participantsTemp = this.notulenData.notulenmu_participants;
+      this.loading = false;
+      this.loadingService.dismiss();
+    }, err => {
+      this.loading = false;
+      this.loadingService.dismiss();
     })
   }
 

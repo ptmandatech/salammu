@@ -4,6 +4,7 @@ import { ModalController, LoadingController } from '@ionic/angular';
 import { ModalPetaComponent } from 'src/app/pengajian/modal-peta/modal-peta.component';
 import { ApiService } from 'src/app/services/api.service';
 import { CommonService } from 'src/app/services/common.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-daerah',
@@ -26,11 +27,11 @@ export class DaerahPage implements OnInit {
     public router:Router,
     public routes:ActivatedRoute,
     public modalController: ModalController,
-    private loadingController: LoadingController,
+    private loadingService: LoadingService,
   ) { }
 
   ngOnInit() {
-    this.present();
+    this.loadingService.present();
     this.loading = true;
     this.id = this.routes.snapshot.paramMap.get('id');
     this.cekLogin();
@@ -44,31 +45,14 @@ export class DaerahPage implements OnInit {
     }, 2000);
   }
 
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 10000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
-      });
-      this.loading = false;
-    });
-  }
-
   cekLogin()
   {
     this.api.me().then(res=>{
       this.userData = res;
+      this.loadingService.dismiss();
     }, error => {
       console.log(error);
+      this.loadingService.dismiss();
     })
   }
 
@@ -77,6 +61,8 @@ export class DaerahPage implements OnInit {
       this.dataDaerah = res;
       this.loading = false;
       this.getCabang();
+    }, err => {
+      this.loadingService.dismiss();
     });
   }
 
@@ -90,8 +76,10 @@ export class DaerahPage implements OnInit {
         this.syncCabang();
       }
       this.loading = false;
+      this.loadingService.dismiss();
     }, error => {
       this.loading = false;
+      this.loadingService.dismiss();
     })
   }
 

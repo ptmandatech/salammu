@@ -4,6 +4,7 @@ import { LoadingController, ModalController, ToastController } from '@ionic/angu
 import { LoginPage } from '../auth/login/login.page';
 import { ApiService } from '../services/api.service';
 import { CommonService } from '../services/common.service';
+import { LoadingService } from '../services/loading.service';
 
 @Component({
   selector: 'app-tanya-ustad',
@@ -28,12 +29,12 @@ export class TanyaUstadPage implements OnInit {
     public router:Router,
     public modalController: ModalController,
     private toastController: ToastController,
-    private loadingController: LoadingController,
+    private loadingService: LoadingService,
   ) { }
 
   ngOnInit() {
     this.loading = true;
-    this.present();
+    this.loadingService.present();
     this.serverImg = this.common.photoBaseUrl+'pediamu/';
     this.serverImgUser = this.common.photoBaseUrl+'users/';
     this.listUstadz = [];
@@ -50,27 +51,12 @@ export class TanyaUstadPage implements OnInit {
     this.loading = true;
     this.listUstadz = [];
     this.listUstadzTemp = [];
-    this.present();
+    this.loadingService.present();
     this.getAllUstadz();
     this.cekLogin();
     setTimeout(() => {
       event.target.complete();
     }, 2000);
-  }
-
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 10000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-      });
-      this.loading = false;
-    });
   }
 
   cekLogin()
@@ -79,9 +65,9 @@ export class TanyaUstadPage implements OnInit {
       this.userData = res;
       console.log(res)
       this.getAvailableRoomChats();
-      this.loadingController.dismiss();
+      this.loadingService.dismiss();
     }, error => {
-      this.loadingController.dismiss();
+      this.loadingService.dismiss();
     })
   }
 
@@ -89,13 +75,12 @@ export class TanyaUstadPage implements OnInit {
     this.listUstadz = [];
     this.listUstadzTemp = [];
     this.api.get('ustadzmu').then(res => {
-      console.log(res)
       this.listUstadz = res;
       this.listUstadzTemp = res;
-      this.loadingController.dismiss();
+      this.loadingService.dismiss();
     }, error => {
       this.loading = false;
-      this.loadingController.dismiss();
+      this.loadingService.dismiss();
     })
   }
 
@@ -177,9 +162,9 @@ export class TanyaUstadPage implements OnInit {
     this.unreadTotal = 0;
     this.listRoomChats = [];
     this.listRoomChatsTemp = [];
+    this.loadingService.present();
     this.api.get('chattings/getRooms/'+this.userData.id).then(res => {
       this.listRoomChats = res;
-      console.log(res)
       this.listRoomChatsTemp = res;
       this.listRoomChats.forEach(data => {
         if(this.userData.role == 'ustadz') {
@@ -192,6 +177,9 @@ export class TanyaUstadPage implements OnInit {
           }
         }
       });
+      this.loadingService.dismiss();
+    }, err => {
+      this.loadingService.dismiss();
     })
   }
 

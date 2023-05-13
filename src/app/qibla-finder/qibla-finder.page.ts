@@ -5,6 +5,7 @@ import { ApiService } from '../services/api.service';
 import { CommonService } from '../services/common.service';
 import { DeviceOrientation, DeviceOrientationCompassHeading } from '@awesome-cordova-plugins/device-orientation/ngx';
 import { Geolocation, Geoposition, PositionError } from '@awesome-cordova-plugins/geolocation/ngx';
+import { LoadingService } from '../services/loading.service';
 
 @Component({
   selector: 'app-qibla-finder',
@@ -21,40 +22,25 @@ export class QiblaFinderPage implements OnInit {
     public router:Router,
     public modalController: ModalController,
     private geolocation: Geolocation,
-    private loadingController: LoadingController,
+    private loadingService: LoadingService,
     private deviceOrientation: DeviceOrientation,
   ) { }
 
   ngOnInit() {
     this.loading = true;
-    this.present();
+    this.loadingService.present();
     this.city = localStorage.getItem('selectedCity');
     this.initOrientation();
   }
 
   async doRefresh(event) {
     this.loading = true;
-    this.present();
+    this.loadingService.present();
     this.city = localStorage.getItem('selectedCity');
     this.initOrientation();
     setTimeout(() => {
       event.target.complete();
     }, 2000);
-  }
-
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 2000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-      });
-      this.loading = false;
-    });
   }
 
   // Initial Kaaba location that we've got from google maps
@@ -72,11 +58,17 @@ export class QiblaFinderPage implements OnInit {
         const currentQibla = res.magneticHeading-this.getQiblaPosition();
         this.qiblaLocation = currentQibla > 360 ? currentQibla%360 : currentQibla;
       }
+      this.loadingService.dismiss();
+    }, err => {
+      this.loadingService.dismiss();
     });
 
     // Watch current location
     this.geolocation.watchPosition().subscribe(async (pos: Geoposition) => {
       this.currentLocation = pos;
+      this.loadingService.dismiss();
+    }, err => {
+      this.loadingService.dismiss();
     });
   }
 

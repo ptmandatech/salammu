@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { ApiService } from '../services/api.service';
 import { CommonService } from '../services/common.service';
+import { LoadingService } from '../services/loading.service';
 
 @Component({
   selector: 'app-video',
@@ -19,7 +20,7 @@ export class VideoPage implements OnInit {
     public api: ApiService,
     public common: CommonService,
     public router:Router,
-    private loadingController: LoadingController,
+    private loadingService: LoadingService,
   ) { }
 
   ngOnInit() {
@@ -27,7 +28,7 @@ export class VideoPage implements OnInit {
     this.serverImg = this.common.photoBaseUrl+'videos/';
     this.listVideos = [];
     this.listVideosTemp = [];
-    this.present();
+    this.loadingService.present();
     this.getAllVideos();
   }
 
@@ -35,26 +36,11 @@ export class VideoPage implements OnInit {
     this.loading = true;
     this.listVideos = [];
     this.listVideosTemp = [];
-    this.present();
+    this.loadingService.present();
     this.getAllVideos();
     setTimeout(() => {
       event.target.complete();
     }, 2000);
-  }
-
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 2000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-      });
-      this.loading = false;
-    });
   }
 
   getAllVideos() {
@@ -62,10 +48,10 @@ export class VideoPage implements OnInit {
       this.listVideos = res;
       this.listVideosTemp = res;
       this.loading = false;
-      this.loadingController.dismiss();
+      this.loadingService.dismiss();
     }, error => {
       this.loading = false;
-      this.loadingController.dismiss();
+      this.loadingService.dismiss();
     })
   }
 

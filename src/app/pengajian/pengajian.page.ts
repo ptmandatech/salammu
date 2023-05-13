@@ -29,6 +29,7 @@ import VectorLayer from 'ol/layer/Vector';
 import PluggableMap from 'ol/PluggableMap';
 import TileWMS from 'ol/source/TileWMS';
 import Geocoder from 'ol-geocoder';
+import { LoadingService } from '../services/loading.service';
 useGeographic();
 
 @Component({
@@ -64,6 +65,7 @@ export class PengajianPage implements OnInit {
     public modalController: ModalController,
     public actionSheetController: ActionSheetController,
     public http:HttpClient, 
+    private loadingService: LoadingService,
     public alertController: AlertController,
     private diagnostic: Diagnostic,
     private loadingController: LoadingController,
@@ -72,7 +74,7 @@ export class PengajianPage implements OnInit {
 
   async ngOnInit() {
     this.loadingGetMap = true;
-    this.present();
+    this.loadingService.present();
     this.checkPermission();
     this.cekLogin();
     this.getAllPengajian();
@@ -90,20 +92,6 @@ export class PengajianPage implements OnInit {
     setTimeout(() => {
       event.target.complete();
     }, 2000);
-  }
-
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 2000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-      });
-    });
   }
 
   checkPermission() {
@@ -155,6 +143,7 @@ export class PengajianPage implements OnInit {
       this.longitude = resp.coords.longitude;
       this.getDetailLocation(location);
     }).catch((error) => {
+      this.loadingService.dismiss();
       console.log('Error getting location', error);
     });
   }
@@ -221,12 +210,14 @@ export class PengajianPage implements OnInit {
           this.getCityFromLocal();
         })
       }
+      this.loadingService.dismiss();
     }, async error => {
-      await this.http.get('https://nominatim.openstreetmap.org/reverse?format=geojson&lat=' + dt.lat + '&lon=' + dt.long, this.httpOption).subscribe(res => {
+      await this.api.post('lokasi/openstreetmap', dt).then(res => {
         this.checkCity(res);
       }, err => {
         this.getCityFromLocal();
       })
+      this.loadingService.dismiss();
     });
 
     let city = localStorage.getItem('selectedCity');
@@ -356,6 +347,7 @@ export class PengajianPage implements OnInit {
       this.pengajian = res;
       this.parsePengajianAwal();
     }, error => {
+      this.loadingService.dismiss();
       this.loading = false;
     })
   }
@@ -375,7 +367,7 @@ export class PengajianPage implements OnInit {
         this.dataPengajian[Number(tanggal)+'_'+Number(bulan)+'_'+tahun].push(this.pengajian[i]);
       }
     }
-    this.loadingController.dismiss();
+    this.loadingService.dismiss();
   }
 
   // parseDataPengajian(datetime, tanggal, bulan, tahun) {
@@ -416,8 +408,8 @@ export class PengajianPage implements OnInit {
       componentProps: {data:dataPengajian},
       mode: "md",
       cssClass: 'modal-class',
-      initialBreakpoint: 0.5,
-      breakpoints: [0, 0.5, 1],
+      initialBreakpoint: 0.6,
+      breakpoints: [0, 0.6, 1],
     });
     return await modal.present();
   }
@@ -601,6 +593,7 @@ export class PengajianPage implements OnInit {
       this.mapPengajian.setTarget(document.getElementById('mapPengajian'));
     }, 1000);
     this.loadingGetMap = false;
+    this.loadingService.dismiss();
   }
 
 }

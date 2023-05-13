@@ -4,6 +4,7 @@ import { NavigationExtras, Router } from '@angular/router';
 import { LoadingController, ModalController } from '@ionic/angular';
 import { ApiService } from '../services/api.service';
 import { CommonService } from '../services/common.service';
+import { LoadingService } from '../services/loading.service';
 
 @Component({
   selector: 'app-ustadmu',
@@ -21,12 +22,12 @@ export class UstadmuPage implements OnInit {
     public common: CommonService,
     public router:Router,
     public modalController: ModalController,
-    private loadingController: LoadingController,
+    private loadingService: LoadingService,
   ) { }
 
   ngOnInit() {
     this.loading = true;
-    this.present();
+    this.loadingService.present();
     this.serverImg = this.common.photoBaseUrl+'ustadzmu/';
     this.listUstadmu = [];
     this.listUstadmuTemp = [];
@@ -58,36 +59,21 @@ export class UstadmuPage implements OnInit {
     this.loading = true;
     this.listUstadmu = [];
     this.listUstadmuTemp = [];
-    this.present();
+    this.loadingService.present();
     this.getAllPediamu();
     setTimeout(() => {
       event.target.complete();
     }, 2000);
   }
 
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 10000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-      });
-      this.loading = false;
-    });
-  }
-
   getAllPediamu() {
     this.api.get('ustadzmu').then(res => {
       this.listUstadmu = res;
       this.listUstadmuTemp = res;
-      this.loadingController.dismiss();
+      this.loadingService.dismiss();
     }, error => {
       this.loading = false;
-      this.loadingController.dismiss();
+      this.loadingService.dismiss();
     })
   }
 

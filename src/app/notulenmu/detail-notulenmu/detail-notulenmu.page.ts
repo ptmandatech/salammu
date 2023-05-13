@@ -17,6 +17,7 @@ import { AndroidPermissions } from '@awesome-cordova-plugins/android-permissions
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@awesome-cordova-plugins/file-transfer/ngx';
 import { HTTP } from '@awesome-cordova-plugins/http/ngx';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { LoadingService } from 'src/app/services/loading.service';
 @Component({
   selector: 'app-detail-notulenmu',
   templateUrl: './detail-notulenmu.page.html',
@@ -35,7 +36,7 @@ export class DetailNotulenmuPage implements OnInit {
     public common: CommonService,
     public actionSheetController:ActionSheetController,
     public modalController: ModalController,
-    private loadingController: LoadingController,
+    private loadingService: LoadingService,
     private toastController: ToastController,
     public routes:ActivatedRoute,
     private file: File,
@@ -50,31 +51,13 @@ export class DetailNotulenmuPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.present();
+    this.loadingService.present();
     this.id = this.routes.snapshot.paramMap.get('id');
     this.serverImg = this.common.photoBaseUrl+'notulenmu/';
     if(this.id != 0) {
       this.getDetailNotulen();
     }
   } 
-  
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 1000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
-      });
-      this.loading = false;
-    });
-  }
 
   getDetailNotulen() {
     this.api.get('notulenmu/find/'+this.id).then(res => {
@@ -82,7 +65,9 @@ export class DetailNotulenmuPage implements OnInit {
       if(this.notulenData.images != '') {
         this.notulenData.images = JSON.parse(this.notulenData.images);
       }
-      
+      this.loadingService.dismiss();
+    }, err => {
+      this.loadingService.dismiss();
     })
   }
 
@@ -90,7 +75,7 @@ export class DetailNotulenmuPage implements OnInit {
   pdfObj:any;
   async export(n)
   {
-    this.present();
+    this.loadingService.present();
     let participants = [];
     let lampiran = [];
     for(var i=0; i<n.notulenmu_participants.length; i++) {
@@ -195,7 +180,7 @@ export class DetailNotulenmuPage implements OnInit {
   }
 
   getBase64ImageFromURL(url) {
-    const corsAnywhereUrl = 'https://cors-anywhere.herokuapp.com/' + url;
+    const corsAnywhereUrl = 'https://corsproxy.io/?' + url;
     return new Promise((resolve, reject) => {
       var img = new Image();
       img.setAttribute("crossOrigin", "anonymous");
@@ -218,6 +203,48 @@ export class DetailNotulenmuPage implements OnInit {
         resolve(dataURL);
       };
       img.onerror = error => {
+        this.loadingService.dismiss();
+        let dt = this.getBase64ImageFromURLOtherUrl(url);
+        resolve(dt);
+      };
+      img.src = corsAnywhereUrl;
+    });
+  }
+
+  getBase64ImageFromURLOtherUrl(url) {
+    const corsAnywhereUrl = 'https://proxy.cors.sh/' + url;
+    return new Promise((resolve, reject) => {
+      var img = new Image();
+      img.setAttribute("crossOrigin", "anonymous");
+      img.onload = () => {
+        var canvas = document.createElement("canvas");
+        // Mendapatkan ukuran asli gambar
+        const originalWidth = img.width;
+        const originalHeight = img.height;
+      
+        // Menetapkan ukuran baru untuk gambar (50%)
+        const newWidth = originalWidth / 2;
+        const newHeight = originalHeight / 2;
+        
+        canvas.width = newWidth;
+        canvas.height = newHeight;
+
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, originalWidth, originalHeight, 0, 0, newWidth, newHeight);
+        var dataURL = canvas.toDataURL("image/png");
+        resolve(dataURL);
+      };
+      img.onerror = error => {
+        this.toastController
+          .create({
+            message: JSON.stringify(error),
+            duration: 1000,
+            color: "danger",
+          })
+          .then((toastEl) => {
+            toastEl.present();
+          });
+        this.loadingService.dismiss();
         reject(error);
       };
       img.src = corsAnywhereUrl;
@@ -225,7 +252,7 @@ export class DetailNotulenmuPage implements OnInit {
   }
 
   cekPermissions() {
-    if (this.platform.is('android')) {
+    if (this.device.platform == "Android") {
       this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE).then(
         result => console.log('Has permission?',result.hasPermission),
         err => this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE)
@@ -235,14 +262,16 @@ export class DetailNotulenmuPage implements OnInit {
   
       this.file.checkDir(this.file.externalDataDirectory, 'Download').then(res => {
         console.log('sudah ada')
+        this.loadingService.dismiss();
       }).catch(error => {
         this.file.createDir(this.file.externalDataDirectory, 'Download', true);
+        this.loadingService.dismiss();
       })
     }
   }
 
   downloadPdf(n) {
-    this.present();
+    this.loadingService.present();
     const fileTransfer: FileTransferObject = this.fileTransfer.create();
     if (this.device.platform == "Android") {
       this.pdfObj.getBuffer(async (buffer) => {
@@ -263,16 +292,29 @@ export class DetailNotulenmuPage implements OnInit {
           var msg = name + ' - SalamMU';
           this.socialSharing.share(msg, 'notulenmu', fileEntry.nativeURL).then(() => {
             // Sharing via email is possible
+            this.loadingService.dismiss();
           }).catch(() => {
             // Sharing via email is not possible
+            this.loadingService.dismiss();
           });
         }).catch(error => {
-          alert(JSON.stringify(error));
+          this.loadingService.dismiss();
+          this.toastController
+          .create({
+            message: JSON.stringify(error),
+            duration: 1000,
+            color: "danger",
+          })
+          .then((toastEl) => {
+            toastEl.present();
+          });
         })
       });
     } else {
       // On a browser simply use download!
-      this.pdfObj.download();
+      var name = 'notulenmu_'+n.title+'.pdf';
+      this.pdfObj.download(name);
+      this.loadingService.dismiss();
     }
   }
 

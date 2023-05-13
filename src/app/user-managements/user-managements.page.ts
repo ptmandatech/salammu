@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { LoadingController, ToastController } from '@ionic/angular';
 import { ApiService } from '../services/api.service';
 import { CommonService } from '../services/common.service';
+import { LoadingService } from '../services/loading.service';
 
 @Component({
   selector: 'app-user-managements',
@@ -20,12 +21,12 @@ export class UserManagementsPage implements OnInit {
     public api: ApiService,
     public common: CommonService,
     private toastController: ToastController,
-    private loadingController: LoadingController,
+    private loadingService: LoadingService,
     public router:Router,
   ) { }
 
   ngOnInit() {
-    this.present();
+    this.loadingService.present();
     this.loading = true;
   }
 
@@ -40,26 +41,11 @@ export class UserManagementsPage implements OnInit {
     this.loading = true;
     this.listUsers = [];
     this.listUsersTemp = [];
-    this.present();
+    this.loadingService.present();
     this.cekLogin();
     setTimeout(() => {
       event.target.complete();
     }, 2000);
-  }
-
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 10000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-      });
-      this.loading = false;
-    });
   }
 
   cekLogin()
@@ -72,6 +58,7 @@ export class UserManagementsPage implements OnInit {
       localStorage.removeItem('salammuToken');
       this.router.navigate(['/home']);
       console.log(error)
+      this.loadingService.dismiss();
     })
   }
 
@@ -80,10 +67,10 @@ export class UserManagementsPage implements OnInit {
       this.listUsers = res;
       this.listUsersTemp = res;
       this.loading = false;
-      this.loadingController.dismiss();
+      this.loadingService.dismiss();
     }, error => {
       this.loading = false;
-      this.loadingController.dismiss();
+      this.loadingService.dismiss();
     })
   }
 

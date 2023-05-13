@@ -5,6 +5,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { ImageUploaderPage } from 'src/app/image-uploader/image-uploader.page';
 import { CommonService } from 'src/app/services/common.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-tambah-banner',
@@ -26,7 +27,7 @@ export class TambahBannerPage implements OnInit {
     public actionSheetController:ActionSheetController,
     public modalController: ModalController,
     public routes:ActivatedRoute,
-    private loadingController: LoadingController,
+    private loadingService: LoadingService,
   ) { }
 
   ngOnInit() {
@@ -42,6 +43,9 @@ export class TambahBannerPage implements OnInit {
     this.api.get('banners/find/'+this.id).then(res => {
       this.bannerData = res;
       this.imageNow = this.serverImg+this.bannerData.image;
+      this.loadingService.dismiss();
+    }, err => {
+      this.loadingService.dismiss();
     })
   }
 
@@ -76,8 +80,12 @@ export class TambahBannerPage implements OnInit {
       resultType: CameraResultType.DataUrl,
       source: (from == 'photo' ? CameraSource.Camera:CameraSource.Photos)
     });
-    this.loadingAlert();
+    this.loadingService.present();
     this.showImageUploader(image.dataUrl, from);
+    var that = this;
+    setTimeout(function () {
+      that.loadingService.dismiss();
+    }, 3000);
   }
 
   image:any;
@@ -94,26 +102,10 @@ export class TambahBannerPage implements OnInit {
       {
         this.image = result.data;
       } else {
-        this.loadingController.dismiss();
+        this.loadingService.dismiss();
       } 
     });
     return await modal.present();
-  }
-
-  async loadingAlert() {
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      message: 'Mohon Tunggu...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-        var that = this;
-        setTimeout(function () {
-          that.loadingController.dismiss();
-        }, 3000);
-      });
-    });
   }
 
   async uploadPhoto()

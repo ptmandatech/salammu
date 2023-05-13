@@ -5,6 +5,7 @@ import { ActionSheetController, ModalController, LoadingController, ToastControl
 import { ImageUploaderPage } from 'src/app/image-uploader/image-uploader.page';
 import { ApiService } from 'src/app/services/api.service';
 import { CommonService } from 'src/app/services/common.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-tambah-user',
@@ -25,13 +26,13 @@ export class TambahUserPage implements OnInit {
     public common: CommonService,
     public actionSheetController:ActionSheetController,
     public modalController: ModalController,
-    private loadingController: LoadingController,
+    private loadingService: LoadingService,
     private toastController: ToastController,
     public routes:ActivatedRoute,
   ) { }
 
   ngOnInit() {
-    this.present();
+    this.loadingService.present();
     this.id = this.routes.snapshot.paramMap.get('id');
     this.serverImg = this.common.photoBaseUrl+'users/';
     if(this.id != 0) {
@@ -39,26 +40,8 @@ export class TambahUserPage implements OnInit {
       this.getDetailUser();
     } else {
       this.id = new Date().getTime().toString();
+      this.loadingService.dismiss();
     }
-  }
-
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 10000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
-      });
-      this.loading = false;
-    });
   }
 
   getDetailUser() {
@@ -70,6 +53,9 @@ export class TambahUserPage implements OnInit {
         this.userData.editor = true;
       }
       this.uploadImg = false;
+      this.loadingService.dismiss();
+    }, err => {
+      this.loadingService.dismiss();
     })
   }
 
@@ -104,8 +90,9 @@ export class TambahUserPage implements OnInit {
       resultType: CameraResultType.DataUrl,
       source: (from == 'photo' ? CameraSource.Camera:CameraSource.Photos)
     });
-    this.loadingAlert();
+    this.loadingService.present();
     this.showImageUploader(image.dataUrl, from);
+    this.loadingService.dismiss();
   }
 
   image:any;
@@ -124,26 +111,10 @@ export class TambahUserPage implements OnInit {
         this.image = result.data;
         this.uploadImg = true;
       } else {
-        this.loadingController.dismiss();
+        this.loadingService.dismiss();
       } 
     });
     return await modal.present();
-  }
-
-  async loadingAlert() {
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      message: 'Mohon Tunggu...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-        var that = this;
-        setTimeout(function () {
-          that.loadingController.dismiss();
-        }, 3000);
-      });
-    });
   }
 
   imgUploaded:any;

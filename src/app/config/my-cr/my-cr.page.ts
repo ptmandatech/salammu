@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 import { CommonService } from 'src/app/services/common.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-my-cr',
@@ -20,33 +21,15 @@ export class MyCrPage implements OnInit {
     public api: ApiService,
     public common: CommonService,
     public router:Router,
-    private loadingController:LoadingController
+    private loadingService: LoadingService,
   ) { }
 
   ngOnInit() {
     this.loading = true;
+    this.loadingService.present();
     this.listRanting = [];
     this.listCabang = [];
     this.getAllCr();
-  }
-
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 10000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
-      });
-      this.loading = false;
-    });
   }
 
   onDidViewEnter() {
@@ -60,7 +43,7 @@ export class MyCrPage implements OnInit {
     this.loading = true;
     this.listRanting = [];
     this.listCabang = [];
-    this.present();
+    this.loadingService.present();
     this.getAllCr();
     setTimeout(() => {
       event.target.complete();
@@ -72,6 +55,7 @@ export class MyCrPage implements OnInit {
       this.parseData(res);
     }, error => {
       this.loading = false;
+      this.loadingService.dismiss();
     })
   }
 
@@ -89,6 +73,7 @@ export class MyCrPage implements OnInit {
           }
       }
     }
+    this.loadingService.dismiss();
     this.loading = false;
   }
 

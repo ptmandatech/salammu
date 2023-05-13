@@ -8,6 +8,7 @@ import { CommonService } from 'src/app/services/common.service';
 import { VideoHandler, ImageHandler, Options } from 'ngx-quill-upload';
 import Quill from 'quill';
 import { HttpClient } from '@angular/common/http';
+import { LoadingService } from 'src/app/services/loading.service';
 
 Quill.register('modules/imageHandler', ImageHandler);
 Quill.register('modules/videoHandler', VideoHandler);
@@ -33,13 +34,13 @@ export class TambahProdukPage implements OnInit {
     public common: CommonService,
     public actionSheetController:ActionSheetController,
     public modalController: ModalController,
-    private loadingController: LoadingController,
+    private loadingService: LoadingService,
     private toastController: ToastController,
     public routes:ActivatedRoute,
   ) { }
 
   ngOnInit() {
-    this.present();
+    this.loadingService.present();
     this.getCategories();
     this.cekLogin();
     this.id = this.routes.snapshot.paramMap.get('id');
@@ -51,32 +52,15 @@ export class TambahProdukPage implements OnInit {
       this.productData.id = new Date().getTime().toString() + '' + [Math.floor((Math.random() * 1000))];
     }
   }
-  
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 10000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
-      });
-      this.loading = false;
-    });
-  }
 
   allCategories:any = [];
   getCategories() {
     this.api.get('categories').then(res=>{
       this.allCategories = res;
       this.allCategories = this.allCategories.sort((a:any,b:any) => a.name < b.name ? -1:1)
+      this.loadingService.dismiss();
     }, err => {
+      this.loadingService.dismiss();
     });
   }
 
@@ -84,13 +68,13 @@ export class TambahProdukPage implements OnInit {
   {    
     this.api.me().then(async res=>{
       this.userData = res;
-      await this.loadingController.dismiss();
+      this.loadingService.dismiss();
     }, async error => {
       this.loading = false;
       localStorage.removeItem('userSalammu');
       localStorage.removeItem('salammuToken');
       this.userData = undefined;
-      await this.loadingController.dismiss();
+      this.loadingService.dismiss();
     })
   }
 
@@ -100,6 +84,9 @@ export class TambahProdukPage implements OnInit {
       if(this.productData.images != '') {
         this.imageNow = JSON.parse(this.productData.images);
       }
+      this.loadingService.dismiss();
+    }, err => {
+      this.loadingService.dismiss();
     })
   }
 
@@ -179,8 +166,9 @@ export class TambahProdukPage implements OnInit {
       resultType: CameraResultType.DataUrl,
       source: (from == 'photo' ? CameraSource.Camera:CameraSource.Photos)
     });
-    this.loadingAlert();
+    this.loadingService.present();
     this.showImageUploader(image.dataUrl, from);
+    this.loadingService.dismiss();
   }
 
   images:any = []
@@ -198,26 +186,10 @@ export class TambahProdukPage implements OnInit {
       {
         this.images.push(result.data);
       } else {
-        this.loadingController.dismiss();
+        this.loadingService.dismiss();
       } 
     });
     return await modal.present();
-  }
-
-  async loadingAlert() {
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      message: 'Mohon Tunggu...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-        var that = this;
-        setTimeout(function () {
-          that.loadingController.dismiss();
-        }, 3000);
-      });
-    });
   }
 
   imgUploaded:any = [];
@@ -253,6 +225,7 @@ export class TambahProdukPage implements OnInit {
   }
 
   addProduct() {
+    this.loadingService.present();
     if(this.isCreated == true) {
       this.productData.verified = false;
       this.productData.images = JSON.stringify(this.imgUploaded);
@@ -294,6 +267,7 @@ export class TambahProdukPage implements OnInit {
             toastEl.present();
           });
           this.loading = false;
+          this.loadingService.dismiss();
           this.router.navigate(['/my-product']);
         }
       }, err => {

@@ -246,14 +246,16 @@ export class AppComponent {
       importance: 4,
       visibility: 1
     }).then(async res => {
-      const toast = await this.toastController.create({
-        message: 'Channel created!',
-        duration: 1500,
-        position: 'bottom',
-        mode: 'ios'
-      });
+      console.log('Channel created!');
+      
+      // const toast = await this.toastController.create({
+      //   message: 'Channel created!',
+      //   duration: 1500,
+      //   position: 'bottom',
+      //   mode: 'ios'
+      // });
   
-      await toast.present();
+      // await toast.present();
     });
 
     // On success, we should be able to receive notifications

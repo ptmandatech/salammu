@@ -20,6 +20,7 @@ import Point from 'ol/geom/Point';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import PluggableMap from 'ol/PluggableMap';
+import { LoadingService } from 'src/app/services/loading.service';
 useGeographic();
 
 @Component({
@@ -40,31 +41,16 @@ export class DetailPengajianPage implements OnInit {
     public common: CommonService,
     public router:Router,
     public routes:ActivatedRoute,
+    private loadingService: LoadingService,
     public alertController: AlertController,
     public modalController: ModalController,
-    private loadingController: LoadingController,
   ) { }
 
   async ngOnInit() {
-    this.present();
+    this.loadingService.present();
     await this.getAllCr();
     this.id = this.routes.snapshot.paramMap.get('id');
     this.getDetailPengajian();
-  }
-
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 10000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-      });
-      this.loading = false;
-    });
   }
 
   listCabang:any = [];
@@ -108,9 +94,9 @@ export class DetailPengajianPage implements OnInit {
         this.getDetailLocation(dt);
         this.generateMap(dt);
       }
-      this.loadingController.dismiss();
+      this.loadingService.dismiss();
     }, er => {
-      this.loadingController.dismiss();
+      this.loadingService.dismiss();
     })
   }
 

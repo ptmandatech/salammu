@@ -4,6 +4,7 @@ import { LoadingController, ToastController } from '@ionic/angular';
 import { ApiService } from '../../services/api.service';
 import { ActionSheetController } from '@ionic/angular';
 import { AppComponent } from 'src/app/app.component';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-ayat-tersimpan',
@@ -18,14 +19,15 @@ export class AyatTersimpanPage implements OnInit {
   constructor(
     private api: ApiService,
     public actionSheetController:ActionSheetController,
-    private loadingController: LoadingController,
     private toastController: ToastController,
     private appComponent: AppComponent,
+    private loadingService: LoadingService,
     private router: Router
   ) { }
 
   async ngOnInit() {
     // this.present();
+    this.loadingService.present();
     this.loading = true;
     let dt = JSON.parse(localStorage.getItem('ayatTersimpan'));
     this.ayatTersimpan = dt == null ? []:dt;
@@ -36,36 +38,18 @@ export class AyatTersimpanPage implements OnInit {
     this.ngOnInit();
   }
 
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 10000,
-      message: 'Sedang menyiapkan data...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
-      });
-      this.loading = false;
-    });
-  }
-
   cekLogin()
   {
     this.api.me().then(async res=>{
       this.userData = res;
-      await this.loadingController.dismiss();
+      this.loadingService.dismiss();
+      this.loading = false;
     }, async error => {
       this.loading = false;
       localStorage.removeItem('userSalammu');
       localStorage.removeItem('salammuToken');
       this.userData = undefined;
-      await this.loadingController.dismiss();
+      this.loadingService.dismiss();
     })
   }
 
@@ -95,7 +79,7 @@ export class AyatTersimpanPage implements OnInit {
         data: 10,
         handler: () => {
           console.log('Lihat clicked');
-          this.present();
+          this.loadingService.present();
           this.getDetailSurat(n);
         }
       }, {
@@ -144,12 +128,13 @@ export class AyatTersimpanPage implements OnInit {
       aa.terakhirDibaca = n;
       localStorage.setItem('terakhirDibaca', JSON.stringify(aa));
       this.bacaSurat(this.detailSurat);
+      this.loadingService.dismiss();
     }, err => {
+      this.loadingService.dismiss();
     })
   }
 
   bacaSurat(n) {
-    this.present();
     this.router.navigate(['/al-quran/detail-surat', n.nomor]);
   }
 }

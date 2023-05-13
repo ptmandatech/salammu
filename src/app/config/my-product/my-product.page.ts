@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { LoadingController, ModalController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 import { CommonService } from 'src/app/services/common.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-my-product',
@@ -21,11 +22,11 @@ export class MyProductPage implements OnInit {
     public common: CommonService,
     public router:Router,
     public modalController: ModalController,
-    private loadingController: LoadingController,
+    private loadingService: LoadingService,
   ) { }
 
   ngOnInit() {
-    this.present();
+    this.loadingService.present();
     this.loading = true;
     this.serverImg = this.common.photoBaseUrl+'products/';
     this.listProducts = [];
@@ -39,31 +40,12 @@ export class MyProductPage implements OnInit {
     this.listProductsTemp = [];
     this.cekLogin();
   }
-  
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 2000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
-      });
-      this.loading = false;
-    });
-  }
 
   async doRefresh(event) {
     this.loading = true;
     this.listProducts = [];
     this.listProductsTemp = [];
-    this.present();
+    this.loadingService.present();
     this.cekLogin();
     setTimeout(() => {
       event.target.complete();
@@ -82,6 +64,7 @@ export class MyProductPage implements OnInit {
       this.loading = false;
       this.listProducts = [];
       this.listProductsTemp = [];
+      this.loadingService.dismiss();
     })
   }
 
@@ -91,6 +74,7 @@ export class MyProductPage implements OnInit {
       this.parseUser(res);
     }, error => {
       this.loading = false;
+      this.loadingService.dismiss();
     })
   }
 
@@ -98,6 +82,7 @@ export class MyProductPage implements OnInit {
     for(var i=0; i<res.length; i++) {
       this.users[res[i].id] = res[i];
     }
+    this.loadingService.dismiss();
   }
 
   getAllProducts() {
@@ -114,6 +99,7 @@ export class MyProductPage implements OnInit {
         this.loading = false;
       })
     }
+    this.loadingService.dismiss();
   }
 
   parseImage(res) {

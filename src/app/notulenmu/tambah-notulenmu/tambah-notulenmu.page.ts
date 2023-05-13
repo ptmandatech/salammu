@@ -12,6 +12,7 @@ import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { ListHadirPage } from '../list-hadir/list-hadir.page';
 import { FormControl } from '@angular/forms';
+import { LoadingService } from 'src/app/services/loading.service';
 
 Quill.register('modules/imageHandler', ImageHandler);
 Quill.register('modules/videoHandler', VideoHandler);
@@ -43,14 +44,14 @@ export class TambahNotulenmuPage implements OnInit {
     public common: CommonService,
     public actionSheetController:ActionSheetController,
     public modalController: ModalController,
-    private loadingController: LoadingController,
+    private loadingService: LoadingService,
     private toastController: ToastController,
     public routes:ActivatedRoute,
     private datePipe: DatePipe,
   ) { }
 
   ngOnInit() {
-    this.present();
+    this.loadingService.present();
     this.getListCabang();
     this.getListRanting();
     this.dataLogin = JSON.parse(localStorage.getItem('salammuToken'));
@@ -64,24 +65,6 @@ export class TambahNotulenmuPage implements OnInit {
     } else {
       this.notulenData.id = new Date().getTime().toString() + '' + [Math.floor((Math.random() * 1000))];
     }
-  }
-
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 2000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
-      });
-      this.loading = false;
-    });
   }
 
   cekLogin()
@@ -105,13 +88,13 @@ export class TambahNotulenmuPage implements OnInit {
 
     this.api.me().then(async res=>{
       this.userData = res;
-      await this.loadingController.dismiss();
+      this.loadingService.dismiss();
     }, async error => {
       this.loading = false;
       localStorage.removeItem('userSalammu');
       localStorage.removeItem('salammuToken');
       this.userData = undefined;
-      await this.loadingController.dismiss();
+      this.loadingService.dismiss();
     })
   }
 
@@ -137,6 +120,9 @@ export class TambahNotulenmuPage implements OnInit {
         this.selectedCR = this.dataLogin.ranting_id;
         this.selectCR();
       }
+      this.loadingService.dismiss();
+    }, err => {
+      this.loadingService.dismiss();
     })
   }
 
@@ -163,8 +149,10 @@ export class TambahNotulenmuPage implements OnInit {
         this.listCabang = res;
         this.listCabangTemp = res;
         this.gettingCabang = false;
+        this.loadingService.dismiss();
       }, err => {
         this.gettingCabang = false;
+        this.loadingService.dismiss();
       });
     } catch {
 
@@ -283,8 +271,9 @@ export class TambahNotulenmuPage implements OnInit {
       resultType: CameraResultType.DataUrl,
       source: (from == 'photo' ? CameraSource.Camera:CameraSource.Photos)
     });
-    this.loadingAlert();
+    this.loadingService.present();
     this.showImageUploader(image.dataUrl, from);
+    this.loadingService.dismiss();
   }
 
   images:any = []
@@ -302,25 +291,10 @@ export class TambahNotulenmuPage implements OnInit {
       {
         this.images.push(result.data);
       } else {
-        this.loadingController.dismiss();
+        this.loadingService.dismiss();
       } 
     });
     return await modal.present();
-  }
-
-  async loadingAlert() {
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      message: 'Mohon Tunggu...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        var that = this;
-        setTimeout(function () {
-          that.loadingController.dismiss();
-        }, 3000);
-      });
-    });
   }
 
   removeImg(idx) {

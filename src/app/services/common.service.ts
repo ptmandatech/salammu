@@ -12,7 +12,7 @@ export class CommonService {
   serverPrayTimes2='https://api.aladhan.com/v1/';
   serverUrl='https://api.shdprime.xyz/salammu/index.php/';
   serverImgPath='https://api.shdprime.xyz/salammu/';
-  public photoBaseUrl='https://www.api.shdprime.xyz/salammu/photos/';
+  public photoBaseUrl='https://api.shdprime.xyz/salammu/photos/';
 
   //server Al Quran
   serverAlQuran = 'https://equran.id/api/';

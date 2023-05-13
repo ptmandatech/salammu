@@ -16,7 +16,7 @@
       <ion-col size-md="6">
         <ion-searchbar style="margin-top: 14px" mode="ios" showCancelButton="never" [(ngModel)]="searchTerm" (ionChange)="searchChanged($event)" placeholder="Cari Peserta"></ion-searchbar>
 
-        <div class="item-centered" *ngIf="!loading && listUsers.length == 0">
+        <div class="item-centered" *ngIf="!loading && listUsers.length == 0 && notulenData.notulenmu_participants.length == 0">
           <img src="./assets/icon/pencarian.svg">
           <ion-label>
             <p>Peserta tidak ditemukan</p>

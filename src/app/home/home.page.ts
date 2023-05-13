@@ -13,6 +13,7 @@ import { SemuaMenuPage } from './semua-menu/semua-menu.page';
 import { SettingLokasiPage } from './setting-lokasi/setting-lokasi.page';
 import { PilihLokasiPage } from './pilih-lokasi/pilih-lokasi.page';
 import { DetailJadwalSholatPage } from './detail-jadwal-sholat/detail-jadwal-sholat.page';
+import { LoadingService } from '../services/loading.service';
 
 @Component({
   selector: 'app-home',
@@ -53,6 +54,7 @@ export class HomePage implements OnInit {
     public common: CommonService,
     public http:HttpClient,
     private api: ApiService,
+    private loadingService: LoadingService,
     private loadingController: LoadingController,
     private datePipe: DatePipe,
     public modalController: ModalController,
@@ -70,7 +72,7 @@ export class HomePage implements OnInit {
   timesToday:any;
   async ngOnInit() {
     this.loading = true;
-    this.present();
+    this.loadingService.present();
     this.surat = JSON.parse(localStorage.getItem('suratAlQuran'));
     if(this.surat == null) {
       this.getSurat();
@@ -80,7 +82,6 @@ export class HomePage implements OnInit {
     this.tempTimes2 = [];
     this.dateNow = new Date();
     await this.checkPermission();
-    // this.getHijri(this.dateNow);
     this.cekLogin();
     this.serverImg = this.common.photoBaseUrl+'products/';
     this.serverImgBanner = this.common.photoBaseUrl+'banners/';
@@ -93,36 +94,24 @@ export class HomePage implements OnInit {
     this.getAllVideos();
   }
 
+  ionViewWillEnter() {
+    this.cekLogin();
+  }
+
   surat:any = [];
   suratTemp:any = [];
   getSurat() {
     this.loading = true;
-    this.present();
     this.surat = [];
     this.suratTemp = [];
     this.api.get('quran/surat').then(res => {
+      this.loadingService.dismiss();
       this.surat = res;
       this.suratTemp = res;
       localStorage.setItem('suratAlQuran', JSON.stringify(this.surat));
+    }, err => {
+      this.loadingService.dismiss();
     })
-  }
-
-  async present() {
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 3000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
-      });
-      this.loading = false;
-    });
   }
 
   dateHijri:any = {};
@@ -417,25 +406,11 @@ export class HomePage implements OnInit {
     }
   }
 
-  // async loginStatus() {
-  //   this.loading = true;
-  //   return await this.loadingController.create({
-  //     spinner: 'crescent',
-  //     message: 'Mohon Tunggu...',
-  //     cssClass: 'custom-class custom-loading'
-  //   }).then(a => {
-  //     a.present().then(() => {
-  //       console.log('presented');
-  //       this.cekLogin();
-  //     });
-  //     this.loading = false;
-  //   });
-  // }
-
   isLoggedIn:boolean = false;
   isVisible:boolean = false;
   async cekLogin()
   {
+    this.loadingService.present();
     this.dataLogin = await JSON.parse(localStorage.getItem('salammuToken'));
     this.api.me().then(async res=>{
       this.userData = res;
@@ -443,7 +418,7 @@ export class HomePage implements OnInit {
       if(this.dataLogin.cabang_id || this.dataLogin.ranting_id) {
         this.isVisible = true;
       }
-      await this.loadingController.dismiss();
+      this.loadingService.dismiss();
     }, async error => {
       this.loading = false;
       localStorage.removeItem('userSalammu');
@@ -451,7 +426,7 @@ export class HomePage implements OnInit {
       this.userData = undefined;
       this.isLoggedIn = false;
       this.isVisible = false;
-      await this.loadingController.dismiss();
+      this.loadingService.dismiss();
     })
   }
 
@@ -501,7 +476,9 @@ export class HomePage implements OnInit {
   getAllArticles() {
     this.api.get('articles?limit=5').then(res => {
       this.listArticles = res;
+      this.loadingService.dismiss();
     }, error => {
+      this.loadingService.dismiss();
     })
   }
 
@@ -510,14 +487,19 @@ export class HomePage implements OnInit {
     this.api.get('videos?limit=5').then(res => {
       this.listVideos = res;
       this.loading = false;
+      this.loadingService.dismiss();
     }, error => {
       this.loading = false;
+      this.loadingService.dismiss();
     })
   }
 
   getAllBanners() {
     this.api.get('banners').then(res => {
       this.listBanners = res;
+      this.loadingService.dismiss();
+    }, err => {
+      this.loadingService.dismiss();
     })
   }
 
@@ -735,6 +717,8 @@ export class HomePage implements OnInit {
   getAllProducts() {
     this.api.get('products?getBy=fav').then(res => {
       this.parseImage(res);
+    }, err => {
+      this.loadingService.dismiss();
     })
   }
 
@@ -754,12 +738,14 @@ export class HomePage implements OnInit {
         }
       }
     }
+    this.loadingService.dismiss();
   }
 
   //Modal Semua Menu
   async allMenu() {
     const modal = await this.modalController.create({
       component: SemuaMenuPage,
+      componentProps: {dataLogin: this.dataLogin},
       mode: "md",
       cssClass: 'modal-class',
       initialBreakpoint: 0.6,
@@ -780,7 +766,7 @@ export class HomePage implements OnInit {
 
     modal.onDidDismiss().then(async (result) => {
       if(result['data'] == 'lokasisekarang') {
-        this.present();
+        this.loadingService.present();
         await this.checkPermission();
       } else if(result['data'] == 'cari') {
         this.openLocations();
@@ -815,6 +801,7 @@ export class HomePage implements OnInit {
 
   //Modal Pilih Lokasi
   async openLocations() {
+    this.loadingService.dismiss();
     const modal = await this.modalController.create({
       component: PilihLokasiPage,
       mode: "md",

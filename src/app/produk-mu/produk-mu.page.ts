@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { LoadingController, ModalController } from '@ionic/angular';
 import { ApiService } from '../services/api.service';
 import { CommonService } from '../services/common.service';
+import { LoadingService } from '../services/loading.service';
 
 @Component({
   selector: 'app-produk-mu',
@@ -20,11 +21,11 @@ export class ProdukMUPage implements OnInit {
     public common: CommonService,
     public router:Router,
     public modalController: ModalController,
-    private loadingController: LoadingController,
+    private loadingService: LoadingService,
   ) { }
 
   ngOnInit() {
-    this.present();
+    this.loadingService.present();
     this.loading = true;
     this.serverImg = this.common.photoBaseUrl+'products/';
     this.listProducts = [];
@@ -37,30 +38,11 @@ export class ProdukMUPage implements OnInit {
     this.getAllProducts();
   }
 
-  // ionViewWillEnter() {
-  //   this.ngOnInit();
-  // }
-
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 10000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-      });
-      this.loading = false;
-    });
-  }
-
   async doRefresh(event) {
     this.loading = true;
     this.listProducts = [];
     this.listProductsTemp = [];
-    this.present();
+    this.loadingService.present();
     this.allCategories = [{
       id: 'semua',
       name: 'Semua'
@@ -77,7 +59,7 @@ export class ProdukMUPage implements OnInit {
       this.parseImage(res);
     }, error => {
       this.loading = false;
-      this.loadingController.dismiss();
+      this.loadingService.dismiss();
     })
   }
 
@@ -87,10 +69,13 @@ export class ProdukMUPage implements OnInit {
       name: 'Semua'
     }
   ];
+
   getCategories() {
     this.api.get('categories').then(res=>{
       this.allCategories = [...this.allCategories, ...res];
+      this.loadingService.dismiss();
     }, err => {
+      this.loadingService.dismiss();
     });
   }
 
@@ -113,7 +98,7 @@ export class ProdukMUPage implements OnInit {
       }
     }
     this.loading = false;
-    this.loadingController.dismiss();
+    this.loadingService.dismiss();
   }
 
   initializeItems(): void {

@@ -16,6 +16,7 @@ import * as chatActions from '../../store/actions/chat/chat.actions';
 import * as chatSelectors from '../../store/selectors/chat/chat.selectors';
 import { Observable } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { LoadingService } from 'src/app/services/loading.service';
 @Component({
   selector: 'app-chatting',
   templateUrl: './chatting.page.html',
@@ -46,7 +47,7 @@ export class ChattingPage implements OnInit {
     private fb: FormBuilder,
     private http: HttpClient,
     public modalController: ModalController,
-    private loadingController: LoadingController,
+    private loadingService: LoadingService,
     public actionSheetController: ActionSheetController,
     private store: Store<AppState>,
     private actionsSubject$: ActionsSubject,
@@ -64,27 +65,8 @@ export class ChattingPage implements OnInit {
   }
 
   async ngOnInit() {
-    this.present();
+    this.loadingService.present();
     await this.cekLogin();
-  }
-
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 10000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
-      });
-      this.loading = false;
-    });
   }
 
   cekLogin()
@@ -92,9 +74,9 @@ export class ChattingPage implements OnInit {
     this.api.me().then(res=>{
       this.userData = res;
       this.checkRoom();
-      this.loadingController.dismiss();
+      this.loadingService.dismiss();
     }, error => {
-      this.loadingController.dismiss();
+      this.loadingService.dismiss();
     })
   }
 

@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingController, ModalController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 import { CommonService } from 'src/app/services/common.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-detail-doa-dzikir',
@@ -24,12 +25,12 @@ export class DetailDoaDzikirPage implements OnInit {
     public router:Router,
     public routes:ActivatedRoute,
     public modalController: ModalController,
-    private loadingController: LoadingController,
+    private loadingService: LoadingService,
     public sanitizer: DomSanitizer
   ) { }
 
   ngOnInit() {
-    this.present();
+    this.loadingService.present();
     this.id = this.routes.snapshot.paramMap.get('id');
     this.cekLogin();
     this.serverImg = this.common.photoBaseUrl+'doadzikir/';
@@ -43,33 +44,20 @@ export class DetailDoaDzikirPage implements OnInit {
   {    
     this.api.me().then(res=>{
       this.userData = res;
+      this.loadingService.dismiss();
     }, error => {
+      this.loadingService.dismiss();
       // console.log(error);
     })
-  }
-
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 10000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
-      });
-      this.loading = false;
-    });
   }
 
   getDetailDoaDzikir() {
     this.api.get('doadzikir/find/'+this.id).then(res => {
       this.doaDzikirData = res;
+      this.loadingService.dismiss();
+    }, error => {
+      this.loadingService.dismiss();
+      // console.log(error);
     })
   } 
 

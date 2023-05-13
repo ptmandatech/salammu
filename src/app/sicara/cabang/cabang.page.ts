@@ -21,6 +21,7 @@ import Point from 'ol/geom/Point';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import PluggableMap from 'ol/PluggableMap';
+import { LoadingService } from 'src/app/services/loading.service';
 useGeographic();
 
 @Component({
@@ -45,42 +46,25 @@ export class CabangPage implements OnInit {
     public alertController: AlertController,
     public routes:ActivatedRoute,
     public modalController: ModalController,
-    private loadingController: LoadingController,
+    private loadingService: LoadingService,
   ) { }
 
   ngOnInit() {
-    this.present();
+    this.loadingService.present();
     this.loading = true;
     this.id = this.routes.snapshot.paramMap.get('id');
     this.cekLogin();
     this.getDetailCabang();
   }
 
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 10000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
-      });
-      this.loading = false;
-    });
-  }
-
   cekLogin()
   {
     this.api.me().then(res=>{
       this.userData = res;
+      this.loadingService.dismiss();
     }, error => {
       console.log(error);
+      this.loadingService.dismiss();
     })
   }
 
@@ -93,7 +77,11 @@ export class CabangPage implements OnInit {
         this.generateMap(dt);
       }
       this.loading = false;
-    });
+      this.loadingService.dismiss();
+    }, error => {
+      console.log(error);
+      this.loadingService.dismiss();
+    })
   }
 
   httpOption:any;

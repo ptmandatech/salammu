@@ -6,6 +6,7 @@ import { CommonService } from 'src/app/services/common.service';
 import { ViewerModalComponent } from 'ngx-ionic-image-viewer';
 import {IonSlides} from '@ionic/angular';
 import SwiperCore, { SwiperOptions } from 'swiper';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-detail-produk',
@@ -33,34 +34,15 @@ export class DetailProdukPage implements OnInit {
     public router:Router,
     public routes:ActivatedRoute,
     public modalController: ModalController,
-    private loadingController: LoadingController,
+    private loadingService: LoadingService,
   ) { }
 
   loading:boolean;
   ngOnInit() {
-    this.present();
+    this.loadingService.present();
     this.id = this.routes.snapshot.paramMap.get('id');
     this.serverImg = this.common.photoBaseUrl+'products/';
     this.getDetailProduct();
-  }
-
-  async present() {
-    this.loading = true;
-    return await this.loadingController.create({
-      spinner: 'crescent',
-      duration: 10000,
-      message: 'Tunggu Sebentar...',
-      cssClass: 'custom-class custom-loading'
-    }).then(a => {
-      a.present().then(() => {
-        console.log('presented');
-        if (!this.loading) {
-          a.dismiss().then(() => console.log('abort presenting'));
-          this.loading = false;
-        }
-      });
-      this.loading = false;
-    });
   }
 
   slideOpts = {
@@ -80,6 +62,8 @@ export class DetailProdukPage implements OnInit {
   getDetailProduct() {
     this.api.get('products/find/'+this.id).then(res => {
       this.parseImage(res);
+    }, err => {
+      this.loadingService.dismiss();
     })
   }
 
@@ -93,12 +77,16 @@ export class DetailProdukPage implements OnInit {
       this.detailProduct = res;
     }
     this.getDetailOwner();
+    this.loadingService.dismiss();
   }
 
   ownerData:any;
   getDetailOwner() {
     this.api.get('users/find/'+this.detailProduct.created_by).then(res => {
       this.ownerData = res;
+      this.loadingService.dismiss();
+    }, err => {
+      this.loadingService.dismiss();
     })
   }
 
