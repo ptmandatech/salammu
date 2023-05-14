@@ -40,24 +40,23 @@
           </ion-label>
         </div>
 
-        <ion-row class="ion-no-padding" *ngIf="loading">
-          <ion-col size="6" *ngFor="let n of [1,2,3,4,5,6,7,8,9,10]">
-            <ion-card class="rounded-15">
-              <ion-card-content>
-                <ion-skeleton-text animated style="height: 60px;"></ion-skeleton-text>
-                <ion-label>
-                  <ion-text color="primary">
-                    <h2><ion-skeleton-text animated></ion-skeleton-text></h2>
-                  </ion-text>
-                  <ion-text color="medium">
-                    <p class="text-elipsis"><ion-skeleton-text animated></ion-skeleton-text><p>
-                  </ion-text>
-                </ion-label>
-                <h2 style="margin-top: 20px;"><ion-skeleton-text animated></ion-skeleton-text></h2>
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
-        </ion-row>
+        <div *ngIf="loading">
+          <ion-card *ngFor="let n of [1,2,3,4,5,6,7,8,9,10]" class="rounded-15">
+            <div style="text-align: center;" >
+              <ion-skeleton-text animated style="height: 100px;"></ion-skeleton-text>
+            </div>
+            <ion-card-header>
+              <ion-card-subtitle><ion-skeleton-text animated></ion-skeleton-text></ion-card-subtitle>
+              <ion-card-title><ion-skeleton-text animated></ion-skeleton-text></ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-card-content>
+            <div class="ion-padding">
+              <small> <ion-skeleton-text animated></ion-skeleton-text> </small>
+            </div>
+          </ion-card>
+        </div>
 
       </ion-col>
     </ion-row>

@@ -50,7 +50,9 @@ export class PediamuPage implements OnInit {
       this.listPediamu = res;
       this.listPediamuTemp = res;
       this.loadingService.dismiss();
+      this.loading = false;
     }, error => {
+      this.loading = false;
       this.loading = false;
       this.loadingService.dismiss();
     })

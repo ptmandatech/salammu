@@ -48,8 +48,8 @@ export class RadiomuPage implements OnInit {
   getAllRadiomu() {
     this.api.get('radiomu').then(res => {
       this.listRadiomu = res;
-      console.log(res)
       this.listRadiomuTemp = res;
+      this.loading = false;
       this.loadingService.dismiss();
     }, error => {
       this.loading = false;

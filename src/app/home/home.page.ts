@@ -410,7 +410,6 @@ export class HomePage implements OnInit {
   isVisible:boolean = false;
   async cekLogin()
   {
-    this.loadingService.present();
     this.dataLogin = await JSON.parse(localStorage.getItem('salammuToken'));
     this.api.me().then(async res=>{
       this.userData = res;
