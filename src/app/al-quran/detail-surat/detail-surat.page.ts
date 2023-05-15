@@ -30,7 +30,6 @@ export class DetailSuratPage implements OnInit {
 
   ngOnInit() {
     // this.present();
-    this.loadingService.present();
     this.id = this.routes.snapshot.paramMap.get('id');
     let dt = JSON.parse(localStorage.getItem('detailSurat-'+this.id));
     this.detailSurat = dt == null ? {}:dt;
@@ -76,15 +75,8 @@ export class DetailSuratPage implements OnInit {
 
   detailSurat:any = {};
   async getDetailSurat() {
-    await this.api.get('quran/detailSurat/'+this.id).then(res => {
-      this.detailSurat = res;
-      localStorage.setItem('detailSurat-'+this.id, JSON.stringify(this.detailSurat));
-      let dt = JSON.parse(localStorage.getItem('detailSurat-'+this.id));
-      this.detailSurat = dt == null ? {}:dt;
-      this.loadingService.dismiss();
-    }, err => {
-      this.loadingService.dismiss();
-    })
+    let dt = JSON.parse(localStorage.getItem('detailSurat-'+this.id));
+    this.detailSurat = dt == null ? {}:dt;
   }
 
   async modalSurat(detailSurat) {
@@ -165,13 +157,10 @@ export class DetailSuratPage implements OnInit {
     await actionSheet.present();
 
     const { role, data } = await actionSheet.onDidDismiss();
-    console.log('onDidDismiss resolved with role and data', role, data);
   }
 
   bacaSurat(n) {
-    this.loadingService.present();
     this.router.navigate(['/al-quran/detail-surat', n.nomor]);
-    this.loadingService.dismiss();
   }
 
 }

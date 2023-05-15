@@ -26,30 +26,32 @@ export class AlQuranPage implements OnInit {
 
   async ngOnInit() {
     // this.present();
+  }
+
+  ionViewDidEnter() {
     this.surat = JSON.parse(localStorage.getItem('suratAlQuran'));
     this.terakhirDibaca = JSON.parse(localStorage.getItem('terakhirDibaca'));
     this.suratTemp = this.surat;
     if(this.surat == null) {
       this.getSurat();
+    } else {
+      let detailSuratSaved = localStorage.getItem('detailSuratSaved');
+      if(!detailSuratSaved){
+        this.parseDataSurat();
+      }
     }
     this.cekLogin();
-  }
-
-  ionViewDidEnter() {
-    this.ngOnInit();
   }
 
   cekLogin()
   {
     this.api.me().then(async res=>{
       this.userData = res;
-      await this.loadingController.dismiss();
     }, async error => {
       this.loading = false;
       localStorage.removeItem('userSalammu');
       localStorage.removeItem('salammuToken');
       this.userData = undefined;
-      await this.loadingController.dismiss();
     })
   }
 
@@ -78,8 +80,33 @@ export class AlQuranPage implements OnInit {
     this.api.get('quran/surat').then(res => {
       this.surat = res;
       this.suratTemp = res;
+      let detailSuratSaved = localStorage.getItem('detailSuratSaved');
+      if(!detailSuratSaved){
+        this.parseDataSurat();
+      }
       localStorage.setItem('suratAlQuran', JSON.stringify(this.surat));
     })
+  }
+
+  parseDataSurat() {
+    this.loadingService.present();
+    this.api.post('quran/getDetailSurat', this.surat).then(res => {
+      this.parseDetailSurat(res);
+    }, err => {
+      this.loadingService.dismiss();
+    })
+  }
+
+  parseDetailSurat(res) {
+    if(res){
+      for(var i = 0; i < res.length; i++) {
+        localStorage.setItem('detailSurat-'+res[i].nomor, JSON.stringify(res[i]));
+        if(i+1 == res.length){
+          localStorage.setItem('detailSuratSaved', 'true');
+          this.loadingService.dismiss();
+        }
+      }
+    }
   }
 
   initializeItems(): void {

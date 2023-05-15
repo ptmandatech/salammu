@@ -164,6 +164,7 @@ export class HomePage implements OnInit {
     } else {
       await this.checkLocation();
     }
+    this.loadingService.dismiss();
   }
 
   async getCurrentLocations() {
@@ -179,18 +180,14 @@ export class HomePage implements OnInit {
     }, (err: PositionError) => {
       this.openSettingLokasi();
     });
-
-    if(currentPos == null) {
+    
+    if(currentPos.lat != location.lat && currentPos.long != location.long) {
       localStorage.setItem('currentPos', JSON.stringify(location));
-      let city = localStorage.getItem('selectedCity');
-      if(city == null) {
-        await this.getDetailLocation(location);
-      } else {
-        this.city = city;
-        this.setTimeFromLocalCitySaved();
-      }
+      localStorage.removeItem('selectedCity');
+      localStorage.removeItem('address_display_name');
+      await this.getDetailLocation(location);
     } else {
-      if(currentPos.lat != location.lat && currentPos.long != location.long) {
+      if(currentPos == null) {
         localStorage.setItem('currentPos', JSON.stringify(location));
         let city = localStorage.getItem('selectedCity');
         if(city == null) {
@@ -234,18 +231,13 @@ export class HomePage implements OnInit {
       this.openSettingLokasi();
     });
 
-    if(currentPos == null) {
+    if(currentPos.lat != location.lat && currentPos.long != location.long) {
       localStorage.setItem('currentPos', JSON.stringify(location));
-      let city = localStorage.getItem('selectedCity');
-      this.address_display_name = localStorage.getItem('address_display_name');
-      if(city == null) {
-        await this.getDetailLocation(location);
-      } else {
-        this.city = city;
-        this.setTimeFromLocalCitySaved();
-      }
+      localStorage.removeItem('selectedCity');
+      localStorage.removeItem('address_display_name');
+      await this.getDetailLocation(location);
     } else {
-      if(currentPos.lat != location.lat && currentPos.long != location.long) {
+      if(currentPos == null) {
         localStorage.setItem('currentPos', JSON.stringify(location));
         let city = localStorage.getItem('selectedCity');
         if(city == null) {
@@ -301,12 +293,6 @@ export class HomePage implements OnInit {
   httpOption:any;
   address_display_name:any;
   async getDetailLocation(dt) {
-    this.httpOption = {
-      headers: new HttpHeaders({
-        'Content-Type':  'application/json',
-      })
-    };
-    
     await this.api.post('lokasi/openstreetmap', dt).then(async res => {
       this.checkCity(res);
     }, async error => {
@@ -766,6 +752,9 @@ export class HomePage implements OnInit {
     modal.onDidDismiss().then(async (result) => {
       if(result['data'] == 'lokasisekarang') {
         this.loadingService.present();
+        localStorage.removeItem('selectedCity');
+        localStorage.removeItem('currentPos');
+        localStorage.removeItem('address_display_name');
         await this.checkPermission();
       } else if(result['data'] == 'cari') {
         this.openLocations();
@@ -811,8 +800,31 @@ export class HomePage implements OnInit {
 
     modal.onDidDismiss().then(async (result) => {
       if(result['data']) {
+        this.loadingService.present();
         this.city = result['data']['kab_nama'];
         localStorage.setItem('selectedCity', this.city);
+        this.getDetailLocationByName();
+      }
+    });
+    return await modal.present();
+  }
+
+  async getDetailLocationByName() {
+    let name = this.city.replace('KAB ', '');
+    let dt = {
+      name: name.replace(' ', '+').toLowerCase()
+    }
+    await this.api.post('lokasi/detailLokasiByName', dt).then(async res => {
+      if(res[0]){
+        let location = {
+          lat: res[0].lat,
+          long: res[0].lon,
+          time: new Date(),
+        };
+        this.address_display_name = res[0]['display_name'];
+
+        localStorage.setItem('currentPos', JSON.stringify(location));
+        localStorage.setItem('address_display_name', this.address_display_name);
         if(this.city != undefined) {
           this.listTimes = [];
           this.tempTimes1 = [];
@@ -846,7 +858,9 @@ export class HomePage implements OnInit {
           }
         }
       }
+      this.loadingService.dismiss();
+    }, async error => {
+      this.loadingService.dismiss();
     });
-    return await modal.present();
   }
 }
