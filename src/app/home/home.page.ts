@@ -181,21 +181,21 @@ export class HomePage implements OnInit {
       this.openSettingLokasi();
     });
     
-    if(currentPos.lat != location.lat && currentPos.long != location.long) {
+    if(currentPos == null) {
       localStorage.setItem('currentPos', JSON.stringify(location));
-      localStorage.removeItem('selectedCity');
-      localStorage.removeItem('address_display_name');
-      await this.getDetailLocation(location);
+      let city = localStorage.getItem('selectedCity');
+      if(city == null) {
+        await this.getDetailLocation(location);
+      } else {
+        this.city = city;
+        this.setTimeFromLocalCitySaved();
+      }
     } else {
-      if(currentPos == null) {
+      if(currentPos.lat != location.lat && currentPos.long != location.long) {
         localStorage.setItem('currentPos', JSON.stringify(location));
-        let city = localStorage.getItem('selectedCity');
-        if(city == null) {
-          await this.getDetailLocation(location);
-        } else {
-          this.city = city;
-          this.setTimeFromLocalCitySaved();
-        }
+        localStorage.removeItem('selectedCity');
+        localStorage.removeItem('address_display_name');
+        await this.getDetailLocation(location);
       } else {
         await this.getDetailLocation(currentPos);
       }
@@ -230,22 +230,22 @@ export class HomePage implements OnInit {
     }, (err: PositionError) => {
       this.openSettingLokasi();
     });
-
-    if(currentPos.lat != location.lat && currentPos.long != location.long) {
+    
+    if(currentPos == null) {
       localStorage.setItem('currentPos', JSON.stringify(location));
-      localStorage.removeItem('selectedCity');
-      localStorage.removeItem('address_display_name');
-      await this.getDetailLocation(location);
+      let city = localStorage.getItem('selectedCity');
+      if(city == null) {
+        await this.getDetailLocation(location);
+      } else {
+        this.city = city;
+        this.setTimeFromLocalCitySaved();
+      }
     } else {
-      if(currentPos == null) {
+      if(currentPos.lat != location.lat && currentPos.long != location.long) {
         localStorage.setItem('currentPos', JSON.stringify(location));
-        let city = localStorage.getItem('selectedCity');
-        if(city == null) {
-          await this.getDetailLocation(location);
-        } else {
-          this.city = city;
-          this.setTimeFromLocalCitySaved();
-        }
+        localStorage.removeItem('selectedCity');
+        localStorage.removeItem('address_display_name');
+        await this.getDetailLocation(location);
       } else {
         await this.getDetailLocation(currentPos);
       }
