@@ -1,6 +1,6 @@
 <ion-header class="ion-no-border">
   <ion-toolbar color="primary">
-    <ion-title>Baca Al-Quran</ion-title>
+    <ion-title>{{detailSurat.nama_latin == null ? 'Baca Al-Quran':'QS '+detailSurat.nama_latin}}</ion-title>
     <ion-buttons slot="start">
       <ion-button fill="clear" routerLink="/al-quran">
         <ion-icon name="arrow-back-outline"></ion-icon>

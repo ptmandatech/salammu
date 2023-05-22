@@ -54,7 +54,7 @@ export class AppComponent {
         this.routerOutlet.pop();
       } else if (this.router.url === '/profil' || this.router.url === '/login' || 
         this.router.url === '/video' || this.router.url === '/pengajian' || this.router.url === '/produk-mu' || 
-        this.router.url === '/jadwal-sholat' || this.router.url === '/cabang-ranting') {
+        this.router.url === '/jadwal-sholat' || this.router.url === '/cabang-ranting' || this.router.url === '/al-quran') {
         this.router.navigate(['/home']);
       }
     });

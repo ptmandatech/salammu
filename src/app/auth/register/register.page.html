@@ -52,7 +52,7 @@
             </div>
           </div>
 
-          <ion-text color="medium">Cabang (opsional)</ion-text>
+          <ion-text color="medium">Cabang (opsional) <ion-icon (click)="getListCabang()" name="refresh-outline"></ion-icon></ion-text>
           <div class="selectOptions">
             <ng-select formControlName="cabang" [searchable]="true" placeholder="Pilih Cabang"
               (change)="selectEvent($event)">
@@ -61,7 +61,7 @@
             <ion-note style="font-style: italic;" *ngIf="gettingCabang">Mengambil data Cabang...</ion-note>
           </div>
 
-          <ion-text color="medium">Ranting (opsional)</ion-text>
+          <ion-text color="medium">Ranting (opsional) <ion-icon (click)="getListRanting()" name="refresh-outline"></ion-icon></ion-text>
           <div class="selectOptions">
             <ng-select formControlName="ranting" [searchable]="true" placeholder="Pilih Ranting"
               (change)="selectEventRanting($event)">

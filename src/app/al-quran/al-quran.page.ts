@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, Platform } from '@ionic/angular';
 import { AppComponent } from '../app.component';
 import { ApiService } from '../services/api.service';
 import { LoadingService } from '../services/loading.service';
@@ -21,8 +21,13 @@ export class AlQuranPage implements OnInit {
     private loadingController: LoadingController,
     private appComponent: AppComponent,
     private router: Router,
+    public platform: Platform,
     private loadingService: LoadingService
-  ) { }
+  ) { 
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      this.router.navigate(['/home']);
+    });
+  }
 
   async ngOnInit() {
     // this.present();

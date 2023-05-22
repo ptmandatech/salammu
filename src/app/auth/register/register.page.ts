@@ -42,6 +42,7 @@ export class RegisterPage implements OnInit {
   listCabangTemp:any = [];
   gettingCabang:boolean = true;
   async getListCabang() {
+    this.gettingCabang = true;
     try {
       await this.api.get('sicara/getAllPCM').then(res=>{ 
         this.listCabang = res;
@@ -60,15 +61,31 @@ export class RegisterPage implements OnInit {
   listRantingTemp:any = [];
   gettingRanting:boolean = true;
   async getListRanting() {
+    this.gettingRanting = true;
+    this.form.patchValue({
+      ranting: null
+    })
     try {
-      await this.api.get('sicara/getAllPRM').then(res=>{ 
-        this.listRanting = res;
-        this.listRantingTemp = res;
-        this.gettingRanting = false;
-      }, err => {
-        this.loading = false;
-        this.gettingRanting = false;
-      });
+      if(this.form.get('cabang').value) {
+        let val = this.form.get('cabang').value;
+        await this.api.get('sicara/getAllPRM?pcm_id='+val).then(res=>{ 
+          this.listRanting = res;
+          this.listRantingTemp = res;
+          this.gettingRanting = false;
+        }, err => {
+          this.loading = false;
+          this.gettingRanting = false;
+        });
+      } else {
+        await this.api.get('sicara/getAllPRM').then(res=>{ 
+          this.listRanting = res;
+          this.listRantingTemp = res;
+          this.gettingRanting = false;
+        }, err => {
+          this.loading = false;
+          this.gettingRanting = false;
+        });
+      }
     } catch {
 
     }
@@ -183,13 +200,18 @@ export class RegisterPage implements OnInit {
 
   async login(userData) {
     var dt = {
-      email: userData.email,
+      email: userData.email == null ? userData.phone:userData.email,
       password: userData.password
     }
     await this.api.post('auth/login',dt).then(res=>{     
       localStorage.setItem('salammuToken',JSON.stringify(res));
+      var that = this;
       this.dismiss();
-      this.router.navigate(['/home']);
+      this.dismiss();
+      setTimeout(function () {
+        that.dismiss();
+        this.router.navigate(['/home']);
+      }, 1000);
       this.loading=false;
     }).catch(error => {
       this.loading=false;

@@ -21,14 +21,14 @@
   <div id="content">
     <form [formGroup]="form">
       <ion-text color="medium">
-        <p>Email</p>
+        <p>Email / Nomor HP</p>
       </ion-text>
       <ion-item class="input">
-        <ion-input formControlName="email" name="email" required type="email" email="true" placeholder="Masukan Email"></ion-input>
+        <ion-input formControlName="email" name="email" required type="text" placeholder="Masukan Email / Nomor HP"></ion-input>
       </ion-item>
       
       <div class="error-msg" *ngIf="form.controls.email.hasError('required') && form.controls.email.touched">
-      Email harus diisi!
+      Email / Nomor HP harus diisi!
       </div>
       <div class="error-msg" *ngIf="form.controls.email.errors?.email">
       Format Email salah!

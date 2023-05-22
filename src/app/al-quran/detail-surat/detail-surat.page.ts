@@ -29,7 +29,7 @@ export class DetailSuratPage implements OnInit {
     public platform: Platform,
     private loadingService: LoadingService,
   ) { 
-    this.subscription =  this.platform.backButton.subscribeWithPriority(-1, () => {
+    this.subscription =  this.platform.backButton.subscribeWithPriority(999, () => {
       this.router.navigate(['/al-quran'], {replaceUrl: true});
     });
   }
