@@ -396,13 +396,23 @@ export class HomePage implements OnInit {
   isVisible:boolean = false;
   async cekLogin()
   {
+    this.userData = {};
+    this.isLoggedIn = false;
+    this.isVisible = false;
     this.dataLogin = await JSON.parse(localStorage.getItem('salammuToken'));
     this.api.me().then(async res=>{
       this.userData = res;
       this.isLoggedIn = true;
-      if(this.dataLogin.cabang_id || this.dataLogin.ranting_id) {
+      if(this.userData.cabang || this.userData.ranting) {
         this.isVisible = true;
+      } else {
+        this.isVisible = false;
       }
+      this.dataLogin.cabang = this.userData.cabang;
+      this.dataLogin.ranting = this.userData.ranting;
+      this.dataLogin.cabang_nama = this.userData.cabang_nama;
+      this.dataLogin.ranting_nama = this.userData.ranting_nama;
+      localStorage.setItem('salammuToken',JSON.stringify(this.dataLogin));
       this.loadingService.dismiss();
     }, async error => {
       this.loading = false;

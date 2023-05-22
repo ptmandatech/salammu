@@ -6,6 +6,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { CommonService } from 'src/app/services/common.service';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-edit-profil',
@@ -26,6 +27,7 @@ export class EditProfilPage implements OnInit {
     private loadingController: LoadingController,
     public actionSheetController:ActionSheetController,
     private toastController: ToastController,
+    private loadingService: LoadingService
   ) { 
     this.form = this.formBuilder.group({
       email: [null, [Validators.required, Validators.email]],
@@ -222,8 +224,10 @@ export class EditProfilPage implements OnInit {
   uploadImg:boolean;
   async uploadPhoto()
   {
+    this.loadingService.present();
     if (!this.form.valid) {
       this.validateAllFormFields(this.form);
+      this.loadingService.dismiss();
     }
     else {
       if(this.image != undefined) {
@@ -262,8 +266,10 @@ export class EditProfilPage implements OnInit {
       });
       this.loading = false;
       this.router.navigate(['/home']);
+      this.loadingService.dismiss();
     }, error => {
       console.log(error)
+      this.loadingService.dismiss();
     });
   }
 

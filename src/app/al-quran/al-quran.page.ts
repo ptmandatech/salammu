@@ -24,9 +24,9 @@ export class AlQuranPage implements OnInit {
     public platform: Platform,
     private loadingService: LoadingService
   ) { 
-    this.platform.backButton.subscribeWithPriority(10, () => {
-      this.router.navigate(['/home']);
-    });
+    // this.platform.backButton.subscribeWithPriority(10, () => {
+    //   this.router.navigate(['/home']);
+    // });
   }
 
   async ngOnInit() {
