@@ -118,13 +118,11 @@ export class TambahPengajianPage implements OnInit {
   {
     this.api.me().then(async res=>{
       this.userData = res;
-      this.loadingService.dismiss();
     }, async error => {
       this.loading = false;
       localStorage.removeItem('userSalammu');
       localStorage.removeItem('salammuToken');
       this.userData = undefined;
-      this.loadingService.dismiss();
     })
   }
 
@@ -137,10 +135,8 @@ export class TambahPengajianPage implements OnInit {
         this.listCabang = res;
         this.listCabangTemp = res;
         this.gettingCabang = false;
-        this.loadingService.dismiss();
       }, err => {
         this.loading = false;
-        this.loadingService.dismiss();
         this.gettingCabang = false;
       });
     } catch {
@@ -157,11 +153,9 @@ export class TambahPengajianPage implements OnInit {
         this.listRanting = res;
         this.listRantingTemp = res;
         this.gettingRanting = false;
-        this.loadingService.dismiss();
       }, err => {
         this.loading = false;
         this.gettingRanting = false;
-        this.loadingService.dismiss();
       });
     } catch {
       this.loadingService.dismiss();
@@ -199,7 +193,6 @@ export class TambahPengajianPage implements OnInit {
 
   locationNow:any;
   async getDetailPengajian() {
-    this.loadingService.present();
     await this.api.get('pengajian/find/'+this.id).then(res => {
       this.pengajianData = res;
       if(this.pengajianData.pin != null) {
@@ -246,6 +239,7 @@ export class TambahPengajianPage implements OnInit {
   }
 
   save() {
+    this.loadingService.present();
     if(this.form.controls.organizer.value?.trim() == 'cabang') {
       this.form.patchValue({
         twig: null
@@ -260,6 +254,7 @@ export class TambahPengajianPage implements OnInit {
 
     if (!this.form.valid) {
       this.validateAllFormFields(this.form);
+      this.loadingService.dismiss();
     }
     else {
       if(this.form.get('url_livestream').value) {
@@ -274,6 +269,7 @@ export class TambahPengajianPage implements OnInit {
           .then((toastEl) => {
             toastEl.present();
           });
+          this.loadingService.dismiss();
           return;
         }
       }
@@ -288,6 +284,7 @@ export class TambahPengajianPage implements OnInit {
           .then((toastEl) => {
             toastEl.present();
           });
+          this.loadingService.dismiss();
           return;
       }
 
@@ -322,6 +319,7 @@ export class TambahPengajianPage implements OnInit {
               toastEl.present();
             });
             this.loading = false;
+            this.loadingService.dismiss();
             this.router.navigate(['/my-pengajian']);
           }
         })
@@ -338,6 +336,7 @@ export class TambahPengajianPage implements OnInit {
               toastEl.present();
             });
             this.loading = false;
+            this.loadingService.dismiss();
             this.router.navigate(['/my-pengajian']);
           }
         })
@@ -370,6 +369,7 @@ export class TambahPengajianPage implements OnInit {
   done() {
     var conf = confirm('Jadwal pengajian sudah selesai?');
     if (conf) {
+      this.loadingService.present();
       this.pengajianData.status = 'done';
       this.api.put('pengajian/'+this.id, this.pengajianData).then(res => {
         if(res) {
@@ -383,8 +383,11 @@ export class TambahPengajianPage implements OnInit {
             toastEl.present();
           });
           this.loading = false;
+          this.loadingService.dismiss();
           this.router.navigate(['/my-pengajian']);
         }
+      }, err => {
+        this.loadingService.dismiss();
       })
     }
   }
@@ -392,6 +395,7 @@ export class TambahPengajianPage implements OnInit {
   delete() {
     var conf = confirm('Anda yakin ingin menghapus data?');
     if (conf) {
+      this.loadingService.present();
       this.api.delete('pengajian/'+this.id).then(res => {
         if(res) {
           this.toastController
@@ -404,8 +408,11 @@ export class TambahPengajianPage implements OnInit {
             toastEl.present();
           });
           this.loading = false;
+          this.loadingService.dismiss();
           this.router.navigate(['/my-pengajian']);
         }
+      }, err => {
+        this.loadingService.dismiss();
       })
     }
   }
@@ -414,6 +421,7 @@ export class TambahPengajianPage implements OnInit {
     this.loading = true;
     var conf = confirm('Anda yakin ingin melanjutkan verifikasi data pengajian?');
     if (conf) {
+      this.loadingService.present();
       this.pengajianData.verified = true;
       this.api.put('pengajian/'+ this.id, this.pengajianData).then(res => {
         if(res) {
@@ -428,10 +436,12 @@ export class TambahPengajianPage implements OnInit {
             toastEl.present();
           });
           this.loading = false;
+          this.loadingService.dismiss();
           this.router.navigate(['/my-pengajian']);
         }
       }).catch(error => {
         this.loading = false;
+        this.loadingService.dismiss();
       })
     } else {
       this.loading = false;
@@ -659,6 +669,7 @@ export class TambahPengajianPage implements OnInit {
 
     setTimeout(() => {
       this.map.setTarget(document.getElementById('map'));
+      this.loadingService.dismiss();
     }, 1000);
   }
 

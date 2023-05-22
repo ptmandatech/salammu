@@ -168,13 +168,13 @@ export class TambahProdukPage implements OnInit {
     });
     this.loadingService.present();
     this.showImageUploader(image.dataUrl, from);
-    this.loadingService.dismiss();
   }
 
   images:any = []
   blobImage:any;
   //tampilkan image editor dan uploader
   async showImageUploader(imageData,from) {
+    this.loadingService.dismiss();
     const modal = await this.modalController.create({
       component: ImageUploaderPage,
       componentProps: {
@@ -195,6 +195,7 @@ export class TambahProdukPage implements OnInit {
   imgUploaded:any = [];
   async uploadPhoto()
   {
+    this.loadingService.present();
     if(this.productData.price <= 0) {
       this.toastController
       .create({
@@ -225,7 +226,6 @@ export class TambahProdukPage implements OnInit {
   }
 
   addProduct() {
-    this.loadingService.present();
     if(this.isCreated == true) {
       this.productData.verified = false;
       this.productData.images = JSON.stringify(this.imgUploaded);
@@ -255,6 +255,7 @@ export class TambahProdukPage implements OnInit {
         this.productData.images = '';
         this.productData.images = JSON.stringify(this.imageNow);
       }
+      
       this.api.put('products/'+ this.productData.id, this.productData).then(res => {
         if(res) {
           this.toastController

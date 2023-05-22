@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActionSheetController, IonContent, LoadingController, ModalController, ToastController } from '@ionic/angular';
+import { ActionSheetController, IonContent, LoadingController, ModalController, Platform, ToastController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 import { ModalSuratComponent } from '../modal-surat/modal-surat.component';
 import { LoadingService } from 'src/app/services/loading.service';
@@ -16,6 +16,7 @@ export class DetailSuratPage implements OnInit {
   loading:boolean;
   id:any;
   terakhirDibaca:any;
+  subscription:any;
   constructor(
     public api: ApiService,
     private route: ActivatedRoute,
@@ -25,8 +26,13 @@ export class DetailSuratPage implements OnInit {
     private loadingController: LoadingController,
     private toastController: ToastController,
     public routes:ActivatedRoute,
+    public platform: Platform,
     private loadingService: LoadingService,
-  ) { }
+  ) { 
+    this.subscription =  this.platform.backButton.subscribeWithPriority(-1, () => {
+      this.router.navigate(['/al-quran'], {replaceUrl: true});
+    });
+  }
 
   ngOnInit() {
     // this.present();

@@ -118,20 +118,13 @@ export class AyatTersimpanPage implements OnInit {
 
   detailSurat:any = {};
   async getDetailSurat(n) {
-    await this.api.get('quran/surat/'+n.surat_id).then(res => {
-      this.detailSurat = res;
-      localStorage.setItem('detailSurat-'+n.surat_id, JSON.stringify(this.detailSurat));
-      let dt = JSON.parse(localStorage.getItem('detailSurat-'+n.surat_id));
-      this.detailSurat = dt == null ? {}:dt;
-
-      let aa = this.detailSurat;
-      aa.terakhirDibaca = n;
-      localStorage.setItem('terakhirDibaca', JSON.stringify(aa));
-      this.bacaSurat(this.detailSurat);
-      this.loadingService.dismiss();
-    }, err => {
-      this.loadingService.dismiss();
-    })
+    let dt = JSON.parse(localStorage.getItem('detailSurat-'+n.surat_id));
+    this.detailSurat = dt == null ? {}:dt;
+    let aa = this.detailSurat;
+    aa.terakhirDibaca = n;
+    localStorage.setItem('terakhirDibaca', JSON.stringify(aa));
+    this.bacaSurat(this.detailSurat);
+    this.loadingService.dismiss();
   }
 
   bacaSurat(n) {

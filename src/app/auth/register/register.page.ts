@@ -119,17 +119,30 @@ export class RegisterPage implements OnInit {
         this.userData.date_created = new Date();
         this.userData.id = new Date().getTime().toString() + '' + [Math.floor((Math.random() * 1000))];
         this.userData.role = 'user';
-        this.api.post('auth/register/',this.userData).then(res=>{
-          this.toastController
-          .create({
-            message: 'Pendaftaran berhasil.',
-            duration: 2000,
-            color: "primary",
-          })
-          .then((toastEl) => {
-            toastEl.present();
-          });
-          this.login(this.userData);
+        this.api.post('auth/register/',this.userData).then((res:any)=>{
+          if(res != 'exist') {
+            this.toastController
+            .create({
+              message: 'Pendaftaran berhasil.',
+              duration: 2000,
+              color: "primary",
+            })
+            .then((toastEl) => {
+              toastEl.present();
+            });
+            this.login(this.userData);
+          } else {
+            this.loading=false;
+            this.toastController
+            .create({
+              message: 'Email sudah digunakan!',
+              duration: 2000,
+              color: "danger",
+            })
+            .then((toastEl) => {
+              toastEl.present();
+            });
+          }
         },err=>{
           this.loading=false;
           this.toastController

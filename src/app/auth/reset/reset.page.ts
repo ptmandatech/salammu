@@ -67,7 +67,7 @@ export class ResetPage implements OnInit {
         this.api.put('auth/reset',{password:this.user.password, email:email}).then(res=>{
           this.toastController
           .create({
-            message: 'Pembaruan Kata Sandi berhasil.',
+            message: 'Kata sandi berhasil diperbarui, silahkan buka aplikasi salammu dengan password baru anda.',
             duration: 2000,
             color: "primary",
           })
@@ -77,7 +77,7 @@ export class ResetPage implements OnInit {
           this.loading=false;
           this.submited = false;
           localStorage.removeItem('salammuToken');
-          this.navCtrl.navigateRoot(['/home']);
+          // this.navCtrl.navigateRoot(['/home']);
         },err=>{
           this.toastController
           .create({

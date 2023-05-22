@@ -103,6 +103,8 @@ export class TambahNotulenmuPage implements OnInit {
   getDetailNotulen() {
     this.api.get('notulenmu/find/'+this.id).then(res => {
       this.notulenData = res;
+      console.log(res);
+      
       
       if(this.notulenData.images != '') {
         this.imageNow = JSON.parse(this.notulenData.images);

@@ -47,6 +47,7 @@ export class AlQuranPage implements OnInit {
   {
     this.api.me().then(async res=>{
       this.userData = res;
+      this.loading = false;
     }, async error => {
       this.loading = false;
       localStorage.removeItem('userSalammu');
@@ -58,7 +59,18 @@ export class AlQuranPage implements OnInit {
   async doRefresh(event) {
     if(this.appComponent.networkStatus.connected == true) {
       this.loading = true;
-      this.ngOnInit();
+      this.surat = JSON.parse(localStorage.getItem('suratAlQuran'));
+      this.terakhirDibaca = JSON.parse(localStorage.getItem('terakhirDibaca'));
+      this.suratTemp = this.surat;
+      if(this.surat == null) {
+        this.getSurat();
+      } else {
+        let detailSuratSaved = localStorage.getItem('detailSuratSaved');
+        if(!detailSuratSaved){
+          this.parseDataSurat();
+        }
+      }
+      this.cekLogin();
       setTimeout(() => {
         event.target.complete();
       }, 2000);
