@@ -47,13 +47,13 @@
         <ion-searchbar style="margin-top: 14px" mode="ios" showCancelButton="never" [(ngModel)]="searchTerm" (ionChange)="searchChanged($event)" placeholder="Cari Notulen"></ion-searchbar>
 
       
-        <div class="item-centered-sicara" *ngIf="!loading && listNotulenMu.length == 0 && dataLogin.cabang_nama || dataLogin.ranting_nama">
+        <div class="item-centered-sicara" *ngIf="!loading && listNotulenMu.length == 0">
           <img src="./assets/imgs/blank-notulenmu.png">
         </div>
 
-        <div class="item-centered-sicara" *ngIf="!loading && listNotulenMu.length == 0 && dataLogin.cabang_nama == null && dataLogin.ranting_nama == null">
+        <!-- <div class="item-centered-sicara" *ngIf="!loading && listNotulenMu.length == 0 && dataLogin.cabang_nama == null && dataLogin.ranting_nama == null">
           <img src="./assets/imgs/blank-notulenmu-tidakterdaftar.png">
-        </div>
+        </div> -->
 
         <ion-list *ngIf="!loading && listNotulenMu.length > 0">
           <ion-item *ngFor="let n of listNotulenMu">
