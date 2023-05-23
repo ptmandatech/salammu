@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController, ModalController } from '@ionic/angular';
+import { IonInfiniteScroll, LoadingController, ModalController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 import { CommonService } from 'src/app/services/common.service';
 import { LoadingService } from 'src/app/services/loading.service';
@@ -14,6 +14,8 @@ export class MyPengajianPage implements OnInit {
 
   listPengajian:any = [];
   listPengajianTemp:any = [];
+  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
+  listPengajianInfinite = [];
   userData:any;
   loading:boolean;
   constructor(
@@ -39,6 +41,7 @@ export class MyPengajianPage implements OnInit {
     this.loading = true;
     this.listPengajian = [];
     this.listPengajianTemp = [];
+    this.listPengajianInfinite = [];
     this.loadingService.present();
     this.cekLogin();
     setTimeout(() => {
@@ -81,17 +84,21 @@ export class MyPengajianPage implements OnInit {
 
   getAllPengajian() {
     if(this.userData.role == 'superadmin') {
-      this.api.get('pengajian/getAsAdmin').then(res => {
+      this.api.get('pengajian/getAsAdmin').then(async res => {
         this.listPengajian = res;
         this.listPengajianTemp = res;
+        const nextData = this.listPengajian.slice(0, 9);
+        this.listPengajianInfinite = await this.listPengajianInfinite.concat(nextData);
         this.loading = false;
       }, error => {
         this.loading = false;
       })
     } else {
-      this.api.get('pengajian?created_by='+ this.userData.id).then(res => {
+      this.api.get('pengajian?created_by='+ this.userData.id).then(async res => {
         this.listPengajian = res;
         this.listPengajianTemp = res;
+        const nextData = this.listPengajian.slice(0, 9);
+        this.listPengajianInfinite = await this.listPengajianInfinite.concat(nextData);
         this.loading = false;
       }, error => {
         this.loading = false;
@@ -100,22 +107,40 @@ export class MyPengajianPage implements OnInit {
     this.loadingService.dismiss();
   }
 
+  loadData(event) {
+    setTimeout(async () => {
+      let startIndex = 0;
+      if (this.listPengajianInfinite.length > 0) {
+        startIndex = this.listPengajianInfinite.length;
+      }
+      const nextData = this.listPengajian.slice(startIndex, this.listPengajianInfinite.length + 9);
+      this.listPengajianInfinite = this.listPengajianInfinite.concat(nextData);
+      event.target.complete();
+
+      if (this.listPengajianInfinite.length >= this.listPengajian.length) {
+        event.target.disabled = true;
+      }
+    }, 500);
+  }
+
   initializeItems(): void {
     this.listPengajian = this.listPengajianTemp;
   }
 
   searchTerm: string = '';
-  searchChanged(evt) {
+  async searchChanged(evt) {
 
     this.initializeItems();
 
     const searchTerm = evt.srcElement.value;
 
     if (!searchTerm) {
+      const nextData = this.listPengajian.slice(0, 9);
+      this.listPengajianInfinite = await this.listPengajianInfinite.concat(nextData);
       return;
     }
 
-    this.listPengajian = this.listPengajian.filter(pengajian => {
+    this.listPengajianInfinite = this.listPengajian.filter(pengajian => {
       if (pengajian.name && pengajian.location && searchTerm) {
         if (pengajian.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
           return true;
@@ -132,7 +157,7 @@ export class MyPengajianPage implements OnInit {
       this.initializeItems();
     } else {
       this.initializeItems();
-      this.listPengajian = this.listPengajian.filter(pengajian => {
+      this.listPengajianInfinite = this.listPengajian.filter(pengajian => {
         if (pengajian.status) {
           if (pengajian.status == status) {
             return true;

@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController, ModalController } from '@ionic/angular';
+import { IonInfiniteScroll, LoadingController, ModalController } from '@ionic/angular';
 import { ApiService } from '../services/api.service';
 import { CommonService } from '../services/common.service';
 import { LoadingService } from '../services/loading.service';
@@ -15,6 +15,8 @@ export class RadiomuPage implements OnInit {
 
   listRadiomu:any = [];
   listRadiomuTemp:any = [];
+  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
+  listRadiomuInfinite = [];
   serverImg: any;
   loading:boolean;
   constructor(
@@ -38,6 +40,7 @@ export class RadiomuPage implements OnInit {
     this.loading = true;
     this.listRadiomu = [];
     this.listRadiomuTemp = [];
+    this.listRadiomuInfinite = [];
     this.loadingService.present();
     this.getAllRadiomu();
     setTimeout(() => {
@@ -46,10 +49,12 @@ export class RadiomuPage implements OnInit {
   }
 
   getAllRadiomu() {
-    this.api.get('radiomu').then(res => {
+    this.api.get('radiomu').then(async res => {
       this.listRadiomu = res;
       this.listRadiomuTemp = res;
       this.loading = false;
+      const nextData = this.listRadiomu.slice(0, 9);
+      this.listRadiomuInfinite = await this.listRadiomuInfinite.concat(nextData);
       this.loadingService.dismiss();
     }, error => {
       this.loading = false;
@@ -57,22 +62,40 @@ export class RadiomuPage implements OnInit {
     })
   }
 
+  loadData(event) {
+    setTimeout(async () => {
+      let startIndex = 0;
+      if (this.listRadiomuInfinite.length > 0) {
+        startIndex = this.listRadiomuInfinite.length;
+      }
+      const nextData = this.listRadiomu.slice(startIndex, this.listRadiomuInfinite.length + 9);
+      this.listRadiomuInfinite = this.listRadiomuInfinite.concat(nextData);
+      event.target.complete();
+
+      if (this.listRadiomuInfinite.length >= this.listRadiomu.length) {
+        event.target.disabled = true;
+      }
+    }, 500);
+  }
+
   initializeItems(): void {
     this.listRadiomu = this.listRadiomuTemp;
   }
 
   searchTerm: string = '';
-  searchChanged(evt) {
+  async searchChanged(evt) {
 
     this.initializeItems();
 
     const searchTerm = evt.srcElement.value;
 
     if (!searchTerm) {
+      const nextData = this.listRadiomu.slice(0, 9);
+      this.listRadiomuInfinite = await this.listRadiomuInfinite.concat(nextData);
       return;
     }
 
-    this.listRadiomu = this.listRadiomu.filter(articles => {
+    this.listRadiomuInfinite = this.listRadiomu.filter(articles => {
       if (articles.title && searchTerm) {
         if (articles.title.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
           return true;

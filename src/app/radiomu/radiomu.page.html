@@ -18,7 +18,7 @@
       <ion-col size-md="6">
        
         <div class="pins">
-          <ion-card *ngFor="let n of listRadiomu" class="rounded-15" [routerLink]="['/radiomu/detail-radio', n.id]">
+          <ion-card *ngFor="let n of listRadiomuInfinite" class="rounded-15" [routerLink]="['/radiomu/detail-radio', n.id]">
             <img class="object-bg" style="height: 150px;" src="{{n.image == undefined || n.image == '' ? '../../assets/imgs/no-product.png':(serverImg+n.image)}}" />
             <ion-card-content>
               <ion-label>
@@ -29,7 +29,7 @@
             </ion-card-content>
           </ion-card>
         
-          <div class="item-centered" *ngIf="!loading && listRadiomu.length == 0">
+          <div class="item-centered" *ngIf="!loading && listRadiomuInfinite.length == 0">
             <img src="./assets/icon/pencarian.svg">
             <ion-label>
               <p>Data tidak ditemukan</p>
@@ -53,5 +53,9 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+  <ion-infinite-scroll (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content>
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 
 </ion-content>

@@ -18,7 +18,7 @@
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
 
-        <div class="item-centered" *ngIf="!loading && listProducts.length == 0">
+        <div class="item-centered" *ngIf="!loading && listProdukInfinite.length == 0">
           <img src="./assets/icon/pencarian.svg">
           <ion-label>
             <p>Data tidak ditemukan</p>
@@ -26,7 +26,7 @@
         </div>
 
         <ion-row class="ion-no-padding" *ngIf="!loading">
-          <ion-col size="6" *ngFor="let n of listProducts">
+          <ion-col size="6" *ngFor="let n of listProdukInfinite">
             <ion-card class="rounded-15" [routerLink]="['/produk-mu/tambah-produk', n.id]">
               <img src="{{n.images.length == 0 ? './assets/imgs/no-product.png':(serverImg+n.images[0])}}" class="object-bg" style="height: 150px;">
               <ion-card-content>
@@ -81,6 +81,10 @@
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+  <ion-infinite-scroll (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content>
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 
 
 </ion-content>

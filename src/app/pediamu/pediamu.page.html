@@ -17,7 +17,7 @@
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
 
-        <ion-card *ngFor="let n of listPediamu" [routerLink]="['/detail-pediamu', n.id]" class="rounded-15">
+        <ion-card *ngFor="let n of listPediamuInfinite" [routerLink]="['/detail-pediamu', n.id]" class="rounded-15">
           <div style="text-align: center;" >
             <img src="{{n.image == undefined || n.image == '' ? '../../assets/imgs/no-product.png':(serverImg+n.image)}}" />
           </div>
@@ -33,7 +33,7 @@
           </div>
         </ion-card>
         
-        <div class="item-centered" *ngIf="!loading && listPediamu.length == 0">
+        <div class="item-centered" *ngIf="!loading && listPediamuInfinite.length == 0">
           <img src="./assets/icon/pencarian.svg">
           <ion-label>
             <p>Data tidak ditemukan</p>
@@ -61,5 +61,9 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+  <ion-infinite-scroll (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content>
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 
 </ion-content>

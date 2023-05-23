@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { LoadingController, ModalController } from '@ionic/angular';
+import { IonInfiniteScroll, LoadingController, ModalController } from '@ionic/angular';
 import { ApiService } from '../services/api.service';
 import { CommonService } from '../services/common.service';
 import { LoadingService } from '../services/loading.service';
@@ -14,6 +14,8 @@ export class KhutbahPage implements OnInit {
 
   listKhutbah:any = [];
   listKhutbahTemp:any = [];
+  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
+  listKhutbahInfinite = [];
   serverImg: any;
   loading:boolean;
   constructor(
@@ -37,6 +39,7 @@ export class KhutbahPage implements OnInit {
     this.loading = true;
     this.listKhutbah = [];
     this.listKhutbahTemp = [];
+    this.listKhutbahInfinite = [];
     this.loadingService.present();
     this.getAllKhutbah();
     setTimeout(() => {
@@ -45,9 +48,11 @@ export class KhutbahPage implements OnInit {
   }
 
   getAllKhutbah() {
-    this.api.get('khutbah?all=ok').then(res => {
+    this.api.get('khutbah?all=ok').then(async res => {
       this.listKhutbah = res;
       this.listKhutbahTemp = res;
+      const nextData = this.listKhutbah.slice(0, 9);
+      this.listKhutbahInfinite = await this.listKhutbahInfinite.concat(nextData);
       this.loading = false;
       this.loadingService.dismiss();
     }, error => {
@@ -56,22 +61,40 @@ export class KhutbahPage implements OnInit {
     })
   }
 
+  loadData(event) {
+    setTimeout(async () => {
+      let startIndex = 0;
+      if (this.listKhutbahInfinite.length > 0) {
+        startIndex = this.listKhutbahInfinite.length;
+      }
+      const nextData = this.listKhutbah.slice(startIndex, this.listKhutbahInfinite.length + 9);
+      this.listKhutbahInfinite = this.listKhutbahInfinite.concat(nextData);
+      event.target.complete();
+
+      if (this.listKhutbahInfinite.length >= this.listKhutbah.length) {
+        event.target.disabled = true;
+      }
+    }, 500);
+  }
+
   initializeItems(): void {
     this.listKhutbah = this.listKhutbahTemp;
   }
 
   searchTerm: string = '';
-  searchChanged(evt) {
+  async searchChanged(evt) {
 
     this.initializeItems();
 
     const searchTerm = evt.srcElement.value;
 
     if (!searchTerm) {
+      const nextData = this.listKhutbah.slice(0, 9);
+      this.listKhutbahInfinite = await this.listKhutbahInfinite.concat(nextData);
       return;
     }
 
-    this.listKhutbah = this.listKhutbah.filter(khutbah => {
+    this.listKhutbahInfinite = this.listKhutbah.filter(khutbah => {
       if (khutbah.title && searchTerm) {
         if (khutbah.title.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
           return true;

@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ActionSheetController, AlertController, LoadingController, ModalController, Platform } from '@ionic/angular';
+import { ActionSheetController, AlertController, IonInfiniteScroll, LoadingController, ModalController, Platform } from '@ionic/angular';
 import { CalendarService } from '../services/calendar.service';
 import { ModalKalenderComponent } from './modal-kalender/modal-kalender.component';
 import { ModalPetaComponent } from './modal-peta/modal-peta.component';
@@ -416,13 +416,18 @@ export class PengajianPage implements OnInit {
 
   listPengajian:any = [];
   listPengajianTemp:any = [];
+  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
+  listPengajianInfinite = [];
   loading:boolean;
   getAllPengajian() {
     this.listPengajian = [];
     this.listPengajianTemp = [];
-    this.api.get('pengajian?all=ok').then(res => {
+    this.listPengajianInfinite = [];
+    this.api.get('pengajian?all=ok').then(async res => {
       this.listPengajian = res;
       this.listPengajianTemp = res;
+      const nextData = this.listPengajian.slice(0, 9);
+      this.listPengajianInfinite = await this.listPengajianInfinite.concat(nextData);
       this.loading = false;
       this.generateMap();
     }, error => {
@@ -594,6 +599,22 @@ export class PengajianPage implements OnInit {
     }, 1000);
     this.loadingGetMap = false;
     this.loadingService.dismiss();
+  }
+
+  loadData(event) {
+    setTimeout(async () => {
+      let startIndex = 0;
+      if (this.listPengajianInfinite.length > 0) {
+        startIndex = this.listPengajianInfinite.length;
+      }
+      const nextData = this.listPengajian.slice(startIndex, this.listPengajianInfinite.length + 9);
+      this.listPengajianInfinite = this.listPengajianInfinite.concat(nextData);
+      event.target.complete();
+
+      if (this.listPengajianInfinite.length >= this.listPengajian.length) {
+        event.target.disabled = true;
+      }
+    }, 500);
   }
 
 }

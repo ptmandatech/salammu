@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController, ModalController } from '@ionic/angular';
+import { IonInfiniteScroll, LoadingController, ModalController } from '@ionic/angular';
 import { ApiService } from '../services/api.service';
 import { CommonService } from '../services/common.service';
 import { LoadingService } from '../services/loading.service';
@@ -14,6 +14,8 @@ export class ProdukMUPage implements OnInit {
 
   listProducts:any = [];
   listProductsTemp:any = [];
+  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
+  listProdukInfinite = [];
   serverImg: any;
   loading:boolean;
   constructor(
@@ -42,6 +44,7 @@ export class ProdukMUPage implements OnInit {
     this.loading = true;
     this.listProducts = [];
     this.listProductsTemp = [];
+    this.listProdukInfinite = [];
     this.loadingService.present();
     this.allCategories = [{
       id: 'semua',
@@ -79,7 +82,7 @@ export class ProdukMUPage implements OnInit {
     });
   }
 
-  parseImage(res) {
+  async parseImage(res) {
     for(var i=0; i<res.length; i++) {
       let idx = this.listProducts.indexOf(res[i]);
 
@@ -98,7 +101,25 @@ export class ProdukMUPage implements OnInit {
       }
     }
     this.loading = false;
+    const nextData = this.listProducts.slice(0, 9);
+    this.listProdukInfinite = await this.listProdukInfinite.concat(nextData);
     this.loadingService.dismiss();
+  }
+
+  loadData(event) {
+    setTimeout(async () => {
+      let startIndex = 0;
+      if (this.listProdukInfinite.length > 0) {
+        startIndex = this.listProdukInfinite.length;
+      }
+      const nextData = this.listProducts.slice(startIndex, this.listProdukInfinite.length + 9);
+      this.listProdukInfinite = this.listProdukInfinite.concat(nextData);
+      event.target.complete();
+
+      if (this.listProdukInfinite.length >= this.listProducts.length) {
+        event.target.disabled = true;
+      }
+    }, 500);
   }
 
   initializeItems(): void {
@@ -116,17 +137,19 @@ export class ProdukMUPage implements OnInit {
   }
 
   searchTerm: string = '';
-  searchChanged(evt) {
+  async searchChanged(evt) {
 
     this.initializeItems();
 
     const searchTerm = evt.srcElement.value;
 
     if (!searchTerm) {
+      const nextData = this.listProducts.slice(0, 9);
+      this.listProdukInfinite = await this.listProdukInfinite.concat(nextData);
       return;
     }
 
-    this.listProducts = this.listProducts.filter(product => {
+    this.listProdukInfinite = this.listProducts.filter(product => {
       if(this.selectedCat != 'semua') {
         if (product.category && this.selectedCat) {
           if (product.category.toLowerCase().indexOf(this.selectedCat.toLowerCase()) > -1) {

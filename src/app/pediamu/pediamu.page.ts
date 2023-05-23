@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController, ModalController } from '@ionic/angular';
+import { IonInfiniteScroll, LoadingController, ModalController } from '@ionic/angular';
 import { ApiService } from '../services/api.service';
 import { CommonService } from '../services/common.service';
 import { LoadingService } from '../services/loading.service';
@@ -15,6 +15,8 @@ export class PediamuPage implements OnInit {
 
   listPediamu:any = [];
   listPediamuTemp:any = [];
+  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
+  listPediamuInfinite = [];
   serverImg: any;
   loading:boolean;
   constructor(
@@ -38,6 +40,7 @@ export class PediamuPage implements OnInit {
     this.loading = true;
     this.listPediamu = [];
     this.listPediamuTemp = [];
+    this.listPediamuInfinite = [];
     this.loadingService.present();
     this.getAllPediamu();
     setTimeout(() => {
@@ -46,16 +49,33 @@ export class PediamuPage implements OnInit {
   }
 
   getAllPediamu() {
-    this.api.get('pediamu?all=ok').then(res => {
+    this.api.get('pediamu?all=ok').then(async res => {
       this.listPediamu = res;
       this.listPediamuTemp = res;
       this.loadingService.dismiss();
+      const nextData = this.listPediamu.slice(0, 9);
+      this.listPediamuInfinite = await this.listPediamuInfinite.concat(nextData);
       this.loading = false;
     }, error => {
       this.loading = false;
-      this.loading = false;
       this.loadingService.dismiss();
     })
+  }
+
+  loadData(event) {
+    setTimeout(async () => {
+      let startIndex = 0;
+      if (this.listPediamuInfinite.length > 0) {
+        startIndex = this.listPediamuInfinite.length;
+      }
+      const nextData = this.listPediamu.slice(startIndex, this.listPediamuInfinite.length + 9);
+      this.listPediamuInfinite = this.listPediamuInfinite.concat(nextData);
+      event.target.complete();
+
+      if (this.listPediamuInfinite.length >= this.listPediamu.length) {
+        event.target.disabled = true;
+      }
+    }, 500);
   }
 
   initializeItems(): void {
@@ -63,17 +83,19 @@ export class PediamuPage implements OnInit {
   }
 
   searchTerm: string = '';
-  searchChanged(evt) {
+  async searchChanged(evt) {
 
     this.initializeItems();
 
     const searchTerm = evt.srcElement.value;
 
     if (!searchTerm) {
+      const nextData = this.listPediamu.slice(0, 9);
+      this.listPediamuInfinite = await this.listPediamuInfinite.concat(nextData);
       return;
     }
 
-    this.listPediamu = this.listPediamu.filter(articles => {
+    this.listPediamuInfinite = this.listPediamu.filter(articles => {
       if (articles.title && searchTerm) {
         if (articles.title.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
           return true;

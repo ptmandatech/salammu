@@ -20,7 +20,7 @@
   </ion-refresher>
 
   <ion-grid>
-    <ion-row class="ion-justify-content-center" *ngIf="!loading && listPengajian.length == 0">
+    <ion-row class="ion-justify-content-center" *ngIf="!loading && listPengajianInfinite.length == 0">
       <ion-col size-md="6">
         <div class="item-centered">
           <img src="./assets/icon/pencarian.svg">
@@ -32,7 +32,7 @@
     </ion-row>
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6" *ngIf="!loading">
-        <ion-item lines="none" detail class="list-custom" *ngFor="let n of listPengajian" [routerLink]="['/pengajian/tambah-pengajian', n.id]">
+        <ion-item lines="none" detail class="list-custom" *ngFor="let n of listPengajianInfinite" [routerLink]="['/pengajian/tambah-pengajian', n.id]">
           <ion-label>
             <ion-chip *ngIf="n.verified == 0" color="danger">
               <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
@@ -77,6 +77,11 @@
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+  
+  <ion-infinite-scroll (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content>
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 
 </ion-content>
 

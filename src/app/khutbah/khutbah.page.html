@@ -15,7 +15,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <ion-item detail *ngFor="let n of listKhutbah">
+  <ion-item detail *ngFor="let n of listKhutbahInfinite">
     <ion-grid>
       <ion-row class="ion-align-items-center" (click)="detail(n)">
         <ion-col size="4">
@@ -33,4 +33,21 @@
     </ion-grid>
   </ion-item>
 
+  <ion-grid *ngIf="listKhutbahInfinite.length == 0">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-md="6">
+        <div class="item-centered">
+          <img src="./assets/icon/pencarian.svg">
+          <ion-label>
+            <p>Data tidak ditemukan</p>
+          </ion-label>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-infinite-scroll (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content>
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

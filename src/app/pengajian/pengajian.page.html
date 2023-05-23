@@ -37,7 +37,7 @@
           <!-- Segment List -->
           <div *ngSwitchCase="'list'" >
             <ion-list class="ion-padding">
-              <ion-item lines="none" detail *ngFor="let n of listPengajian" class="{{n.status == 'soon' ? 'list-custom':'list-custom-done'}}" (click)="modalPeta(n)">
+              <ion-item lines="none" detail *ngFor="let n of listPengajianInfinite" class="{{n.status == 'soon' ? 'list-custom':'list-custom-done'}}" (click)="modalPeta(n)">
                 <ion-label class="ion-text-wrap">
                   <ion-badge mode="ios" color="{{n.status == 'soon' ? 'warning':'primary'}}">{{n.status == 'soon' ? 'Akan Datang':'Selesai'}}</ion-badge>
                   <h3>{{n.name}}</h3>
@@ -51,7 +51,7 @@
               </ion-item>
             </ion-list>
 
-            <ion-grid *ngIf="listPengajian.length == 0">
+            <ion-grid *ngIf="listPengajianInfinite.length == 0">
               <ion-row class="ion-justify-content-center">
                 <ion-col size-md="6">
                   <div class="item-centered">
@@ -63,6 +63,10 @@
                 </ion-col>
               </ion-row>
             </ion-grid>
+            <ion-infinite-scroll (ionInfinite)="loadData($event)">
+              <ion-infinite-scroll-content>
+              </ion-infinite-scroll-content>
+            </ion-infinite-scroll>
           </div>
           <!-- End Segment List -->
 

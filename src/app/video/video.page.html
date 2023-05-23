@@ -18,7 +18,7 @@
   <ion-grid class="ion-no-padding">
     <ion-row class="ion-justify-content-center">
       <ion-col size-md="6">
-        <div class="item-centered" *ngIf="!loading && listVideos.length == 0">
+        <div class="item-centered" *ngIf="!loading && listVideoInfinite.length == 0">
           <img src="./assets/icon/pencarian.svg">
           <ion-label>
             <p>Pencarian tidak ditemukan</p>
@@ -27,7 +27,7 @@
         <div style="margin-top: 20px;"></div>
 
           <div *ngIf="!loading">
-            <ion-item detail *ngFor="let n of listVideos" [routerLink]="['/video/detail-video', n.id]">
+            <ion-item detail *ngFor="let n of listVideoInfinite" [routerLink]="['/video/detail-video', n.id]">
               <ion-grid>
                 <ion-row class="ion-align-items-center">
                   <ion-col size="4">
@@ -61,4 +61,8 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+  <ion-infinite-scroll (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content>
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

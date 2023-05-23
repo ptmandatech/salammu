@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController, ModalController, ToastController } from '@ionic/angular';
+import { IonInfiniteScroll, LoadingController, ModalController, ToastController } from '@ionic/angular';
 import { ApiService } from '../services/api.service';
 import { CommonService } from '../services/common.service';
 import { SweetAlert } from 'sweetalert/typings/core';
@@ -15,6 +15,8 @@ export class NotulenmuPage implements OnInit {
 
   listNotulenMu:any = [];
   listNotulenMuTemp:any = [];
+  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
+  listNotulenmuInfinite = [];
   serverImg: any;
   loading:boolean;
   selectedFilter:any = 'Semua';
@@ -76,6 +78,7 @@ export class NotulenmuPage implements OnInit {
     this.serverImg = this.common.photoBaseUrl+'notulenmu/';
     this.listNotulenMu = [];
     this.listNotulenMuTemp = [];
+    this.listNotulenmuInfinite = [];
     setTimeout(() => {
       event.target.complete();
     }, 2000);
@@ -85,7 +88,7 @@ export class NotulenmuPage implements OnInit {
     this.selectedFilter = m;
     this.initializeItems();
     if(this.selectedFilter != 'Semua') {
-      this.listNotulenMu = this.listNotulenMu.filter(data => {
+      this.listNotulenmuInfinite = this.listNotulenMu.filter(data => {
         if (data.organization_type.toLowerCase().indexOf(this.selectedFilter.toLowerCase()) > -1) {
           return true;
         }
@@ -98,19 +101,23 @@ export class NotulenmuPage implements OnInit {
     this.listNotulenMuTemp = [];
     if(this.dataLogin) {
       if(this.dataLogin.role == 'superadmin') {
-        this.api.get('notulenmu').then(res => {
+        this.api.get('notulenmu').then(async res => {
           this.listNotulenMu = res;
           this.listNotulenMuTemp = res;
           this.loading = false;
+          const nextData = this.listNotulenMu.slice(0, 9);
+          this.listNotulenmuInfinite = await this.listNotulenmuInfinite.concat(nextData);
         }, error => {
           this.loading = false;
           this.loadingService.dismiss();
         })
       } else {
-        this.api.get('notulenmu?cabang='+this.userData.cabang+'&ranting='+this.userData.ranting).then(res => {
+        this.api.get('notulenmu?cabang='+this.userData.cabang+'&ranting='+this.userData.ranting).then(async res => {
           this.listNotulenMu = res;
           this.listNotulenMuTemp = res;
           this.loading = false;
+          const nextData = this.listNotulenMu.slice(0, 9);
+          this.listNotulenmuInfinite = await this.listNotulenmuInfinite.concat(nextData);
         }, error => {
           this.loading = false;
           this.loadingService.dismiss();
@@ -119,22 +126,40 @@ export class NotulenmuPage implements OnInit {
     }
   }
 
+  loadData(event) {
+    setTimeout(async () => {
+      let startIndex = 0;
+      if (this.listNotulenmuInfinite.length > 0) {
+        startIndex = this.listNotulenmuInfinite.length;
+      }
+      const nextData = this.listNotulenMu.slice(startIndex, this.listNotulenmuInfinite.length + 9);
+      this.listNotulenmuInfinite = this.listNotulenmuInfinite.concat(nextData);
+      event.target.complete();
+
+      if (this.listNotulenmuInfinite.length >= this.listNotulenMu.length) {
+        event.target.disabled = true;
+      }
+    }, 500);
+  }
+
   initializeItems(): void {
     this.listNotulenMu = this.listNotulenMuTemp;
   }
 
   searchTerm: string = '';
-  searchChanged(evt) {
+  async searchChanged(evt) {
 
     this.initializeItems();
 
     const searchTerm = evt.srcElement.value;
 
     if (!searchTerm) {
+      const nextData = this.listNotulenMu.slice(0, 9);
+      this.listNotulenmuInfinite = await this.listNotulenmuInfinite.concat(nextData);
       return;
     }
 
-    this.listNotulenMu = this.listNotulenMu.filter(data => {
+    this.listNotulenmuInfinite = this.listNotulenMu.filter(data => {
       if (data.title && searchTerm) {
         if (data.title.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
           return true;
