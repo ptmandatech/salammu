@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Diagnostic } from '@awesome-cordova-plugins/diagnostic/ngx';
+import { Market } from '@awesome-cordova-plugins/market/ngx';
 import { AlertController, LoadingController, ModalController, Platform, ToastController } from '@ionic/angular';
 import { LoginPage } from '../auth/login/login.page';
 import { ApiService } from '../services/api.service';
@@ -14,6 +15,7 @@ import { SettingLokasiPage } from './setting-lokasi/setting-lokasi.page';
 import { PilihLokasiPage } from './pilih-lokasi/pilih-lokasi.page';
 import { DetailJadwalSholatPage } from './detail-jadwal-sholat/detail-jadwal-sholat.page';
 import { LoadingService } from '../services/loading.service';
+import { App } from '@capacitor/app';
 
 @Component({
   selector: 'app-home',
@@ -63,6 +65,7 @@ export class HomePage implements OnInit {
     public alertController: AlertController,
     private diagnostic: Diagnostic,
     private platform: Platform,
+    private market: Market,
     private toastController: ToastController,
     private appComponent: AppComponent,
   ) {}
@@ -96,6 +99,62 @@ export class HomePage implements OnInit {
 
   ionViewWillEnter() {
     this.cekLogin();
+    this.checkVersion();
+  }
+
+  mobileVersion:any = "1.0.0";
+  build_version:any = "1.0.0";
+  checkVersion() {
+    this.api.get('config').then((res:any) => {
+      for(var i=0; i<res.length; i++) {
+        if(res[i].key == "mobile_version") {
+          this.mobileVersion = res[i].value;
+        }
+        if(res[i].key == "build_version") {
+          this.build_version = res[i].value;
+        }
+      }
+      console.log('Version Name', this.mobileVersion);
+      this.checkCurrentVersion();
+    }, err => {
+      console.log(err);
+    })
+  }
+
+  infoApp:any = {};
+  checkCurrentVersion() {
+    this.platform.ready().then(() => {
+      App.getInfo().then(res => {
+        this.infoApp = res;
+        if(this.infoApp.build == this.build_version && this.infoApp.version == this.mobileVersion) {
+          console.log('Version Oke');
+        } else {
+          this.showModalUpdateVersion();
+        }
+      })
+    });
+  }
+
+  async showModalUpdateVersion() {
+    console.log('Version Not Oke');
+    const confirm = await this.alertController.create({
+      header: 'Versi terbaru tersedia',
+      message: 'Perbaharui aplikasi SalamMU yuk.',
+      buttons: [
+        {
+          text: 'Tutup',
+          handler: async () => {
+          }
+        },
+        {
+          text: 'Perbaharui',
+          handler: async () => {
+            this.market.open(this.infoApp.id);
+          }
+        }
+      ]
+    });
+    await confirm.present();
   }
 
   surat:any = [];
@@ -442,6 +501,7 @@ export class HomePage implements OnInit {
         this.nextTimeTimer = undefined;
         await this.checkPermission();
         this.cekLogin();
+        this.checkVersion();
         this.dateNow = new Date();
         this.getHijri(this.dateNow);
         this.serverImg = this.common.photoBaseUrl+'products/';
