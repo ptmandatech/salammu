@@ -69,6 +69,26 @@ export class TambahNotulenmuPage implements OnInit {
 
   cekLogin()
   {    
+    this.api.me().then(async res=>{
+      this.userData = res;
+      this.dataLogin.cabang = this.userData.cabang;
+      this.dataLogin.ranting = this.userData.ranting;
+      this.dataLogin.cabang_nama = this.userData.cabang_nama;
+      this.dataLogin.ranting_nama = this.userData.ranting_nama;
+      localStorage.setItem('salammuToken',JSON.stringify(this.dataLogin))
+      this.checkOptionsCR();
+      this.loadingService.dismiss();
+    }, async error => {
+      this.loading = false;
+      localStorage.removeItem('userSalammu');
+      localStorage.removeItem('salammuToken');
+      this.userData = undefined;
+      this.loadingService.dismiss();
+    })
+  }
+
+  checkOptionsCR() {
+    this.dataLogin = JSON.parse(localStorage.getItem('salammuToken'));
     if(this.dataLogin.cabang_nama) {
       let dt = {
         id: this.dataLogin.cabang_id,
@@ -85,17 +105,6 @@ export class TambahNotulenmuPage implements OnInit {
       }
       this.pilihanCR.push(dt);
     }
-
-    this.api.me().then(async res=>{
-      this.userData = res;
-      this.loadingService.dismiss();
-    }, async error => {
-      this.loading = false;
-      localStorage.removeItem('userSalammu');
-      localStorage.removeItem('salammuToken');
-      this.userData = undefined;
-      this.loadingService.dismiss();
-    })
   }
 
   selectedCR = '';
@@ -103,9 +112,6 @@ export class TambahNotulenmuPage implements OnInit {
   getDetailNotulen() {
     this.api.get('notulenmu/find/'+this.id).then(res => {
       this.notulenData = res;
-      console.log(res);
-      
-      
       if(this.notulenData.images != '') {
         this.imageNow = JSON.parse(this.notulenData.images);
       }

@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController, ModalController } from '@ionic/angular';
+import { LoadingController, ModalController, Platform } from '@ionic/angular';
 import { ApiService } from '../services/api.service';
 import { CommonService } from '../services/common.service';
 import { SweetAlert } from 'sweetalert/typings/core';
 const swal: SweetAlert = require('sweetalert');
+import { App } from '@capacitor/app';
 @Component({
   selector: 'app-profil',
   templateUrl: './profil.page.html',
@@ -18,6 +19,7 @@ export class ProfilPage implements OnInit {
     public api: ApiService,
     public common: CommonService,
     public router:Router,
+    private platform: Platform,
     public modalController: ModalController,
     private loadingController: LoadingController,
   ) { }
@@ -25,6 +27,16 @@ export class ProfilPage implements OnInit {
   ngOnInit(): void {
     this.serverImg = this.common.photoBaseUrl+'users/';
     this.loginStatus();
+    this.checkCurrentVersion();
+  }
+
+  infoApp:any = {};
+  checkCurrentVersion() {
+    this.platform.ready().then(() => {
+      App.getInfo().then(res => {
+        this.infoApp = res;
+      })
+    });
   }
 
   loading:boolean;
