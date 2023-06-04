@@ -49,7 +49,7 @@
           </div>
 
           <!-- <div class="ion-padding" (click)="detailJadwal()"> -->
-          <div class="ion-padding">
+          <div class="ion-padding" *ngIf="configKeys['show_card_jadwal_sholat'] == '1'">
             <div class="info-jadwal">
               <ion-row style="border-bottom: 1px solid #F2F2F2;">
                 <ion-col class="ion-text-center">
@@ -93,7 +93,7 @@
           </div>
 
           <div class="container">
-            <ion-slides pager="true" *ngIf="!loading" [options]="slideOpts" class="ion-padding" style="margin-top: 20px;">
+            <ion-slides pager="true" *ngIf="!loading && configKeys['show_banners'] == '1'" [options]="slideOpts" class="ion-padding" style="margin-top: 20px;">
               <ion-slide *ngFor="let n of listBanners">
                 <a href="{{n.url}}">
                   <img src="{{n.image == undefined ? './assets/imgs/slide1.png':(serverImgBanner+n.image)}}" class="object-bg rounded-1" height="150">
@@ -115,42 +115,48 @@
             </ion-slides>
 
             <!-- WargaMU -->
-            <ion-item lines="none">
+            <ion-item lines="none" *ngIf="configKeys['show_menu_pengajian'] == '1' || configKeys['show_menu_jadwalsholat'] == '1' ||
+            configKeys['show_qibla_finder'] == '1' || configKeys['show_menu_video'] == '1' || 
+            configKeys['show_menu_doadzikir'] == '1' || configKeys['show_menu_artikelmu'] == '1' || 
+            configKeys['show_menu_pediamu'] == '1' || configKeys['show_menu_alquran'] == '1'">
               <ion-label>
                 <h2>WargaMU</h2>
               </ion-label>
             </ion-item>
-            <ion-grid>
+            <ion-grid *ngIf="configKeys['show_menu_pengajian'] == '1' || configKeys['show_menu_jadwalsholat'] == '1' ||
+            configKeys['show_qibla_finder'] == '1' || configKeys['show_menu_video'] == '1' || 
+            configKeys['show_menu_doadzikir'] == '1' || configKeys['show_menu_artikelmu'] == '1' || 
+            configKeys['show_menu_pediamu'] == '1' || configKeys['show_menu_alquran'] == '1'">
               <ion-row>
-                <ion-col size="3" class="ion-text-center mb-16" routerLink="/pengajian">
+                <ion-col *ngIf="configKeys['show_menu_pengajian'] == '1'" size="3" class="ion-text-center mb-16" routerLink="/pengajian">
                   <img src="./assets/icon/pengajian.svg"/>
                   <p class="fs-10" style="margin-top: -1px;">Pengajian</p>
                 </ion-col>
-                <ion-col size="3" class="ion-text-center mb-16" routerLink="/jadwal-sholat">
+                <ion-col *ngIf="configKeys['show_menu_jadwalsholat'] == '1'" size="3" class="ion-text-center mb-16" routerLink="/jadwal-sholat">
                   <img src="./assets/icon/jadwal-sholat.svg"/>
                   <p class="fs-10" style="margin-top: -1px;">Jadwal Sholat</p>
                 </ion-col>
-                <!-- <ion-col size="3" class="ion-text-center mb-16" routerLink="/qibla-finder">
+                <ion-col *ngIf="configKeys['show_qibla_finder'] == '1'" size="3" class="ion-text-center mb-16" routerLink="/qibla-finder">
                   <img src="./assets/icon/qibla-finder.svg"/>
                   <p class="fs-10" style="margin-top: -1px;">Qibla Finder</p>
-                </ion-col> -->
-                <ion-col size="3" class="ion-text-center mb-16" routerLink="/video">
+                </ion-col>
+                <ion-col *ngIf="configKeys['show_menu_video'] == '1'" size="3" class="ion-text-center mb-16" routerLink="/video">
                   <img src="./assets/icon/video.svg"/>
                   <p class="fs-10" style="margin-top: -1px;">Video</p>
                 </ion-col>
-                <ion-col size="3" class="ion-text-center mb-16" routerLink="/doa-dzikir">
+                <ion-col *ngIf="configKeys['show_menu_doadzikir'] == '1'" size="3" class="ion-text-center mb-16" routerLink="/doa-dzikir">
                   <img src="./assets/icon/dzikir.svg"/>
                   <p class="fs-10" style="margin-top: -1px;">Doa & Dzikir</p>
                 </ion-col>
-                <ion-col size="3" class="ion-text-center mb-16" routerLink="/artikel">
+                <ion-col *ngIf="configKeys['show_menu_artikelmu'] == '1'" size="3" class="ion-text-center mb-16" routerLink="/artikel">
                   <img src="./assets/icon/artikelmu.svg"/>
                   <p class="fs-10" style="margin-top: -1px;">ArtikelMU</p>
                 </ion-col>
-                <ion-col size="3" class="ion-text-center mb-16" routerLink="/pediamu">
+                <ion-col *ngIf="configKeys['show_menu_pediamu'] == '1'" size="3" class="ion-text-center mb-16" routerLink="/pediamu">
                   <img src="./assets/icon/tentangmu.svg"/>
                   <p class="fs-10" style="margin-top: -1px;">PediaMU</p>
                 </ion-col>
-                <ion-col size="3" class="ion-text-center mb-16" routerLink="/al-quran">
+                <ion-col *ngIf="configKeys['show_menu_alquran'] == '1'" size="3" class="ion-text-center mb-16" routerLink="/al-quran">
                   <img src="./assets/icon/al-quran.svg"/>
                   <p class="fs-10" style="margin-top: -1px;">Al-Quran</p>
                 </ion-col>
@@ -161,10 +167,10 @@
               </ion-row>
             </ion-grid>
 
-            <hr *ngIf="isVisible" class="separator separator--line" />
+            <hr *ngIf="isVisible && configKeys['show_menu_notulenmu'] == '1' || configKeys['show_menu_cr'] == '1'" class="separator separator--line" />
 
             <!-- RantingMU -->
-            <ion-item lines="none" *ngIf="isVisible">
+            <ion-item lines="none" *ngIf="isVisible && configKeys['show_menu_notulenmu'] == '1' || configKeys['show_menu_cr'] == '1'">
               <ion-label>
                 <h2>Cabang RantingMU</h2>
               </ion-label>
@@ -172,11 +178,11 @@
 
             <ion-grid *ngIf="isVisible">
               <ion-row>
-                <ion-col size="3" class="ion-text-center mb-16" routerLink="/notulenmu">
+                <ion-col *ngIf="configKeys['show_menu_notulenmu'] == '1'" size="3" class="ion-text-center mb-16" routerLink="/notulenmu">
                   <img src="./assets/icon/notulenmu.svg"/>
                   <p class="fs-10" style="margin-top: -1px;">NotulenMU</p>
                 </ion-col>
-                <ion-col size="3" class="ion-text-center mb-16" routerLink="/sicara">
+                <ion-col *ngIf="configKeys['show_menu_cr'] == '1'" size="3" class="ion-text-center mb-16" routerLink="/sicara">
                   <img src="./assets/icon/cabang-ranting.svg"/>
                   <p class="fs-10" style="margin-top: -1px;">Cabang & Ranting</p>
                 </ion-col>

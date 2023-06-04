@@ -14,9 +14,11 @@ export class SemuaMenuPage implements OnInit {
   ) { }
 
   dataLogin:any;
+  configKeys:any = {};
   isVisible:boolean = false;
   ngOnInit() {
     this.dataLogin = this.navparams.get('dataLogin');
+    this.configKeys = this.navparams.get('configKeys');
     if(this.dataLogin) {
       this.isVisible = true;
     }

@@ -99,14 +99,21 @@ export class HomePage implements OnInit {
 
   ionViewWillEnter() {
     this.cekLogin();
-    this.checkVersion();
+    this.getConfig();
   }
+
 
   mobileVersion:any = "1.0.0";
   build_version:any = "1.0.0";
-  checkVersion() {
+  configKeys:any = {};
+  getConfig() {
     this.api.get('config').then((res:any) => {
       for(var i=0; i<res.length; i++) {
+        if(this.configKeys[res[i].key] == null) {
+          this.configKeys[res[i].key] = '';
+        }
+        this.configKeys[res[i].key] = res[i].value;
+
         if(res[i].key == "mobile_version") {
           this.mobileVersion = res[i].value;
         }
@@ -114,13 +121,13 @@ export class HomePage implements OnInit {
           this.build_version = res[i].value;
         }
       }
+      
       console.log('Version Name', this.mobileVersion);
       this.checkCurrentVersion();
     }, err => {
       console.log(err);
     })
   }
-
   infoApp:any = {};
   checkCurrentVersion() {
     this.platform.ready().then(() => {
@@ -320,17 +327,19 @@ export class HomePage implements OnInit {
       this.timesToday = undefined;
       
       this.prayTime = await this.api.getToday(this.city).catch(async err => {
-        const toast = await this.toastController.create({
-          message: 'Gagal Mendapatkan informasi Jadwal Sholat, Silahkan refresh berkala.<br /> Error Message: '+err.error.message,
-          duration: 2500,
-          position: 'bottom',
-          color: 'danger',
-          mode: 'ios',
-          cssClass: 'className'
-        });
-    
-        await toast.present();
-        return null;
+        if(this.configKeys['show_card_jadwal_sholat'] == '1') {
+          const toast = await this.toastController.create({
+            message: 'Gagal Mendapatkan informasi Jadwal Sholat, Silahkan refresh berkala.<br /> Error Message: '+err.error.message,
+            duration: 2500,
+            position: 'bottom',
+            color: 'danger',
+            mode: 'ios',
+            cssClass: 'className'
+          });
+      
+          await toast.present();
+          return null;
+        }
       });
       if(this.prayTime) {
         this.timesToday = await this.prayTime.timings;
@@ -372,17 +381,19 @@ export class HomePage implements OnInit {
           this.prayTime = undefined;
           this.timesToday = undefined;
           this.prayTime = await this.api.getToday(this.city).catch(async err => {
-            const toast = await this.toastController.create({
-              message: 'Gagal Mendapatkan informasi Jadwal Sholat, Silahkan refresh berkala.<br /> Error Message: '+err.error.message,
-              duration: 2500,
-              position: 'bottom',
-              color: 'danger',
-              mode: 'ios',
-              cssClass: 'className'
-            });
-        
-            await toast.present();
-            return null;
+            if(this.configKeys['show_card_jadwal_sholat'] == '1') {
+              const toast = await this.toastController.create({
+                message: 'Gagal Mendapatkan informasi Jadwal Sholat, Silahkan refresh berkala.<br /> Error Message: '+err.error.message,
+                duration: 2500,
+                position: 'bottom',
+                color: 'danger',
+                mode: 'ios',
+                cssClass: 'className'
+              });
+          
+              await toast.present();
+              return null;
+            }
           });
           if(this.prayTime) {
             this.timesToday = await this.prayTime.timings;
@@ -422,17 +433,19 @@ export class HomePage implements OnInit {
       this.prayTime = undefined;
       this.timesToday = undefined;
       this.prayTime = await this.api.getToday(this.city).catch(async err => {
-        const toast = await this.toastController.create({
-          message: 'Gagal Mendapatkan informasi Jadwal Sholat, Silahkan refresh berkala.<br /> Error Message: '+err.error.message,
-          duration: 2500,
-          position: 'bottom',
-          color: 'danger',
-          mode: 'ios',
-          cssClass: 'className'
-        });
-    
-        await toast.present();
-        return null;
+        if(this.configKeys['show_card_jadwal_sholat'] == '1') {
+          const toast = await this.toastController.create({
+            message: 'Gagal Mendapatkan informasi Jadwal Sholat, Silahkan refresh berkala.<br /> Error Message: '+err.error.message,
+            duration: 2500,
+            position: 'bottom',
+            color: 'danger',
+            mode: 'ios',
+            cssClass: 'className'
+          });
+      
+          await toast.present();
+          return null;
+        }
       });
       if(this.prayTime) {
         this.timesToday = await this.prayTime.timings;
@@ -501,7 +514,7 @@ export class HomePage implements OnInit {
         this.nextTimeTimer = undefined;
         await this.checkPermission();
         this.cekLogin();
-        this.checkVersion();
+        this.getConfig();
         this.dateNow = new Date();
         this.getHijri(this.dateNow);
         this.serverImg = this.common.photoBaseUrl+'products/';
@@ -800,7 +813,10 @@ export class HomePage implements OnInit {
   async allMenu() {
     const modal = await this.modalController.create({
       component: SemuaMenuPage,
-      componentProps: {dataLogin: this.dataLogin},
+      componentProps: {
+        dataLogin: this.dataLogin,
+        configKeys: this.configKeys
+      },
       mode: "md",
       cssClass: 'modal-class',
       initialBreakpoint: 0.6,
@@ -902,17 +918,19 @@ export class HomePage implements OnInit {
           this.prayTime = undefined;
           this.timesToday = undefined;
           this.prayTime = await this.api.getToday(this.city).catch(async err => {
-            const toast = await this.toastController.create({
-              message: 'Gagal Mendapatkan informasi Jadwal Sholat, Silahkan refresh berkala.<br /> Error Message: '+err.error.message,
-              duration: 2500,
-              position: 'bottom',
-              color: 'danger',
-              mode: 'ios',
-              cssClass: 'className'
-            });
-        
-            await toast.present();
-            return null;
+            if(this.configKeys['show_card_jadwal_sholat'] == '1') {
+              const toast = await this.toastController.create({
+                message: 'Gagal Mendapatkan informasi Jadwal Sholat, Silahkan refresh berkala.<br /> Error Message: '+err.error.message,
+                duration: 2500,
+                position: 'bottom',
+                color: 'danger',
+                mode: 'ios',
+                cssClass: 'className'
+              });
+          
+              await toast.present();
+              return null;
+            }
           });
           if(this.prayTime) {
             this.timesToday = await this.prayTime.timings;
