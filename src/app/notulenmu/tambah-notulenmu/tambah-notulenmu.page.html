@@ -106,9 +106,9 @@
             </ion-label>
           </ion-item>
 
-          <ion-text color="medium">Cabang dan Ranting</ion-text>
+          <ion-text color="medium">Wilayah/Daerah/Cabang/Ranting</ion-text>
           <ion-item lines="none" class="input" *ngIf="userData.role != 'superadmin'">
-              <ion-select mode="ios" [(ngModel)]="selectedCR" (ngModelChange)="selectCR()" required #category="ngModel" placeholder="Pilih Cabang / Ranting" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" interface="popover">
+              <ion-select mode="ios" [(ngModel)]="selectedCR" (ngModelChange)="selectCR()" required #category="ngModel" placeholder="Pilih Data" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}">
                 <ion-select-option *ngFor="let n of pilihanCR" value="{{n.id}}">{{n.nama}}</ion-select-option>
               </ion-select>
               <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
@@ -116,11 +116,27 @@
 
           <!-- IF ADMIN -->
           <ion-item lines="none" class="input" *ngIf="userData.role == 'superadmin'">
-              <ion-select mode="ios" [(ngModel)]="notulenData.organization_type" required #organization_type="ngModel" placeholder="Pilih Cabang / Ranting" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" interface="popover">
-                <ion-select-option *ngFor="let n of ['cabang', 'ranting']" value="{{n}}">{{n}}</ion-select-option>
+              <ion-select mode="ios" [(ngModel)]="notulenData.organization_type" required #organization_type="ngModel" placeholder="Pilih Data" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}">
+                <ion-select-option *ngFor="let n of ['wilayah', 'daerah','cabang', 'ranting']" value="{{n}}">{{n}}</ion-select-option>
               </ion-select>
               <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
           </ion-item>
+
+          <ion-text color="medium" *ngIf="userData.role == 'superadmin' && notulenData.organization_type == 'wilayah'">Wilayah</ion-text>
+          <div class="selectOptions" *ngIf="userData.role == 'superadmin' && notulenData.organization_type == 'wilayah'">
+            <ng-select [(ngModel)]="notulenData.organization_id" required #organization_id="ngModel" [searchable]="true" placeholder="Pilih Wilayah">
+              <ng-option *ngFor="let data of listWilayah" [value]="data.id">{{data.nama}}</ng-option>
+            </ng-select>
+            <ion-note style="font-style: italic;" *ngIf="gettingWilayah">Mengambil data Wilayah...</ion-note>
+          </div>
+
+          <ion-text color="medium" *ngIf="userData.role == 'superadmin' && notulenData.organization_type == 'daerah'">Daerah</ion-text>
+          <div class="selectOptions" *ngIf="userData.role == 'superadmin' && notulenData.organization_type == 'daerah'">
+            <ng-select [(ngModel)]="notulenData.organization_id" required #organization_id="ngModel" [searchable]="true" placeholder="Pilih Daerah">
+              <ng-option *ngFor="let data of listDaerah" [value]="data.id">{{data.nama}}</ng-option>
+            </ng-select>
+            <ion-note style="font-style: italic;" *ngIf="gettingDaerah">Mengambil data Daerah...</ion-note>
+          </div>
 
           <ion-text color="medium" *ngIf="userData.role == 'superadmin' && notulenData.organization_type == 'cabang'">Cabang</ion-text>
           <div class="selectOptions" *ngIf="userData.role == 'superadmin' && notulenData.organization_type == 'cabang'">

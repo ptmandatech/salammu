@@ -34,13 +34,18 @@ export class EditProfilPage implements OnInit {
       name: [null, [Validators.required]],
       phone: [null, [Validators.required, Validators.minLength(10), Validators.maxLength(15), Validators.pattern('^[0-9]*$')]],
       address: [null, [Validators.required]],
+      wilayah: [null],
+      daerah: [null],
       cabang: [null],
       ranting: [null],
+      asManagement: [false]
     });
   }
 
   async ngOnInit(): Promise<void> {
     this.serverImg = this.common.photoBaseUrl+'users/';
+    this.getListWilayah();
+    this.getListDaerah();
     await this.getListCabang();
     await this.getListRanting();
     this.cekLogin();
@@ -64,6 +69,44 @@ export class EditProfilPage implements OnInit {
       });
       this.loading = false;
     });
+  }
+
+  listWilayah:any = [];
+  listWilayahTemp:any = [];
+  gettingWilayah:boolean = true;
+  async getListWilayah() {
+    this.gettingWilayah = true;
+    try {
+      await this.api.get('sicara/getAllPWM').then(res=>{ 
+        this.listWilayah = res;
+        this.listWilayahTemp = res;
+        this.gettingWilayah = false;
+      }, err => {
+        this.loading = false;
+        this.gettingWilayah = false;
+      });
+    } catch {
+
+    }
+  }
+
+  listDaerah:any = [];
+  listDaerahTemp:any = [];
+  gettingDaerah:boolean = true;
+  async getListDaerah() {
+    this.gettingDaerah = true;
+    try {
+      await this.api.get('sicara/getAllPDM').then(res=>{ 
+        this.listDaerah = res;
+        this.listDaerahTemp = res;
+        this.gettingDaerah = false;
+      }, err => {
+        this.loading = false;
+        this.gettingDaerah = false;
+      });
+    } catch {
+
+    }
   }
 
   listCabang:any = [];
@@ -102,6 +145,53 @@ export class EditProfilPage implements OnInit {
     }
   }
 
+  async selectEventPWM(val) {
+    this.form.patchValue({
+      wilayah: val
+    })
+    this.listDaerah = [];
+    this.listDaerahTemp = [];
+    this.gettingDaerah = true;
+    this.form.patchValue({
+      daerah: null,
+      cabang: null,
+      ranting: null
+    })
+    this.form.get('cabang').disable();
+    this.form.get('ranting').disable();
+    await this.api.get('sicara/getAllPDM?pwm_id='+val).then(res=>{ 
+      this.listDaerah = res;
+      this.listDaerahTemp = res;
+      this.gettingDaerah = false;
+    }, err => {
+      this.loading = false;
+      this.gettingDaerah = false;
+    });
+  }
+
+  async selectEventPDM(val) {
+    this.form.patchValue({
+      daerah: val
+    })
+    this.listCabang = [];
+    this.listCabangTemp = [];
+    this.gettingCabang = true;
+    this.form.patchValue({
+      cabang: null,
+      ranting: null
+    })
+    this.form.get('cabang').enable();
+    this.form.get('ranting').disable();
+    await this.api.get('sicara/getAllPCM?pdm_id='+val).then(res=>{ 
+      this.listCabang = res;
+      this.listCabangTemp = res;
+      this.gettingCabang = false;
+    }, err => {
+      this.loading = false;
+      this.gettingCabang = false;
+    });
+  }
+
   async selectEvent(val) {
     this.form.patchValue({
       cabang: val
@@ -112,6 +202,7 @@ export class EditProfilPage implements OnInit {
     this.form.patchValue({
       ranting: null
     })
+    this.form.get('ranting').enable();
     await this.api.get('sicara/getAllPRM?pcm_id='+val).then(res=>{ 
       this.listRanting = res;
       this.listRantingTemp = res;
@@ -136,9 +227,12 @@ export class EditProfilPage implements OnInit {
         name: this.userData.name,
         email: this.userData.email,
         phone: this.userData.phone,
+        wilayah: this.userData.wilayah,
+        daerah: this.userData.daerah,
         cabang: this.userData.cabang,
         ranting: this.userData.ranting,
-        address: this.userData.address
+        address: this.userData.address,
+        asManagement: this.userData.asManagement == '1' ? true:false
       });
       this.uploadImg = false;
       this.loadingController.dismiss();
@@ -251,8 +345,16 @@ export class EditProfilPage implements OnInit {
     this.userData.email = this.form.get('email').value;
     this.userData.phone = this.form.get('phone').value;
     this.userData.address = this.form.get('address').value;
+    this.userData.wilayah = this.form.get('wilayah').value;
+    this.userData.daerah = this.form.get('daerah').value;
     this.userData.cabang = this.form.get('cabang').value;
     this.userData.ranting = this.form.get('ranting').value;
+    this.userData.asManagement = this.form.get('asManagement').value;
+    if(this.userData.asManagement) {
+      this.userData.statusAsManagement = 'pending';
+    } else {
+      this.userData.statusAsManagement = 'isNotManagement';
+    }
     
     this.api.put('users/'+this.userData.id, this.userData).then(res=>{
       this.toastController

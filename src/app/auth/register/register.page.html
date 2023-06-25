@@ -52,6 +52,24 @@
             </div>
           </div>
 
+          <ion-text color="medium">Wilayah (opsional) <ion-icon (click)="getListWilayah()" name="refresh-outline"></ion-icon></ion-text>
+          <div class="selectOptions">
+            <ng-select formControlName="wilayah" [searchable]="true" placeholder="Pilih Wilayah"
+              (change)="selectEventPWM($event)">
+              <ng-option *ngFor="let data of listWilayah" [value]="data.id">{{data.nama}}</ng-option>
+            </ng-select>
+            <ion-note style="font-style: italic;" *ngIf="gettingWilayah">Mengambil data Wilayah...</ion-note>
+          </div>
+
+          <ion-text color="medium">Daerah (opsional) <ion-icon (click)="getListDaerah()" name="refresh-outline"></ion-icon></ion-text>
+          <div class="selectOptions">
+            <ng-select formControlName="daerah" [searchable]="true" placeholder="Pilih Daerah"
+              (change)="selectEventPDM($event)">
+              <ng-option *ngFor="let data of listDaerah" [value]="data.id">{{data.nama}}</ng-option>
+            </ng-select>
+            <ion-note style="font-style: italic;" *ngIf="gettingDaerah">Mengambil data Daerah...</ion-note>
+          </div>
+
           <ion-text color="medium">Cabang (opsional) <ion-icon (click)="getListCabang()" name="refresh-outline"></ion-icon></ion-text>
           <div class="selectOptions">
             <ng-select formControlName="cabang" [searchable]="true" placeholder="Pilih Cabang"
@@ -112,6 +130,15 @@
           </div>
 
           <!-- <p *ngIf="match == false" style="color: red;">Confirmation Password not match!</p> -->
+          <ion-item lines="none">
+            <div>Apakah anda masuk dalam Pengurus LPCRM?</div>
+            <ion-checkbox
+              mode="ios"
+              slot="start"
+              formControlName="asManagement" 
+              name="asManagement"
+            ></ion-checkbox>
+          </ion-item>
 
           <div style="margin-top: 100px;"></div>
 

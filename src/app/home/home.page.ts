@@ -475,15 +475,20 @@ export class HomePage implements OnInit {
     this.api.me().then(async res=>{
       this.userData = res;
       this.isLoggedIn = true;
-      if(this.userData.cabang || this.userData.ranting) {
+      if(this.userData.wilayah || this.userData.daerah || this.userData.cabang || this.userData.ranting) {
         this.isVisible = true;
       } else {
         this.isVisible = false;
       }
+      this.dataLogin.wilayah = this.userData.wilayah;
+      this.dataLogin.daerah = this.userData.daerah;
       this.dataLogin.cabang = this.userData.cabang;
       this.dataLogin.ranting = this.userData.ranting;
+      this.dataLogin.wilayah_nama = this.userData.wilayah_nama;
+      this.dataLogin.daerah_nama = this.userData.daerah_nama;
       this.dataLogin.cabang_nama = this.userData.cabang_nama;
       this.dataLogin.ranting_nama = this.userData.ranting_nama;
+      this.dataLogin.asManagement = this.userData.asManagement;
       localStorage.setItem('salammuToken',JSON.stringify(this.dataLogin));
       this.loadingService.dismiss();
     }, async error => {

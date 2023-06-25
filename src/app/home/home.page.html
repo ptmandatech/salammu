@@ -10,7 +10,7 @@
           <div class="top-left">
             <ion-button fill="clear" class="ion-text-wrap" style="width: 80%;" color="light" (click)="openSettingLokasi()">
               <ion-icon slot="icon-only" name="location-outline"></ion-icon>
-              <span style="text-align: left;" *ngIf="!loading">{{address_display_name == undefined ? city:address_display_name}}</span>
+              <span style="text-align: left;" *ngIf="!loading">{{ address_display_name == undefined ? city : (address_display_name.length > 45 ? address_display_name.slice(0, 45) + '...' : address_display_name) }}</span>
               <span *ngIf="loading"><ion-skeleton-text animated style="width: 50%;"></ion-skeleton-text></span>
             </ion-button>
             <!-- <ion-item class="fill-0" lines="none" *ngIf="prayTime.meta != undefined">

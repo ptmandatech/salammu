@@ -59,15 +59,28 @@ export class NotulenmuPage implements OnInit {
   pilihanChip:any = [];
   parseChip() {
     if(this.userData.role != 'superadmin') {
-      if(this.dataLogin.cabang_nama && this.dataLogin.ranting_nama == null) {
-        this.pilihanChip = ['Cabang'];
-      } else if(this.dataLogin.ranting_nama && this.dataLogin.cabang_nama == null) {
-        this.pilihanChip = ['Ranting'];
-      } else if(this.dataLogin.ranting_nama && this.dataLogin.cabang_nama) {
-        this.pilihanChip = ['Semua', 'Cabang', 'Ranting'];
+      this.pilihanChip = ['Semua'];
+      if(this.dataLogin.wilayah_nama) {
+        this.pilihanChip.push('Wilayah')
       }
+      if(this.dataLogin.daerah_nama) {
+        this.pilihanChip.push('Daerah')
+      }
+      if(this.dataLogin.cabang_nama) {
+        this.pilihanChip.push('Cabang')
+      }
+      if(this.dataLogin.ranting_nama) {
+        this.pilihanChip.push('Ranting')
+      }
+      // if(this.dataLogin.cabang_nama && this.dataLogin.ranting_nama == null) {
+      //   this.pilihanChip = ['Cabang'];
+      // } else if(this.dataLogin.ranting_nama && this.dataLogin.cabang_nama == null) {
+      //   this.pilihanChip = ['Ranting'];
+      // } else if(this.dataLogin.ranting_nama && this.dataLogin.cabang_nama) {
+      //   this.pilihanChip = ['Semua', 'Cabang', 'Ranting'];
+      // }
     } else {
-      this.pilihanChip = ['Semua', 'Cabang', 'Ranting'];
+      this.pilihanChip = ['Semua', 'Wilayah', 'Daerah', 'Cabang', 'Ranting'];
     }
   }
 

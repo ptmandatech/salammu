@@ -26,16 +26,59 @@ export class RegisterPage implements OnInit {
       name: [null, [Validators.required]],
       phone: [null, [Validators.required, Validators.minLength(10), Validators.maxLength(15), Validators.pattern('^[0-9]*$')]],
       address: [null, [Validators.required]],
+      wilayah: [null],
+      daerah: [null],
       cabang: [null],
       ranting: [null],
       password: [null, [Validators.required, Validators.minLength(6)]],
-      re_password: [null, [Validators.required, Validators.minLength(6)]]
+      re_password: [null, [Validators.required, Validators.minLength(6)]],
+      asManagement: [false]
     });
   }
 
   ngOnInit() {
+    this.getListWilayah();
+    this.getListDaerah();
     this.getListCabang();
     this.getListRanting();
+  }
+
+  listWilayah:any = [];
+  listWilayahTemp:any = [];
+  gettingWilayah:boolean = true;
+  async getListWilayah() {
+    this.gettingWilayah = true;
+    try {
+      await this.api.get('sicara/getAllPWM').then(res=>{ 
+        this.listWilayah = res;
+        this.listWilayahTemp = res;
+        this.gettingWilayah = false;
+      }, err => {
+        this.loading = false;
+        this.gettingWilayah = false;
+      });
+    } catch {
+
+    }
+  }
+
+  listDaerah:any = [];
+  listDaerahTemp:any = [];
+  gettingDaerah:boolean = true;
+  async getListDaerah() {
+    this.gettingDaerah = true;
+    try {
+      await this.api.get('sicara/getAllPDM').then(res=>{ 
+        this.listDaerah = res;
+        this.listDaerahTemp = res;
+        this.gettingDaerah = false;
+      }, err => {
+        this.loading = false;
+        this.gettingDaerah = false;
+      });
+    } catch {
+
+    }
   }
 
   listCabang:any = [];
@@ -91,6 +134,53 @@ export class RegisterPage implements OnInit {
     }
   }
 
+  async selectEventPWM(val) {
+    this.form.patchValue({
+      wilayah: val
+    })
+    this.listDaerah = [];
+    this.listDaerahTemp = [];
+    this.gettingDaerah = true;
+    this.form.patchValue({
+      daerah: null,
+      cabang: null,
+      ranting: null
+    })
+    this.form.get('cabang').disable();
+    this.form.get('ranting').disable();
+    await this.api.get('sicara/getAllPDM?pwm_id='+val).then(res=>{ 
+      this.listDaerah = res;
+      this.listDaerahTemp = res;
+      this.gettingDaerah = false;
+    }, err => {
+      this.loading = false;
+      this.gettingDaerah = false;
+    });
+  }
+
+  async selectEventPDM(val) {
+    this.form.patchValue({
+      daerah: val
+    })
+    this.listCabang = [];
+    this.listCabangTemp = [];
+    this.gettingCabang = true;
+    this.form.patchValue({
+      cabang: null,
+      ranting: null
+    })
+    this.form.get('cabang').enable();
+    this.form.get('ranting').disable();
+    await this.api.get('sicara/getAllPCM?pdm_id='+val).then(res=>{ 
+      this.listCabang = res;
+      this.listCabangTemp = res;
+      this.gettingCabang = false;
+    }, err => {
+      this.loading = false;
+      this.gettingCabang = false;
+    });
+  }
+
   async selectEvent(val) {
     this.form.patchValue({
       cabang: val
@@ -101,6 +191,7 @@ export class RegisterPage implements OnInit {
     this.form.patchValue({
       ranting: null
     })
+    this.form.get('ranting').enable();
     await this.api.get('sicara/getAllPRM?pcm_id='+val).then(res=>{ 
       this.listRanting = res;
       this.listRantingTemp = res;
@@ -130,6 +221,11 @@ export class RegisterPage implements OnInit {
     else {
       this.loading=true;
       this.userData = this.form.value;
+      if(this.userData.asManagement) {
+        this.userData.statusAsManagement = 'pending';
+      } else {
+        this.userData.statusAsManagement = 'isNotManagement';
+      }
       if(this.userData.password != '' && this.userData.password == this.userData.re_password)
       {
         this.userData.is_active = 1;

@@ -35,13 +35,13 @@ export class ListHadirPage implements OnInit {
     this.loadingService.present();
     this.id = this.navParams.get('id');
     this.action = this.navParams.get('action');
+    this.notulenData = this.navParams.get('notulenData');
     this.dataLogin = JSON.parse(localStorage.getItem('salammuToken'));
     this.cekLogin();
     this.loading = true;
     this.serverImg = this.common.photoBaseUrl+'users/';
     this.listUsers = [];
     this.listUsersTemp = [];
-    this.getAllUsers();
     this.getDetailNotulen();
   }
 
@@ -70,6 +70,27 @@ export class ListHadirPage implements OnInit {
     }, 2000);
   }
 
+  notulenData:any = {};
+  getDetailNotulen() {
+    if(this.notulenData) {
+      this.notulenData.notulenmu_participantsTemp = this.notulenData.notulenmu_participants;
+      this.loading = false;
+      this.loadingService.dismiss();
+      this.getAllUsers();
+    } else {
+      this.api.get('notulenmu/find/'+this.id).then(res => {
+        this.notulenData = res;
+        this.notulenData.notulenmu_participantsTemp = this.notulenData.notulenmu_participants;
+        this.loading = false;
+        this.loadingService.dismiss();
+        this.getAllUsers();
+      }, err => {
+        this.loading = false;
+        this.loadingService.dismiss();
+      })
+    }
+  }
+
   getAllUsers() {
     if(this.dataLogin) {
       if(this.dataLogin.role == 'superadmin') {
@@ -82,10 +103,15 @@ export class ListHadirPage implements OnInit {
           this.loadingService.dismiss();
         })
       } else {
-        this.api.get('users/getAll?cabang='+this.dataLogin.cabang_id+'&ranting='+this.dataLogin.ranting_id).then(res => {
-          this.listUsers = res;
-          this.listUsersTemp = res;
-          this.parseData();
+        this.api.get('users/getAll?wilayah='+this.dataLogin.wilayah_id+'&daerah='+this.dataLogin.daerah_id+'&cabang='+this.dataLogin.cabang_id+'&ranting='+this.dataLogin.ranting_id).then(res => {
+          if(res) {
+            this.listUsers = res;
+            this.listUsersTemp = res;
+            this.parseData();
+          } else {
+            this.loading = false;
+            this.loadingService.dismiss();
+          }
         }, error => {
           this.loading = false;
           this.loadingService.dismiss();
@@ -149,19 +175,6 @@ export class ListHadirPage implements OnInit {
         return false;
       }
     });
-  }
-
-  notulenData:any = {};
-  getDetailNotulen() {
-    this.api.get('notulenmu/find/'+this.id).then(res => {
-      this.notulenData = res;
-      this.notulenData.notulenmu_participantsTemp = this.notulenData.notulenmu_participants;
-      this.loading = false;
-      this.loadingService.dismiss();
-    }, err => {
-      this.loading = false;
-      this.loadingService.dismiss();
-    })
   }
 
   async tambahPeserta() {
