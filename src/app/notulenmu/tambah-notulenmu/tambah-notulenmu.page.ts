@@ -81,7 +81,14 @@ export class TambahNotulenmuPage implements OnInit {
       this.dataLogin.daerah_nama = this.userData.daerah_nama;
       this.dataLogin.cabang_nama = this.userData.cabang_nama;
       this.dataLogin.ranting_nama = this.userData.ranting_nama;
+
+      this.dataLogin.wilayah_id = this.userData.wilayah_id;
+      this.dataLogin.daerah_id = this.userData.daerah_id;
+      this.dataLogin.cabang_id = this.userData.cabang_id;
+      this.dataLogin.ranting_id = this.userData.ranting_id;
       this.dataLogin.asManagement = this.userData.asManagement;
+      this.dataLogin.placeManagement = this.userData.placeManagement;
+      this.dataLogin.statusAsManagement = this.userData.statusAsManagement;
       localStorage.setItem('salammuToken',JSON.stringify(this.dataLogin))
       this.checkOptionsCR();
       this.loadingService.dismiss();
@@ -97,6 +104,24 @@ export class TambahNotulenmuPage implements OnInit {
   checkOptionsCR() {
     this.dataLogin = JSON.parse(localStorage.getItem('salammuToken'));
     console.log(this.dataLogin);
+    if(this.dataLogin.wilayah_nama && this.dataLogin.placeManagement == 'wilayah' && this.dataLogin.statusAsManagement == 'confirmed') {
+      let dt = {
+        id: this.dataLogin.wilayah_id,
+        nama: this.dataLogin.wilayah_nama,
+        type: 'wilayah'
+      }
+      this.pilihanCR.push(dt);
+    }
+
+    if(this.dataLogin.daerah_nama && this.dataLogin.placeManagement == 'daerah' && this.dataLogin.statusAsManagement == 'confirmed') {
+      let dt = {
+        id: this.dataLogin.daerah_id,
+        nama: this.dataLogin.daerah_nama,
+        type: 'daerah'
+      }
+      this.pilihanCR.push(dt);
+    }
+
     if(this.dataLogin.cabang_nama) {
       let dt = {
         id: this.dataLogin.cabang_id,
@@ -105,6 +130,7 @@ export class TambahNotulenmuPage implements OnInit {
       }
       this.pilihanCR.push(dt);
     }
+    
     if(this.dataLogin.ranting_nama) {
       let dt = {
         id: this.dataLogin.ranting_id,

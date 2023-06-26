@@ -38,7 +38,8 @@ export class EditProfilPage implements OnInit {
       daerah: [null],
       cabang: [null],
       ranting: [null],
-      asManagement: [false]
+      asManagement: [false],
+      placeManagement: [null]
     });
   }
 
@@ -153,10 +154,15 @@ export class EditProfilPage implements OnInit {
     this.listDaerahTemp = [];
     this.gettingDaerah = true;
     this.form.patchValue({
+      asManagement: false,
+      placeManagement: null,
       daerah: null,
       cabang: null,
       ranting: null
     })
+    this.userData.asManagement = '0';
+    this.userData.statusAsManagement = 'isNotManagement';
+    this.userData.placeManagement = null;
     this.form.get('cabang').disable();
     this.form.get('ranting').disable();
     await this.api.get('sicara/getAllPDM?pwm_id='+val).then(res=>{ 
@@ -232,8 +238,12 @@ export class EditProfilPage implements OnInit {
         cabang: this.userData.cabang,
         ranting: this.userData.ranting,
         address: this.userData.address,
+        placeManagement: this.userData.placeManagement,
         asManagement: this.userData.asManagement == '1' ? true:false
       });
+      if(this.userData.daerah) {
+        this.selectEventPDM(this.userData.daerah);
+      }
       this.uploadImg = false;
       this.loadingController.dismiss();
     }, error => {
@@ -298,6 +308,56 @@ export class EditProfilPage implements OnInit {
     return await modal.present();
   }
 
+  pengurus:any = [
+    {
+      id:'wilayah',
+      nama: 'Wilayah',
+      disabled: true
+    },
+    {
+      id:'daerah',
+      nama: 'Daerah',
+      disabled: true
+    }
+  ]
+  checkLPCRM(evt) {
+    if(this.form.get('wilayah').value) {
+      let idx = this.pengurus.findIndex(e => e.id == 'wilayah');
+      if(idx != -1) {
+        this.pengurus[idx].disabled = false;
+      }
+    }
+
+    if(this.form.get('daerah').value) {
+      let idx = this.pengurus.findIndex(e => e.id == 'daerah');
+      if(idx != -1) {
+        this.pengurus[idx].disabled = false;
+      }
+    }
+
+    if(this.form.get('wilayah').value || this.form.get('daerah').value) {
+      // this.form.patchValue({
+      //   asManagement: true
+      // });
+    } else {
+      this.toastController
+      .create({
+        message: 'Pilih Wilayah atau Daerah.',
+        duration: 2000,
+        color: "danger",
+      })
+      .then((toastEl) => {
+        toastEl.present();
+      });
+      this.userData.asManagement = '0';
+      this.userData.statusAsManagement = 'isNotManagement';
+      this.form.patchValue({
+        asManagement: false,
+        placeManagement: null
+      });
+    }
+  }
+
   async loadingAlert() {
     return await this.loadingController.create({
       spinner: 'crescent',
@@ -350,6 +410,7 @@ export class EditProfilPage implements OnInit {
     this.userData.cabang = this.form.get('cabang').value;
     this.userData.ranting = this.form.get('ranting').value;
     this.userData.asManagement = this.form.get('asManagement').value;
+    this.userData.placeManagement = this.form.get('placeManagement').value;
     if(this.userData.asManagement) {
       this.userData.statusAsManagement = 'pending';
     } else {

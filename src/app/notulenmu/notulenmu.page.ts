@@ -60,10 +60,10 @@ export class NotulenmuPage implements OnInit {
   parseChip() {
     if(this.userData.role != 'superadmin') {
       this.pilihanChip = ['Semua'];
-      if(this.dataLogin.wilayah_nama) {
+      if(this.dataLogin.wilayah_nama && this.dataLogin.placeManagement == 'wilayah' && this.dataLogin.statusAsManagement == 'confirmed') {
         this.pilihanChip.push('Wilayah')
       }
-      if(this.dataLogin.daerah_nama) {
+      if(this.dataLogin.daerah_nama && this.dataLogin.placeManagement == 'daerah' && this.dataLogin.statusAsManagement == 'confirmed') {
         this.pilihanChip.push('Daerah')
       }
       if(this.dataLogin.cabang_nama) {

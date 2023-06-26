@@ -25,9 +25,17 @@
                   <h2>{{userData.name}}</h2>
                   <p>{{userData.phone}}</p>
                 </ion-label>
-                <ion-chip color="primary" *ngIf="userData.asManagement == '1'">
+                <ion-chip color="warning" *ngIf="userData.asManagement == '1' && userData.statusAsManagement == 'pending'">
                   <ion-label>
-                    Pengurus
+                    Pending <br>
+                    <p>{{userData.placeManagement == 'daerah' ? userData.daerah_nama:userData.wilayah_nama}}</p>
+                  </ion-label>
+                </ion-chip>
+
+                <ion-chip color="primary" *ngIf="userData.asManagement == '1' && userData.statusAsManagement == 'confirmed'">
+                  <ion-label>
+                    Pengurus <br>
+                    <p>{{userData.placeManagement == 'daerah' ? userData.daerah_nama:userData.wilayah_nama}}</p>
                   </ion-label>
                 </ion-chip>
               </ion-col>

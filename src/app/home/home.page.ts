@@ -488,7 +488,14 @@ export class HomePage implements OnInit {
       this.dataLogin.daerah_nama = this.userData.daerah_nama;
       this.dataLogin.cabang_nama = this.userData.cabang_nama;
       this.dataLogin.ranting_nama = this.userData.ranting_nama;
+
+      this.dataLogin.wilayah_id = this.userData.wilayah_id;
+      this.dataLogin.daerah_id = this.userData.daerah_id;
+      this.dataLogin.cabang_id = this.userData.cabang_id;
+      this.dataLogin.ranting_id = this.userData.ranting_id;
       this.dataLogin.asManagement = this.userData.asManagement;
+      this.dataLogin.placeManagement = this.userData.placeManagement;
+      this.dataLogin.statusAsManagement = this.userData.statusAsManagement;
       localStorage.setItem('salammuToken',JSON.stringify(this.dataLogin));
       this.loadingService.dismiss();
     }, async error => {
@@ -707,15 +714,20 @@ export class HomePage implements OnInit {
       } else if(title[idx] == 'Sunset') {
         title[idx] = 'Maghrib';
       }
+
       if(title[idx] != undefined) {
         this.nextTime.title = title[idx];
       } else {
         this.nextTime.title = 'Midnight';
       }
-      if(title[idx] == 'Fajr') {
+      
+      let h = Number(arr2[0]);
+      let m = Number(arr2[1]);
+
+      if(title[idx] == 'Fajr' || title[idx] == 'Subuh') {
         let today = new Date(this.prayTime.date.readable);
         today.setDate(today.getDate() + 1);
-        next_time = new Date(today).setHours(4, 10, 0);
+        next_time = new Date(today).setHours(h, m, 0);
         this.nextTime.time = undefined;
         this.nextTimeTimer = undefined;
         this.nextTime.time = new Date(next_time);

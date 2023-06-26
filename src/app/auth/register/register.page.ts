@@ -32,7 +32,8 @@ export class RegisterPage implements OnInit {
       ranting: [null],
       password: [null, [Validators.required, Validators.minLength(6)]],
       re_password: [null, [Validators.required, Validators.minLength(6)]],
-      asManagement: [false]
+      asManagement: [false],
+      placeManagement: [null]
     });
   }
 
@@ -206,6 +207,56 @@ export class RegisterPage implements OnInit {
     this.form.patchValue({
       ranting: val
     })
+  }
+
+  pengurus:any = [
+    {
+      id:'wilayah',
+      nama: 'Wilayah',
+      disabled: true
+    },
+    {
+      id:'daerah',
+      nama: 'Daerah',
+      disabled: true
+    }
+  ]
+  
+  checkLPCRM(evt) {
+    if(this.form.get('wilayah').value) {
+      let idx = this.pengurus.findIndex(e => e.id == 'wilayah');
+      if(idx != -1) {
+        this.pengurus[idx].disabled = false;
+      }
+    }
+
+    if(this.form.get('daerah').value) {
+      let idx = this.pengurus.findIndex(e => e.id == 'daerah');
+      if(idx != -1) {
+        this.pengurus[idx].disabled = false;
+      }
+    }
+
+    if(this.form.get('wilayah').value || this.form.get('daerah').value) {
+      // this.form.patchValue({
+      //   asManagement: true
+      // });
+    } else {
+      this.toastController
+      .create({
+        message: 'Pilih Wilayah atau Daerah.',
+        duration: 2000,
+        color: "danger",
+      })
+      .then((toastEl) => {
+        toastEl.present();
+      });
+      this.userData.asManagement = '0';
+      this.userData.statusAsManagement = 'isNotManagement';
+      this.form.patchValue({
+        asManagement: false
+      });
+    }
   }
 
   type = 'password';

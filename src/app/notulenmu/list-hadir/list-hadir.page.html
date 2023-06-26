@@ -80,7 +80,7 @@
           <ion-grid>
             <ion-row>
               <ion-col>
-                <ion-button color="primary" expand="block" (click)="simpanPartisipan()">
+                <ion-button color="primary" expand="block" [disabled]="listUsers.length == 0" (click)="simpanPartisipan()">
                   {{loading ? 'Mohon tunggu...':'Simpan'}}
                 </ion-button>
               </ion-col>

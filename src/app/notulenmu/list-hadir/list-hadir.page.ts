@@ -73,6 +73,9 @@ export class ListHadirPage implements OnInit {
   notulenData:any = {};
   getDetailNotulen() {
     if(this.notulenData) {
+      if(!this.notulenData.notulenmu_participants) {
+        this.notulenData.notulenmu_participants = [];
+      }
       this.notulenData.notulenmu_participantsTemp = this.notulenData.notulenmu_participants;
       this.loading = false;
       this.loadingService.dismiss();
@@ -80,6 +83,9 @@ export class ListHadirPage implements OnInit {
     } else {
       this.api.get('notulenmu/find/'+this.id).then(res => {
         this.notulenData = res;
+        if(!this.notulenData.notulenmu_participants) {
+          this.notulenData.notulenmu_participants = [];
+        }
         this.notulenData.notulenmu_participantsTemp = this.notulenData.notulenmu_participants;
         this.loading = false;
         this.loadingService.dismiss();
@@ -189,6 +195,8 @@ export class ListHadirPage implements OnInit {
     modal.onDidDismiss().then(async (result) => {
       if(result.data) {
         this.listUsers.push(result.data);
+        console.log(this.listUsers);
+        
       }
     });
     return await modal.present();

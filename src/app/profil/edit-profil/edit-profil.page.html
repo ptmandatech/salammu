@@ -105,15 +105,23 @@
           Alamat harus diisi!
           </div>
           
-          <ion-item lines="none">
+          <ion-item lines="none" style="margin-bottom: 10px;">
             <div>Apakah anda masuk dalam Pengurus LPCRM?</div>
             <ion-checkbox
               mode="ios"
               slot="start"
               formControlName="asManagement" 
               name="asManagement"
+              (ionChange)="checkLPCRM($event)"
             ></ion-checkbox>
           </ion-item>
+
+          <ion-text *ngIf="form.get('asManagement').value == true" color="medium">Pilih Salah Satu</ion-text>
+          <div class="selectOptions" *ngIf="form.get('asManagement').value == true">
+            <ng-select formControlName="placeManagement" [searchable]="true" placeholder="Pilih Salah Satu">
+              <ng-option *ngFor="let data of pengurus" [value]="data.id" [disabled]="data.disabled">{{data.nama}}</ng-option>
+            </ng-select>
+          </div>
 
           <div style="margin-top: 100px;"></div>
 
