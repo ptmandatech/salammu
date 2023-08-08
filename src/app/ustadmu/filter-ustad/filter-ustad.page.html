@@ -22,7 +22,7 @@
 
   <ion-text color="medium">Provinsi</ion-text>
   <ion-item lines="none" class="input">
-    <ion-select mode="md" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" interface="popover" placeholder="Pilih Provinsi" [(ngModel)]="filterData.prov_id" (ngModelChange)="getKab()">
+    <ion-select mode="md" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" placeholder="Pilih Provinsi" [(ngModel)]="filterData.prov_id" (ngModelChange)="getKab()">
       <ion-select-option *ngFor="let n of allProvinsi" value="{{n.prov_id}}">{{n.prov_nama}}</ion-select-option>
     </ion-select>
     <ion-icon *ngIf="!loading && allProvinsi.length > 0" name="chevron-down-outline" slot="end"></ion-icon>
@@ -31,7 +31,7 @@
 
   <ion-text color="medium">Kabupaten</ion-text>
   <ion-item lines="none" class="input">
-    <ion-select mode="md" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" interface="popover" placeholder="Pilih Kabupaten" [disabled]="!filterData.prov_id" [(ngModel)]="filterData.kab_id" (ngModelChange)="getKec()">
+    <ion-select mode="md" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" placeholder="Pilih Kabupaten" [disabled]="!filterData.prov_id" [(ngModel)]="filterData.kab_id" (ngModelChange)="getKec()">
       <ion-select-option *ngFor="let n of allKab" value="{{n.kab_id}}">{{n.kab_nama}}</ion-select-option>
     </ion-select>
     <ion-icon *ngIf="!loading && allKab.length > 0" name="chevron-down-outline" slot="end"></ion-icon>
@@ -40,7 +40,7 @@
 
   <ion-text color="medium">Kecamatan</ion-text>
   <ion-item lines="none" class="input">
-    <ion-select mode="md" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" interface="popover" placeholder="Pilih Kecamatan" [disabled]="!filterData.prov_id && !filterData.kab_id" [(ngModel)]="filterData.kec_id">
+    <ion-select mode="md" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" placeholder="Pilih Kecamatan" [disabled]="!filterData.prov_id && !filterData.kab_id" [(ngModel)]="filterData.kec_id">
       <ion-select-option *ngFor="let n of allKec" value="{{n.kec_id}}">{{n.kec_nama}}</ion-select-option>
     </ion-select>
     <ion-icon *ngIf="!loading && allKec.length > 0" name="chevron-down-outline" slot="end"></ion-icon>

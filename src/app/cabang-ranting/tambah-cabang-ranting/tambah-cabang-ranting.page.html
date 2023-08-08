@@ -17,7 +17,7 @@
 
         <ion-text color="medium">Pilih Kategori</ion-text>
           <ion-item lines="none" class="input">
-              <ion-select [(ngModel)]="crData.category" required #category="ngModel" placeholder="Select category" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" interface="popover" placeholder="Pilih kategori">
+              <ion-select [(ngModel)]="crData.category" required #category="ngModel" placeholder="Select category" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" placeholder="Pilih kategori">
                 <ion-select-option *ngFor="let n of ['cabang', 'ranting']" value="{{n}}">{{n}}</ion-select-option>
               </ion-select>
               <ion-icon name="chevron-down-outline" slot="end"></ion-icon>

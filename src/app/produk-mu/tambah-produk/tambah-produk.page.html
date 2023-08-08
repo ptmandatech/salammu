@@ -37,7 +37,7 @@
 
           <ion-text color="medium">Pilih Kategori</ion-text>
           <ion-item lines="none" class="input">
-              <ion-select mode="ios" [(ngModel)]="productData.category" required #category="ngModel" placeholder="Pilih Kategori" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" interface="popover">
+              <ion-select mode="ios" [(ngModel)]="productData.category" required #category="ngModel" placeholder="Pilih Kategori" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}">
                 <ion-select-option *ngFor="let n of allCategories" value="{{n.id}}">{{n.name}}</ion-select-option>
               </ion-select>
               <ion-icon name="chevron-down-outline" slot="end"></ion-icon>

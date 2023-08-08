@@ -106,6 +106,24 @@
             </ion-item>
           </ion-card>
 
+          <ion-card class="rounded-15" routerLink="/delete-account">
+            <ion-item lines="none" detail>
+              <ion-icon slot="start" color="danger" name="person-remove-outline"></ion-icon>
+              <ion-label>
+                <h3>Penghapusan Akun</h3>
+              </ion-label>
+            </ion-item>
+          </ion-card>
+
+          <ion-card class="rounded-15" routerLink="/privacy-police">
+            <ion-item lines="none" detail>
+              <ion-icon slot="start" name="reader-outline"></ion-icon>
+              <ion-label>
+                <h3>Kebijakan Privasi</h3>
+              </ion-label>
+            </ion-item>
+          </ion-card>
+
           <ion-card class="rounded-15" (click)="logout()">
             <ion-item lines="none" detail>
               <ion-icon color="danger" slot="start" name="exit-outline"></ion-icon>

@@ -1,0 +1,43 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-back-button slot="start"></ion-back-button>
+    <ion-title>Penghapusan Akun</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-row>
+    <ion-col class="ion-text-center">
+      <img src="./assets/icon/logo.svg" width="40%">
+    </ion-col>
+  </ion-row>
+
+  <div id="content">
+    <form [formGroup]="form">
+      <ion-text color="dark">
+        <p class="ion-text-center">Mohon perhatikan bahwa setelah akun Anda dihapus, Anda tidak dapat memulihkannya kembali.</p>
+      </ion-text>
+
+      <div class="ion-text-center" (click)="generateUniqueCodes(1)">
+        <ion-chip color="primary" style="font-size: large;">{{uniqueCode}}</ion-chip>
+      </div>
+
+      <ion-text color="medium">
+        <p>Kode Konfirmasi</p>
+      </ion-text>
+      <ion-item class="input">
+        <ion-input formControlName="confirmCode" name="confirmCode" required placeholder="Masukkan Kode Konfirmasi"></ion-input>
+      </ion-item>
+      
+      <div class="error-msg" *ngIf="form.controls.confirmCode.hasError('required') && form.controls.confirmCode.touched">
+        Kode Konfirmasi harus diisi!
+      </div>
+  
+      <ion-button color="danger" class="custom-button" [disabled]="loading" (click)="sendDeleteAccount()">
+        {{loading ? 'Mohon Tunggu...':'Lanjutkan'}}
+      </ion-button>
+    </form>
+  </div>
+
+</ion-content>

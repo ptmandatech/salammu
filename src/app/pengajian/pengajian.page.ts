@@ -450,7 +450,7 @@ export class PengajianPage implements OnInit {
     this.loadingGetMap = true;
     var features = [];
     for(var i=0; i<this.listPengajian.length; i++) {
-      if(this.listPengajian[i].pin != null) {
+      if(this.listPengajian[i].pin != null && this.listPengajian[i].status != 'done') {
         let pin = JSON.parse(this.listPengajian[i].pin);
         await features.push(coloredSvgMarker([pin.long, pin.lat], this.listPengajian[i].name, this.listPengajian[i].id, "red"));
       }

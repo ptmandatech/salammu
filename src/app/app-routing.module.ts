@@ -153,6 +153,14 @@ const routes: Routes = [
   {
     path: 'notulenmu',
     loadChildren: () => import('./notulenmu/notulenmu.module').then( m => m.NotulenmuPageModule)
+  },
+  {
+    path: 'privacy-police',
+    loadChildren: () => import('./auth/privacy-police/privacy-police.module').then( m => m.PrivacyPolicePageModule)
+  },
+  {
+    path: 'delete-account',
+    loadChildren: () => import('./auth/delete-account/delete-account.module').then( m => m.DeleteAccountPageModule)
   }
 
 

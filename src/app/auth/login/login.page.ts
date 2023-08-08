@@ -93,7 +93,6 @@ export class LoginPage implements OnInit {
       this.api.post('auth/login',this.user).then(res=>{     
         this.loading=false;
         this.submited = false;
-        localStorage.setItem('salammuToken',JSON.stringify(res));
         this.redirect(res);
       },err=>{
         var that = this;
@@ -140,7 +139,8 @@ export class LoginPage implements OnInit {
   nonaktif:boolean = false;
   async redirect(user)
   {
-    if(user.is_active == 1) {
+    if(user.is_active == 1 || user.is_active == '1') {
+      localStorage.setItem('salammuToken',JSON.stringify(user));
       this.cekToken(user, user.email);
       var that = this;
       setTimeout(function () {
@@ -148,11 +148,32 @@ export class LoginPage implements OnInit {
         that.router.navigate(['/profil']);
       }, 1000);
     } else {
-      this.dismiss();
-      this.nonaktif = true;
-      setTimeout(function () {
-        location.reload();
-      }, 1000);
+      if(user.isDeleted == '1' || user.isDeleted == 1) {
+        this.toastController
+        .create({
+          message: 'Pengguna sudah melakukan penghapusan akun!',
+          duration: 2000,
+          color: "danger",
+        })
+        .then((toastEl) => {
+          toastEl.present();
+        });
+      } else {
+        this.toastController
+        .create({
+          message: 'Akun dinonaktifkan!',
+          duration: 2000,
+          color: "danger",
+        })
+        .then((toastEl) => {
+          toastEl.present();
+        });
+        // this.dismiss();
+        // this.nonaktif = true;
+        // setTimeout(function () {
+        //   location.reload();
+        // }, 1000);
+      }
     }
     this.loadingController.dismiss();
   }
