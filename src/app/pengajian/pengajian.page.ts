@@ -343,9 +343,9 @@ export class PengajianPage implements OnInit {
   getPengajian() {
     this.dataPengajian = {};
     this.pengajian = [];
-    this.api.get('pengajian?all=ok').then(res => {
+    this.api.get('pengajian?all=ok').then(async res => {
       this.pengajian = res;
-      this.parsePengajianAwal();
+      await this.parsePengajianAwal();
     }, error => {
       this.loadingService.dismiss();
       this.loading = false;
@@ -368,6 +368,16 @@ export class PengajianPage implements OnInit {
       }
     }
     this.loadingService.dismiss();
+  }
+
+  checkAgenda(data) {
+    const hasSoonEvent = data.some(event => event.status === "soon");
+
+    if (hasSoonEvent) {
+      return "soon";
+    } else {
+      return "done";
+    }
   }
 
   // parseDataPengajian(datetime, tanggal, bulan, tahun) {

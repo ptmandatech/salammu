@@ -459,13 +459,16 @@ export class TambahPengajianPage implements OnInit {
   center:any=[110.3647,-7.8014];
   generateMap(data)
   {
+    let currentPos = JSON.parse(localStorage.getItem('currentPos'));
     if(this.pengajianData.pin != null) {
       data = JSON.parse(this.pengajianData.pin);
     }
+    this.center[0] = currentPos ? currentPos.long:110.3647;
+    this.center[1] = currentPos ? currentPos.lat:-7.8014;
     var features = [];
     if(data == undefined) {
-      this.longitude = 110.3647;
-      this.latitude = -7.8014;
+      this.longitude = currentPos ? currentPos.long:110.3647;
+      this.latitude = currentPos ? currentPos.lat:-7.8014;
       this.locationNow = {};
       this.locationNow.lat = this.latitude;
       this.locationNow.long = this.longitude;

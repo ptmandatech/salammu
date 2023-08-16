@@ -105,7 +105,8 @@
                   <ion-col class="cal-cell" *ngFor="let n of [0,1,2,3,4,5,6]" [ngClass]="{'cell-selected':cellSelected[m+n]}" (click)="selectCell(m,n)">
                     <div *ngIf="cal[m][n]!=0" class="centered ion-padding">
                       <ion-text class="cal-date">{{cal[m][n]!=0 ? cal[m][n].tanggal : ''}}</ion-text><br>
-                      <ion-icon *ngIf="dataPengajian[cal[m][n].tanggal+'_'+cal[m][n].bulan+'_'+cal[m][n].tahun]" name="ellipsis-horizontal-outline" color="{{cellSelected[m+n] ? '':'primary'}}"></ion-icon>
+                      <ion-icon *ngIf="dataPengajian[cal[m][n].tanggal+'_'+cal[m][n].bulan+'_'+cal[m][n].tahun] && checkAgenda(dataPengajian[cal[m][n].tanggal+'_'+cal[m][n].bulan+'_'+cal[m][n].tahun]) == 'soon'" name="ellipsis-horizontal-outline" color="{{cellSelected[m+n] ? '':'warning'}}"></ion-icon>
+                      <ion-icon *ngIf="dataPengajian[cal[m][n].tanggal+'_'+cal[m][n].bulan+'_'+cal[m][n].tahun] && checkAgenda(dataPengajian[cal[m][n].tanggal+'_'+cal[m][n].bulan+'_'+cal[m][n].tahun]) == 'done'" name="ellipsis-horizontal-outline" color="{{cellSelected[m+n] ? '':'primary'}}"></ion-icon>
                     </div>
                   </ion-col>
                 </ion-row>

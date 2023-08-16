@@ -359,54 +359,58 @@ export class HomePage implements OnInit {
   }
 
   httpOption:any;
-  address_display_name:any;
+  address_display_name:any = '';
   async getDetailLocation(dt) {
     await this.api.post('lokasi/openstreetmap', dt).then(async res => {
       this.checkCity(res);
     }, async error => {
       await this.api.post('lokasi/mapquestapi', dt).then(async res => {
-        this.locationNow = res;
-        
-        if(res['name'] || res['display_name']) {
-          this.address_display_name = res['name'] == null ? res['display_name']:res['name'];
-        }
-      
-        this.city = this.locationNow.city.replace('Kota ', '');
-        localStorage.setItem('selectedCity', this.city);
-        localStorage.setItem('address_display_name', this.address_display_name);
-        if(this.city != undefined) {
-          this.listTimes = [];
-          this.tempTimes1 = [];
-          this.tempTimes2 = [];
-          this.prayTime = undefined;
-          this.timesToday = undefined;
-          this.prayTime = await this.api.getToday(this.city).catch(async err => {
-            if(this.configKeys['show_card_jadwal_sholat'] == '1') {
-              const toast = await this.toastController.create({
-                message: 'Gagal Mendapatkan informasi Jadwal Sholat, Silahkan refresh berkala.<br /> Error Message: '+err.error.message,
-                duration: 2500,
-                position: 'bottom',
-                color: 'danger',
-                mode: 'ios',
-                cssClass: 'className'
-              });
+        if(!res['fault']) {
+          this.locationNow = res;
           
-              await toast.present();
-              return null;
-            }
-          });
-          if(this.prayTime) {
-            this.timesToday = await this.prayTime.timings;
-      
-            if(this.timesToday['Firstthird']) {
-              delete this.timesToday['Firstthird'];
-              delete this.timesToday['Lastthird'];
-            }
-            if(this.timesToday['Sunrise']) {
-              delete this.timesToday['Sunrise'];
-            }
-            this.parseTime(this.timesToday);
+          if(res['name'] || res['display_name']) {
+            this.address_display_name = res['name'] == null ? res['display_name']:res['name'];
           }
+        
+          this.city = this.locationNow.city.replace('Kota ', '');
+          localStorage.setItem('selectedCity', this.city);
+          localStorage.setItem('address_display_name', this.address_display_name);
+          if(this.city != undefined) {
+            this.listTimes = [];
+            this.tempTimes1 = [];
+            this.tempTimes2 = [];
+            this.prayTime = undefined;
+            this.timesToday = undefined;
+            this.prayTime = await this.api.getToday(this.city).catch(async err => {
+              if(this.configKeys['show_card_jadwal_sholat'] == '1') {
+                const toast = await this.toastController.create({
+                  message: 'Gagal Mendapatkan informasi Jadwal Sholat, Silahkan refresh berkala.<br /> Error Message: '+err.error.message,
+                  duration: 2500,
+                  position: 'bottom',
+                  color: 'danger',
+                  mode: 'ios',
+                  cssClass: 'className'
+                });
+            
+                await toast.present();
+                return null;
+              }
+            });
+            if(this.prayTime) {
+              this.timesToday = await this.prayTime.timings;
+        
+              if(this.timesToday['Firstthird']) {
+                delete this.timesToday['Firstthird'];
+                delete this.timesToday['Lastthird'];
+              }
+              if(this.timesToday['Sunrise']) {
+                delete this.timesToday['Sunrise'];
+              }
+              this.parseTime(this.timesToday);
+            }
+          }
+        } else {
+          this.openSettingLokasi();
         }
       }, async error => {
         this.openSettingLokasi();
@@ -418,7 +422,7 @@ export class HomePage implements OnInit {
     this.locationNow = res.features[0].properties;
     
     if(this.locationNow['name'] || this.locationNow['display_name']) {
-      this.address_display_name = this.locationNow['name'] == null ? this.locationNow['display_name']:this.locationNow['name'];
+      this.address_display_name = this.locationNow['address'] ? this.locationNow['address']['city_district']:this.locationNow['name'] == null ? this.locationNow['display_name']:this.locationNow['name'];
     }
     this.city = res.features[0].properties.address.city == null ? res.features[0].properties.address.town == null ? res.features[0].properties.address.municipality:res.features[0].properties.address.town:res.features[0].properties.address.city;
     if(!this.city) {
