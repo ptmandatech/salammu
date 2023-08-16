@@ -430,7 +430,7 @@ export class HomePage implements OnInit {
     }
     localStorage.setItem('selectedCity', this.city);
     localStorage.setItem('address_display_name', this.address_display_name);
-    if(this.city != undefined) {
+    if(this.city != undefined && this.address_display_name != null || this.address_display_name != '') {
       this.listTimes = [];
       this.tempTimes1 = [];
       this.tempTimes2 = [];
