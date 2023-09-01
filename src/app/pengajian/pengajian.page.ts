@@ -237,7 +237,11 @@ export class PengajianPage implements OnInit {
 
   checkCity(res) {
     this.locationNow = res.features[0].properties;
-    this.city = res.features[0].properties.address.city == null ? res.features[0].properties.address.town:res.features[0].properties.address.city;
+    
+    this.city = this.locationNow['address'] ? this.locationNow['address']['city_district'] ? this.locationNow['address']['city_district']:this.locationNow['address']['county']:this.locationNow['name'];
+    if(!this.city) {
+      this.city = res.features[0].properties.address.city == null ? res.features[0].properties.address.county:res.features[0].properties.address.city;
+    }
     this.getCal();
   }
 
@@ -354,17 +358,19 @@ export class PengajianPage implements OnInit {
 
   parsePengajianAwal() {
     for(var i=0; i<this.pengajian.length; i++) {
-      let tahun = this.datePipe.transform(new Date(this.pengajian[i].datetime), 'yyyy');
-      let bulan = this.datePipe.transform(new Date(this.pengajian[i].datetime), 'MM');
-      let tanggal = this.datePipe.transform(new Date(this.pengajian[i].datetime), 'dd');
-
-      if(this.dataPengajian[Number(tanggal)+'_'+Number(bulan)+'_'+tahun] == undefined) {
-        this.dataPengajian[Number(tanggal)+'_'+Number(bulan)+'_'+tahun] = [];
-      }
-
-      let idx = this.dataPengajian[Number(tanggal)+'_'+Number(bulan)+'_'+tahun].indexOf(this.pengajian[i]);
-      if(idx == -1) {
-        this.dataPengajian[Number(tanggal)+'_'+Number(bulan)+'_'+tahun].push(this.pengajian[i]);
+      if(this.pengajian[i].datetime != '') {
+        let tahun = this.datePipe.transform(new Date(this.pengajian[i].datetime), 'yyyy');
+        let bulan = this.datePipe.transform(new Date(this.pengajian[i].datetime), 'MM');
+        let tanggal = this.datePipe.transform(new Date(this.pengajian[i].datetime), 'dd');
+  
+        if(this.dataPengajian[Number(tanggal)+'_'+Number(bulan)+'_'+tahun] == undefined) {
+          this.dataPengajian[Number(tanggal)+'_'+Number(bulan)+'_'+tahun] = [];
+        }
+  
+        let idx = this.dataPengajian[Number(tanggal)+'_'+Number(bulan)+'_'+tahun].indexOf(this.pengajian[i]);
+        if(idx == -1) {
+          this.dataPengajian[Number(tanggal)+'_'+Number(bulan)+'_'+tahun].push(this.pengajian[i]);
+        }
       }
     }
     this.loadingService.dismiss();

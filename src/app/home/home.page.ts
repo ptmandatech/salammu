@@ -320,13 +320,14 @@ export class HomePage implements OnInit {
 
   async setTimeFromLocalCitySaved() {
     if(this.city != undefined) {
+      let cityCheck = this.city ? this.city:this.address_display_name;
       this.listTimes = [];
       this.tempTimes1 = [];
       this.tempTimes2 = [];
       this.prayTime = undefined;
       this.timesToday = undefined;
       
-      this.prayTime = await this.api.getToday(this.city).catch(async err => {
+      this.prayTime = await this.api.getToday(cityCheck).catch(async err => {
         if(this.configKeys['show_card_jadwal_sholat'] == '1') {
           const toast = await this.toastController.create({
             message: 'Gagal Mendapatkan informasi Jadwal Sholat, Silahkan refresh berkala.<br /> Error Message: '+err.error.message,
@@ -376,12 +377,13 @@ export class HomePage implements OnInit {
           localStorage.setItem('selectedCity', this.city);
           localStorage.setItem('address_display_name', this.address_display_name);
           if(this.city != undefined) {
+            let cityCheck = this.city ? this.city:this.address_display_name;
             this.listTimes = [];
             this.tempTimes1 = [];
             this.tempTimes2 = [];
             this.prayTime = undefined;
             this.timesToday = undefined;
-            this.prayTime = await this.api.getToday(this.city).catch(async err => {
+            this.prayTime = await this.api.getToday(cityCheck).catch(async err => {
               if(this.configKeys['show_card_jadwal_sholat'] == '1') {
                 const toast = await this.toastController.create({
                   message: 'Gagal Mendapatkan informasi Jadwal Sholat, Silahkan refresh berkala.<br /> Error Message: '+err.error.message,
@@ -422,21 +424,28 @@ export class HomePage implements OnInit {
     this.locationNow = res.features[0].properties;
     
     if(this.locationNow['name'] || this.locationNow['display_name']) {
-      this.address_display_name = this.locationNow['address'] ? this.locationNow['address']['city_district']:this.locationNow['name'] == null ? this.locationNow['display_name']:this.locationNow['name'];
+      this.address_display_name = this.locationNow['address'] ? this.locationNow['address']['city_district'] ? this.locationNow['address']['city_district']:this.locationNow['address']['county']:this.locationNow['name'] == null ? this.locationNow['display_name']:this.locationNow['name'];
+
+      if(!this.address_display_name) {
+        this.address_display_name = this.locationNow['name'] == null ? this.locationNow['display_name']:this.locationNow['name'];
+      }
     }
-    this.city = res.features[0].properties.address.city == null ? res.features[0].properties.address.town == null ? res.features[0].properties.address.municipality:res.features[0].properties.address.town:res.features[0].properties.address.city;
+    
+    this.city = this.locationNow['address'] ? this.locationNow['address']['city_district'] ? this.locationNow['address']['city_district']:this.locationNow['address']['county']:this.locationNow['name'];
     if(!this.city) {
       this.city = res.features[0].properties.address.city == null ? res.features[0].properties.address.county:res.features[0].properties.address.city;
     }
+
     localStorage.setItem('selectedCity', this.city);
     localStorage.setItem('address_display_name', this.address_display_name);
     if(this.city != undefined && this.address_display_name != null || this.address_display_name != '') {
+      let cityCheck = this.city ? this.city:this.address_display_name;
       this.listTimes = [];
       this.tempTimes1 = [];
       this.tempTimes2 = [];
       this.prayTime = undefined;
       this.timesToday = undefined;
-      this.prayTime = await this.api.getToday(this.city).catch(async err => {
+      this.prayTime = await this.api.getToday(cityCheck).catch(async err => {
         if(this.configKeys['show_card_jadwal_sholat'] == '1') {
           const toast = await this.toastController.create({
             message: 'Gagal Mendapatkan informasi Jadwal Sholat, Silahkan refresh berkala.<br /> Error Message: '+err.error.message,
@@ -933,12 +942,13 @@ export class HomePage implements OnInit {
         localStorage.setItem('currentPos', JSON.stringify(location));
         localStorage.setItem('address_display_name', this.address_display_name);
         if(this.city != undefined) {
+          let cityCheck = this.city ? this.city:this.address_display_name;
           this.listTimes = [];
           this.tempTimes1 = [];
           this.tempTimes2 = [];
           this.prayTime = undefined;
           this.timesToday = undefined;
-          this.prayTime = await this.api.getToday(this.city).catch(async err => {
+          this.prayTime = await this.api.getToday(cityCheck).catch(async err => {
             if(this.configKeys['show_card_jadwal_sholat'] == '1') {
               const toast = await this.toastController.create({
                 message: 'Gagal Mendapatkan informasi Jadwal Sholat, Silahkan refresh berkala.<br /> Error Message: '+err.error.message,

@@ -45,11 +45,13 @@ export class ModalKalenderComponent implements OnInit {
 
   parseData(res, datetime) {
     for(var i=0; i<res.length; i++) {
-      let dt = this.datePipe.transform(new Date(res[i].datetime), 'yyyy-MM-dd');
-      if(dt == datetime) {
-        let idx = this.listPengajian.indexOf(res[i]);
-        if(idx == -1) {
-          this.listPengajian.push(res[i]);
+      if(res[i].datetime != '') {
+        let dt = this.datePipe.transform(new Date(res[i].datetime), 'yyyy-MM-dd');
+        if(dt == datetime) {
+          let idx = this.listPengajian.indexOf(res[i]);
+          if(idx == -1) {
+            this.listPengajian.push(res[i]);
+          }
         }
       }
     }

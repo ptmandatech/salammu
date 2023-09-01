@@ -209,7 +209,7 @@ export class TambahPengajianPage implements OnInit {
         this.twigSelected = this.listRanting.find(x => x.id === this.pengajianData.twig);
       }
       
-      if(this.pengajianData.datetime) {
+      if(this.pengajianData.datetime && this.pengajianData.datetime != '') {
         this.dateValue = this.datePipe.transform(new Date(this.pengajianData.datetime), 'MMM dd yyyy HH:mm');
       }
       if(this.pengajianData != null) {
