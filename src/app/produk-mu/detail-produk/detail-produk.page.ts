@@ -72,11 +72,12 @@ export class DetailProdukPage implements OnInit {
     if(images.length > 0 && images != null && images != '') {
       res.images = images;
       this.detailProduct = res;
+      this.getDetailOwner();
     } else {
       res.images = [];
       this.detailProduct = res;
+      this.getDetailOwner();
     }
-    this.getDetailOwner();
     this.loadingService.dismiss();
   }
 

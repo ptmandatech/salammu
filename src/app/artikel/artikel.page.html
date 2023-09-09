@@ -14,7 +14,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ion-grid class="ion-no-padding">
-    <ion-row class="ion-justify-content-center">
+    <ion-row class="ion-justify-content-center" *ngIf="!loading">
       <ion-col size-md="6">
         <ion-card class="rounded-15" *ngFor="let n of listArtikelInfinite" [routerLink]="['/detail-artikel', n.id]">
           <div style="text-align: center;" >
@@ -38,25 +38,26 @@
             <p>Data tidak ditemukan</p>
           </ion-label>
         </div>
+      </ion-col>
+    </ion-row>
 
-        <ion-row class="ion-no-padding" *ngIf="loading">
-          <ion-col size="6" *ngFor="let n of [1,2,3,4,5,6,7,8,9,10]">
-            <ion-card class="rounded-15">
-              <ion-card-content>
-                <ion-skeleton-text animated style="height: 60px;"></ion-skeleton-text>
-                <ion-label>
-                  <ion-text color="primary">
-                    <h2><ion-skeleton-text animated></ion-skeleton-text></h2>
-                  </ion-text>
-                  <ion-text color="medium">
-                    <p class="text-elipsis"><ion-skeleton-text animated></ion-skeleton-text><p>
-                  </ion-text>
-                </ion-label>
-                <h2 style="margin-top: 20px;"><ion-skeleton-text animated></ion-skeleton-text></h2>
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
-        </ion-row>
+    <ion-row class="ion-justify-content-center" *ngIf="loading">
+      <ion-col size-md="6">
+        <ion-card class="rounded-15" *ngFor="let n of [1,2,3,4,5,6,7,8,9,10]">
+          <div style="text-align: center;" >
+            <ion-skeleton-text animated style="height: 150px;"></ion-skeleton-text>
+          </div>
+          <ion-card-header>
+            <ion-card-subtitle><ion-skeleton-text animated></ion-skeleton-text></ion-card-subtitle>
+            <ion-card-title><ion-skeleton-text animated></ion-skeleton-text></ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-skeleton-text animated></ion-skeleton-text>    
+          </ion-card-content>
+          <div class="ion-padding">
+            <small><ion-skeleton-text animated></ion-skeleton-text></small>
+          </div>
+        </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>

@@ -23,12 +23,12 @@ export class KhutbahPage implements OnInit {
     public common: CommonService,
     public router:Router,
     public modalController: ModalController,
-    private loadingService: LoadingService,
+    // private loadingService: LoadingService,
   ) { }
 
   ngOnInit() {
     this.loading = true;
-    this.loadingService.present();
+    // this.loadingService.present();
     this.serverImg = this.common.photoBaseUrl+'khutbah/';
     this.listKhutbah = [];
     this.listKhutbahTemp = [];
@@ -40,7 +40,7 @@ export class KhutbahPage implements OnInit {
     this.listKhutbah = [];
     this.listKhutbahTemp = [];
     this.listKhutbahInfinite = [];
-    this.loadingService.present();
+    // this.loadingService.present();
     this.getAllKhutbah();
     setTimeout(() => {
       event.target.complete();
@@ -54,10 +54,10 @@ export class KhutbahPage implements OnInit {
       const nextData = this.listKhutbah.slice(0, 9);
       this.listKhutbahInfinite = await this.listKhutbahInfinite.concat(nextData);
       this.loading = false;
-      this.loadingService.dismiss();
+      // this.loadingService.dismiss();
     }, error => {
       this.loading = false;
-      this.loadingService.dismiss();
+      // this.loadingService.dismiss();
     })
   }
 

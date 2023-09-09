@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { CommonService } from './common.service';
 import { DatePipe } from '@angular/common';
 import { Diagnostic } from '@awesome-cordova-plugins/diagnostic/ngx';
-import { AlertController, LoadingController, ModalController, Platform } from '@ionic/angular';
+import { AlertController, LoadingController, ModalController, Platform, ToastController } from '@ionic/angular';
 import { Geolocation, Geoposition, PositionError } from '@awesome-cordova-plugins/geolocation/ngx';
 
 @Injectable({
@@ -23,6 +23,7 @@ export class ApiService {
     private platform: Platform,
     private loadingController: LoadingController,
     public alertController: AlertController,
+    private toastController: ToastController,
   ) 
   { 
   }
@@ -65,11 +66,23 @@ export class ApiService {
   } 
 
   chatSeller(ownerData, detailProduct) {
-    var msg = "Halo, " + ownerData.name + ' Saya tertarik dengan produk: %0A';
-    var dp = "Nama produk: " + detailProduct.name + '%0A' + "Harga: Rp." + detailProduct.price + '%0A';
-    var message = msg+dp;
-    var url = 'https://api.whatsapp.com/send?phone=' + ownerData.phone +'&text='+message;
-    window.open(url, 'blank')
+    if(ownerData) {
+      var msg = "Halo, " + ownerData.name + ' Saya tertarik dengan produk: %0A';
+      var dp = "Nama produk: " + detailProduct.name + '%0A' + "Harga: Rp." + detailProduct.price + '%0A';
+      var message = msg+dp;
+      var url = 'https://api.whatsapp.com/send?phone=' + ownerData.phone +'&text='+message;
+      window.open(url, 'blank')
+    } else {
+      this.toastController
+      .create({
+        message: 'Data penjual tidak tersedia.',
+        duration: 2000,
+        color: "danger",
+      })
+      .then((toastEl) => {
+        toastEl.present();
+      });
+    }
   }
 
   async getQiblaDirections(lat, long) {

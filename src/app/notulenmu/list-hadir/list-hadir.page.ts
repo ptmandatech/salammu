@@ -109,7 +109,7 @@ export class ListHadirPage implements OnInit {
           this.loadingService.dismiss();
         })
       } else {
-        this.api.get('users/getAll?wilayah='+this.dataLogin.wilayah_id+'&daerah='+this.dataLogin.daerah_id+'&cabang='+this.dataLogin.cabang_id+'&ranting='+this.dataLogin.ranting_id).then(res => {
+        this.api.get('users/getAll?wilayah='+this.dataLogin.wilayah+'&daerah='+this.dataLogin.daerah+'&cabang='+this.dataLogin.cabang_id+'&ranting='+this.dataLogin.ranting_id).then(res => {
           if(res) {
             this.listUsers = res;
             this.listUsersTemp = res;

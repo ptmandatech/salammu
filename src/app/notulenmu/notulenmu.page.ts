@@ -31,6 +31,9 @@ export class NotulenmuPage implements OnInit {
   ) { }
 
   ngOnInit() {
+  }
+
+  ionViewWillEnter() {
     this.loadingService.present();
     this.dataLogin = JSON.parse(localStorage.getItem('salammuToken'));
     this.cekLogin();
@@ -60,10 +63,10 @@ export class NotulenmuPage implements OnInit {
   parseChip() {
     if(this.userData.role != 'superadmin') {
       this.pilihanChip = ['Semua'];
-      if(this.dataLogin.wilayah_nama && this.dataLogin.placeManagement == 'wilayah' && this.dataLogin.statusAsManagement == 'confirmed') {
+      if(this.dataLogin.wilayah_nama) {
         this.pilihanChip.push('Wilayah')
       }
-      if(this.dataLogin.daerah_nama && this.dataLogin.placeManagement == 'daerah' && this.dataLogin.statusAsManagement == 'confirmed') {
+      if(this.dataLogin.daerah_nama) {
         this.pilihanChip.push('Daerah')
       }
       if(this.dataLogin.cabang_nama) {
@@ -97,13 +100,23 @@ export class NotulenmuPage implements OnInit {
     }, 2000);
   }
 
-  selectFilter(m) {
+  async selectFilter(m) {
     this.selectedFilter = m;
-    this.initializeItems();
-    if(this.selectedFilter != 'Semua') {
+    if(this.selectedFilter == 'Semua') {
+      this.listNotulenMu = [];
+      await this.initializeItems();
+      const nextData = this.listNotulenMu.slice(0, 9);
+      this.listNotulenmuInfinite = await this.listNotulenmuInfinite.concat(nextData);
+    } else {
+      await this.initializeItems();
       this.listNotulenmuInfinite = this.listNotulenMu.filter(data => {
-        if (data.organization_type.toLowerCase().indexOf(this.selectedFilter.toLowerCase()) > -1) {
-          return true;
+        if(this.selectedFilter != 'Semua') {
+          if (data.organization_type && this.selectedFilter) {
+            if (data.organization_type.toLowerCase().indexOf(this.selectedFilter.toLowerCase()) > -1) {
+              return true;
+            }
+            return false;
+          }
         }
       });
     }
@@ -112,6 +125,7 @@ export class NotulenmuPage implements OnInit {
   getAllNotulenmu() {
     this.listNotulenMu = [];
     this.listNotulenMuTemp = [];
+    this.listNotulenmuInfinite = [];
     if(this.dataLogin) {
       if(this.dataLogin.role == 'superadmin') {
         this.api.get('notulenmu').then(async res => {
@@ -125,7 +139,7 @@ export class NotulenmuPage implements OnInit {
           this.loadingService.dismiss();
         })
       } else {
-        this.api.get('notulenmu?cabang='+this.userData.cabang+'&ranting='+this.userData.ranting).then(async res => {
+        this.api.get('notulenmu?cabang='+this.userData.cabang+'&ranting='+this.userData.ranting+'&daerah='+this.userData.daerah+'&wilayah='+this.userData.wilayah).then(async res => {
           this.listNotulenMu = res;
           this.listNotulenMuTemp = res;
           this.loading = false;
@@ -136,6 +150,7 @@ export class NotulenmuPage implements OnInit {
           this.loadingService.dismiss();
         })
       }
+      
     }
   }
 

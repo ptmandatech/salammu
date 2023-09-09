@@ -102,7 +102,6 @@ export class HomePage implements OnInit {
     this.getConfig();
   }
 
-
   mobileVersion:any = "1.0.0";
   build_version:any = "1.0.0";
   configKeys:any = {};
@@ -143,7 +142,6 @@ export class HomePage implements OnInit {
   }
 
   async showModalUpdateVersion() {
-    console.log('Version Not Oke');
     const confirm = await this.alertController.create({
       header: 'Versi terbaru tersedia',
       message: 'Perbaharui aplikasi SalamMU yuk.',
@@ -171,12 +169,9 @@ export class HomePage implements OnInit {
     this.surat = [];
     this.suratTemp = [];
     this.api.get('quran/surat').then(res => {
-      this.loadingService.dismiss();
       this.surat = res;
       this.suratTemp = res;
       localStorage.setItem('suratAlQuran', JSON.stringify(this.surat));
-    }, err => {
-      this.loadingService.dismiss();
     })
   }
 
@@ -510,7 +505,6 @@ export class HomePage implements OnInit {
       this.dataLogin.placeManagement = this.userData.placeManagement;
       this.dataLogin.statusAsManagement = this.userData.statusAsManagement;
       localStorage.setItem('salammuToken',JSON.stringify(this.dataLogin));
-      this.loadingService.dismiss();
     }, async error => {
       this.loading = false;
       localStorage.removeItem('userSalammu');
@@ -518,7 +512,6 @@ export class HomePage implements OnInit {
       this.userData = undefined;
       this.isLoggedIn = false;
       this.isVisible = false;
-      this.loadingService.dismiss();
     })
   }
 
@@ -569,9 +562,6 @@ export class HomePage implements OnInit {
   getAllArticles() {
     this.api.get('articles?limit=5').then(res => {
       this.listArticles = res;
-      this.loadingService.dismiss();
-    }, error => {
-      this.loadingService.dismiss();
     })
   }
 
@@ -590,9 +580,6 @@ export class HomePage implements OnInit {
   getAllBanners() {
     this.api.get('banners').then(res => {
       this.listBanners = res;
-      this.loadingService.dismiss();
-    }, err => {
-      this.loadingService.dismiss();
     })
   }
 
@@ -763,15 +750,19 @@ export class HomePage implements OnInit {
 
   checkCurrentTime() {
     setInterval(async ()=> {
-      let date = new Date();
-      this.nextTimeTimer = await this.timeCalc(date, this.nextTime.time);
-      if(this.nextTimeTimer.includes('-') || this.nextTimeTimer.includes('NaN')) {
-        this.listTimes = [];
-        this.tempTimes1 = [];
-        this.tempTimes2 = [];
-        this.nextTime = {};
-        this.nextTimeTimer = null;
-        this.parseTime(this.timesToday);
+      if(this.nextTime.time) {
+        let date = new Date();
+        this.nextTimeTimer = await this.timeCalc(date, this.nextTime.time);
+        if(this.nextTimeTimer.includes('-') || this.nextTimeTimer.includes('NaN')) {
+          this.listTimes = [];
+          this.tempTimes1 = [];
+          this.tempTimes2 = [];
+          this.nextTime = {};
+          this.nextTimeTimer = null;
+          this.parseTime(this.timesToday);
+        }
+      } else {
+        this.checkPermission();
       }
     },1000);
   }
@@ -815,8 +806,6 @@ export class HomePage implements OnInit {
   getAllProducts() {
     this.api.get('products?getBy=fav').then(res => {
       this.parseImage(res);
-    }, err => {
-      this.loadingService.dismiss();
     })
   }
 
@@ -836,7 +825,6 @@ export class HomePage implements OnInit {
         }
       }
     }
-    this.loadingService.dismiss();
   }
 
   //Modal Semua Menu

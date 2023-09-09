@@ -8,10 +8,16 @@
       <ion-col size-md="6">
           <img src="./assets/imgs/bg-hero.svg" width="100%">
           <div class="top-left">
-            <ion-button fill="clear" class="ion-text-wrap" [ngStyle]="{'width': address_display_name.length <= 10 ? '65%':'80%'}" color="light" (click)="openSettingLokasi()">
+            <ion-button fill="clear" *ngIf="!loading" class="ion-text-wrap" [ngStyle]="{'width': address_display_name.length <= 10 ? '65%':'80%'}" color="light" (click)="openSettingLokasi()">
               <ion-icon slot="icon-only" name="location-outline"></ion-icon>
               <span style="text-align: left;" *ngIf="!loading">{{ address_display_name == undefined ? city : (address_display_name.length > 45 ? address_display_name.slice(0, 45) + '...' : address_display_name) }}</span>
-              <span *ngIf="loading"><ion-skeleton-text animated style="width: 50%;"></ion-skeleton-text></span>
+            </ion-button>
+
+            <ion-button fill="clear" *ngIf="loading" class="ion-text-wrap" color="light">
+              <ion-icon slot="icon-only" name="location-outline"></ion-icon>
+              <span style="text-align: left;">
+                <ion-skeleton-text [animated]="true" style="width: 100px"></ion-skeleton-text>
+              </span>
             </ion-button>
             <!-- <ion-item class="fill-0" lines="none" *ngIf="prayTime.meta != undefined">
               <ion-label>
@@ -31,8 +37,8 @@
             <ion-item class="fill-0" lines="none" *ngIf="loading">
               <ion-label>
                 <ion-text color="light">
-                  <h1><ion-skeleton-text animated></ion-skeleton-text></h1>
-                  <p><ion-skeleton-text animated></ion-skeleton-text></p>
+                  <h1><ion-skeleton-text [animated]="true" style="width: 80%;"></ion-skeleton-text></h1>
+                  <p><ion-skeleton-text [animated]="true" style="width: 80%;"></ion-skeleton-text></p>
                 </ion-text>
               </ion-label>
             </ion-item>

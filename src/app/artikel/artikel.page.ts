@@ -23,11 +23,11 @@ export class ArtikelPage implements OnInit {
     public common: CommonService,
     public router:Router,
     public modalController: ModalController,
-    private loadingService: LoadingService,
+    // private loadingService: LoadingService,
   ) { }
 
   ngOnInit() {
-    this.loadingService.present();
+    // this.loadingService.present();
     this.loading = true;
     this.serverImg = this.common.photoBaseUrl+'articles/';
     this.listArticles = [];
@@ -40,7 +40,7 @@ export class ArtikelPage implements OnInit {
     this.listArticles = [];
     this.listArticlesTemp = [];
     this.listArtikelInfinite = [];
-    this.loadingService.present();
+    // this.loadingService.present();
     this.getAllArticles();
     setTimeout(() => {
       event.target.complete();
@@ -54,10 +54,10 @@ export class ArtikelPage implements OnInit {
       this.loading = false;
       const nextData = this.listArticles.slice(0, 9);
       this.listArtikelInfinite = await this.listArtikelInfinite.concat(nextData);
-      this.loadingService.dismiss();
+      // this.loadingService.dismiss();
     }, error => {
       this.loading = false;
-      this.loadingService.dismiss();
+      // this.loadingService.dismiss();
     })
   }
 

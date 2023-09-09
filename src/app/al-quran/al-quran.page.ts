@@ -34,6 +34,7 @@ export class AlQuranPage implements OnInit {
   }
 
   ionViewDidEnter() {
+    this.loading = true;
     this.surat = JSON.parse(localStorage.getItem('suratAlQuran'));
     this.terakhirDibaca = JSON.parse(localStorage.getItem('terakhirDibaca'));
     this.suratTemp = this.surat;

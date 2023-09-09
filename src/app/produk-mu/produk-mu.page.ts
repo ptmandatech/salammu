@@ -177,28 +177,33 @@ export class ProdukMUPage implements OnInit {
 
   // Pilihan Kategori 
   selectedCat:any = 'semua';
-  selectCat(cat)
+  async selectCat(cat)
   {
-  		if(this.selectedCat != cat.id)
-  		{
-  			this.selectedCat = cat.id;
-  		}else{
-  			this.selectedCat=null;
-  		} 
-      if(this.selectedCat == 'semua') {
-        this.listProducts = [];
-        this.initializeItems();
-      } else {
-        this.initializeItems();
-        this.listProducts = this.listProducts.filter(product => {
+    if(this.selectedCat != cat.id)
+    {
+      this.selectedCat = cat.id;
+    }else{
+      this.selectedCat=null;
+    } 
+
+    if(this.selectedCat == 'semua') {
+      this.listProducts = [];
+      await this.initializeItems();
+      const nextData = this.listProducts.slice(0, 9);
+      this.listProdukInfinite = await this.listProdukInfinite.concat(nextData);
+    } else {
+      await this.initializeItems();
+      this.listProdukInfinite = this.listProducts.filter(product => {
+        if(this.selectedCat != 'semua') {
           if (product.category && this.selectedCat) {
             if (product.category.toLowerCase().indexOf(this.selectedCat.toLowerCase()) > -1) {
               return true;
             }
             return false;
           }
-        });
-      }
+        }
+      });
+    }
   }
 
 }

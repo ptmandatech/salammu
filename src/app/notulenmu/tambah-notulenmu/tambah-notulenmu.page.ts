@@ -50,7 +50,7 @@ export class TambahNotulenmuPage implements OnInit {
     private datePipe: DatePipe,
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.loadingService.present();
     this.getListWilayah();
     this.getListDaerah();
@@ -58,7 +58,7 @@ export class TambahNotulenmuPage implements OnInit {
     this.getListRanting();
     this.dataLogin = JSON.parse(localStorage.getItem('salammuToken'));
     this.minDate = new Date().toISOString();
-    this.cekLogin();
+    await this.cekLogin();
     this.id = this.routes.snapshot.paramMap.get('id');
     this.serverImg = this.common.photoBaseUrl+'notulenmu/';
     if(this.id != 0) {
@@ -69,9 +69,9 @@ export class TambahNotulenmuPage implements OnInit {
     }
   }
 
-  cekLogin()
+  async cekLogin()
   {    
-    this.api.me().then(async res=>{
+    await this.api.me().then(async res=>{
       this.userData = res;
       this.dataLogin.wilayah = this.userData.wilayah;
       this.dataLogin.daerah = this.userData.daerah;
@@ -90,7 +90,7 @@ export class TambahNotulenmuPage implements OnInit {
       this.dataLogin.placeManagement = this.userData.placeManagement;
       this.dataLogin.statusAsManagement = this.userData.statusAsManagement;
       localStorage.setItem('salammuToken',JSON.stringify(this.dataLogin))
-      this.checkOptionsCR();
+      await this.checkOptionsCR();
       this.loadingService.dismiss();
     }, async error => {
       this.loading = false;
@@ -103,19 +103,18 @@ export class TambahNotulenmuPage implements OnInit {
 
   checkOptionsCR() {
     this.dataLogin = JSON.parse(localStorage.getItem('salammuToken'));
-    console.log(this.dataLogin);
-    if(this.dataLogin.wilayah_nama && this.dataLogin.placeManagement == 'wilayah' && this.dataLogin.statusAsManagement == 'confirmed') {
+    if(this.dataLogin.wilayah_nama) {
       let dt = {
-        id: this.dataLogin.wilayah_id,
+        id: this.dataLogin.wilayah,
         nama: this.dataLogin.wilayah_nama,
         type: 'wilayah'
       }
       this.pilihanCR.push(dt);
     }
 
-    if(this.dataLogin.daerah_nama && this.dataLogin.placeManagement == 'daerah' && this.dataLogin.statusAsManagement == 'confirmed') {
+    if(this.dataLogin.daerah_nama) {
       let dt = {
-        id: this.dataLogin.daerah_id,
+        id: this.dataLogin.daerah,
         nama: this.dataLogin.daerah_nama,
         type: 'daerah'
       }
@@ -139,8 +138,6 @@ export class TambahNotulenmuPage implements OnInit {
       }
       this.pilihanCR.push(dt);
     }
-    console.log(this.pilihanCR);
-    
   }
 
   selectedCR = '';
@@ -153,8 +150,6 @@ export class TambahNotulenmuPage implements OnInit {
       }
       if(this.notulenData.datetime) {
         this.dateValue = this.datePipe.transform(new Date(this.notulenData.datetime), 'MMM dd yyyy HH:mm');
-        console.log(this.dateValue);
-        
       }
 
       if(this.notulenData.organization_type == 'cabang') {
@@ -166,6 +161,17 @@ export class TambahNotulenmuPage implements OnInit {
         this.selectedCR = this.dataLogin.ranting_id;
         this.selectCR();
       }
+
+      if(this.notulenData.organization_type == 'wilayah') {
+        this.selectedCR = this.dataLogin.wilayah;
+        this.selectCR();
+      }
+
+      if(this.notulenData.organization_type == 'daerah') {
+        this.selectedCR = this.dataLogin.daerah;
+        this.selectCR();
+      }
+      
       this.loadingService.dismiss();
     }, err => {
       this.loadingService.dismiss();
@@ -176,13 +182,8 @@ export class TambahNotulenmuPage implements OnInit {
     let idx = this.pilihanCR.findIndex(e => e.id === this.selectedCR);
     if(idx != -1) {
       let data = this.pilihanCR[idx];
-      if(data.type == 'cabang') {
-        this.notulenData.organization_id = data.id;
-        this.notulenData.organization_type = 'cabang';
-      } else {
-        this.notulenData.organization_id = data.id;
-        this.notulenData.organization_type = 'ranting';
-      }
+      this.notulenData.organization_id = data.id;
+      this.notulenData.organization_type = data.type;
     }
   }
 
@@ -392,6 +393,7 @@ export class TambahNotulenmuPage implements OnInit {
   imgUploaded:any = [];
   async uploadPhoto()
   {
+    this.loading = true;
     if(this.images.length > 0) {
       for(var i=0; i<this.images.length; i++) {
         await this.api.put('notulenmu/uploadfoto/'+this.notulenData.id,{image: this.images[i]}).then(res=>{
@@ -450,6 +452,7 @@ export class TambahNotulenmuPage implements OnInit {
           this.loading = false;
           this.router.navigate(['/notulenmu']);
         }
+        this.loading = false;
       }, err => {
         this.loading = false;
       })

@@ -22,7 +22,7 @@ export class VideoPage implements OnInit {
     public api: ApiService,
     public common: CommonService,
     public router:Router,
-    private loadingService: LoadingService,
+    // private loadingService: LoadingService,
   ) { }
 
   ngOnInit() {
@@ -30,7 +30,7 @@ export class VideoPage implements OnInit {
     this.serverImg = this.common.photoBaseUrl+'videos/';
     this.listVideos = [];
     this.listVideosTemp = [];
-    this.loadingService.present();
+    // this.loadingService.present();
     this.getAllVideos();
   }
 
@@ -39,7 +39,7 @@ export class VideoPage implements OnInit {
     this.listVideos = [];
     this.listVideosTemp = [];
     this.listVideoInfinite = [];
-    this.loadingService.present();
+    // this.loadingService.present();
     this.getAllVideos();
     setTimeout(() => {
       event.target.complete();
@@ -54,10 +54,10 @@ export class VideoPage implements OnInit {
             
       const nextData = this.listVideos.slice(0, 9);
       this.listVideoInfinite = await this.listVideoInfinite.concat(nextData);
-      this.loadingService.dismiss();
+      // this.loadingService.dismiss();
     }, error => {
       this.loading = false;
-      this.loadingService.dismiss();
+      // this.loadingService.dismiss();
     })
   }
 
