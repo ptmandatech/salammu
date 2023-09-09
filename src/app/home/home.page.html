@@ -8,7 +8,7 @@
       <ion-col size-md="6">
           <img src="./assets/imgs/bg-hero.svg" width="100%">
           <div class="top-left">
-            <ion-button fill="clear" *ngIf="!loading" class="ion-text-wrap" [ngStyle]="{'width': address_display_name.length <= 10 ? '65%':'80%'}" color="light" (click)="openSettingLokasi()">
+            <ion-button fill="clear" *ngIf="!loading" class="ion-text-wrap" [ngStyle]="{'width': address_display_name.length <= 10 ? '65%':'85%'}" color="light" (click)="openSettingLokasi()">
               <ion-icon slot="icon-only" name="location-outline"></ion-icon>
               <span style="text-align: left;" *ngIf="!loading">{{ address_display_name == undefined ? city : (address_display_name.length > 45 ? address_display_name.slice(0, 45) + '...' : address_display_name) }}</span>
             </ion-button>
