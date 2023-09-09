@@ -101,9 +101,9 @@ export class NotulenmuPage implements OnInit {
   }
 
   async selectFilter(m) {
+    this.listNotulenmuInfinite = [];
     this.selectedFilter = m;
     if(this.selectedFilter == 'Semua') {
-      this.listNotulenMu = [];
       await this.initializeItems();
       const nextData = this.listNotulenMu.slice(0, 9);
       this.listNotulenmuInfinite = await this.listNotulenmuInfinite.concat(nextData);

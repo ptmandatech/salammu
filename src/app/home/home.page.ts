@@ -726,13 +726,12 @@ export class HomePage implements OnInit {
 
       if(title[idx] == 'Fajr' || title[idx] == 'Subuh') {
         let today = new Date(this.prayTime.date.readable);
-        today.setDate(today.getDate() + 1);
         next_time = new Date(today).setHours(h, m, 0);
         this.nextTime.time = undefined;
         this.nextTimeTimer = undefined;
         this.nextTime.time = new Date(next_time);
-        let date = new Date();
-        this.nextTimeTimer = await this.timeCalc(date, this.nextTime.time);
+        // let date = new Date();
+        this.nextTimeTimer = await this.timeCalc(today, this.nextTime.time);
         this.checkCurrentTime();
       } else {
         this.nextTime.time = undefined;
